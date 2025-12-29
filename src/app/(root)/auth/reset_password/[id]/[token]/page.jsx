@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +22,7 @@ import ButtonLoading from "@/components/Application/ButtonLoading";
 // Icons & Assets
 import Logo from "@/components/Application/Logo";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import { FiLock, FiCheck, FiX, FiArrowRight, FiKey } from "react-icons/fi";
 
 // Schema
 import { resetPasswordSchema } from "@/lib/zodSchema";
@@ -36,6 +35,9 @@ import { useResetPasswordMutation } from "@/services/api/authApi";
 
 // Snackbar
 import { useSnackbar } from "@/context/SnackbarContext";
+
+// Styles
+import styles from "@/styles/auth.module.css";
 
 const ResetPassword = ({ params }) => {
     const router = useRouter();
@@ -90,101 +92,142 @@ const ResetPassword = ({ params }) => {
     };
 
     return (
-        <Card className="w-full max-w-sm">
-            <CardContent>
-                {/* Logo */}
-                <div className="flex justify-center mb-5">
-                    <Logo width={60} height={60} />     {/* This is Main Project logo */}
+        <div className={styles.authContainer}>
+            {/* Background Pattern */}
+            <div className={styles.backgroundPattern}>
+                <div className={styles.patternCircle1}></div>
+                <div className={styles.patternCircle2}></div>
+                <div className={styles.patternCircle3}></div>
+            </div>
+
+            <div className={styles.resetWrapper}>
+                {/* Logo Section */}
+                <div className={styles.logoSection}>
+                    <div className={styles.logoContainer}>
+                        <Logo width={80} height={80} />
+                        <h1 className={styles.projectName}>LifeHub</h1>
+                        <p className={styles.projectTagline}>Reset your password securely</p>
+                    </div>
                 </div>
 
-                {/* Page Title */}
-                <div className="text-center mb-5">
-                    <h1 className="text-3xl font-bold">
-                        Reset Password Into <span className="text-blue-600">LifeHub</span>
-                    </h1>
+                {/* Reset Password Card */}
+                <Card className={styles.resetCard}>
+                    <CardContent className={styles.cardContent}>
+                        <div className={styles.formHeader}>
+                            <div className={styles.titleIcon}>
+                                <FiKey size={32} />
+                            </div>
+                            <h2 className={styles.formTitle}>Reset Password</h2>
+                            <p className={styles.formSubtitle}>
+                                Create a new password for your LifeHub account
+                            </p>
+                        </div>
+
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(handleResetPasswordSubmit)}
+                                className={styles.resetForm}
+                            >
+                                {/* Password Field */}
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.formItem}>
+                                            <FormLabel className={styles.formLabel}>
+                                                <FiLock className={styles.inputIcon} />
+                                                New Password
+                                            </FormLabel>
+                                            <div className={styles.passwordContainer}>
+                                                <FormControl>
+                                                    <Input
+                                                        type="password"
+                                                        placeholder="Enter new password"
+                                                        {...field}
+                                                        className={styles.formInput}
+                                                    />
+                                                </FormControl>
+                                            </div>
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Confirm Password Field */}
+                                <FormField
+                                    control={form.control}
+                                    name="password2"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.formItem}>
+                                            <FormLabel className={styles.formLabel}>
+                                                <FiLock className={styles.inputIcon} />
+                                                Confirm Password
+                                            </FormLabel>
+                                            <div className={styles.passwordContainer}>
+                                                <FormControl>
+                                                    <Input
+                                                        type={isPasswordVisible ? "text" : "password"}
+                                                        placeholder="Confirm your password"
+                                                        {...field}
+                                                        className={styles.formInput}
+                                                    />
+                                                </FormControl>
+                                                <button
+                                                    type="button"
+                                                    className={styles.eyeButton}
+                                                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                                                >
+                                                    {isPasswordVisible ? (
+                                                        <FaRegEyeSlash />
+                                                    ) : (
+                                                        <FaRegEye />
+                                                    )}
+                                                </button>
+                                            </div>
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Submit Button */}
+                                <ButtonLoading
+                                    type="submit"
+                                    text="Reset Password"
+                                    isLoading={isLoading}
+                                    className={styles.submitButton}
+                                    icon={<FiArrowRight />}
+                                />
+                            </form>
+                        </Form>
+
+                        {/* Back to Login Link */}
+                        <div className={styles.backToLoginSection}>
+                            <p>
+                                <span>Remember your password? </span>
+                                <a
+                                    href={ROUTES.AUTH.LOGIN}
+                                    className={styles.backToLoginLink}
+                                >
+                                    Back to Login
+                                </a>
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Footer */}
+                <div className={styles.footer}>
+                    <p className={styles.footerText}>
+                        © {new Date().getFullYear()} LifeHub. All rights reserved.
+                    </p>
+                    <div className={styles.footerLinks}>
+                        <a href="/privacy" className={styles.footerLink}>Privacy Policy</a>
+                        <a href="/terms" className={styles.footerLink}>Terms of Service</a>
+                        <a href="/help" className={styles.footerLink}>Help Center</a>
+                    </div>
                 </div>
-
-                {/* Form */}
-                <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(handleResetPasswordSubmit)}
-                        className="space-y-6"
-                    >
-                        {/* Password */}
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="*********"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Confirm Password */}
-                        <FormField
-                            control={form.control}
-                            name="password2"
-                            render={({ field }) => (
-                                <FormItem className="relative">
-                                    <FormLabel>Confirm Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type={isPasswordVisible ? "text" : "password"}
-                                            placeholder="*********"
-                                            {...field}
-                                        />
-                                    </FormControl>
-
-                                    {/* Toggle Password Visibility */}
-                                    <button
-                                        type="button"
-                                        className="absolute right-3 top-[32px] text-gray-400"
-                                        onClick={() =>
-                                            setIsPasswordVisible((prev) => !prev)
-                                        }
-                                    >
-                                        {isPasswordVisible ? (
-                                            <FaRegEye />
-                                        ) : (
-                                            <FaRegEyeSlash />
-                                        )}
-                                    </button>
-
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Submit Button */}
-                        <ButtonLoading
-                            type="submit"
-                            text="Change Password"
-                            isLoading={isLoading}
-                            className="w-full cursor-pointer"
-                        />
-                    </form>
-                </Form>
-
-                <div className="text-center">
-                    <span>Back to </span>
-                    <Link
-                        href={ROUTES.AUTH.LOGIN}
-                        className="text-blue-600 hover:underline"
-                    >
-                        Login
-                    </Link>
-                </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 };
 

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -20,10 +19,12 @@ import {
 } from "@/components/ui/form";
 
 import ButtonLoading from "@/components/Application/ButtonLoading";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
 // Icons & Assets
 import Logo from "@/components/Application/Logo";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import { FiLock, FiArrowLeft } from "react-icons/fi";
 
 // Schema
 import { changePasswordSchema } from "@/lib/zodSchema";
@@ -36,6 +37,9 @@ import { useChangeUserPasswordMutation } from "@/services/api/authApi";
 
 // Snackbar
 import { useSnackbar } from "@/context/SnackbarContext";
+
+// Styles
+import styles from "@/styles/dashboard.module.css";
 
 const ChangePassword = () => {
     const router = useRouter();
@@ -88,101 +92,121 @@ const ChangePassword = () => {
     };
 
     return (
-        <Card className="w-full max-w-sm">
-            <CardContent>
-                {/* Logo */}
-                <div className="flex justify-center mb-5">
-                    <Logo width={60} height={60} />     {/* This is Main Project logo */}
-                </div>
-
-                {/* Page Title */}
-                <div className="text-center mb-5">
-                    <h1 className="text-3xl font-bold">
-                        Change Password Into <span className="text-blue-600">LifeHub</span>
-                    </h1>
-                </div>
-
-                {/* Form */}
-                <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(handleChangePasswordSubmit)}
-                        className="space-y-6"
+        <DashboardLayout>
+            <div className={styles.changePasswordContainer}>
+                {/* Back Button */}
+                <div className={styles.backButtonWrapper}>
+                    <button
+                        onClick={() => router.back()}
+                        className={styles.backButton}
                     >
-                        {/* Password */}
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="*********"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Confirm Password */}
-                        <FormField
-                            control={form.control}
-                            name="password2"
-                            render={({ field }) => (
-                                <FormItem className="relative">
-                                    <FormLabel>Confirm Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type={isPasswordVisible ? "text" : "password"}
-                                            placeholder="*********"
-                                            {...field}
-                                        />
-                                    </FormControl>
-
-                                    {/* Toggle Password Visibility */}
-                                    <button
-                                        type="button"
-                                        className="absolute right-3 top-[32px] text-gray-400"
-                                        onClick={() =>
-                                            setIsPasswordVisible((prev) => !prev)
-                                        }
-                                    >
-                                        {isPasswordVisible ? (
-                                            <FaRegEye />
-                                        ) : (
-                                            <FaRegEyeSlash />
-                                        )}
-                                    </button>
-
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Submit Button */}
-                        <ButtonLoading
-                            type="submit"
-                            text="Change Password"
-                            isLoading={isLoading}
-                            className="w-full cursor-pointer"
-                        />
-                    </form>
-                </Form>
-
-                <div className="text-center">
-                    <span>Back to </span>
-                    <Link
-                        href={ROUTES.AUTH.DASHBOARD}
-                        className="text-blue-600 hover:underline"
-                    >
-                        Dashboard
-                    </Link>
+                        <FiArrowLeft /> Back
+                    </button>
                 </div>
-            </CardContent>
-        </Card>
+
+                <div className={styles.changePasswordCard}>
+                    <CardContent className={styles.cardContent}>
+                        {/* Page Title */}
+                        <div className={styles.titleSection}>
+                            <div className={styles.titleIcon}>
+                                <FiLock size={32} />
+                            </div>
+                            <h1 className={styles.pageTitle}>
+                                Change Password
+                            </h1>
+                            <p className={styles.pageSubtitle}>
+                                Update your password to keep your account secure
+                            </p>
+                        </div>
+
+                        {/* Form */}
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(handleChangePasswordSubmit)}
+                                className={styles.changePasswordForm}
+                            >
+                                {/* Password */}
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.formItem}>
+                                            <FormLabel className={styles.formLabel}>
+                                                New Password
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="password"
+                                                    placeholder="Enter new password"
+                                                    {...field}
+                                                    className={styles.formInput}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Confirm Password */}
+                                <FormField
+                                    control={form.control}
+                                    name="password2"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.formItem}>
+                                            <FormLabel className={styles.formLabel}>
+                                                Confirm Password
+                                            </FormLabel>
+                                            <div className={styles.passwordContainer}>
+                                                <FormControl>
+                                                    <Input
+                                                        type={isPasswordVisible ? "text" : "password"}
+                                                        placeholder="Confirm new password"
+                                                        {...field}
+                                                        className={styles.formInput}
+                                                    />
+                                                </FormControl>
+                                                <button
+                                                    type="button"
+                                                    className={styles.eyeButton}
+                                                    onClick={() =>
+                                                        setIsPasswordVisible((prev) => !prev)
+                                                    }
+                                                >
+                                                    {isPasswordVisible ? (
+                                                        <FaRegEye />
+                                                    ) : (
+                                                        <FaRegEyeSlash />
+                                                    )}
+                                                </button>
+                                            </div>
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Submit Button */}
+                                <ButtonLoading
+                                    type="submit"
+                                    text="Change Password"
+                                    isLoading={isLoading}
+                                    className={styles.submitButton}
+                                />
+
+                                {/* Clear Form Button */}
+                                <button
+                                    type="button"
+                                    onClick={() => form.reset()}
+                                    className={styles.clearButton}
+                                    disabled={isLoading}
+                                >
+                                    Clear Form
+                                </button>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </div>
+            </div>
+        </DashboardLayout>
     );
 };
 

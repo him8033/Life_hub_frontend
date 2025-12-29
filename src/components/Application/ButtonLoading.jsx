@@ -3,7 +3,7 @@ import { Button } from '../ui/button'
 import { cn } from '@/lib/utils'
 import { Loader2Icon } from 'lucide-react'
 
-function ButtonLoading({ type = "button", text, isLoading, className, onClick, ...props }) {
+function ButtonLoading({ type = "button", text, isLoading, className, icon, onClick, ...props }) {
     return (
         <Button
             type={type}
@@ -13,12 +13,15 @@ function ButtonLoading({ type = "button", text, isLoading, className, onClick, .
             {...props}
         >
             {isLoading ? (
-                <>
-                    <Loader2Icon className="animate-spin h-4 w-4" />
-                    <span>Please wait...</span>
-                </>
+                <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Loading...
+                </div>
             ) : (
-                <span>{text}</span>
+                <div className="flex items-center justify-center gap-2">
+                    {icon}
+                    {text}
+                </div>
             )}
         </Button>
     )

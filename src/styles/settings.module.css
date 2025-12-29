@@ -1,0 +1,447 @@
+/* Settings Container */
+.settingsContainer {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Back Button */
+.backButtonContainer {
+    margin-bottom: 2rem;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #6b7280;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.backButton:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    transform: translateX(-4px);
+}
+
+/* Settings Content Layout */
+.settingsContent {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    min-height: calc(100vh - 120px);
+}
+
+@media (max-width: 1024px) {
+    .settingsContent {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Left Column - Info Card */
+.leftColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.infoCard {
+    background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid #667eea20;
+    height: fit-content;
+}
+
+.infoIcon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.infoTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.infoText {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.requirementsList {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+}
+
+.requirementsList li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #475569;
+}
+
+.requirementsList li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #10b981;
+    font-weight: bold;
+}
+
+.securityTips {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.securityTips h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.securityTips p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Right Column - Form */
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Form Header */
+.formHeader {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.titleSection {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.titleIcon {
+    color: #667eea;
+    font-size: 2rem;
+}
+
+.formTitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.formSubtitle {
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+/* Password Form Card */
+.passwordFormCard {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.cardContent {
+    padding: 2rem !important;
+}
+
+.passwordForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form Items */
+.formItem {
+    margin-bottom: 0;
+}
+
+.formLabel {
+    display: block;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.inputContainer {
+    position: relative;
+}
+
+.passwordInput {
+    width: 100%;
+    /* padding-right: 3rem !important; */
+    padding: 1.2rem !important;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+}
+
+.passwordInput:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.eyeButton {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.eyeButton:hover {
+    color: #6b7280;
+}
+
+/* Password Strength Meter */
+.strengthMeter {
+    margin-top: 1rem;
+}
+
+.strengthBar {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.strengthFill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strengthText {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Password Requirements */
+.requirementsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .requirementsGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.requirementItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.requirementIconValid {
+    color: #10b981;
+    min-width: 16px;
+}
+
+.requirementIconInvalid {
+    color: #9ca3af;
+    min-width: 16px;
+}
+
+.requirementText {
+    color: #6b7280;
+}
+
+.requirementMet {
+    color: #059669;
+    font-weight: 500;
+}
+
+/* Password Match Indicator */
+.matchIndicator {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.matchValid {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #059669;
+    font-weight: 500;
+}
+
+.matchInvalid {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #dc2626;
+}
+
+/* Error Message */
+.errorMessage {
+    margin-top: 0.5rem !important;
+    font-size: 0.875rem;
+}
+
+/* Form Actions */
+.formActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.cancelButton {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    color: #6b7280;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancelButton:hover:not(:disabled) {
+    background: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.cancelButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.submitButton {
+    flex: 2;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.875rem 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    height: 3.4rem;
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.submitButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Additional Info */
+.additionalInfo {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.infoBox {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid #3b82f6;
+}
+
+.infoBox h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.infoBox p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.passwordFormCard {
+    animation: slideIn 0.5s ease-out;
+}
+
+.infoCard {
+    animation: slideIn 0.5s ease-out 0.1s both;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .settingsContainer {
+        padding: 1rem;
+    }
+
+    .formActions {
+        flex-direction: column;
+    }
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+}

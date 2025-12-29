@@ -1,0 +1,533 @@
+/* Profile Container */
+.profileContainer {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Profile Header */
+.profileHeader {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.profileTitle {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profileSubtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.editButton,
+.saveButton,
+.cancelButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 1rem;
+}
+
+.editButton {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.editButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.saveButton {
+    background: #10b981;
+    color: white;
+    margin-right: 1rem;
+}
+
+.saveButton:hover {
+    background: #059669;
+    transform: translateY(-2px);
+}
+
+.cancelButton {
+    background: #ef4444;
+    color: white;
+}
+
+.cancelButton:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+.editActions {
+    display: flex;
+}
+
+/* Profile Content Layout */
+.profileContent {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .profileContent {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Left Column */
+.leftColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Profile Card */
+.profileCard {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.avatarSection {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.avatarInfo {
+    flex: 1;
+}
+
+.userName {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.userTitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 1rem;
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.statusBadge.active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.statusBadge.inactive {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.statusBadge.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.statsSection {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1.5rem 0;
+    border-top: 1px solid #e5e7eb;
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.statNumber {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.statLabel {
+    font-size: 0.875rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.statDivider {
+    width: 1px;
+    height: 40px;
+    background: #e5e7eb;
+}
+
+/* Info Card */
+.infoCard {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.infoList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.infoItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.infoIcon {
+    color: #667eea;
+    font-size: 1.25rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.infoContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.infoLabel {
+    font-size: 0.875rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.infoValue {
+    font-size: 1.125rem;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+/* Right Column */
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Bio Card */
+.bioCard {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.bioText {
+    color: #475569;
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+/* Skills Card */
+.skillsCard {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.skillsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.addSkillButton {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.addSkillButton:hover {
+    background: #e2e8f0;
+}
+
+.skillsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.skillTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+    color: #667eea;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid #667eea40;
+    position: relative;
+}
+
+.removeSkill {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-left: 4px;
+}
+
+.removeSkill:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.skillInput {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    color: #475569;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.skillInput:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Activity Card */
+.activityCard {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.activityList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.activityItem {
+    display: flex;
+    gap: 1rem;
+    padding-left: 0.5rem;
+}
+
+.activityDot {
+    width: 12px;
+    height: 12px;
+    background: #667eea;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.activityDot::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: #667eea20;
+    border-radius: 50%;
+}
+
+.activityContent {
+    flex: 1;
+}
+
+.activityText {
+    color: #1e293b;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.activityTime {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+/* Edit Inputs */
+.editInput,
+.editTextarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #1e293b;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.editInput:focus,
+.editTextarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: white;
+}
+
+.editTextarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profileContainer {
+        padding: 1rem;
+    }
+
+    .profileTitle {
+        font-size: 2rem;
+    }
+
+    .avatarSection {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .statsSection {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .statDivider {
+        width: 100%;
+        height: 1px;
+    }
+
+    .editActions {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .saveButton,
+    .cancelButton {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profileCard,
+.infoCard,
+.bioCard,
+.skillsCard,
+.activityCard {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.profileCard {
+    animation-delay: 0.1s;
+}
+
+.infoCard {
+    animation-delay: 0.2s;
+}
+
+.bioCard {
+    animation-delay: 0.3s;
+}
+
+.skillsCard {
+    animation-delay: 0.4s;
+}
+
+.activityCard {
+    animation-delay: 0.5s;
+}

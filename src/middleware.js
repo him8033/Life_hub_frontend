@@ -6,11 +6,11 @@ export function middleware(request) {
 
     // Logged-in users should not visit auth pages
     if (accessToken && (pathname === "/auth/login" || pathname === "/auth/register")) {
-        return NextResponse.redirect(new URL("/auth/dashboard", request.url));
+        return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     // Unauthenticated users shouldn't visit /auth/dashboard
-    if (!accessToken && pathname.startsWith("/auth/dashboard")) {
+    if (!accessToken && pathname.startsWith("/dashboard")) {
         return NextResponse.redirect(new URL("/auth/login", request.url));
     }
 
@@ -18,5 +18,5 @@ export function middleware(request) {
 }
 
 export const config = {
-    matcher: ["/auth/dashboard/:path*", "/auth/login", "/auth/register"],
+    matcher: ["/dashboard/:path*", "/auth/login", "/auth/register"],
 };

@@ -33,14 +33,15 @@ export const registerSchema = z
 // Change Password Schema
 export const changePasswordSchema = z
     .object({
-        password: z.string().min(6, "New password must be at least 6 characters"),
-        password2: z
-            .string()
-            .min(6, "Confirm password must be at least 6 characters"),
-    })
-    .refine((data) => data.password === data.password2, {
-        message: "New passwords do not match",
-        path: ["password2"],
+        password: z.string()
+            .min(8, "Password must be at least 8 characters")
+            .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+            .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+            .regex(/[0-9]/, "Password must contain at least one number"),
+        password2: z.string()
+    }).refine((data) => data.password === data.password2, {
+        message: "Passwords do not match",
+        path: ["password2"]
     });
 
 // Reset Password Request Schema (send email)

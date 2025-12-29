@@ -1,19 +1,9 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { tokenService } from "../auth/token.service";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQueryWithReauth";
 
 export const authApi = createApi({
     reducerPath: "authApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl: `${BASE_URL}/api/v1/user/`,
-        prepareHeaders: (headers) => {
-            const { access } = tokenService.get();
-            if (access) headers.set("authorization", `Bearer ${access}`);
-            headers.set("Content-Type", "application/json");
-            return headers;
-        },
-    }),
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (payload) => ({ url: "register/", method: "POST", body: payload }),

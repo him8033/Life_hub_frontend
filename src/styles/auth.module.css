@@ -1,0 +1,1307 @@
+/* Auth Container */
+.authContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Pattern */
+.backgroundPattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.patternCircle1 {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    top: -150px;
+    right: -150px;
+}
+
+.patternCircle2 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+    bottom: -100px;
+    left: -100px;
+}
+
+.patternCircle3 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Login Wrapper */
+.loginWrapper {
+    width: 100%;
+    max-width: 400px;
+    z-index: 10;
+}
+
+/* Logo Section */
+.logoSection {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.projectName {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.projectTagline {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+    text-align: center;
+}
+
+/* Login Card */
+.loginCard {
+    border: none;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.cardContent {
+    padding: 2.5rem !important;
+}
+
+/* Form Header */
+.formHeader {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.formTitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.formSubtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Login Form */
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form Items */
+.formItem {
+    margin-bottom: 0;
+}
+
+.formLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.inputIcon {
+    color: #667eea;
+    font-size: 1rem;
+}
+
+.formInput {
+    width: 100%;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    padding: 0.875rem 1rem !important;
+    font-size: 1rem !important;
+    transition: all 0.2s ease;
+    background: #f9fafb !important;
+}
+
+.formInput:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    background: white !important;
+}
+
+/* Password Container */
+.passwordContainer {
+    position: relative;
+}
+
+.eyeButton {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.eyeButton:hover {
+    color: #6b7280;
+}
+
+/* Error Message */
+.errorMessage {
+    margin-top: 0.5rem !important;
+    font-size: 0.875rem !important;
+}
+
+/* Form Options */
+.formOptions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.rememberMe {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.checkbox {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox:checked {
+    background: #667eea;
+    border-color: #667eea;
+}
+
+.checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 0.75rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.forgotPassword {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.forgotPassword:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Submit Button */
+.submitButton {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+.submitButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+}
+
+/* Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1rem 0;
+    color: #9ca3af;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.divider span {
+    padding: 0 1rem;
+    font-size: 0.875rem;
+}
+
+/* Register Section */
+.registerSection {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.registerSection p {
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.registerLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.registerLink:hover {
+    color: #764ba2;
+    gap: 0.75rem;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.footerText {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+}
+
+.footerLinks {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.footerLink {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+.footerLink:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .authContainer {
+        padding: 1rem;
+    }
+
+    .loginWrapper {
+        max-width: 100%;
+    }
+
+    .cardContent {
+        padding: 1.5rem !important;
+    }
+
+    .projectName {
+        font-size: 2rem;
+    }
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+
+    .footerLinks {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .patternCircle1,
+    .patternCircle2,
+    .patternCircle3 {
+        display: none;
+    }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+    .cardContent {
+        padding: 1.25rem !important;
+    }
+
+    .formOptions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .projectTagline {
+        font-size: 0.875rem;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.loginCard {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.logoContainer {
+    animation: fadeIn 0.6s ease-out 0.1s both;
+}
+
+/* Register Specific Styles */
+.registerWrapper {
+    width: 100%;
+    max-width: 480px;
+    z-index: 10;
+}
+
+.registerCard {
+    border: none;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Password Strength Meter */
+.strengthMeter {
+    margin-top: 0.75rem;
+}
+
+.strengthBar {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.strengthFill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strengthText {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Password Requirements */
+.requirementsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 480px) {
+    .requirementsGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.requirementItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.requirementIconValid {
+    color: #10b981;
+    min-width: 16px;
+    font-size: 0.875rem;
+}
+
+.requirementIconInvalid {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.requirementText {
+    color: #6b7280;
+    font-size: 0.8rem;
+}
+
+.requirementMet {
+    color: #059669;
+    font-weight: 500;
+}
+
+/* Password Match Indicator */
+.matchIndicator {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.matchValid {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #059669;
+    font-weight: 500;
+}
+
+.matchInvalid {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #dc2626;
+}
+
+.xIcon {
+    width: 16px;
+    height: 16px;
+    position: relative;
+}
+
+.xIcon::before,
+.xIcon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: #dc2626;
+}
+
+.xIcon::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.xIcon::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Terms & Conditions */
+.termsItem {
+    margin-top: 0.5rem;
+}
+
+.termsContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.termsCheckbox {
+    width: 18px;
+    height: 18px;
+    margin-top: 0.125rem;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    appearance: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.termsCheckbox:checked {
+    background: #667eea;
+    border-color: #667eea;
+}
+
+.termsCheckbox:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 0.75rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.termsLabel {
+    color: #6b7280;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.termsLink {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.termsLink:hover {
+    text-decoration: underline;
+}
+
+/* Login Section */
+.loginSection {
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+.loginLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.loginLink:hover {
+    color: #764ba2;
+    gap: 0.75rem;
+}
+
+/* Responsive Design for Register */
+@media (max-width: 768px) {
+    .registerWrapper {
+        max-width: 100%;
+    }
+
+    .requirementsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .termsLabel {
+        font-size: 0.825rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .registerCard {
+        border-radius: 16px !important;
+    }
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+
+    .formSubtitle {
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation for Register Card */
+.registerCard {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Forgot Password Specific Styles */
+.forgotWrapper {
+    width: 100%;
+    max-width: 480px;
+    z-index: 10;
+}
+
+.forgotCard {
+    border: none;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.forgotForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Back Button */
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    margin-bottom: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.backButton:hover {
+    color: #764ba2;
+    gap: 0.75rem;
+}
+
+/* Title Icon */
+.titleIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+    border-radius: 50%;
+    color: #667eea;
+    margin: 0 auto 1rem;
+}
+
+/* Success State */
+.successState {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.successIcon {
+    color: #10b981;
+    margin-bottom: 1.5rem;
+    animation: bounce 1s ease;
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.successMessage {
+    margin-bottom: 2rem;
+}
+
+.successMessage h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.successMessage p {
+    color: #64748b;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.successTips {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: left;
+    border-left: 4px solid #3b82f6;
+}
+
+.successTips h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.successTips ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.successTips li {
+    position: relative;
+    padding-left: 1.5rem;
+    color: #64748b;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.successTips li::before {
+    content: "•";
+    position: absolute;
+    left: 0.5rem;
+    color: #667eea;
+}
+
+.successActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.tryAgainButton {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tryAgainButton:hover {
+    background: #764ba2;
+    transform: translateY(-2px);
+}
+
+.backToLoginButton {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    color: #6b7280;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.backToLoginButton:hover {
+    border-color: #667eea;
+    color: #667eea;
+}
+
+/* Info Section */
+.infoSection {
+    margin: 2rem 0 1rem;
+}
+
+.infoBox {
+    background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #667eea20;
+}
+
+.infoBox h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.infoBox p {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.supportLink {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.supportLink:hover {
+    text-decoration: underline;
+}
+
+/* Input Container */
+.inputContainer {
+    position: relative;
+}
+
+/* Responsive Design for Forgot Password */
+@media (max-width: 768px) {
+    .forgotWrapper {
+        max-width: 100%;
+    }
+
+    .successActions {
+        flex-direction: column;
+    }
+
+    .tryAgainButton,
+    .backToLoginButton {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .forgotCard {
+        border-radius: 16px !important;
+    }
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+
+    .formSubtitle {
+        font-size: 0.9rem;
+    }
+
+    .successMessage h3 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Animation for Forgot Card */
+.forgotCard {
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Reset Password Specific Styles */
+.resetWrapper {
+    width: 100%;
+    max-width: 400px;
+    z-index: 10;
+}
+
+.resetCard {
+    border: none;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.cardContent {
+    padding: 2.5rem !important;
+}
+
+.resetForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form Header */
+.formHeader {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.titleIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+    border-radius: 50%;
+    color: #667eea;
+    margin: 0 auto 1rem;
+}
+
+.formTitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.formSubtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Form Items */
+.formItem {
+    margin-bottom: 0;
+}
+
+.formLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.inputIcon {
+    color: #667eea;
+    font-size: 1rem;
+}
+
+/* Password Container */
+.passwordContainer {
+    position: relative;
+}
+
+.formInput {
+    width: 100%;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    padding: 0.875rem 1rem !important;
+    font-size: 1rem !important;
+    transition: all 0.2s ease;
+    background: #f9fafb !important;
+}
+
+.formInput:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    background: white !important;
+}
+
+.eyeButton {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.eyeButton:hover {
+    color: #6b7280;
+}
+
+/* Error Message */
+.errorMessage {
+    margin-top: 0.5rem !important;
+    font-size: 0.875rem !important;
+}
+
+/* Submit Button */
+.submitButton {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+.submitButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+}
+
+/* Back to Login Section */
+.backToLoginSection {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.backToLoginSection p {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.backToLoginLink {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.backToLoginLink:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.footerText {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+}
+
+.footerLinks {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.footerLink {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+.footerLink:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Background Pattern */
+.backgroundPattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.patternCircle1 {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    top: -150px;
+    right: -150px;
+}
+
+.patternCircle2 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+    bottom: -100px;
+    left: -100px;
+}
+
+.patternCircle3 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Logo Section */
+.logoSection {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.projectName {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.projectTagline {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Main Container */
+.authContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.resetCard {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .authContainer {
+        padding: 1rem;
+    }
+
+    .resetWrapper {
+        max-width: 100%;
+    }
+
+    .cardContent {
+        padding: 1.5rem !important;
+    }
+
+    .projectName {
+        font-size: 2rem;
+    }
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+
+    .footerLinks {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .patternCircle1,
+    .patternCircle2,
+    .patternCircle3 {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .cardContent {
+        padding: 1.25rem !important;
+    }
+
+    .projectTagline {
+        font-size: 0.875rem;
+    }
+}

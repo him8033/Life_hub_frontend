@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -24,6 +23,7 @@ import ButtonLoading from "@/components/Application/ButtonLoading";
 // Icons & Assets
 import Logo from "@/components/Application/Logo";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import { FiArrowRight, FiUserCheck, FiUser, FiMail, FiLock, FiCheck } from "react-icons/fi";
 
 // Schema
 import { registerSchema } from "@/lib/zodSchema";
@@ -37,11 +37,18 @@ import { useRegisterUserMutation } from "@/services/api/authApi";
 // Snackbar
 import { useSnackbar } from "@/context/SnackbarContext";
 
+// Styles
+import styles from "@/styles/auth.module.css";
+
 const RegisterPage = () => {
     const router = useRouter();
     const { showSnackbar } = useSnackbar();
 
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState({
+        password: false,
+        confirmPassword: false
+    });
+    const [passwordStrength, setPasswordStrength] = useState(0);
     const [registerUser, { isLoading }] = useRegisterUserMutation();
 
     const form = useForm({
@@ -54,6 +61,43 @@ const RegisterPage = () => {
             tc: false,
         },
     });
+
+    // Check password strength
+    const checkPasswordStrength = (password) => {
+        let strength = 0;
+
+        if (password.length >= 8) strength += 25;
+        if (/[a-z]/.test(password)) strength += 25;
+        if (/[A-Z]/.test(password)) strength += 25;
+        if (/[0-9]/.test(password) || /[^A-Za-z0-9]/.test(password)) strength += 25;
+
+        setPasswordStrength(strength);
+    };
+
+    const handlePasswordChange = (value) => {
+        checkPasswordStrength(value);
+    };
+
+    const getStrengthColor = () => {
+        if (passwordStrength <= 25) return "#ef4444";
+        if (passwordStrength <= 50) return "#f59e0b";
+        if (passwordStrength <= 75) return "#3b82f6";
+        return "#10b981";
+    };
+
+    const getStrengthText = () => {
+        if (passwordStrength <= 25) return "Weak";
+        if (passwordStrength <= 50) return "Fair";
+        if (passwordStrength <= 75) return "Good";
+        return "Strong";
+    };
+
+    const togglePasswordVisibility = (field) => {
+        setIsPasswordVisible(prev => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
+    };
 
     const handleRegisterSubmit = async (data) => {
 
@@ -87,167 +131,291 @@ const RegisterPage = () => {
         if (res.data) {
             showSnackbar(res.data.message, "success", 5000);
             form.reset();
+            setPasswordStrength(0);
             router.push(ROUTES.AUTH.LOGIN);
         }
     };
 
+    const passwordRequirements = [
+        { text: "At least 8 characters", check: (pwd) => pwd.length >= 8 },
+        { text: "Contains lowercase letter", check: (pwd) => /[a-z]/.test(pwd) },
+        { text: "Contains uppercase letter", check: (pwd) => /[A-Z]/.test(pwd) },
+        { text: "Contains number or special character", check: (pwd) => /[0-9]/.test(pwd) || /[^A-Za-z0-9]/.test(pwd) },
+    ];
+
     return (
-        <Card className="w-full max-w-sm">
-            <CardContent>
-                {/* Logo */}
-                <div className="flex justify-center mb-5">
-                    <Logo width={60} height={60} />     {/* This is Main Project logo */}
+        <div className={styles.authContainer}>
+            {/* Background Pattern */}
+            <div className={styles.backgroundPattern}>
+                <div className={styles.patternCircle1}></div>
+                <div className={styles.patternCircle2}></div>
+                <div className={styles.patternCircle3}></div>
+            </div>
+
+            <div className={styles.registerWrapper}>
+                {/* Logo Section */}
+                <div className={styles.logoSection}>
+                    <div className={styles.logoContainer}>
+                        <Logo width={80} height={80} />
+                        <h1 className={styles.projectName}>LifeHub</h1>
+                        <p className={styles.projectTagline}>Start your journey with us</p>
+                    </div>
                 </div>
 
-                {/* Page Title */}
-                <div className="text-center mb-5">
-                    <h1 className="text-3xl font-bold">
-                        Register Into <span className="text-blue-600">LifeHub</span>
-                    </h1>
-                </div>
-
-                {/* Form */}
-                <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(handleRegisterSubmit)}
-                        className="space-y-6"
-                    >
-                        {/* Email */}
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="email"
-                                            placeholder="example@email.com"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Name */}
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Name</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            placeholder="Enter your name"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Password */}
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="*********"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Confirm Password */}
-                        <FormField
-                            control={form.control}
-                            name="password2"
-                            render={({ field }) => (
-                                <FormItem className="relative">
-                                    <FormLabel>Confirm Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type={isPasswordVisible ? "text" : "password"}
-                                            placeholder="*********"
-                                            {...field}
-                                        />
-                                    </FormControl>
-
-                                    {/* Toggle Password Visibility */}
-                                    <button
-                                        type="button"
-                                        className="absolute right-3 top-[32px] text-gray-400"
-                                        onClick={() =>
-                                            setIsPasswordVisible((prev) => !prev)
-                                        }
-                                    >
-                                        {isPasswordVisible ? (
-                                            <FaRegEye />
-                                        ) : (
-                                            <FaRegEyeSlash />
-                                        )}
-                                    </button>
-
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Terms & Conditions */}
-                        <FormField
-                            control={form.control}
-                            name="tc"
-                            render={({ field }) => (
-                                <FormItem className="flex items-center space-x-2">
-                                    <FormControl>
-                                        <input
-                                            type="checkbox"
-                                            checked={field.value}
-                                            onChange={(e) =>
-                                                field.onChange(e.target.checked)
-                                            }
-                                            className="w-4 h-4 cursor-pointer"
-                                        />
-                                    </FormControl>
-                                    <FormLabel>I agree to the Terms & Conditions</FormLabel>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Submit Button */}
-                        <ButtonLoading
-                            type="submit"
-                            text="Create Account"
-                            isLoading={isLoading}
-                            className="w-full cursor-pointer"
-                        />
-
-                        {/* Footer */}
-                        <div className="text-center">
-                            <span>Already have an account? </span>
-                            <Link
-                                href={ROUTES.AUTH.LOGIN}
-                                className="text-blue-600 hover:underline"
-                            >
-                                Login
-                            </Link>
+                {/* Register Form Card */}
+                <Card className={styles.registerCard}>
+                    <CardContent className={styles.cardContent}>
+                        <div className={styles.formHeader}>
+                            <h2 className={styles.formTitle}>Create Account</h2>
+                            <p className={styles.formSubtitle}>Join LifeHub and manage your life efficiently</p>
                         </div>
-                    </form>
-                </Form>
-            </CardContent>
-        </Card>
+
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(handleRegisterSubmit)}
+                                className={styles.registerForm}
+                            >
+                                {/* Name Field */}
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.formItem}>
+                                            <FormLabel className={styles.formLabel}>
+                                                <FiUser className={styles.inputIcon} />
+                                                Full Name
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="text"
+                                                    placeholder="John Doe"
+                                                    {...field}
+                                                    className={styles.formInput}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Email Field */}
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.formItem}>
+                                            <FormLabel className={styles.formLabel}>
+                                                <FiMail className={styles.inputIcon} />
+                                                Email Address
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="email"
+                                                    placeholder="you@example.com"
+                                                    {...field}
+                                                    className={styles.formInput}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Password Field */}
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.formItem}>
+                                            <FormLabel className={styles.formLabel}>
+                                                <FiLock className={styles.inputIcon} />
+                                                Password
+                                            </FormLabel>
+                                            <div className={styles.passwordContainer}>
+                                                <FormControl>
+                                                    <Input
+                                                        type={isPasswordVisible.password ? "text" : "password"}
+                                                        placeholder="Create a strong password"
+                                                        {...field}
+                                                        onChange={(e) => {
+                                                            field.onChange(e);
+                                                            handlePasswordChange(e.target.value);
+                                                        }}
+                                                        className={styles.formInput}
+                                                    />
+                                                </FormControl>
+                                                <button
+                                                    type="button"
+                                                    className={styles.eyeButton}
+                                                    onClick={() => togglePasswordVisibility("password")}
+                                                >
+                                                    {isPasswordVisible.password ? (
+                                                        <FaRegEyeSlash />
+                                                    ) : (
+                                                        <FaRegEye />
+                                                    )}
+                                                </button>
+                                            </div>
+
+                                            {/* Password Strength Meter */}
+                                            {field.value && (
+                                                <div className={styles.strengthMeter}>
+                                                    <div className={styles.strengthBar}>
+                                                        <div
+                                                            className={styles.strengthFill}
+                                                            style={{
+                                                                width: `${passwordStrength}%`,
+                                                                backgroundColor: getStrengthColor()
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className={styles.strengthText}>
+                                                        <span>Strength: </span>
+                                                        <span style={{ color: getStrengthColor() }}>
+                                                            {getStrengthText()}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Password Requirements */}
+                                            <div className={styles.requirementsGrid}>
+                                                {passwordRequirements.map((req, index) => (
+                                                    <div key={index} className={styles.requirementItem}>
+                                                        {req.check(field.value) ? (
+                                                            <FiCheck className={styles.requirementIconValid} />
+                                                        ) : (
+                                                            <div className={styles.requirementIconInvalid} />
+                                                        )}
+                                                        <span className={`${styles.requirementText} ${req.check(field.value) ? styles.requirementMet : ''
+                                                            }`}>
+                                                            {req.text}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Confirm Password Field */}
+                                <FormField
+                                    control={form.control}
+                                    name="password2"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.formItem}>
+                                            <FormLabel className={styles.formLabel}>
+                                                <FiLock className={styles.inputIcon} />
+                                                Confirm Password
+                                            </FormLabel>
+                                            <div className={styles.passwordContainer}>
+                                                <FormControl>
+                                                    <Input
+                                                        type={isPasswordVisible.confirmPassword ? "text" : "password"}
+                                                        placeholder="Confirm your password"
+                                                        {...field}
+                                                        className={styles.formInput}
+                                                    />
+                                                </FormControl>
+                                                <button
+                                                    type="button"
+                                                    className={styles.eyeButton}
+                                                    onClick={() => togglePasswordVisibility("confirmPassword")}
+                                                >
+                                                    {isPasswordVisible.confirmPassword ? (
+                                                        <FaRegEyeSlash />
+                                                    ) : (
+                                                        <FaRegEye />
+                                                    )}
+                                                </button>
+                                            </div>
+
+                                            {/* Password Match Indicator */}
+                                            {form.watch("password") && field.value && (
+                                                <div className={styles.matchIndicator}>
+                                                    {form.watch("password") === field.value ? (
+                                                        <div className={styles.matchValid}>
+                                                            <FiCheck /> Passwords match
+                                                        </div>
+                                                    ) : (
+                                                        <div className={styles.matchInvalid}>
+                                                            <div className={styles.xIcon} /> Passwords do not match
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Terms & Conditions */}
+                                <FormField
+                                    control={form.control}
+                                    name="tc"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.termsItem}>
+                                            <div className={styles.termsContainer}>
+                                                <input
+                                                    type="checkbox"
+                                                    id="tc"
+                                                    checked={field.value}
+                                                    onChange={(e) => field.onChange(e.target.checked)}
+                                                    className={styles.termsCheckbox}
+                                                />
+                                                <label htmlFor="tc" className={styles.termsLabel}>
+                                                    I agree to the <Link href="/terms" className={styles.termsLink}>Terms of Service</Link> and <Link href="/privacy" className={styles.termsLink}>Privacy Policy</Link>
+                                                </label>
+                                            </div>
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Submit Button */}
+                                <ButtonLoading
+                                    type="submit"
+                                    text="Create Account"
+                                    isLoading={isLoading}
+                                    className={styles.submitButton}
+                                    icon={<FiUserCheck />}
+                                />
+
+                                {/* Divider */}
+                                <div className={styles.divider}>
+                                    <span>Already have an account?</span>
+                                </div>
+
+                                {/* Login Link */}
+                                <div className={styles.loginSection}>
+                                    <Link
+                                        href={ROUTES.AUTH.LOGIN}
+                                        className={styles.loginLink}
+                                    >
+                                        Sign in to your account <FiArrowRight />
+                                    </Link>
+                                </div>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+
+                {/* Footer */}
+                <div className={styles.footer}>
+                    <p className={styles.footerText}>
+                        © {new Date().getFullYear()} LifeHub. All rights reserved.
+                    </p>
+                    <div className={styles.footerLinks}>
+                        <Link href="/privacy" className={styles.footerLink}>Privacy Policy</Link>
+                        <Link href="/terms" className={styles.footerLink}>Terms of Service</Link>
+                        <Link href="/help" className={styles.footerLink}>Help Center</Link>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 };
 

@@ -1,0 +1,331 @@
+/* Common Styles for all Auth Pages */
+.authContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.backgroundPattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.patternCircle1 {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    top: -150px;
+    right: -150px;
+}
+
+.patternCircle2 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+    bottom: -100px;
+    left: -100px;
+}
+
+.patternCircle3 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.authWrapper {
+    width: 100%;
+    max-width: 400px;
+    z-index: 10;
+}
+
+.authCard {
+    border: none;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.cardContent {
+    padding: 2.5rem !important;
+}
+
+/* Logo Section - Common */
+.logoSection {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.projectName {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.projectTagline {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Form Header - Common */
+.formHeader {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.formTitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.formSubtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Form Elements - Common */
+.authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.formItem {
+    margin-bottom: 0;
+}
+
+.formLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.inputIcon {
+    color: #667eea;
+    font-size: 1rem;
+}
+
+.formInput {
+    width: 100%;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    padding: 0.875rem 1rem !important;
+    font-size: 1rem !important;
+    transition: all 0.2s ease;
+    background: #f9fafb !important;
+}
+
+.formInput:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    background: white !important;
+}
+
+/* Password Container - Common */
+.passwordContainer {
+    position: relative;
+}
+
+.eyeButton {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.eyeButton:hover {
+    color: #6b7280;
+}
+
+/* Error Message - Common */
+.errorMessage {
+    margin-top: 0.5rem !important;
+    font-size: 0.875rem !important;
+}
+
+/* Submit Button - Common */
+.submitButton {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+.submitButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+}
+
+/* Divider - Common */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1rem 0;
+    color: #9ca3af;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.divider span {
+    padding: 0 1rem;
+    font-size: 0.875rem;
+}
+
+/* Footer - Common */
+.footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.footerText {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+}
+
+.footerLinks {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.footerLink {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+.footerLink:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Animation - Common */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.authCard {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsive - Common */
+@media (max-width: 768px) {
+    .authContainer {
+        padding: 1rem;
+    }
+
+    .authWrapper {
+        max-width: 100%;
+    }
+
+    .cardContent {
+        padding: 1.5rem !important;
+    }
+
+    .projectName {
+        font-size: 2rem;
+    }
+
+    .footerLinks {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .patternCircle1,
+    .patternCircle2,
+    .patternCircle3 {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .cardContent {
+        padding: 1.25rem !important;
+    }
+
+    .projectTagline {
+        font-size: 0.875rem;
+    }
+}
