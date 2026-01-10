@@ -1,0 +1,373 @@
+/* Common Listing Template - Pure CSS (No Tailwind) */
+.listingContainer {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.listingHeader {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+@media (min-width: 768px) {
+    .listingHeader {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.listingTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 16px;
+}
+
+@media (min-width: 768px) {
+    .listingTitle {
+        margin-bottom: 0;
+    }
+}
+
+.listingActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.listingSearch {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .listingSearch {
+        width: auto;
+    }
+}
+
+.searchInput {
+    padding: 8px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .searchInput {
+        width: 256px;
+    }
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.primaryButton {
+    padding: 8px 16px;
+    background-color: #2563eb;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.primaryButton:hover {
+    background-color: #1d4ed8;
+}
+
+.secondaryButton {
+    padding: 8px 16px;
+    background-color: #f3f4f6;
+    color: #374151;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.secondaryButton:hover {
+    background-color: #e5e7eb;
+}
+
+.listingFilters {
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+}
+
+.filterGroup {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .filterGroup {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .filterGroup {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.filterField {
+    display: flex;
+    flex-direction: column;
+}
+
+.filterLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+.filterSelect {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 14px;
+}
+
+.filterSelect:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.listingContent {
+    padding: 24px;
+}
+
+.listingTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.listingTable thead {
+    background-color: #f9fafb;
+}
+
+.listingTable th {
+    padding: 12px 24px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.listingTable tbody {
+    background-color: white;
+}
+
+.listingTable tr {
+    transition: background-color 0.15s;
+}
+
+.listingTable tr:hover {
+    background-color: #f9fafb;
+}
+
+.listingTable td {
+    padding: 16px 24px;
+    white-space: nowrap;
+    font-size: 14px;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.statusActive {
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 9999px;
+    background-color: #dcfce7;
+    color: #166534;
+    display: inline-block;
+}
+
+.statusInactive {
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 9999px;
+    background-color: #fee2e2;
+    color: #991b1b;
+    display: inline-block;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 8px;
+}
+
+.actionButton {
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.editButton {
+    color: #2563eb;
+}
+
+.editButton:hover {
+    background-color: #dbeafe;
+}
+
+.deleteButton {
+    color: #dc2626;
+}
+
+.deleteButton:hover {
+    background-color: #fee2e2;
+}
+
+.viewButton {
+    color: #059669;
+}
+
+.viewButton:hover {
+    background-color: #d1fae5;
+}
+
+.listingEmpty {
+    text-align: center;
+    padding: 48px 0;
+    color: #6b7280;
+}
+
+/* Responsive table for mobile */
+@media (max-width: 768px) {
+    .listingTable {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .listingHeader {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .listingActions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .listingSearch {
+        width: 100%;
+    }
+
+    .searchInput {
+        width: 100%;
+    }
+}
+
+/* Add these styles to your existing Listing.module.css */
+
+/* Table wrapper for better overflow handling */
+.tableWrapper {
+    overflow-x: auto;
+}
+
+/* Name cell styling */
+.nameCell {
+    display: flex;
+    flex-direction: column;
+}
+
+.name {
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 2px;
+}
+
+.slug {
+    font-size: 12px;
+    color: #6b7280;
+    font-family: monospace;
+}
+
+/* Disabled states */
+.actionButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.filterSelect:disabled,
+.searchInput:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background-color: #f9fafb;
+}
+
+/* Loading overlay for table */
+.tableLoading {
+    position: relative;
+}
+
+.tableLoading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* Button loading states */
+.buttonLoading {
+    position: relative;
+    color: transparent !important;
+}
+
+.buttonLoading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}

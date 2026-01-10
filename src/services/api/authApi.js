@@ -6,22 +6,27 @@ export const authApi = createApi({
     baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         registerUser: builder.mutation({
-            query: (payload) => ({ url: "register/", method: "POST", body: payload }),
+            query: (payload) => ({ url: "user/register/", method: "POST", body: payload }),
         }),
+
         loginUser: builder.mutation({
-            query: (payload) => ({ url: "login/", method: "POST", body: payload }),
+            query: (payload) => ({ url: "user/login/", method: "POST", body: payload }),
         }),
+
         getLoggedUser: builder.query({
-            query: () => ({ url: "profile/" }),
+            query: () => ({ url: "user/profile/" }),
         }),
+
         changeUserPassword: builder.mutation({
-            query: (payload) => ({ url: "changepassword/", method: "POST", body: payload }),
+            query: (payload) => ({ url: "user/changepassword/", method: "POST", body: payload }),
         }),
+
         sendPasswordResetEmail: builder.mutation({
-            query: (payload) => ({ url: "send-reset-password-email/", method: "POST", body: payload }),
+            query: (payload) => ({ url: "user/send-reset-password-email/", method: "POST", body: payload }),
         }),
+        
         resetPassword: builder.mutation({
-            query: ({ data, id, token }) => ({ url: `reset-password/${id}/${token}/`, method: "POST", body: data }),
+            query: ({ data, id, token }) => ({ url: `user/reset-password/${id}/${token}/`, method: "POST", body: data }),
         }),
     }),
 });

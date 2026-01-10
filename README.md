@@ -233,3 +233,170 @@ npx shadcn@latest add dialog
 Components will be added to:
 
 src/components/ui/
+```
+
+```bash
+📦 Life_hub_frontend-Project-Structure
+│
+├── public/                            # Static public assets (served directly)
+│   ├── assets/
+│   │   └── images/
+│   │       └── logo.png               # Application logo
+│   ├── file.svg               # Generic SVG asset
+│   ├── globe.svg              # Decorative SVG
+│   ├── next.svg               # Next.js default asset
+│   ├── vercel.svg             # Vercel branding asset
+│   ├── window.svg             # UI/illustration asset
+│
+├── src/
+│   │
+│   ├── app/                           # ✅ Next.js App Router (routing system)
+│   │
+│   │   ├── (root)/                    # Route group (no URL impact)
+│   │   │   ├── auth/                  # Authentication routes
+│   │   │   │   ├── change_password/
+│   │   │   │   │   └── page.jsx            # Change password (logged-in user)
+│   │   │   │   │
+│   │   │   │   ├── forgot_password/
+│   │   │   │   │   └── page.jsx            # Forgot password page
+│   │   │   │   │
+│   │   │   │   ├── login/
+│   │   │   │   │   └── page.jsx            # Login page
+│   │   │   │   │
+│   │   │   │   ├── register/
+│   │   │   │   │   └── page.jsx            # Register page
+│   │   │   │   │
+│   │   │   │   ├── reset_password/
+│   │   │   │   │   └── [id]/
+│   │   │   │   │       └── [token]/
+│   │   │   │   │           └── page.jsx    # Reset password (dynamic route)
+│   │   │   │   │
+│   │   │   │   └── layout.jsx             # Shared auth layout (logo, background, card)
+│   │   │   └── page.jsx               # Landing / Home page
+│   │   │
+│   │   ├── dashboard/                 # Protected dashboard routes
+│   │   │   ├── profile/
+│   │   │   │   └── page.jsx            # User profile page
+│   │   │   │
+│   │   │   ├── travelspots/            # TravelSpot CRUD routes
+│   │   │   │   ├── create/
+│   │   │   │   │   └── page.jsx            # Create form
+│   │   │   │   │
+│   │   │   │   ├── edit/
+│   │   │   │   │   └── [id]/            
+│   │   │   │   │       └── page.jsx        # Edit form
+│   │   │   │   │
+│   │   │   │   ├── view/
+│   │   │   │   │   └── [id]/
+│   │   │   │   │       └── page.jsx        # View Details
+│   │   │   │   │
+│   │   │   │   └── page.jsx                # Listing page
+│   │   │   │
+│   │   │   ├── page.jsx                # Dashboard home
+│   │   │
+│   │   │
+│   │   ├── favicon.ico                # Browser tab icon
+│   │   ├── globals.css                # Global styles (reset, base typography)
+│   │   ├── layout.jsx                 # Root layout (wrapping entire app)
+│   │   └── page.jsx                   # Root entry page
+│   │
+│   ├── components/                    # Reusable UI & layout components
+│   │   ├── Application/
+│   │   │   ├── ButtonLoading.jsx       # Loading button component
+│   │   │   ├── GlobalSnackbarRenderer.jsx # Snackbar mount point
+│   │   │   ├── Logo.jsx                # App logo component
+│   │   │   ├── PopupMenu.jsx           # User menu dropdown
+│   │   │   └── SnackBar.jsx            # Snackbar UI
+│   │   │
+│   │   ├── dashboard/
+│   │   │   ├── DashboardLayout.jsx     # Dashboard wrapper logic
+│   │   │   ├── Header.jsx              # Dashboard header
+│   │   │   └── Sidebar.jsx             # Dashboard sidebar navigation
+│   │   │
+│   │   ├── layout/
+│   │   │   ├── AppLayout.jsx           # Generic app layout
+│   │   │   ├── DashboardLayout.jsx     # Dashboard layout abstraction
+│   │   │   └── LandingLayout.jsx       # Public landing layout
+│   │   │
+│   │   ├── sections/                  # Landing page sections
+│   │   │   ├── FeaturesSection.jsx     # Features list
+│   │   │   ├── FooterSection.jsx       # Footer
+│   │   │   ├── HeroSection.jsx         # Hero banner
+│   │   │   ├── NavbarSection.jsx       # Navbar
+│   │   │   └── PricingSection.jsx      # Pricing plans
+│   │   │
+│   │   ├── travelspots/               # TravelSpot specific components
+│   │   │   └── TravelSpotActions.jsx  # Action buttons (edit/delete/view)
+│   │   │   ├── TravelSpotCard.jsx     # Card view component
+│   │   │   ├── TravelSpotForm.jsx     # Reusable form component
+│   │   │   ├── TravelSpotTable.jsx    # Listing table component
+│   │
+│   │   └── ui/                         # Low-level UI primitives (shadcn-style)
+│   │       ├── button.jsx
+│   │       ├── card.jsx
+│   │       ├── form.jsx
+│   │       ├── input.jsx
+│   │       └── label.jsx
+│   │
+│   ├── config/                        # App configuration files
+│   │   ├── sections.js                # Landing sections config
+│   │   └── theme.js                   # Theme variables
+│   │
+│   ├── context/                       # React Context providers
+│   │   └── SnackbarContext.jsx        # Snackbar global context
+│   │
+│   ├── lib/                           # Helper libraries
+│   │   └── validations/
+│   │   │   └── travelspotSchema.js    # Zod validation schemas
+│   │   │    
+│   │   ├── utils.js                   # Utility functions
+│   │   └── zodSchema.js               # Zod validation schemas
+│   │
+│   ├── redux/                         # Redux Toolkit setup
+│   │   └── store.js                   # Redux store configuration
+│   │
+│   ├── routes/                        # Route constants
+│   │   └── routes.constants.js        # Centralized route names
+│   │
+│   ├── services/                      # API & business logic layer
+│   │   ├── api/
+│   │   │   ├── authApi.js              # Auth RTK Query endpoints
+│   │   │   ├── baseQueryWithReauth.js  # Token refresh logic
+│   │   │   └── travelspotApi.js       # TravelSpot API endpoints
+│   │   │
+│   │   └── auth/
+│   │       ├── auth.service.js         # Auth helpers
+│   │       └── token.service.js        # Token storage & handling
+│   │
+│   ├── styles/                        # CSS Modules (scoped styles)
+│   │   ├── auth/                      # Auth-related styles
+│   │   │   ├── AuthBase.module.css     # Shared auth styles
+│   │   │   ├── Login.module.css        # Login-specific styles
+│   │   │   ├── Register.module.css     # Register-specific styles
+│   │   │   ├── ForgotPassword.module.css
+│   │   │   └── ResetPassword.module.css
+│   │   │
+│   │   ├── common/               # Common styles
+│   │   │   └── Listing.module.css
+│   │   │
+│   │   ├── travelspots/               # TravelSpot styles
+│   │   │   ├── TravelSpotList.module.css
+│   │   │   ├── TravelSpotForm.module.css
+│   │   │   └── TravelSpotView.module.css
+│   │   │
+│   │   ├── dashboard.module.css        # Dashboard page styles
+│   │   ├── profile.module.css          # Profile page styles
+│   │   └── settings.module.css         # Settings page styles
+│   │
+│   └── middleware.js                  # Route protection (auth middleware)
+│
+├── .gitignore                         # Git ignored files
+├── README.md                          # Project documentation
+├── components.json                   # UI components config
+├── eslint.config.mjs                  # ESLint rules
+├── jsconfig.json                     # Absolute imports config
+├── next.config.mjs                   # Next.js configuration
+├── postcss.config.mjs                # PostCSS configuration
+├── package.json                      # Dependencies & scripts
+└── package-lock.json                 # Locked dependency versions
+```

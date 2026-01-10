@@ -1,0 +1,134 @@
+/* SimpleErrorState Styles - Minimal with Dynamic Colors */
+
+.container {
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f9fafb;
+}
+
+.content {
+    max-width: 400px;
+    width: 100%;
+    background-color: white;
+    /* Default white */
+    border-radius: 8px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+/* Type-specific default colors */
+.content.error {
+    border-top: 3px solid #dc2626;
+}
+
+.content.warning {
+    border-top: 3px solid #d97706;
+}
+
+.content.info {
+    border-top: 3px solid #2563eb;
+}
+
+/* Icon */
+.icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.content.error .icon {
+    color: #dc2626;
+}
+
+.content.warning .icon {
+    color: #d97706;
+}
+
+.content.info .icon {
+    color: #2563eb;
+}
+
+/* Text */
+.textContent {
+    margin-bottom: 24px;
+}
+
+.message {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #4b5563;
+    /* Default text color */
+    margin: 0;
+    word-break: break-word;
+}
+
+/* Button */
+.retryButton {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 120px;
+    color: white;
+}
+
+/* Default button colors by type */
+.content.error .retryButton {
+    background-color: #dc2626;
+}
+
+.content.error .retryButton:hover {
+    background-color: #b91c1c;
+}
+
+.content.warning .retryButton {
+    background-color: #d97706;
+}
+
+.content.warning .retryButton:hover {
+    background-color: #b45309;
+}
+
+.content.info .retryButton {
+    background-color: #2563eb;
+}
+
+.content.info .retryButton:hover {
+    background-color: #1d4ed8;
+}
+
+.retryButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .content {
+        padding: 24px;
+    }
+
+    .icon {
+        font-size: 40px;
+        margin-bottom: 16px;
+    }
+
+    .message {
+        font-size: 15px;
+    }
+
+    .retryButton {
+        padding: 12px 20px;
+        font-size: 15px;
+        width: 100%;
+    }
+}

@@ -1,0 +1,100 @@
+/* TravelSpot View Styles */
+.detailsContainer {
+    padding: 24px;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+@media (min-width: 1024px) {
+    .detailsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.detailSection {
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    padding: 24px;
+}
+
+.sectionTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.detailItem {
+    margin-bottom: 16px;
+}
+
+.detailItem:last-child {
+    margin-bottom: 0;
+}
+
+.detailLabel {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.detailValue {
+    font-size: 16px;
+    color: #1f2937;
+}
+
+.detailText {
+    font-size: 16px;
+    color: #374151;
+    line-height: 1.5;
+    margin-top: 4px;
+}
+
+.mapPreview {
+    margin-top: 16px;
+}
+
+.mapPlaceholder {
+    background-color: #f9fafb;
+    border: 1px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+}
+
+.mapPlaceholder p {
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.mapPlaceholder p:last-child {
+    margin-bottom: 0;
+}
+
+.mapHelp {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.backButton {
+    color: #4b5563;
+    margin-bottom: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+}
+
+.backButton:hover {
+    color: #1f2937;
+}

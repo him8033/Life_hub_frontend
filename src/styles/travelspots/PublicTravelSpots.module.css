@@ -1,0 +1,202 @@
+/* Public TravelSpots Listing Styles */
+
+.publicContainer {
+    min-height: 100vh;
+    background-color: #f9fafb;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.headerContent {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 48px;
+    font-weight: 800;
+    margin: 0 0 16px 0;
+    line-height: 1.1;
+}
+
+.subtitle {
+    font-size: 18px;
+    opacity: 0.9;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Filters Section */
+.filtersSection {
+    background-color: white;
+    padding: 30px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.filtersContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+}
+
+.searchBox {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 12px 20px 12px 45px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.searchIcon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+.filterGroup {
+    min-width: 200px;
+}
+
+.filterSelect {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filterSelect:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.clearButton {
+    padding: 12px 24px;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.clearButton:hover {
+    background-color: #e5e7eb;
+}
+
+/* Results Info */
+.resultsInfo {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.resultsCount {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Travel Spots Grid */
+.spotsContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+}
+
+.noResults {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.noResultsMessage {
+    font-size: 18px;
+    color: #4b5563;
+    margin-bottom: 20px;
+}
+
+.spotsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+/* Footer */
+.footer {
+    background-color: #111827;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.footerText {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header {
+        padding: 40px 20px;
+    }
+
+    .title {
+        font-size: 36px;
+    }
+
+    .subtitle {
+        font-size: 16px;
+    }
+
+    .filtersContainer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .searchBox {
+        min-width: auto;
+    }
+
+    .filterGroup {
+        min-width: auto;
+    }
+
+    .spotsGrid {
+        grid-template-columns: 1fr;
+    }
+}

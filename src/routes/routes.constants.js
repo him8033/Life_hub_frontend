@@ -8,10 +8,21 @@ export const ROUTES = {
         CHANGE_PASSWORD: "/auth/change_password",
         // DASHBOARD: "/auth/dashboard",
     },
+
     DASHBOARD: {
         DASHBOARD: "/dashboard",
         PROFILE: "/dashboard/profile",
     },
+
+    TRAVELSPOT: {
+        PUBLICLISTING: "/travelspots",
+        LISTING: "/dashboard/travelspots",
+        CREATE: "/dashboard/travelspots/create",
+        EDIT: (slug) => `/dashboard/travelspots/edit/${slug}`,
+        VIEW: (slug) => `/travelspots/${slug}`,
+        // PUBLICVIEW: (slug) => `/travelspots/${slug}`,
+    },
+
     LEGAL: {
         TERMS: "/auth/login",
         PRIVACY: "/auth/login",

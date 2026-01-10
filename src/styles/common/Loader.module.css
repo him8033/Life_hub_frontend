@@ -1,0 +1,81 @@
+/* Loader Styles - Minimal Design */
+
+.loaderContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fullPage {
+    width: 100%;
+    height: 80vh;
+    background-color: #f9fafb;
+}
+
+.loaderContent {
+    text-align: center;
+}
+
+/* Spinner */
+.loadingSpinner {
+    border: 3px solid #f3f4f6;
+    border-radius: 50%;
+    border-top-color: #2563eb;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+/* Sizes */
+.loadingSpinner.small {
+    width: 24px;
+    height: 24px;
+    border-width: 2px;
+}
+
+.loadingSpinner.medium {
+    width: 40px;
+    height: 40px;
+}
+
+.loadingSpinner.large {
+    width: 60px;
+    height: 60px;
+    border-width: 4px;
+}
+
+/* Animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Text */
+.loadingText {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .loadingSpinner.medium {
+        width: 32px;
+        height: 32px;
+    }
+
+    .loadingSpinner.large {
+        width: 48px;
+        height: 48px;
+    }
+
+    .loadingText {
+        font-size: 13px;
+        margin-top: 10px;
+    }
+}

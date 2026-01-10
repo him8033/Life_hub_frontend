@@ -1,0 +1,104 @@
+/* NotFoundState Styles - Simple Design */
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.fullPage {
+    width: 100%;
+    height: 80vh;
+    background-color: #f9fafb;
+}
+
+.content {
+    max-width: 400px;
+    width: 100%;
+    background-color: white; /* Default */
+    border-radius: 8px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    border-top: 3px solid #6b7280;
+}
+
+/* Icon */
+.icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    display: inline-block;
+    color: #6b7280;
+}
+
+/* Text */
+.textContent {
+    margin-bottom: 24px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 12px 0;
+    line-height: 1.3;
+}
+
+.message {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #4b5563;
+    margin: 0;
+    word-break: break-word;
+}
+
+/* Button */
+.backButton {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 120px;
+    color: white;
+    background-color: #2563eb; /* Default blue */
+}
+
+.backButton:hover {
+    background-color: #1d4ed8;
+}
+
+.backButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .content {
+        padding: 24px;
+    }
+    
+    .icon {
+        font-size: 40px;
+        margin-bottom: 16px;
+    }
+    
+    .title {
+        font-size: 18px;
+    }
+    
+    .message {
+        font-size: 15px;
+    }
+    
+    .backButton {
+        padding: 12px 20px;
+        font-size: 15px;
+        width: 100%;
+    }
+}

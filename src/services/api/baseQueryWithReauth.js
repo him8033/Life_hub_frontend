@@ -4,7 +4,7 @@ import { tokenService } from "../auth/token.service";
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: `${BASE_URL}/api/v1/user/`,
+    baseUrl: `${BASE_URL}/api/v1/`,
     prepareHeaders: (headers) => {
         const { access } = tokenService.get();
         if (access) {
@@ -30,7 +30,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
         // 🔁 Refresh token request
         const refreshResult = await baseQuery(
             {
-                url: "token/refresh/",
+                url: "user/token/refresh/",
                 method: "POST",
                 body: { refresh },
             },
@@ -38,12 +38,12 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
             extraOptions
         );
 
-        if (refreshResult?.data?.access) {
-            tokenService.store({
-                access: refreshResult.data.access,
-            });
+        const newAccess = refreshResult?.data?.data?.access;
 
-            // 🔁 Retry original request
+        if (newAccess) {
+            tokenService.store({ access: newAccess });
+
+            // 🔁 retry original request with NEW token
             result = await baseQuery(args, api, extraOptions);
         } else {
             tokenService.remove();

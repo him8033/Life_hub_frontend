@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { SnackbarProvider } from "@/context/SnackbarContext";
 import GlobalSnackbarRenderer from "@/components/Application/GlobalSnackbarRenderer";
+import { ConfirmProvider } from "@/context/ConfirmContext";
 
 const assistant = Assistant({ subsets: ["latin"], weight: ["400", "600", "700"] });
 
@@ -15,7 +16,9 @@ export default function RootLayout({ children }) {
         <Provider store={store}>
           <SnackbarProvider>
             <GlobalSnackbarRenderer />
-            {children}
+            <ConfirmProvider>
+              {children}
+            </ConfirmProvider>
           </SnackbarProvider>
         </Provider>
       </body>

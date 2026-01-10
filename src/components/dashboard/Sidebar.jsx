@@ -60,7 +60,7 @@ const menuItems = [
                 icon: <FiFileText />,
                 href: '#',
                 submenu: [
-                    { label: 'Travel Spots', href: '/dashboard/content/posts' },
+                    { label: 'Travel Spots', href: '/dashboard/travelspots' },
                     // { label: 'Categories', href: '/dashboard/content/categories' },
                     // { label: 'Media', href: '/dashboard/content/media' }
                 ]
