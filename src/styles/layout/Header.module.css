@@ -1,0 +1,295 @@
+/* Header Styles */
+
+.header {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+}
+
+/* Logo Section */
+.logoSection {
+    flex-shrink: 0;
+}
+
+.logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logoText {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Desktop Navigation */
+.desktopNav {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .desktopNav {
+        display: block;
+        flex: 1;
+        margin-left: 40px;
+    }
+}
+
+.navList {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 30px;
+}
+
+.navLink {
+    text-decoration: none;
+    color: #4b5563;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 8px 0;
+    position: relative;
+    transition: color 0.2s;
+}
+
+.navLink:hover {
+    color: #111827;
+}
+
+.navLink.active {
+    color: #667eea;
+}
+
+.navLink.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+}
+
+/* Auth Section */
+.authSection {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .authSection {
+        display: block;
+    }
+}
+
+.userMenu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.welcomeText {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.userName {
+    font-weight: 600;
+    color: #111827;
+}
+
+.authButtons {
+    display: flex;
+    gap: 12px;
+}
+
+.loginButton,
+.registerButton,
+.logoutButton,
+.dashboardButton {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.loginButton {
+    background-color: transparent;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.loginButton:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.registerButton,
+.dashboardButton {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.registerButton:hover,
+.dashboardButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.logoutButton {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.logoutButton:hover {
+    background-color: #fecaca;
+}
+
+/* Mobile Menu Button */
+.mobileMenuButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: block;
+}
+
+@media (min-width: 1024px) {
+    .mobileMenuButton {
+        display: none;
+    }
+}
+
+.menuIcon {
+    font-size: 24px;
+    color: #4b5563;
+}
+
+/* Mobile Menu */
+.mobileMenu {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #e5e7eb;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobileNav {
+    padding: 20px;
+}
+
+.mobileNavList {
+    list-style: none;
+    margin: 0 0 20px 0;
+    padding: 0;
+}
+
+.mobileNavLink {
+    display: block;
+    padding: 12px 0;
+    text-decoration: none;
+    color: #4b5563;
+    font-weight: 500;
+    font-size: 16px;
+    border-bottom: 1px solid #f3f4f6;
+    transition: color 0.2s;
+}
+
+.mobileNavLink:hover,
+.mobileNavLink.active {
+    color: #667eea;
+}
+
+.mobileAuthSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mobileUserInfo {
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.mobileWelcomeText {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.mobileUserName {
+    font-weight: 600;
+    color: #111827;
+}
+
+.mobileLoginButton,
+.mobileRegisterButton,
+.mobileLogoutButton,
+.mobileDashboardButton {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mobileLoginButton {
+    background-color: transparent;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.mobileLoginButton:hover {
+    background-color: #f9fafb;
+}
+
+.mobileRegisterButton,
+.mobileDashboardButton {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.mobileLogoutButton {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}

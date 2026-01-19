@@ -1,15 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import TravelSpotForm from '@/components/travelspots/TravelSpotForm';
 import listingStyles from '@/styles/common/Listing.module.css';
-import { useGetTravelSpotBySlugQuery, useUpdateTravelSpotMutation } from '@/services/api/travelspotApi';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { ROUTES } from '@/routes/routes.constants';
 import Loader from '@/components/common/Loader';
 import ErrorState from '@/components/common/ErrorState';
 import NotFoundState from '@/components/common/NotFoundState';
+import SpotCategoryForm from '@/components/travelspots/spotcategory/SpotCategoryForm';
+import { useGetSpotCategoryBySlugQuery, useUpdateSpotCategoryMutation } from '@/services/api/spotcategoryApi';
 
 export default function EditTravelSpotPage() {
     const router = useRouter();
@@ -17,20 +16,20 @@ export default function EditTravelSpotPage() {
     const params = useParams();
     const slug = params.slug;
 
-    const { data, error, isLoading } = useGetTravelSpotBySlugQuery(slug, { skip: !slug, });
-    const travelSpot = data?.data || null;
+    const { data, error, isLoading } = useGetSpotCategoryBySlugQuery(slug, { skip: !slug, });
+    const spotCategory = data?.data || null;
 
-    const [updateTravelSpot, { isLoading: isSubmitting }] = useUpdateTravelSpotMutation();
+    const [updateSpotCategory, { isLoading: isSubmitting }] = useUpdateSpotCategoryMutation();
 
     const handleSubmit = async (formData) => {
         if (isSubmitting) return;
         try {
-            const res = await updateTravelSpot({
+            const res = await updateSpotCategory({
                 slug,
                 data: formData,
             }).unwrap();
             showSnackbar(res.message, 'success', 5000);
-            router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST);
+            router.push(ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST);
         } catch (error) {
             const backendErrors = error?.data?.errors;
 
@@ -54,7 +53,7 @@ export default function EditTravelSpotPage() {
 
     if (isLoading) {
         return (
-            <Loader text="Loading travel spot Data..." />
+            <Loader text="Loading spot category Data..." />
         );
     };
 
@@ -62,10 +61,10 @@ export default function EditTravelSpotPage() {
     if (error?.status === 404) {
         return (
             <NotFoundState
-                title="Travel Spot Not Found"
-                message="The travel spot you're looking for doesn't exist or is no longer available."
-                backLabel="Back to Travel Spots"
-                backTo={ROUTES.DASHBOARD.TRAVELSPOT.LIST}
+                title="Spot Category Not Found"
+                message="The spot category you're looking for doesn't exist or is no longer available."
+                backLabel="Back to Spot Categories"
+                backTo={ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST}
                 fullPage={true}
             />
         );
@@ -74,7 +73,7 @@ export default function EditTravelSpotPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load travel spot details. Please try again."}
+                message={error?.data?.message || "Failed to load spot category details. Please try again."}
                 onRetry={refetch}
                 retryMsg="Retry"
             />
@@ -98,16 +97,16 @@ export default function EditTravelSpotPage() {
                     >
                         ← Back
                     </button>
-                    <h1 className={listingStyles.listingTitle}>Edit Travel Spot</h1>
+                    <h1 className={listingStyles.listingTitle}>Edit Spot Category</h1>
                     <p style={{ color: '#6b7280', fontSize: '14px' }}>
-                        Editing: {travelSpot.name}
+                        Editing: {spotCategory.name}
                     </p>
                 </div>
             </div>
 
             <div style={{ padding: '24px' }}>
-                <TravelSpotForm
-                    initialData={travelSpot}
+                <SpotCategoryForm
+                    initialData={spotCategory}
                     onSubmit={handleSubmit}
                     isSubmitting={isSubmitting}
                     mode="edit"

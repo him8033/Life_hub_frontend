@@ -9,7 +9,7 @@ export default function TravelSpotCard({ travelSpot }) {
     const router = useRouter();
 
     const handleViewDetails = () => {
-        router.push(ROUTES.TRAVELSPOT.VIEW(travelSpot.slug));
+        router.push(ROUTES.PUBLIC.TRAVELSPOT.VIEW(travelSpot.slug));
     };
 
     return (

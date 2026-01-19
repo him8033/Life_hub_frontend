@@ -32,7 +32,7 @@ export default function ViewTravelSpotPage() {
                 title="Travel Spot Not Found"
                 message="The travel spot you're looking for doesn't exist or is no longer available."
                 backLabel="Back to Travel Spots"
-                backTo={ROUTES.TRAVELSPOT.LISTING}
+                backTo={ROUTES.DASHBOARD.TRAVELSPOT.LIST}
                 fullPage={true}
             />
         );
@@ -88,7 +88,7 @@ export default function ViewTravelSpotPage() {
                         </div>
                         <div style={{ display: 'flex', gap: '8px' }}>
                             <Link
-                                href={ROUTES.TRAVELSPOT.EDIT(travelSpot.slug)}
+                                href={ROUTES.DASHBOARD.TRAVELSPOT.EDIT(travelSpot.slug)}
                                 className={listingStyles.primaryButton}
                             >
                                 Edit

@@ -19,7 +19,7 @@ export default function PublicTravelSpotViewPage() {
     const travelSpot = data?.data || null;
 
     const handleBackToList = () => {
-        router.push(ROUTES.TRAVELSPOT.PUBLICLISTING);
+        router.push(ROUTES.PUBLIC.TRAVELSPOTS);
     };
 
     if (isLoading) {
@@ -32,7 +32,7 @@ export default function PublicTravelSpotViewPage() {
                 title="Travel Spot Not Found"
                 message="The travel spot you're looking for doesn't exist or is no longer available."
                 backLabel="Back to Travel Spots"
-                backTo={ROUTES.TRAVELSPOT.PUBLICLISTING}
+                backTo={ROUTES.PUBLIC.TRAVELSPOTS}
                 fullPage={true}
             />
         );

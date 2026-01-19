@@ -90,7 +90,7 @@ const LoginPage = () => {
             // Save Tokens (using new industry-level token service)
             tokenService.store(res.data.data);
             form.reset();
-            router.push(ROUTES.DASHBOARD.DASHBOARD);
+            router.push(ROUTES.DASHBOARD.HOME);
         }
     };
 

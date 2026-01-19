@@ -1,98 +1,77 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+// Import shadcn components
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    FormDescription,
+} from '@/components/ui/form';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import ButtonLoading from '@/components/Application/ButtonLoading';
+
 import styles from '@/styles/travelspots/TravelSpotForm.module.css';
 import useSlugGenerator from '@/hooks/useSlugGenerator';
+import { travelspotSchema } from '@/lib/validations/travelspotSchema';
+import { FiCheck } from 'react-icons/fi';
 
 export default function TravelSpotForm({
     initialData = {},
     onSubmit,
     isSubmitting = false,
-    mode = 'create' // 'create' or 'edit'
+    mode = 'create'
 }) {
-    const [formData, setFormData] = useState({
-        name: '',
-        slug: '',
-        short_description: '',
-        full_address: '',
-        city: 'Delhi',
-        latitude: '',
-        longitude: '',
+    const { slug, generateFrom, updateManually, reset: resetSlug, } = useSlugGenerator(initialData.slug);
+
+    const form = useForm({
+        resolver: zodResolver(travelspotSchema),
+        defaultValues: {
+            name: '',
+            slug: '',
+            short_description: '',
+            full_address: '',
+            city: 'Delhi',
+            latitude: '',
+            longitude: '',
+        },
     });
 
-    const [errors, setErrors] = useState({});
     const {
-        slug,
-        generateFrom,
-        updateManually,
+        handleSubmit,
+        setValue,
+        watch,
         reset,
-    } = useSlugGenerator(initialData.slug);
+        formState: { errors },
+    } = form;
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+    // Watch description for character count
+    const shortDescription = watch('short_description') || '';
 
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value,
-        }));
-
-        // AUTO slug from name
-        if (name === 'name') {
-            generateFrom(value);
-        }
-
-        // MANUAL slug edit
-        if (name === 'slug') {
-            updateManually(value);
-        }
-
-        if (errors[name]) {
-            setErrors(prev => ({ ...prev, [name]: '' }));
-        }
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        // Basic validation
-        const newErrors = {};
-        if (!formData.name.trim()) newErrors.name = 'Name is required';
-        if (!formData.slug.trim()) newErrors.slug = 'Slug is required';
-        if (formData.latitude && (formData.latitude < -90 || formData.latitude > 90)) {
-            newErrors.latitude = 'Latitude must be between -90 and 90';
-        }
-        if (formData.longitude && (formData.longitude < -180 || formData.longitude > 180)) {
-            newErrors.longitude = 'Longitude must be between -180 and 180';
-        }
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
-
-        onSubmit({
-            ...formData,
-            name: formData.name.trim(),
-            slug: formData.slug.trim(),
-            short_description: formData.short_description.trim(),
-            full_address: formData.full_address.trim(),
-            city: formData.city.trim(),
-            latitude: formData.latitude.trim(),
-            longitude: formData.longitude.trim(),
-        });
-    };
-
+    /* Sync slug hook → form */
     useEffect(() => {
-        setFormData(prev =>
-            prev.slug === slug ? prev : { ...prev, slug }
-        );
-    }, [slug]);
+        setValue('slug', slug);
+    }, [slug, setValue]);
 
+    /* Edit mode prefill */
     useEffect(() => {
         if (mode === 'edit' && initialData?.slug) {
-            reset(initialData.slug);
-
-            setFormData({
+            resetSlug(initialData.slug);
+            form.reset({
                 name: initialData.name || '',
                 slug: initialData.slug || '',
                 short_description: initialData.short_description || '',
@@ -102,163 +81,330 @@ export default function TravelSpotForm({
                 longitude: initialData.longitude || '',
             });
         }
-    }, [initialData, mode, reset]);
+    }, [mode, initialData, reset, resetSlug]);
+
+    const isSlugValid = (value) =>
+        /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
+
+    // Handle name change with slug generation
+    const handleNameChange = (e, field) => {
+        field.onChange(e);
+        generateFrom(e.target.value);
+    };
+
+    // Handle slug change
+    const handleSlugChange = (e, field) => {
+        const slugValue = e.target.value;
+        const formattedSlug = slugValue
+            .toLowerCase()
+            .replace(/[^a-z0-9-]/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+
+        field.onChange(formattedSlug);
+        updateManually(formattedSlug);
+    };
+
+    // Indian cities for dropdown
+    const indianCities = [
+        'Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad',
+        'Agra', 'Jaipur', 'Pune', 'Ahmedabad', 'Surat', 'Lucknow',
+        'Kanpur', 'Nagpur', 'Patna', 'Indore', 'Thane', 'Bhopal',
+        'Visakhapatnam', 'Vadodara', 'Firozabad', 'Ludhiana', 'Rajkot',
+        'Siliguri', 'Nashik', 'Faridabad', 'Patiala', 'Meerut'
+    ].sort();
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.formGrid}>
-                {/* Name */}
-                <div className={styles.formGroup}>
-                    <label htmlFor="name" className={styles.label}>
-                        Name *
-                    </label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-                        placeholder="Enter travel spot name"
-                    />
-                    {errors.name && <span className={styles.error}>{errors.name}</span>}
+        <Form {...form}>
+            <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+                {/* Top Row: Name and Slug */}
+                <div className={styles.formSection}>
+                    <div className={styles.formRow}>
+                        {/* Name Field */}
+                        <div className={styles.formGroup}>
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className={styles.labelContainer}>
+                                            <FormLabel className={styles.label}>
+                                                Name <span className={styles.required}>*</span>
+                                            </FormLabel>
+                                            <FormDescription className={styles.fieldInfo}>
+                                                Enter travel spot name
+                                            </FormDescription>
+                                        </div>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="e.g., Lotus Temple"
+                                                {...field}
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    generateFrom(e.target.value);
+                                                }}
+                                                className={styles.input}
+                                                autoFocus={mode === 'create'}
+                                                disabled={isSubmitting}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className={styles.errorMessage} />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        {/* Slug Field */}
+                        <div className={styles.formGroup}>
+                            <FormField
+                                control={form.control}
+                                name="slug"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className={styles.labelContainer}>
+                                            <FormLabel className={styles.label}>
+                                                Slug
+                                            </FormLabel>
+                                            <FormDescription className={styles.fieldInfo}>
+                                                URL-friendly identifier
+                                            </FormDescription>
+                                        </div>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="e.g., lotus-temple"
+                                                {...field}
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    updateManually(e.target.value);
+                                                }}
+                                                className={styles.input}
+                                                disabled={isSubmitting}
+                                            />
+                                        </FormControl>
+
+                                        {/* Slug Validation */}
+                                        {field.value && (
+                                            <div className={styles.validationContainer}>
+                                                <div className={styles.validationItem}>
+                                                    {isSlugValid(field.value) ? (
+                                                        <div className={styles.validationValid}>
+                                                            <FiCheck /> Valid URL slug format
+                                                        </div>
+                                                    ) : (
+                                                        <div className={styles.validationInvalid}>
+                                                            Use lowercase letters, numbers, and hyphens only
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <div className={styles.helperText}>
+                                            This will be used in the URL. Use lowercase letters, numbers, and hyphens.
+                                        </div>
+                                        <FormMessage className={styles.errorMessage} />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                {/* Slug */}
-                <div className={styles.formGroup}>
-                    <label htmlFor="slug" className={styles.label}>
-                        Slug *
-                    </label>
-                    <input
-                        type="text"
-                        id="slug"
-                        name="slug"
-                        value={formData.slug}
-                        onChange={handleChange}
-                        className={`${styles.input} ${errors.slug ? styles.inputError : ''}`}
-                        placeholder="e.g., lotus-temple"
-                    />
-                    {errors.slug && <span className={styles.error}>{errors.slug}</span>}
-                    <p className={styles.helpText}>URL-friendly identifier</p>
+                {/* City Section */}
+                <div className={styles.formSection}>
+                    <div className={styles.singleFieldRow}>
+                        <FormField
+                            control={form.control}
+                            name="city"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <div className={styles.labelContainer}>
+                                        <FormLabel className={styles.label}>
+                                            City
+                                        </FormLabel>
+                                        <FormDescription className={styles.fieldInfo}>
+                                            Select the city where this spot is located
+                                        </FormDescription>
+                                    </div>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                        disabled={isSubmitting}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className={styles.select}>
+                                                <SelectValue placeholder="Select a city" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent className={styles.selectContent}>
+                                            {indianCities.map((city) => (
+                                                <SelectItem
+                                                    key={city}
+                                                    value={city}
+                                                    className={styles.selectItem}
+                                                >
+                                                    {city}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage className={styles.errorMessage} />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                 </div>
 
-                {/* City */}
-                <div className={styles.formGroup}>
-                    <label htmlFor="city" className={styles.label}>
-                        City
-                    </label>
-                    <select
-                        id="city"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        className={styles.select}
-                    >
-                        <option value="Delhi">Delhi</option>
-                        <option value="Mumbai">Mumbai</option>
-                        <option value="Bangalore">Bangalore</option>
-                        <option value="Chennai">Chennai</option>
-                        <option value="Kolkata">Kolkata</option>
-                        <option value="Hyderabad">Hyderabad</option>
-                        <option value="Agra">Agra</option>
-                        <option value="Jaipur">Jaipur</option>
-                    </select>
-                </div>
+                {/* Separator */}
+                <div className={styles.separator} />
 
                 {/* Short Description */}
-                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                    <label htmlFor="short_description" className={styles.label}>
-                        Short Description
-                    </label>
-                    <textarea
-                        id="short_description"
+                <div className={styles.formSection}>
+                    <FormField
+                        control={form.control}
                         name="short_description"
-                        value={formData.short_description}
-                        onChange={handleChange}
-                        className={styles.textarea}
-                        placeholder="Brief description of the travel spot"
-                        rows="3"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className={styles.labelContainer}>
+                                    <FormLabel className={styles.sectionLabel}>
+                                        Short Description
+                                    </FormLabel>
+                                    <FormDescription className={styles.fieldInfo}>
+                                        Brief description of the travel spot
+                                    </FormDescription>
+                                </div>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder="Enter a brief description"
+                                        className={styles.textarea}
+                                        rows={3}
+                                        maxLength={200}
+                                        {...field}
+                                        disabled={isSubmitting}
+                                    />
+                                </FormControl>
+                                <div className={styles.charCount}>
+                                    {shortDescription.length}/200 characters
+                                </div>
+                                <FormMessage className={styles.errorMessage} />
+                            </FormItem>
+                        )}
                     />
                 </div>
 
                 {/* Full Address */}
-                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                    <label htmlFor="full_address" className={styles.label}>
-                        Full Address
-                    </label>
-                    <textarea
-                        id="full_address"
+                <div className={styles.formSection}>
+                    <FormField
+                        control={form.control}
                         name="full_address"
-                        value={formData.full_address}
-                        onChange={handleChange}
-                        className={styles.textarea}
-                        placeholder="Complete address with landmarks"
-                        rows="3"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className={styles.labelContainer}>
+                                    <FormLabel className={styles.sectionLabel}>
+                                        Full Address
+                                    </FormLabel>
+                                    <FormDescription className={styles.fieldInfo}>
+                                        Complete address with landmarks
+                                    </FormDescription>
+                                </div>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder="Enter complete address"
+                                        className={styles.textarea}
+                                        rows={3}
+                                        {...field}
+                                        disabled={isSubmitting}
+                                    />
+                                </FormControl>
+                                <FormMessage className={styles.errorMessage} />
+                            </FormItem>
+                        )}
                     />
                 </div>
 
-                {/* Coordinates */}
-                <div className={styles.formGroup}>
-                    <label htmlFor="latitude" className={styles.label}>
-                        Latitude
-                    </label>
-                    <input
-                        type="number"
-                        id="latitude"
-                        name="latitude"
-                        value={formData.latitude}
-                        onChange={handleChange}
-                        step="any"
-                        className={`${styles.input} ${errors.latitude ? styles.inputError : ''}`}
-                        placeholder="e.g., 28.5535"
-                    />
-                    {errors.latitude && <span className={styles.error}>{errors.latitude}</span>}
-                    <p className={styles.helpText}>Between -90 and 90</p>
+                {/* Latitude and Longitude */}
+                <div className={styles.formSection}>
+                    <div className={styles.coordinatesSection}>
+                        <div className={styles.labelContainer}>
+                            <FormLabel className={styles.sectionLabel}>
+                                Location Coordinates
+                            </FormLabel>
+                            <FormDescription className={styles.fieldInfo}>
+                                Geographical coordinates for precise location
+                            </FormDescription>
+                        </div>
+
+                        <div className={styles.coordinatesRow}>
+                            {/* Latitude */}
+                            <FormField
+                                control={form.control}
+                                name="latitude"
+                                render={({ field }) => (
+                                    <FormItem className={styles.coordinateField}>
+                                        <FormLabel className={styles.coordinateLabel}>
+                                            Latitude
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                step="any"
+                                                placeholder="e.g., 28.5535"
+                                                {...field}
+                                                className={styles.input}
+                                                disabled={isSubmitting}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className={styles.errorMessage} />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Longitude */}
+                            <FormField
+                                control={form.control}
+                                name="longitude"
+                                render={({ field }) => (
+                                    <FormItem className={styles.coordinateField}>
+                                        <FormLabel className={styles.coordinateLabel}>
+                                            Longitude
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                step="any"
+                                                placeholder="e.g., 77.2588"
+                                                {...field}
+                                                className={styles.input}
+                                                disabled={isSubmitting}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className={styles.errorMessage} />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                <div className={styles.formGroup}>
-                    <label htmlFor="longitude" className={styles.label}>
-                        Longitude
-                    </label>
-                    <input
-                        type="number"
-                        id="longitude"
-                        name="longitude"
-                        value={formData.longitude}
-                        onChange={handleChange}
-                        step="any"
-                        className={`${styles.input} ${errors.longitude ? styles.inputError : ''}`}
-                        placeholder="e.g., 77.2588"
-                    />
-                    {errors.longitude && <span className={styles.error}>{errors.longitude}</span>}
-                    <p className={styles.helpText}>Between -180 and 180</p>
-                </div>
-            </div>
+                {/* Form Actions */}
+                <div className={styles.formActions}>
+                    <button
+                        type="button"
+                        onClick={() => window.history.back()}
+                        className={styles.secondaryButton}
+                        disabled={isSubmitting}
+                    >
+                        Cancel
+                    </button>
 
-            <div className={styles.formActions}>
-                <button
-                    type="button"
-                    onClick={() => window.history.back()}
-                    className={styles.secondaryButton}
-                    disabled={isSubmitting}
-                >
-                    Cancel
-                </button>
-                <button
-                    type="submit"
-                    className={styles.primaryButton}
-                    disabled={isSubmitting}
-                >
-                    {isSubmitting ? (
-                        <>
-                            <span className={styles.spinner}></span>
-                            {mode === 'create' ? 'Creating...' : 'Updating...'}
-                        </>
-                    ) : (
-                        mode === 'create' ? 'Create Travel Spot' : 'Update Travel Spot'
-                    )}
-                </button>
-            </div>
-        </form>
+                    <ButtonLoading
+                        type="submit"
+                        text={mode === 'create' ? 'Create Travel Spot' : 'Update Travel Spot'}
+                        isLoading={isSubmitting}
+                        className={styles.primaryButton}
+                    />
+                </div>
+            </form>
+        </Form>
     );
 }

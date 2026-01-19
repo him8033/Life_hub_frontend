@@ -1,5 +1,15 @@
 export const ROUTES = {
-    HOME: "/",
+    PUBLIC: {
+        HOME: '/',
+        TRAVELSPOTS: '/travelspots',
+        TRAVELSPOT: {
+            VIEW: (slug) => `/travelspots/${slug}`,
+        },
+        ABOUT: '/about',
+        SERVICES: '/services',
+        CONTACT: '/contact',
+    },
+
     AUTH: {
         LOGIN: "/auth/login",
         REGISTER: "/auth/register",
@@ -10,17 +20,20 @@ export const ROUTES = {
     },
 
     DASHBOARD: {
-        DASHBOARD: "/dashboard",
+        HOME: "/dashboard",
         PROFILE: "/dashboard/profile",
-    },
-
-    TRAVELSPOT: {
-        PUBLICLISTING: "/travelspots",
-        LISTING: "/dashboard/travelspots",
-        CREATE: "/dashboard/travelspots/create",
-        EDIT: (slug) => `/dashboard/travelspots/edit/${slug}`,
-        VIEW: (slug) => `/travelspots/${slug}`,
-        // PUBLICVIEW: (slug) => `/travelspots/${slug}`,
+        TRAVELSPOT: {
+            LIST: '/dashboard/travelspots',
+            CREATE: '/dashboard/travelspots/create',
+            EDIT: (slug) => `/dashboard/travelspots/edit/${slug}`,
+            VIEW: (slug) => `/dashboard/travelspots/view/${slug}`,
+            SPOTCATEGORY: {
+                LIST: '/dashboard/travelspots/spotcategory',
+                CREATE: '/dashboard/travelspots/spotcategory/create',
+                EDIT: (slug) => `/dashboard/travelspots/spotcategory/edit/${slug}`,
+                VIEW: (slug) => `/dashboard/travelspots/spotcategory/view/${slug}`,
+            },
+        },
     },
 
     LEGAL: {

@@ -272,31 +272,37 @@ src/components/ui/
 │   │   │   │   │           └── page.jsx    # Reset password (dynamic route)
 │   │   │   │   │
 │   │   │   │   └── layout.jsx             # Shared auth layout (logo, background, card)
+│   │   │   │
+│   │   │   ├── dashboard/                 # Protected dashboard routes
+│   │   │   │   ├── profile/
+│   │   │   │   │   └── page.jsx            # User profile page
+│   │   │   │   │
+│   │   │   │   ├── travelspots/            # TravelSpot CRUD routes
+│   │   │   │   │   ├── create/
+│   │   │   │   │   │   └── page.jsx            # Create form
+│   │   │   │   │   │
+│   │   │   │   │   ├── edit/
+│   │   │   │   │   │   └── [id]/            
+│   │   │   │   │   │       └── page.jsx        # Edit form
+│   │   │   │   │   │
+│   │   │   │   │   ├── view/
+│   │   │   │   │   │   └── [id]/
+│   │   │   │   │   │       └── page.jsx        # View Details
+│   │   │   │   │   │
+│   │   │   │   │   └── page.jsx                # Listing page
+│   │   │   │   │
+│   │   │   │   ├── page.jsx                # Dashboard home
+│   │   │   │
+│   │   │   ├── travelspots/                 # Travel Spot routes
+│   │   │   │   ├── [slug]/
+│   │   │   │   │   └── page.jsx            # Public Travel Spot Fullview page
+│   │   │   │   └── page.jsx               # Travel Spot Listing Page
+│   │   │   │   
 │   │   │   └── page.jsx               # Landing / Home page
-│   │   │
-│   │   ├── dashboard/                 # Protected dashboard routes
-│   │   │   ├── profile/
-│   │   │   │   └── page.jsx            # User profile page
-│   │   │   │
-│   │   │   ├── travelspots/            # TravelSpot CRUD routes
-│   │   │   │   ├── create/
-│   │   │   │   │   └── page.jsx            # Create form
-│   │   │   │   │
-│   │   │   │   ├── edit/
-│   │   │   │   │   └── [id]/            
-│   │   │   │   │       └── page.jsx        # Edit form
-│   │   │   │   │
-│   │   │   │   ├── view/
-│   │   │   │   │   └── [id]/
-│   │   │   │   │       └── page.jsx        # View Details
-│   │   │   │   │
-│   │   │   │   └── page.jsx                # Listing page
-│   │   │   │
-│   │   │   ├── page.jsx                # Dashboard home
-│   │   │
 │   │   │
 │   │   ├── favicon.ico                # Browser tab icon
 │   │   ├── globals.css                # Global styles (reset, base typography)
+│   │   ├── not-found.jsx              # Global Not Found Page
 │   │   ├── layout.jsx                 # Root layout (wrapping entire app)
 │   │   └── page.jsx                   # Root entry page
 │   │
@@ -307,6 +313,13 @@ src/components/ui/
 │   │   │   ├── Logo.jsx                # App logo component
 │   │   │   ├── PopupMenu.jsx           # User menu dropdown
 │   │   │   └── SnackBar.jsx            # Snackbar UI
+│   │   │
+│   │   ├── common/
+│   │   │   ├── ConfirmDialog.jsx      # Confirm Box UI
+│   │   │   ├── ErrorState.jsx         # Error Page
+│   │   │   └── Loader.jsx             # Loader Effect UI
+│   │   │   └── NotFoundState.jsx      # Not Found Layout
+│   │   │   └── PageNotFound.jsx       # Page Not Found Layout
 │   │   │
 │   │   ├── dashboard/
 │   │   │   ├── DashboardLayout.jsx     # Dashboard wrapper logic
@@ -343,10 +356,14 @@ src/components/ui/
 │   │   └── theme.js                   # Theme variables
 │   │
 │   ├── context/                       # React Context providers
+│   │   ├── ConfirmContext.js          # Confirm global context
 │   │   └── SnackbarContext.jsx        # Snackbar global context
 │   │
+│   ├── hooks/                         # React hooks
+│   │   └── useSlugGenerator.js        # useSlugGenerator global hooks
+│   │
 │   ├── lib/                           # Helper libraries
-│   │   └── validations/
+│   │   ├── validations/
 │   │   │   └── travelspotSchema.js    # Zod validation schemas
 │   │   │    
 │   │   ├── utils.js                   # Utility functions
@@ -371,19 +388,28 @@ src/components/ui/
 │   ├── styles/                        # CSS Modules (scoped styles)
 │   │   ├── auth/                      # Auth-related styles
 │   │   │   ├── AuthBase.module.css     # Shared auth styles
+│   │   │   ├── ForgotPassword.module.css
 │   │   │   ├── Login.module.css        # Login-specific styles
 │   │   │   ├── Register.module.css     # Register-specific styles
-│   │   │   ├── ForgotPassword.module.css
 │   │   │   └── ResetPassword.module.css
 │   │   │
 │   │   ├── common/               # Common styles
-│   │   │   └── Listing.module.css
+│   │   │   ├── ConfirmDialog.module.css
+│   │   │   ├── ErrorState.module.css
+│   │   │   ├── Listing.module.css
+│   │   │   ├── Loader.module.css
+│   │   │   ├── NotFoundState.module.css
+│   │   │   └── PageNotFound.module.css
 │   │   │
 │   │   ├── travelspots/               # TravelSpot styles
-│   │   │   ├── TravelSpotList.module.css
+│   │   │   ├── PublicTravelSpotCard.module.css
+│   │   │   ├── PublicTravelSpots.module.css
+│   │   │   ├── PublicTravelSpotView.module.css
 │   │   │   ├── TravelSpotForm.module.css
+│   │   │   ├── TravelSpotList.module.css
 │   │   │   └── TravelSpotView.module.css
 │   │   │
+│   │   ├── auth.module.css             # Auth page styles
 │   │   ├── dashboard.module.css        # Dashboard page styles
 │   │   ├── profile.module.css          # Profile page styles
 │   │   └── settings.module.css         # Settings page styles

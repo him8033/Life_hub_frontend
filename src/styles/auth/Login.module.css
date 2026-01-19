@@ -1,97 +1,608 @@
-/* Login Page Specific Styles */
+/* Login.module.css */
 
-/* Login-specific layout adjustments */
-.loginWrapper {
+/* Base Layout */
+.authLayout {
+    display: flex;
+    min-height: 100vh;
     width: 100%;
-    max-width: 400px;
 }
 
-/* Form Options (Remember Me & Forgot Password) */
+/* Branding Section - Updated Gradient */
+.brandingSection {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Purple gradient matching image */
+    color: white;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.brandingSection::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 150%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.brandingContent {
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+    /* Limit width for better readability */
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Logo Container - Left Aligned */
+.logoContainer {
+    margin-bottom: 3rem;
+    text-align: left;
+    /* Left alignment */
+}
+
+.logoWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    justify-content: flex-start;
+    /* Left alignment */
+}
+
+.projectName {
+    font-size: 2.5rem;
+    /* Larger font size like image */
+    font-weight: 800;
+    /* Bolder weight */
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.projectTagline {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* Features List - Left Aligned */
+.featuresList {
+    margin-bottom: 2.5rem;
+}
+
+.featureItem {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    /* More spacing */
+    text-align: left;
+    /* Left alignment */
+}
+
+.featureIcon {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.2rem;
+    flex-shrink: 0;
+    font-size: 1.3rem;
+}
+
+.featureText h3 {
+    font-size: 1.3rem;
+    margin: 0 0 0.4rem 0;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.featureText p {
+    opacity: 0.85;
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Testimonial - Left Aligned */
+.testimonial {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.8rem;
+    margin-top: 2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: left;
+    /* Left alignment */
+}
+
+.testimonialText {
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.testimonialText::before {
+    content: '"';
+    font-size: 3rem;
+    position: absolute;
+    left: -0.5rem;
+    top: -1rem;
+    opacity: 0.3;
+    font-family: serif;
+}
+
+.testimonialAuthor {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* Left alignment */
+}
+
+.authorAvatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.authorInfo h4 {
+    font-size: 1.05rem;
+    margin: 0 0 0.2rem 0;
+    font-weight: 600;
+}
+
+.authorInfo p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* Form Section */
+.formSection {
+    flex: 1;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffffff;
+}
+
+.formWrapper {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+/* Login Card */
+.loginCard {
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.cardContent {
+    padding: 2.5rem !important;
+}
+
+.formHeader {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.formTitle {
+    font-size: 2rem;
+    /* Larger title */
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+}
+
+.formSubtitle {
+    color: #6b7280;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Login Form */
+.loginForm {
+    width: 100%;
+}
+
+.formItem {
+    margin-bottom: 1.5rem;
+}
+
+.formLabel {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #1f2937;
+    font-size: 0.95rem;
+}
+
+.inputContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 1rem;
+    color: #9ca3af;
+    font-size: 1.1rem;
+    z-index: 1;
+}
+
+.formInput {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 2.8rem !important;
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    font-size: 1rem !important;
+    transition: all 0.3s !important;
+}
+
+.formInput:focus {
+    border-color: #4F46E5 !important;
+    /* Match gradient color */
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+    outline: none !important;
+}
+
+.eyeButton {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+}
+
+.eyeButton:hover {
+    color: #6b7280;
+}
+
+/* Form Options */
 .formOptions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
 }
 
 .rememberMe {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: #6b7280;
     cursor: pointer;
+    color: #6b7280;
 }
 
 .checkbox {
+    margin-right: 0.5rem;
     width: 1rem;
     height: 1rem;
-    border: 2px solid #d1d5db;
-    border-radius: 4px;
-    appearance: none;
     cursor: pointer;
-    position: relative;
-}
-
-.checkbox:checked {
-    background: #667eea;
-    border-color: #667eea;
-}
-
-.checkbox:checked::after {
-    content: '✓';
-    position: absolute;
-    color: white;
-    font-size: 0.75rem;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .forgotPassword {
-    color: #667eea;
+    color: #4F46E5;
+    /* Match gradient color */
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.2s ease;
+    font-size: 0.95rem;
 }
 
 .forgotPassword:hover {
-    color: #764ba2;
     text-decoration: underline;
 }
 
-/* Login-specific Link Section */
-.registerSection {
-    text-align: center;
-    padding: 1rem 0;
+/* Submit Button */
+.submitButton {
+    width: 100%;
+    padding: 0.9rem !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    /* Match gradient color */
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    margin-bottom: 1.5rem !important;
 }
 
-.registerSection p {
+.submitButton:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    /* Darker shade */
+}
+
+/* Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
     color: #6b7280;
-    margin-bottom: 0.5rem;
     font-size: 0.95rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.divider span {
+    padding: 0 1rem;
+}
+
+/* Register Link */
+.registerSection {
+    text-align: center;
 }
 
 .registerLink {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #667eea;
+    display: inline-block;
+    color: #4F46E5;
+    /* Match gradient color */
     text-decoration: none;
     font-weight: 500;
-    transition: all 0.2s ease;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #4F46E5;
+    border-radius: 8px;
+    transition: all 0.3s;
 }
 
 .registerLink:hover {
-    color: #764ba2;
-    gap: 0.75rem;
+    background-color: #f5f3ff;
+    /* Light purple background */
+    text-decoration: none;
 }
 
-/* Responsive adjustments for login */
-@media (max-width: 480px) {
+/* Form Footer */
+.formFooter {
+    margin-top: auto;
+    padding-top: 2rem;
+    text-align: center;
+}
+
+.footerLinks {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.footerLink {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.footerLink:hover {
+    color: #4F46E5;
+    /* Match gradient color */
+}
+
+.separator {
+    color: #d1d5db;
+}
+
+.copyright {
+    color: #9ca3af;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* Error Message */
+.errorMessage {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* ===== MOBILE SPECIFIC CHANGES ===== */
+
+/* For mobile screens (up to 768px) */
+@media (max-width: 768px) {
+    .authLayout {
+        flex-direction: column;
+    }
+
+    /* Branding section - only show logo and slogan on mobile */
+    .brandingSection {
+        order: 1;
+        padding: 2rem 1.5rem;
+        padding-bottom: 1.5rem;
+        justify-content: flex-start;
+        min-height: auto;
+        text-align: center;
+        /* Center on mobile */
+    }
+
+    .brandingContent {
+        max-width: 100%;
+    }
+
+    /* Hide features and testimonial on mobile */
+    .featuresList,
+    .testimonial {
+        display: none;
+    }
+
+    /* Center logo and slogan on mobile */
+    .logoContainer {
+        margin-bottom: 0;
+        text-align: center;
+    }
+
+    .logoWrapper {
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .projectName {
+        font-size: 1.8rem;
+    }
+
+    .projectTagline {
+        font-size: 0.95rem;
+        text-align: center;
+        max-width: 100%;
+        margin-bottom: 0;
+    }
+
+    /* Form section */
+    .formSection {
+        order: 2;
+        padding: 1.5rem;
+        padding-top: 1rem;
+        justify-content: flex-start;
+        flex: 1;
+    }
+
+    .formWrapper {
+        max-width: 100%;
+    }
+
+    /* Adjust form card */
+    .loginCard {
+        margin-bottom: 1.5rem;
+        border: none;
+        box-shadow: none;
+    }
+
+    .cardContent {
+        padding: 0 !important;
+    }
+
+    .formHeader {
+        margin-bottom: 1.5rem;
+    }
+
+    .formTitle {
+        font-size: 1.5rem;
+    }
+
+    .formSubtitle {
+        font-size: 0.9rem;
+    }
+
+    /* Stack form options on mobile */
     .formOptions {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.75rem;
+        gap: 0.8rem;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Adjust footer links for mobile */
+    .footerLinks {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .separator {
+        display: none;
+    }
+
+    /* Make footer more compact */
+    .formFooter {
+        padding-top: 1.5rem;
+    }
+}
+
+/* For very small screens (up to 480px) */
+@media (max-width: 480px) {
+    .brandingSection {
+        padding: 1.5rem 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .projectName {
+        font-size: 1.6rem;
+    }
+
+    .projectTagline {
+        font-size: 0.9rem;
+    }
+
+    .formSection {
+        padding: 1rem;
+    }
+
+    .formTitle {
+        font-size: 1.4rem;
+    }
+
+    .formItem {
+        margin-bottom: 1.25rem;
+    }
+}
+
+/* For desktop - enhanced styling */
+@media (min-width: 769px) {
+    .brandingSection {
+        justify-content: center;
+        min-height: 100vh;
+        padding-left: 4rem;
+        /* More padding on left */
+    }
+
+    .brandingContent {
+        margin: 0;
+        /* Remove auto margin for true left alignment */
+        max-width: 520px;
+    }
+
+    .formSection {
+        justify-content: center;
+        min-height: 100vh;
+        padding-right: 4rem;
+        /* Balance with left side */
+    }
+}
+
+/* Large desktop screens */
+@media (min-width: 1200px) {
+    .brandingSection {
+        padding-left: 6rem;
+    }
+
+    .formSection {
+        padding-right: 6rem;
     }
 }

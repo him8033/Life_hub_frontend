@@ -19,6 +19,7 @@ import {
     FiUser
 } from 'react-icons/fi';
 import styles from '@/styles/dashboard.module.css';
+import { ROUTES } from '@/routes/routes.constants';
 
 const menuItems = [
     {
@@ -28,16 +29,9 @@ const menuItems = [
                 id: 'dashboard',
                 label: 'Dashboard',
                 icon: <FiHome />,
-                href: '/dashboard',
+                href: ROUTES.DASHBOARD.HOME,
                 submenu: []
             },
-            // {
-            //     id: 'analytics',
-            //     label: 'Analytics',
-            //     icon: <FiBarChart2 />,
-            //     href: '/dashboard/analytics',
-            //     submenu: []
-            // }
         ]
     },
     {
@@ -60,22 +54,11 @@ const menuItems = [
                 icon: <FiFileText />,
                 href: '#',
                 submenu: [
-                    { label: 'Travel Spots', href: '/dashboard/travelspots' },
-                    // { label: 'Categories', href: '/dashboard/content/categories' },
+                    { label: 'Travel Spots', href: ROUTES.DASHBOARD.TRAVELSPOT.LIST },
+                    { label: 'Spot Categories', href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST },
                     // { label: 'Media', href: '/dashboard/content/media' }
                 ]
             },
-            // {
-            //     id: 'finance',
-            //     label: 'Finance',
-            //     icon: <FiCreditCard />,
-            //     href: '#',
-            //     submenu: [
-            //         { label: 'Transactions', href: '/dashboard/finance' },
-            //         { label: 'Reports', href: '/dashboard/finance/reports' },
-            //         { label: 'Invoices', href: '/dashboard/finance/invoices' }
-            //     ]
-            // }
         ]
     },
     // {
@@ -122,7 +105,7 @@ const menuItems = [
                 id: 'profile',
                 label: 'My Profile',
                 icon: <FiUser />,
-                href: '/dashboard/profile',
+                href: ROUTES.DASHBOARD.PROFILE,
                 submenu: []
             }
         ]

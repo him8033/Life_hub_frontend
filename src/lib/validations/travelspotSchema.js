@@ -41,28 +41,28 @@ export const travelspotSchema = z.object({
 });
 
 // For API response validation
-export const travelspotResponseSchema = travelspotSchema.extend({
-    id: z.number(),
-    travelspot_id: z.string(),
-    created_at: z.string().datetime(),
-    updated_at: z.string().datetime(),
-    deleted_at: z.string().datetime().nullable(),
-    created_by: z.string().nullable(),
-    updated_by: z.string().nullable(),
-});
+// export const travelspotResponseSchema = travelspotSchema.extend({
+//     id: z.number(),
+//     travelspot_id: z.string(),
+//     created_at: z.string().datetime(),
+//     updated_at: z.string().datetime(),
+//     deleted_at: z.string().datetime().nullable(),
+//     created_by: z.string().nullable(),
+//     updated_by: z.string().nullable(),
+// });
 
-// For list response
-export const travelspotListSchema = z.array(travelspotResponseSchema);
+// // For list response
+// export const travelspotListSchema = z.array(travelspotResponseSchema);
 
-// For form data transformation
-export const transformTravelspotData = (data) => {
-    const transformed = { ...data };
+// // For form data transformation
+// export const transformTravelspotData = (data) => {
+//     const transformed = { ...data };
 
-    // Convert empty strings to null for optional fields
-    if (transformed.short_description === '') transformed.short_description = null;
-    if (transformed.full_address === '') transformed.full_address = null;
-    if (transformed.latitude === '') transformed.latitude = null;
-    if (transformed.longitude === '') transformed.longitude = null;
+//     // Convert empty strings to null for optional fields
+//     if (transformed.short_description === '') transformed.short_description = null;
+//     if (transformed.full_address === '') transformed.full_address = null;
+//     if (transformed.latitude === '') transformed.latitude = null;
+//     if (transformed.longitude === '') transformed.longitude = null;
 
-    return transformed;
-};
+//     return transformed;
+// };

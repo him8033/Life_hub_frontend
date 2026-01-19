@@ -1,22 +1,325 @@
-/* Register Page Specific Styles */
+/* Login.module.css / Register.module.css */
 
-/* Register-specific layout */
-.registerWrapper {
+/* Base Layout */
+.authLayout {
+    display: flex;
+    min-height: 100vh;
     width: 100%;
+    align-items: flex-start;
+    /* Align content to top */
+}
+
+/* Branding Section */
+.brandingSection {
+    flex: 1;
+    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+    color: white;
+    padding: 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Align to top */
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+}
+
+.brandingSection::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 150%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.brandingContent {
+    position: relative;
+    z-index: 1;
     max-width: 480px;
+    width: 100%;
+    margin-top: 1rem;
+    /* Small top margin */
+}
+
+/* Logo Container */
+.logoContainer {
+    margin-bottom: 2.5rem;
+    /* Reduced from 3rem */
+    text-align: left;
+}
+
+.logoWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+    /* Reduced */
+    justify-content: flex-start;
+}
+
+.projectName {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.projectTagline {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* Features List */
+.featuresList {
+    margin-bottom: 2rem;
+    /* Reduced from 2.5rem */
+}
+
+.featureItem {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    /* Reduced from 2rem */
+    text-align: left;
+}
+
+.featureIcon {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.2rem;
+    flex-shrink: 0;
+    font-size: 1.3rem;
+}
+
+.featureText h3 {
+    font-size: 1.3rem;
+    margin: 0 0 0.4rem 0;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.featureText p {
+    opacity: 0.85;
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Testimonial */
+.testimonial {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    /* Reduced from 1.8rem */
+    margin-top: 1.5rem;
+    /* Reduced from 2rem */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: left;
+}
+
+.testimonialText {
+    font-style: italic;
+    margin-bottom: 1.2rem;
+    /* Reduced */
+    font-size: 1.05rem;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.testimonialText::before {
+    content: '"';
+    font-size: 3rem;
+    position: absolute;
+    left: -0.5rem;
+    top: -1rem;
+    opacity: 0.3;
+    font-family: serif;
+}
+
+.testimonialAuthor {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.authorAvatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.authorInfo h4 {
+    font-size: 1.05rem;
+    margin: 0 0 0.2rem 0;
+    font-weight: 600;
+}
+
+.authorInfo p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* Form Section */
+.formSection {
+    flex: 1;
+    padding: 2rem 2.5rem;
+    /* Reduced top padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Align to top */
+    background-color: #ffffff;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.formWrapper {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.5rem;
+    /* Small top padding */
+}
+
+/* Register Card / Login Card */
+.registerCard,
+.loginCard {
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    /* Reduced from 2rem */
+}
+
+.cardContent {
+    padding: 2rem !important;
+    /* Reduced from 2.5rem */
+}
+
+.formHeader {
+    margin-bottom: 1.5rem;
+    /* Reduced from 2rem */
+    text-align: center;
+}
+
+.formTitle {
+    font-size: 2rem;
+    color: #1f2937;
+    margin: 0 0 0.4rem 0;
+    /* Reduced */
+    font-weight: 700;
+}
+
+.formSubtitle {
+    color: #6b7280;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Form Styles */
+.registerForm,
+.loginForm {
+    width: 100%;
+}
+
+.formItem {
+    margin-bottom: 1.25rem;
+    /* Reduced from 1.5rem */
+}
+
+.formLabel {
+    display: block;
+    margin-bottom: 0.4rem;
+    /* Reduced */
+    font-weight: 500;
+    color: #1f2937;
+    font-size: 0.95rem;
+}
+
+.inputContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 1rem;
+    color: #9ca3af;
+    font-size: 1.1rem;
+    z-index: 1;
+}
+
+.formInput {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 2.8rem !important;
+    /* Reduced padding */
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    font-size: 1rem !important;
+    transition: all 0.3s !important;
+}
+
+.formInput:focus {
+    border-color: #4F46E5 !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+    outline: none !important;
+}
+
+.eyeButton {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+}
+
+.eyeButton:hover {
+    color: #6b7280;
 }
 
 /* Password Strength Meter */
 .strengthMeter {
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
+    /* Reduced */
 }
 
 .strengthBar {
     height: 6px;
-    background: #e5e7eb;
+    background-color: #e5e7eb;
     border-radius: 3px;
     overflow: hidden;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
+    /* Reduced */
 }
 
 .strengthFill {
@@ -26,75 +329,79 @@
 }
 
 .strengthText {
+    font-size: 0.85rem;
+    color: #6b7280;
     display: flex;
     justify-content: space-between;
-    font-size: 0.875rem;
-    color: #6b7280;
 }
 
 /* Password Requirements */
 .requirementsGrid {
+    margin-top: 0.5rem;
+    /* Reduced */
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    margin-top: 1rem;
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    /* Reduced */
 }
 
 .requirementItem {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.8rem;
 }
 
 .requirementIconValid {
     color: #10b981;
-    min-width: 16px;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
 }
 
 .requirementIconInvalid {
-    width: 16px;
-    height: 16px;
+    width: 0.9rem;
+    height: 0.9rem;
     border: 2px solid #d1d5db;
     border-radius: 50%;
-    flex-shrink: 0;
 }
 
 .requirementText {
+    font-size: 0.85rem;
     color: #6b7280;
-    font-size: 0.8rem;
 }
 
 .requirementMet {
-    color: #059669;
+    color: #10b981;
     font-weight: 500;
 }
 
 /* Password Match Indicator */
 .matchIndicator {
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
+    margin-top: 0.4rem;
+    /* Reduced */
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .matchValid {
+    color: #10b981;
+    font-weight: 500;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #059669;
-    font-weight: 500;
 }
 
 .matchInvalid {
+    color: #ef4444;
+    font-weight: 500;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #dc2626;
 }
 
 .xIcon {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     position: relative;
 }
 
@@ -102,24 +409,25 @@
 .xIcon::after {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 2px;
-    background: #dc2626;
+    width: 2px;
+    height: 12px;
+    background-color: #ef4444;
+    top: 1px;
+    left: 6px;
 }
 
 .xIcon::before {
-    transform: translate(-50%, -50%) rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .xIcon::after {
-    transform: translate(-50%, -50%) rotate(-45deg);
+    transform: rotate(-45deg);
 }
 
 /* Terms & Conditions */
 .termsItem {
-    margin-top: 0.5rem;
+    margin-bottom: 1.25rem;
+    /* Reduced from 1.5rem */
 }
 
 .termsContainer {
@@ -129,41 +437,22 @@
 }
 
 .termsCheckbox {
-    width: 18px;
-    height: 18px;
-    margin-top: 0.125rem;
-    border: 2px solid #d1d5db;
-    border-radius: 4px;
-    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.25rem;
+    accent-color: #4F46E5;
     cursor: pointer;
-    flex-shrink: 0;
-    position: relative;
-}
-
-.termsCheckbox:checked {
-    background: #667eea;
-    border-color: #667eea;
-}
-
-.termsCheckbox:checked::after {
-    content: '✓';
-    position: absolute;
-    color: white;
-    font-size: 0.75rem;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .termsLabel {
+    font-size: 0.9rem;
     color: #6b7280;
-    font-size: 0.875rem;
     line-height: 1.4;
     cursor: pointer;
 }
 
 .termsLink {
-    color: #667eea;
+    color: #4F46E5;
     text-decoration: none;
     font-weight: 500;
 }
@@ -172,46 +461,236 @@
     text-decoration: underline;
 }
 
-/* Login Link Section */
-.loginSection {
-    text-align: center;
-    padding: 0.5rem 0;
-}
-
-.loginLink {
-    display: inline-flex;
+/* Form Options (for login) */
+.formOptions {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
-    color: #667eea;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s ease;
+    margin-bottom: 1.25rem;
+    /* Reduced from 1.5rem */
     font-size: 0.95rem;
 }
 
-.loginLink:hover {
-    color: #764ba2;
-    gap: 0.75rem;
+.rememberMe {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #6b7280;
 }
 
-/* Responsive adjustments for register */
+.checkbox {
+    margin-right: 0.5rem;
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.forgotPassword {
+    color: #4F46E5;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.forgotPassword:hover {
+    text-decoration: underline;
+}
+
+/* Submit Button */
+.submitButton {
+    width: 100%;
+    padding: 0.85rem !important;
+    /* Reduced */
+    background-color: #4F46E5 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    margin-bottom: 1.25rem !important;
+    /* Reduced from 1.5rem */
+}
+
+.submitButton:hover {
+    background-color: #4338CA !important;
+}
+
+/* Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.25rem 0;
+    /* Reduced from 1.5rem */
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.divider span {
+    padding: 0 1rem;
+}
+
+/* Login/Register Link */
+.loginSection,
+.registerSection {
+    text-align: center;
+}
+
+.loginLink,
+.registerLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #4F46E5;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #4F46E5;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.loginLink:hover,
+.registerLink:hover {
+    background-color: #f5f3ff;
+    text-decoration: none;
+}
+
+/* Form Footer */
+.formFooter {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    /* Reduced from 2rem */
+    text-align: center;
+}
+
+.footerLinks {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 0.8rem;
+    /* Reduced from 1rem */
+    flex-wrap: wrap;
+}
+
+.footerLink {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.footerLink:hover {
+    color: #4F46E5;
+}
+
+.separator {
+    color: #d1d5db;
+}
+
+.copyright {
+    color: #9ca3af;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* Error Message */
+.errorMessage {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* ===== MOBILE SPECIFIC CHANGES ===== */
+
+/* For mobile screens (up to 768px) */
 @media (max-width: 768px) {
-    .registerWrapper {
+    .authLayout {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* Branding section - only show logo and slogan on mobile */
+    .brandingSection {
+        order: 1;
+        padding: 1.5rem 1.5rem 1rem;
+        /* Reduced padding */
+        justify-content: flex-start;
+        min-height: auto;
+        text-align: center;
+    }
+
+    .brandingContent {
         max-width: 100%;
+        margin-top: 0;
     }
 
-    .requirementsGrid {
-        grid-template-columns: 1fr;
+    /* Hide features and testimonial on mobile */
+    .featuresList,
+    .testimonial {
+        display: none;
     }
 
-    .termsLabel {
-        font-size: 0.825rem;
+    /* Center logo and slogan on mobile */
+    .logoContainer {
+        margin-bottom: 1rem;
+        /* Reduced */
+        text-align: center;
     }
-}
 
-@media (max-width: 480px) {
-    .registerCard {
-        border-radius: 16px !important;
+    .logoWrapper {
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .projectName {
+        font-size: 1.8rem;
+    }
+
+    .projectTagline {
+        font-size: 0.95rem;
+        text-align: center;
+        max-width: 100%;
+        margin-bottom: 0;
+    }
+
+    /* Form section */
+    .formSection {
+        order: 2;
+        padding: 1rem 1.5rem;
+        /* Reduced padding */
+        justify-content: flex-start;
+        flex: 1;
+        min-height: auto;
+    }
+
+    .formWrapper {
+        max-width: 100%;
+        padding-top: 0;
+    }
+
+    /* Adjust form card */
+    .registerCard,
+    .loginCard {
+        margin-bottom: 1.25rem;
+        /* Reduced */
+        border: none;
+        box-shadow: none;
+    }
+
+    .cardContent {
+        padding: 0 !important;
+    }
+
+    .formHeader {
+        margin-bottom: 1.25rem;
+        /* Reduced */
     }
 
     .formTitle {
@@ -220,5 +699,87 @@
 
     .formSubtitle {
         font-size: 0.9rem;
+    }
+
+    /* Stack form options on mobile */
+    .formOptions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+        /* Reduced */
+    }
+
+    /* Adjust footer links for mobile */
+    .footerLinks {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .separator {
+        display: none;
+    }
+
+    /* Make footer more compact */
+    .formFooter {
+        padding-top: 1rem;
+        /* Reduced */
+    }
+}
+
+/* For very small screens (up to 480px) */
+@media (max-width: 480px) {
+    .brandingSection {
+        padding: 1.25rem 1rem 0.75rem;
+        /* Further reduced */
+    }
+
+    .projectName {
+        font-size: 1.6rem;
+    }
+
+    .projectTagline {
+        font-size: 0.9rem;
+    }
+
+    .formSection {
+        padding: 0.75rem 1rem;
+        /* Further reduced */
+    }
+
+    .formTitle {
+        font-size: 1.4rem;
+    }
+
+    .formItem {
+        margin-bottom: 1rem;
+        /* Further reduced */
+    }
+}
+
+/* For desktop - fine tuning */
+@media (min-width: 769px) {
+    .brandingSection {
+        padding-left: 4rem;
+    }
+
+    .brandingContent {
+        margin: 0;
+        max-width: 520px;
+    }
+
+    .formSection {
+        padding-right: 4rem;
+    }
+}
+
+/* Large desktop screens */
+@media (min-width: 1200px) {
+    .brandingSection {
+        padding-left: 6rem;
+    }
+
+    .formSection {
+        padding-right: 6rem;
     }
 }

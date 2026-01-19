@@ -1,24 +1,24 @@
+// src/app/(root)/dashboard/travelspots/categories/create/page.jsx
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import TravelSpotForm from '@/components/travelspots/TravelSpotForm';
+import SpotCategoryForm from '@/components/travelspots/spotcategory/SpotCategoryForm';
 import listingStyles from '@/styles/common/Listing.module.css';
-import { useCreateTravelSpotMutation } from '@/services/api/travelspotApi';
+import { useCreateSpotCategoryMutation } from '@/services/api/spotcategoryApi';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { ROUTES } from '@/routes/routes.constants';
 
-export default function CreateTravelSpotPage() {
+export default function CreateSpotCategoryPage() {
     const router = useRouter();
     const { showSnackbar } = useSnackbar();
-    const [createTravelSpot, { isLoading }] = useCreateTravelSpotMutation();
+    const [createSpotCategory, { isLoading }] = useCreateSpotCategoryMutation();
 
     const handleSubmit = async (formData) => {
         if (isLoading) return;
         try {
-            const res = await createTravelSpot(formData).unwrap();
-            showSnackbar(res.message, 'success', 5000);
-            router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST);
+            const res = await createSpotCategory(formData).unwrap();
+            showSnackbar(res.message || 'Spot Category created successfully!', 'success', 5000);
+            router.push(ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST); // Or categories list if you have one
         } catch (error) {
             const backendErrors = error?.data?.errors;
 
@@ -43,11 +43,14 @@ export default function CreateTravelSpotPage() {
     return (
         <div className={listingStyles.listingContainer}>
             <div className={listingStyles.listingHeader}>
-                <h1 className={listingStyles.listingTitle}>Add New Travel Spot</h1>
+                <h1 className={listingStyles.listingTitle}>Add New Category</h1>
+                <p className={listingStyles.listingSubtitle}>
+                    Create a new category to organize your travel spots
+                </p>
             </div>
 
-            <div style={{ padding: '24px' }}>
-                <TravelSpotForm
+            <div className={listingStyles.listingContent}>
+                <SpotCategoryForm
                     onSubmit={handleSubmit}
                     isSubmitting={isLoading}
                     mode="create"
