@@ -23,6 +23,8 @@ export const travelspotSchema = z.object({
     city: z.string()
         .default('Delhi'),
 
+    categories: z.array(z.string()).optional(),
+
     latitude: z.string()
         .refine((val) => !val || (!isNaN(parseFloat(val)) && parseFloat(val) >= -90 && parseFloat(val) <= 90), {
             message: 'Latitude must be a valid number between -90 and 90',

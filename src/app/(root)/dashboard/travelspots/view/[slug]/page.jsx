@@ -10,6 +10,7 @@ import Loader from '@/components/common/Loader';
 import { formatDateTime } from '@/utils/date.utils';
 import NotFoundState from '@/components/common/NotFoundState';
 import ErrorState from '@/components/common/ErrorState';
+import TravelSpotMap from '@/components/travelspots/TravelSpotMap';
 
 export default function ViewTravelSpotPage() {
     const router = useRouter();
@@ -151,10 +152,20 @@ export default function ViewTravelSpotPage() {
                         {travelSpot.latitude && travelSpot.longitude && (
                             <div className={viewStyles.mapPreview}>
                                 <div className={viewStyles.mapPlaceholder}>
-                                    <p>📍 Location: {travelSpot.latitude}, {travelSpot.longitude}</p>
+                                    {/* <p>📍 Location: {travelSpot.latitude}, {travelSpot.longitude}</p>
                                     <p className={viewStyles.mapHelp}>
                                         Map preview would be displayed here with Google Maps/Leaflet integration
-                                    </p>
+                                    </p> */}
+                                    <TravelSpotMap
+                                        latitude={travelSpot.latitude}
+                                        longitude={travelSpot.longitude}
+                                        name={travelSpot.name}
+                                        city={travelSpot.city}
+                                        address={travelSpot.full_address}
+                                        height="300px"
+                                        zoom={travelSpot.latitude && travelSpot.longitude ? 14 : 10}
+                                        interactive={true}
+                                    />
                                 </div>
                             </div>
                         )}

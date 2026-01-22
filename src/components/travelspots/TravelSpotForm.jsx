@@ -29,14 +29,27 @@ import styles from '@/styles/travelspots/TravelSpotForm.module.css';
 import useSlugGenerator from '@/hooks/useSlugGenerator';
 import { travelspotSchema } from '@/lib/validations/travelspotSchema';
 import { FiCheck } from 'react-icons/fi';
+import { useGetPublicSpotCategoriesQuery } from '@/services/api/spotcategoryApi';
+import ReactMultiSelect from '@/components/ui/ReactMultiSelect';
 
 export default function TravelSpotForm({
     initialData = {},
     onSubmit,
+    onBackendError,
     isSubmitting = false,
     mode = 'create'
 }) {
     const { slug, generateFrom, updateManually, reset: resetSlug, } = useSlugGenerator(initialData.slug);
+
+    // Fetch categories
+    const { data: categoriesData, isLoading: isLoadingCategories } = useGetPublicSpotCategoriesQuery();
+
+    // Format categories for multi-select
+    const categories = categoriesData?.data?.map(cat => ({
+        value: cat.spotcategory_id,
+        label: cat.name,
+        // count: cat.spotCount || 0,
+    })) || [];
 
     const form = useForm({
         resolver: zodResolver(travelspotSchema),
@@ -48,6 +61,7 @@ export default function TravelSpotForm({
             city: 'Delhi',
             latitude: '',
             longitude: '',
+            categories: [],
         },
     });
 
@@ -79,31 +93,19 @@ export default function TravelSpotForm({
                 city: initialData.city || 'Delhi',
                 latitude: initialData.latitude || '',
                 longitude: initialData.longitude || '',
+                categories: initialData.categories || [],
             });
         }
     }, [mode, initialData, reset, resetSlug]);
 
+    useEffect(() => {
+        if (onBackendError) {
+            onBackendError(form);
+        }
+    }, [form, onBackendError]);
+
     const isSlugValid = (value) =>
         /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
-
-    // Handle name change with slug generation
-    const handleNameChange = (e, field) => {
-        field.onChange(e);
-        generateFrom(e.target.value);
-    };
-
-    // Handle slug change
-    const handleSlugChange = (e, field) => {
-        const slugValue = e.target.value;
-        const formattedSlug = slugValue
-            .toLowerCase()
-            .replace(/[^a-z0-9-]/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '');
-
-        field.onChange(formattedSlug);
-        updateManually(formattedSlug);
-    };
 
     // Indian cities for dropdown
     const indianCities = [
@@ -208,6 +210,39 @@ export default function TravelSpotForm({
                             />
                         </div>
                     </div>
+                </div>
+
+                {/* Categories Multi-Select */}
+                <div className={styles.formSection}>
+                    <FormField
+                        control={form.control}
+                        name="categories"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className={styles.labelContainer}>
+                                    <FormLabel className={styles.label}>
+                                        Categories
+                                    </FormLabel>
+                                    <FormDescription className={styles.fieldInfo}>
+                                        Select the categories which are related
+                                    </FormDescription>
+                                </div>
+                                <FormControl>
+                                    <ReactMultiSelect
+                                        options={categories}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        placeholder="Select categories..."
+                                        disabled={isSubmitting || isLoadingCategories}
+                                        searchable={true}
+                                        maxHeight={250}
+                                        className={styles.multiSelect}
+                                    />
+                                </FormControl>
+                                <FormMessage className={styles.errorMessage} />
+                            </FormItem>
+                        )}
+                    />
                 </div>
 
                 {/* City Section */}

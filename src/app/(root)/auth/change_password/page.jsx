@@ -1,13 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-// UI Components
-import { Card, CardContent } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
     Form,
@@ -20,26 +17,12 @@ import {
 
 import ButtonLoading from "@/components/Application/ButtonLoading";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-
-// Icons & Assets
-import Logo from "@/components/Application/Logo";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { FiLock, FiArrowLeft } from "react-icons/fi";
-
-// Schema
 import { changePasswordSchema } from "@/lib/zodSchema";
-
-// Routes
-import { ROUTES } from "@/routes/routes.constants";
-
-// API
 import { useChangeUserPasswordMutation } from "@/services/api/authApi";
-
-// Snackbar
 import { useSnackbar } from "@/context/SnackbarContext";
-
-// Styles
-import styles from "@/styles/dashboard.module.css";
+import styles from "@/styles/auth/ChangePassword.module.css";
 
 const ChangePassword = () => {
     const router = useRouter();

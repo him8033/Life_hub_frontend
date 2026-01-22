@@ -16,6 +16,7 @@ export default function EditTravelSpotPage() {
     const { showSnackbar } = useSnackbar();
     const params = useParams();
     const slug = params.slug;
+    let formRef = null;
 
     const { data, error, isLoading } = useGetTravelSpotBySlugQuery(slug, { skip: !slug, });
     const travelSpot = data?.data || null;
@@ -35,11 +36,11 @@ export default function EditTravelSpotPage() {
             const backendErrors = error?.data?.errors;
 
             // Field-Level Errors
-            if (backendErrors?.field_errors) {
+            if (backendErrors?.field_errors && formRef) {
                 Object.entries(backendErrors.field_errors).forEach(
                     ([field, messages]) => {
-                        form.setError(field, {
-                            type: "server",
+                        formRef.setError(field, {
+                            type: 'server',
                             message: messages[0],
                         });
                     }
@@ -109,6 +110,7 @@ export default function EditTravelSpotPage() {
                 <TravelSpotForm
                     initialData={travelSpot}
                     onSubmit={handleSubmit}
+                    onBackendError={(form) => (formRef = form)}
                     isSubmitting={isSubmitting}
                     mode="edit"
                 />

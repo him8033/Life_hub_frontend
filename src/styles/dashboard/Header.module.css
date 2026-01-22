@@ -1,0 +1,317 @@
+/* ================================
+   HEADER CONTAINER
+   ================================
+   - Sticky top navigation bar
+   - Gradient background
+   - Holds logo (center) & user menu (right)
+*/
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    position: relative;
+}
+
+/* ================================
+   HEADER CENTER (LOGO AREA)
+   ================================
+   - Keeps logo perfectly centered
+*/
+/* .headerCenter {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.mobileMenuButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    padding: 5px;
+}
+
+/* ================================
+   LOGO STYLES
+   ================================
+   - App icon + app name
+*/
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    /* color: #333; */
+}
+
+.logoIcon {
+    font-size: 1.8rem;
+    color: #ffffff;
+}
+
+/* ================================
+   HEADER RIGHT SECTION
+   ================================
+   - Holds user avatar & popup menu
+*/
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* ================================
+   USER ICON / AVATAR BUTTON
+   ================================
+   - Clickable profile icon
+   - Opens popup menu
+*/
+.userIcon {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.userIcon:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* ================================
+   AVATAR PREVIEW (SMALL CIRCLE)
+   ================================
+   - Shows image or default user icon
+*/
+.avatarPreview {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ================================
+   POPUP MENU CONTAINER
+   ================================
+   - Dropdown below avatar
+*/
+.popupMenu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 280px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Popup arrow */
+.popupMenu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    transform: rotate(45deg);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ================================
+   POPUP OPEN ANIMATION
+   ================================ */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ================================
+   USER INFO SECTION (TOP)
+   ================================
+   - Avatar + name + email + role
+*/
+.userInfoSection {
+    padding: 1.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+}
+
+.userAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.userAvatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userAvatarPlaceholder {
+    color: white;
+}
+
+.userName {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.userEmail {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0.25rem 0;
+}
+
+.userRole {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: #667eea20;
+    color: #667eea;
+    text-transform: uppercase;
+}
+
+/* ================================
+   POPUP MENU LIST
+   ================================ */
+.popupList {
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+}
+
+.popupItem {
+    padding: 0;
+}
+
+.popupLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #475569;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.popupLink:hover {
+    background: linear-gradient(90deg, #667eea08, #764ba208);
+    color: #334155;
+    padding-left: 1.75rem;
+}
+
+.popupIcon {
+    font-size: 1.1rem;
+    color: #94a3b8;
+}
+
+/* ================================
+   DIVIDER LINE
+   ================================ */
+.popupDivider {
+    height: 1px;
+    margin: 0.5rem 1.5rem;
+    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+}
+
+/* ================================
+   MOBILE BEHAVIOR
+   ================================
+   - Popup slides from bottom
+*/
+@media (max-width: 640px) {
+    .popupMenu {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 16px 16px 0 0;
+        animation: slideUp 0.3s ease;
+    }
+
+    .popupMenu::before {
+        display: none;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+    .mobileMenuButton {
+        display: none;
+    }
+}

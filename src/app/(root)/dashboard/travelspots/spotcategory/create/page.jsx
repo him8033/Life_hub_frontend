@@ -12,6 +12,7 @@ export default function CreateSpotCategoryPage() {
     const router = useRouter();
     const { showSnackbar } = useSnackbar();
     const [createSpotCategory, { isLoading }] = useCreateSpotCategoryMutation();
+    let formRef = null;
 
     const handleSubmit = async (formData) => {
         if (isLoading) return;
@@ -23,11 +24,11 @@ export default function CreateSpotCategoryPage() {
             const backendErrors = error?.data?.errors;
 
             // Field-Level Errors
-            if (backendErrors?.field_errors) {
+            if (backendErrors?.field_errors && formRef) {
                 Object.entries(backendErrors.field_errors).forEach(
                     ([field, messages]) => {
-                        form.setError(field, {
-                            type: "server",
+                        formRef.setError(field, {
+                            type: 'server',
                             message: messages[0],
                         });
                     }
@@ -52,6 +53,7 @@ export default function CreateSpotCategoryPage() {
             <div className={listingStyles.listingContent}>
                 <SpotCategoryForm
                     onSubmit={handleSubmit}
+                    onBackendError={(form) => (formRef = form)}
                     isSubmitting={isLoading}
                     mode="create"
                 />

@@ -1,0 +1,227 @@
+/* MultiSelect.module.css */
+.multiSelectContainer {
+    position: relative;
+    width: 100%;
+}
+
+.selectTrigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    min-height: 42px;
+}
+
+.selectTrigger:hover:not(.disabled) {
+    border-color: #9ca3af;
+}
+
+.selectTrigger:focus-within {
+    border-color: #4F46E5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    outline: none;
+}
+
+.disabled .selectTrigger {
+    background-color: #f9fafb;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.selectedValues {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.selectedTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+}
+
+.selectedTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #f5f3ff;
+    color: #4F46E5;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.removeTag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #4F46E5;
+    cursor: pointer;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.removeTag:hover {
+    background-color: #ede9fe;
+}
+
+.placeholder {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.triggerActions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.clearButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.125rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.clearButton:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.chevron {
+    color: #6b7280;
+    transition: transform 0.2s;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
+
+/* Dropdown */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0.25rem;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+    overflow: hidden;
+}
+
+/* Search Container */
+.searchContainer {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: #4F46E5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Options List */
+.optionsList {
+    overflow-y: auto;
+    max-height: 200px;
+}
+
+.optionItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #f9fafb;
+}
+
+.optionItem:last-child {
+    border-bottom: none;
+}
+
+.optionItem:hover {
+    background-color: #f3f4f6;
+}
+
+.optionItem.selected {
+    background-color: #f5f3ff;
+}
+
+.optionCheckbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    background-color: white;
+    transition: all 0.2s;
+}
+
+.optionItem.selected .optionCheckbox {
+    background-color: #4F46E5;
+    border-color: #4F46E5;
+    color: white;
+}
+
+.optionLabel {
+    flex: 1;
+    font-size: 14px;
+    color: #374151;
+}
+
+.optionCount {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.noResults {
+    padding: 1.5rem 1rem;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* Selected Count */
+.selectedCount {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #e5e7eb;
+    font-size: 12px;
+    color: #6b7280;
+    background-color: #f9fafb;
+}

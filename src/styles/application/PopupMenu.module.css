@@ -1,0 +1,77 @@
+/* Enhanced Popup Styles */
+.popupMenu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    min-width: 280px;
+    z-index: 1000;
+    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.popupMenu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    transform: rotate(45deg);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .popupMenu {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        border-radius: 16px 16px 0 0;
+        min-width: auto;
+        animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .popupMenu::before {
+        display: none;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .userInfoSection {
+        padding: 1.5rem 1rem;
+    }
+
+    .popupLink {
+        padding: 1rem 1.5rem;
+    }
+}

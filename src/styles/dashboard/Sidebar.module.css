@@ -1,0 +1,170 @@
+/* ================================
+   SIDEBAR CONTAINER
+   ================================ */
+
+/* Main sidebar wrapper */
+.sidebar {
+    z-index: 40;
+    width: 250px;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem 0;
+    transition: all 0.3s ease;
+    height: calc(100vh - 60px);
+    /* Full height minus header */
+    position: sticky;
+    top: 70px;
+    /* Stick below header */
+    overflow-y: auto;
+}
+
+/* Sidebar collapsed state (future use) */
+.sidebarCollapsed {
+    width: 70px;
+}
+
+
+.sidebarHeader {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: none;
+}
+
+.sidebarTitle {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* ================================
+   SECTION TITLES
+   ================================ */
+
+/* Section title like: Main, Management, Settings */
+.menuTitle {
+    padding: 0 1.5rem;
+    margin-bottom: 1rem;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+/* ================================
+   MENU LIST
+   ================================ */
+
+.menuList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menuItem {
+    padding: 0;
+}
+
+
+/* ================================
+   MAIN MENU LINKS
+   ================================ */
+
+/* Menu item link */
+.menuLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.85rem 1.5rem;
+    color: #475569;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+/* Hover effect */
+.menuLink:hover {
+    background: #f1f5f9;
+    color: #334155;
+    border-left-color: #667eea;
+}
+
+/* Active menu item */
+.menuLinkActive {
+    background: #f8fafc;
+    color: #667eea;
+    border-left-color: #667eea;
+    font-weight: 500;
+}
+
+/* Menu icon */
+.menuIcon {
+    font-size: 1.2rem;
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Menu text */
+.menuText {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ================================
+   SUBMENU
+   ================================ */
+
+/* Submenu wrapper (collapsed by default) */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: #f8fafc;
+}
+
+/* Expanded submenu */
+.submenuOpen {
+    max-height: 500px;
+}
+
+/* Submenu list */
+.submenuList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.submenuItem {
+    padding: 0;
+}
+
+/* Submenu link */
+.submenuLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.75rem 1.5rem 0.75rem 3.5rem;
+    /* Indented */
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+/* Submenu hover */
+.submenuLink:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+/* Active submenu */
+.submenuLinkActive {
+    color: #667eea;
+    font-weight: 500;
+}

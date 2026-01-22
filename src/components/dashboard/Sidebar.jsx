@@ -6,19 +6,13 @@ import { usePathname } from 'next/navigation';
 import {
     FiHome,
     FiUsers,
-    FiBarChart2,
-    FiCalendar,
     FiFileText,
     FiSettings,
     FiChevronDown,
     FiChevronRight,
-    FiInbox,
-    FiCreditCard,
-    FiMessageSquare,
-    FiShoppingCart,
     FiUser
 } from 'react-icons/fi';
-import styles from '@/styles/dashboard.module.css';
+import styles from '@/styles/dashboard/Sidebar.module.css';
 import { ROUTES } from '@/routes/routes.constants';
 
 const menuItems = [
@@ -56,48 +50,10 @@ const menuItems = [
                 submenu: [
                     { label: 'Travel Spots', href: ROUTES.DASHBOARD.TRAVELSPOT.LIST },
                     { label: 'Spot Categories', href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST },
-                    // { label: 'Media', href: '/dashboard/content/media' }
                 ]
             },
         ]
     },
-    // {
-    //     title: 'Applications',
-    //     items: [
-    //         {
-    //             id: 'calendar',
-    //             label: 'Calendar',
-    //             icon: <FiCalendar />,
-    //             href: '/dashboard/calendar',
-    //             submenu: []
-    //         },
-    //         {
-    //             id: 'messages',
-    //             label: 'Messages',
-    //             icon: <FiMessageSquare />,
-    //             href: '/dashboard/messages',
-    //             submenu: []
-    //         },
-    //         {
-    //             id: 'ecommerce',
-    //             label: 'E-commerce',
-    //             icon: <FiShoppingCart />,
-    //             href: '#',
-    //             submenu: [
-    //                 { label: 'Products', href: '/dashboard/ecommerce/products' },
-    //                 { label: 'Orders', href: '/dashboard/ecommerce/orders' },
-    //                 { label: 'Customers', href: '/dashboard/ecommerce/customers' }
-    //             ]
-    //         },
-    //         {
-    //             id: 'inbox',
-    //             label: 'Inbox',
-    //             icon: <FiInbox />,
-    //             href: '/dashboard/inbox',
-    //             submenu: []
-    //         }
-    //     ]
-    // },
     {
         title: 'Account',
         items: [
@@ -124,10 +80,16 @@ const menuItems = [
     }
 ];
 
-const MenuItem = ({ item, pathname, openSubmenus, toggleSubmenu }) => {
+const MenuItem = ({ item, pathname, openSubmenus, toggleSubmenu, closeSidebar }) => {
     const hasSubmenu = item.submenu && item.submenu.length > 0;
     const isActive = pathname === item.href ||
         (hasSubmenu && item.submenu.some(sub => sub.href === pathname));
+
+    const handleClick = () => {
+        if (!hasSubmenu) {
+            closeSidebar(); // Close sidebar when clicking a non-submenu item on mobile
+        }
+    };
 
     return (
         <li className={styles.menuItem}>
@@ -158,6 +120,7 @@ const MenuItem = ({ item, pathname, openSubmenus, toggleSubmenu }) => {
                                     <Link
                                         href={subItem.href}
                                         className={`${styles.submenuLink} ${pathname === subItem.href ? styles.submenuLinkActive : ''}`}
+                                        onClick={closeSidebar}
                                     >
                                         {subItem.label}
                                     </Link>
@@ -170,6 +133,7 @@ const MenuItem = ({ item, pathname, openSubmenus, toggleSubmenu }) => {
                 <Link
                     href={item.href}
                     className={`${styles.menuLink} ${isActive ? styles.menuLinkActive : ''}`}
+                    onClick={handleClick}
                 >
                     <span className={styles.menuIcon}>{item.icon}</span>
                     <span className={styles.menuText}>{item.label}</span>
@@ -179,7 +143,7 @@ const MenuItem = ({ item, pathname, openSubmenus, toggleSubmenu }) => {
     );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ closeSidebar }) => {
     const pathname = usePathname();
     const [openSubmenus, setOpenSubmenus] = useState({
         users: false,
@@ -197,6 +161,10 @@ const Sidebar = () => {
 
     return (
         <aside className={styles.sidebar}>
+            <div className={styles.sidebarHeader}>
+                <h3 className={styles.sidebarTitle}>Navigation</h3>
+            </div>
+
             {menuItems.map((section, index) => (
                 <div key={index}>
                     <div className={styles.menuTitle}>{section.title}</div>
@@ -208,6 +176,7 @@ const Sidebar = () => {
                                 pathname={pathname}
                                 openSubmenus={openSubmenus}
                                 toggleSubmenu={toggleSubmenu}
+                                closeSidebar={closeSidebar}
                             />
                         ))}
                     </ul>

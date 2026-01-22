@@ -1,8 +1,6 @@
-import styles from '@/styles/dashboard.module.css';
-
 const DashboardPage = () => {
     return (
-        <div className={styles.dashboardContent}>
+        <div>
             <h1>Welcome to LifeHub Dashboard</h1>
             <p>This is your main dashboard. You can add widgets, charts, and other components here.</p>
 

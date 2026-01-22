@@ -22,6 +22,7 @@ import styles from '@/styles/travelspots/spotcategory/SpotCategoryForm.module.cs
 const SpotCategoryForm = ({
     initialData = {},
     onSubmit,
+    onBackendError,
     isSubmitting = false,
     mode = 'create' // 'create' or 'edit'
 }) => {
@@ -59,6 +60,12 @@ const SpotCategoryForm = ({
             });
         }
     }, [mode, initialData, reset, resetSlug]);
+
+    useEffect(() => {
+        if (onBackendError) {
+            onBackendError(form);
+        }
+    }, [form, onBackendError]);
 
     const isSlugValid = (value) =>
         /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);

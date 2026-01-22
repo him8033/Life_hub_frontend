@@ -1,18 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { FiUser, FiLogOut, FiSettings, FiEye } from 'react-icons/fi';
+import { FiUser, FiLogOut, FiSettings, FiEye, FiMenu, FiX } from 'react-icons/fi';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import PopupMenu from '@/components/Application/PopupMenu';
-import styles from '@/styles/dashboard.module.css';
+import styles from '@/styles/dashboard/Header.module.css';
 import { useRouter } from "next/navigation";
 import { ROUTES } from '@/routes/routes.constants';
 import { tokenService } from '@/services/auth/token.service';
 
-const Header = () => {
+const Header = ({ toggleSidebar, sidebarOpen }) => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const router = useRouter();
     const [userData, setUserData] = useState(null);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 1024);
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     useEffect(() => {
         const { user } = tokenService.get();
@@ -34,20 +46,27 @@ const Header = () => {
     };
 
     const handleProfileView = () => {
-        // Navigate to profile page
         router.push(ROUTES.DASHBOARD.PROFILE);
         setIsPopupOpen(false);
     };
 
-    const handleResetPassword = () => {
-        // Navigate to reset password page
+    const handleChangePassword = () => {
         router.push(ROUTES.AUTH.CHANGE_PASSWORD);
         setIsPopupOpen(false);
     };
 
     return (
         <header className={styles.header}>
-            <div className={styles.headerCenter}>
+            <div className={styles.headerLeft}>
+                {isMobile && (
+                    <button
+                        className={styles.mobileMenuButton}
+                        onClick={toggleSidebar}
+                        aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+                    >
+                        {sidebarOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+                    </button>
+                )}
                 <div className={styles.logo}>
                     <AiOutlineDashboard className={styles.logoIcon} />
                     <span>LifeHub</span>
@@ -60,7 +79,6 @@ const Header = () => {
                     onClick={() => setIsPopupOpen(!isPopupOpen)}
                     title={`${userData.name} (${userData.role})`}
                 >
-                    {/* You can replace this with an actual image */}
                     <div className={styles.avatarPreview}>
                         {userData.avatar ? (
                             <img
@@ -78,7 +96,7 @@ const Header = () => {
                     isOpen={isPopupOpen}
                     onClose={() => setIsPopupOpen(false)}
                 >
-                    {/* User Info Section */}
+                    {/* User Info Section - Same as before */}
                     <div className={styles.userInfoSection}>
                         <div className={styles.userAvatar}>
                             {userData.avatar ? (
@@ -103,7 +121,7 @@ const Header = () => {
 
                     <div className={styles.popupDivider} />
 
-                    {/* Menu Items */}
+                    {/* Menu Items - Same as before */}
                     <ul className={styles.popupList}>
                         <li className={styles.popupItem}>
                             <button
@@ -117,12 +135,12 @@ const Header = () => {
                         </li>
                         <li className={styles.popupItem}>
                             <button
-                                onClick={handleResetPassword}
+                                onClick={handleChangePassword}
                                 className={styles.popupLink}
                                 style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                             >
                                 <FiSettings className={styles.popupIcon} />
-                                Reset Password
+                                Change Password
                             </button>
                         </li>
                         <div className={styles.popupDivider} />

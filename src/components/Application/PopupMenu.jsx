@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import styles from '@/styles/dashboard.module.css';
+import styles from '@/styles/application/PopupMenu.module.css';
 
 const PopupMenu = ({ isOpen, onClose, children }) => {
     const popupRef = useRef(null);
