@@ -5,6 +5,7 @@ export const ROUTES = {
         TRAVELSPOT: {
             VIEW: (slug) => `/travelspots/${slug}`,
         },
+        LOCATIONFINDER: '/locations',
         ABOUT: '/about',
         SERVICES: '/services',
         CONTACT: '/contact',

@@ -5,7 +5,7 @@ class TokenService {
     store({ access, refresh, user }) {
         if (!access) return;
         Cookies.set("access_token", access, {
-            expires: 1, // 1 day
+            expires: 7, // 7 day
             sameSite: "Strict",
             path: "/",
         });

@@ -10,6 +10,7 @@ import { ROUTES } from '@/routes/routes.constants';
 import Loader from '@/components/common/Loader';
 import ErrorState from '@/components/common/ErrorState';
 import NotFoundState from '@/components/common/NotFoundState';
+import TravelSpotMultiStepForm from '@/components/travelspots/TravelSpotMultiStepForm';
 
 export default function EditTravelSpotPage() {
     const router = useRouter();
@@ -114,6 +115,13 @@ export default function EditTravelSpotPage() {
                     isSubmitting={isSubmitting}
                     mode="edit"
                 />
+                {/* <TravelSpotMultiStepForm
+                    initialData={travelSpot}
+                    onSubmit={handleSubmit}
+                    onBackendError={(form) => (formRef = form)}
+                    isSubmitting={isSubmitting}
+                    mode="edit"
+                /> */}
             </div>
         </div>
     );

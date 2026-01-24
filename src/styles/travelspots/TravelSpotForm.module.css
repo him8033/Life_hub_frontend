@@ -49,11 +49,23 @@
 }
 
 .label {
-    display: block;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
     font-size: 14px;
     font-weight: 600;
     color: #374151;
     margin-bottom: 0.25rem;
+}
+
+.label svg {
+    margin-right: 6px !important;
+    flex-shrink: 0 !important;
+}
+
+/* Ensure proper form item spacing */
+.formItem {
+    margin-bottom: 20px;
 }
 
 .coordinateLabel {
@@ -327,3 +339,282 @@
         padding-top: 1.25rem;
     }
 }
+
+.fieldIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+}
+
+/* Pricing & Timing section specific styles */
+.pricingTimingSection {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.sectionHeading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+}
+
+.sectionIcon {
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+.sectionDescription {
+    color: #64748b;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.formGroup {
+    flex: 1;
+}
+
+/* Input with icon */
+.inputWithIcon {
+    position: relative;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    pointer-events: none;
+}
+
+.inputIcon~input {
+    padding-left: 40px;
+}
+
+/* Time fields alignment */
+.timeFields {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.timeField {
+    flex: 1;
+}
+
+/* Coordinate section styling */
+.coordinatesSection {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+
+
+/* 23 Jan */
+/* Multi-step form styles */
+.multiStepForm {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stepsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.stepWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.stepCircle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.stepCircle.activeStep {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.stepIcon {
+    width: 20px;
+    height: 20px;
+}
+
+.stepNumber {
+    font-size: 16px;
+}
+
+.stepTitle {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stepTitle.activeStepTitle {
+    color: #3b82f6;
+    font-weight: 500;
+}
+
+.stepIconEmoji {
+    margin-right: 6px;
+    font-size: 16px;
+}
+
+.stepConnector {
+    position: absolute;
+    top: 20px;
+    left: calc(50% + 20px);
+    right: calc(-50% + 20px);
+    height: 2px;
+    background-color: #e5e7eb;
+    z-index: 0;
+}
+
+.formContainer {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 32px;
+}
+
+.stepContent {
+    min-height: 400px;
+}
+
+.stepTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.stepDescription {
+    color: #6b7280;
+    margin-bottom: 32px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.formNavigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 40px;
+}
+
+.navigationRight {
+    margin-left: auto;
+}
+
+.nextButton {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.nextButton:hover:not(:disabled) {
+    background-color: #2563eb;
+}
+
+.nextButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.secondaryButton {
+    background: none;
+    border: 1px solid #d1d5db;
+    color: #4b5563;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.secondaryButton:hover:not(:disabled) {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.stepIndicator {
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .stepsContainer {
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .stepWrapper {
+        flex: 0 0 calc(50% - 20px);
+        margin-bottom: 20px;
+    }
+
+    .stepConnector {
+        display: none;
+    }
+
+    .formNavigation {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .navigationRight {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .nextButton,
+    .secondaryButton {
+        width: 100%;
+    }
+}
+
+/* Existing form styles remain the same */
+/* ... your existing form styles ... */

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -28,7 +28,7 @@ import ButtonLoading from '@/components/Application/ButtonLoading';
 import styles from '@/styles/travelspots/TravelSpotForm.module.css';
 import useSlugGenerator from '@/hooks/useSlugGenerator';
 import { travelspotSchema } from '@/lib/validations/travelspotSchema';
-import { FiCheck } from 'react-icons/fi';
+import { FiCheck, FiClock, FiDollarSign, FiCalendar } from 'react-icons/fi';
 import { useGetPublicSpotCategoriesQuery } from '@/services/api/spotcategoryApi';
 import ReactMultiSelect from '@/components/ui/ReactMultiSelect';
 
@@ -39,8 +39,6 @@ export default function TravelSpotForm({
     isSubmitting = false,
     mode = 'create'
 }) {
-    const { slug, generateFrom, updateManually, reset: resetSlug, } = useSlugGenerator(initialData.slug);
-
     // Fetch categories
     const { data: categoriesData, isLoading: isLoadingCategories } = useGetPublicSpotCategoriesQuery();
 
@@ -51,52 +49,76 @@ export default function TravelSpotForm({
         // count: cat.spotCount || 0,
     })) || [];
 
-    const form = useForm({
-        resolver: zodResolver(travelspotSchema),
-        defaultValues: {
+    const getDefaultValues = useMemo(() => {
+        if (mode === 'edit' && initialData?.slug) {
+            return {
+                name: initialData.name || '',
+                slug: initialData.slug || '',
+                short_description: initialData.short_description || '',
+                long_description: initialData.long_description || '',
+                full_address: initialData.full_address || '',
+                city: initialData.city || 'Delhi',
+                latitude: initialData.latitude ? String(initialData.latitude) : '',
+                longitude: initialData.longitude ? String(initialData.longitude) : '',
+                categories: initialData.category_details
+                    ? initialData.category_details.map(cat => cat.spotcategory_id)
+                    : [],
+                entry_fee: initialData.entry_fee || '',
+                opening_time: initialData.opening_time
+                    ? initialData.opening_time.slice(0, 5)
+                    : '',
+                closing_time: initialData.closing_time
+                    ? initialData.closing_time.slice(0, 5)
+                    : '',
+                best_time_to_visit: initialData.best_time_to_visit || '',
+            };
+        }
+
+        // Create mode defaults
+        return {
             name: '',
             slug: '',
             short_description: '',
+            long_description: '',
             full_address: '',
             city: 'Delhi',
             latitude: '',
             longitude: '',
             categories: [],
-        },
+            entry_fee: '',
+            opening_time: '',
+            closing_time: '',
+            best_time_to_visit: '',
+        };
+    }, [mode, initialData]); // Add all necessary dependencies
+
+    const form = useForm({
+        resolver: zodResolver(travelspotSchema),
+        defaultValues: getDefaultValues,
     });
 
     const {
         handleSubmit,
         setValue,
         watch,
-        reset,
         formState: { errors },
     } = form;
 
     // Watch description for character count
     const shortDescription = watch('short_description') || '';
+    const longDescription = watch('long_description') || '';
 
-    /* Sync slug hook → form */
-    useEffect(() => {
-        setValue('slug', slug);
-    }, [slug, setValue]);
+    // Use useSlugGenerator differently for edit mode
+    const { slug, generateFrom, updateManually } = useSlugGenerator(
+        mode === 'edit' ? initialData.slug || '' : ''
+    );
 
-    /* Edit mode prefill */
+    // Sync slug only in create mode or when manually updated
     useEffect(() => {
-        if (mode === 'edit' && initialData?.slug) {
-            resetSlug(initialData.slug);
-            form.reset({
-                name: initialData.name || '',
-                slug: initialData.slug || '',
-                short_description: initialData.short_description || '',
-                full_address: initialData.full_address || '',
-                city: initialData.city || 'Delhi',
-                latitude: initialData.latitude || '',
-                longitude: initialData.longitude || '',
-                categories: initialData.categories || [],
-            });
+        if (mode === 'create') {
+            setValue('slug', slug);
         }
-    }, [mode, initialData, reset, resetSlug]);
+    }, [slug, setValue, mode]);
 
     useEffect(() => {
         if (onBackendError) {
@@ -115,6 +137,16 @@ export default function TravelSpotForm({
         'Visakhapatnam', 'Vadodara', 'Firozabad', 'Ludhiana', 'Rajkot',
         'Siliguri', 'Nashik', 'Faridabad', 'Patiala', 'Meerut'
     ].sort();
+
+    // Time options for opening/closing time
+    const timeOptions = [];
+    for (let hour = 0; hour < 24; hour++) {
+        for (let minute = 0; minute < 60; minute += 30) {
+            const hourStr = hour.toString().padStart(2, '0');
+            const minuteStr = minute.toString().padStart(2, '0');
+            timeOptions.push(`${hourStr}:${minuteStr}`);
+        }
+    }
 
     return (
         <Form {...form}>
@@ -262,8 +294,8 @@ export default function TravelSpotForm({
                                         </FormDescription>
                                     </div>
                                     <Select
+                                        value={field.value || ""}
                                         onValueChange={field.onChange}
-                                        defaultValue={field.value}
                                         disabled={isSubmitting}
                                     >
                                         <FormControl>
@@ -327,6 +359,40 @@ export default function TravelSpotForm({
                     />
                 </div>
 
+                {/* Long Description */}
+                <div className={styles.formSection}>
+                    <FormField
+                        control={form.control}
+                        name="long_description"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className={styles.labelContainer}>
+                                    <FormLabel className={styles.sectionLabel}>
+                                        Long Description
+                                    </FormLabel>
+                                    <FormDescription className={styles.fieldInfo}>
+                                        Detailed description with highlights, history, etc.
+                                    </FormDescription>
+                                </div>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder="Enter detailed description about the travel spot..."
+                                        className={styles.textarea}
+                                        rows={5}
+                                        maxLength={5000}
+                                        {...field}
+                                        disabled={isSubmitting}
+                                    />
+                                </FormControl>
+                                <div className={styles.charCount}>
+                                    {longDescription.length}/5000 characters
+                                </div>
+                                <FormMessage className={styles.errorMessage} />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
                 {/* Full Address */}
                 <div className={styles.formSection}>
                     <FormField
@@ -355,6 +421,167 @@ export default function TravelSpotForm({
                             </FormItem>
                         )}
                     />
+                </div>
+
+                {/* Pricing & Timing Section */}
+                <div className={styles.pricingTimingSection}>
+                    <div className={styles.labelContainer}>
+                        <h3 className={styles.sectionHeading}>
+                            <FiDollarSign className={styles.sectionIcon} />
+                            Pricing & Timing
+                        </h3>
+                        <p className={styles.sectionDescription}>
+                            Information about entry fee and visiting hours
+                        </p>
+                    </div>
+
+                    <div className={styles.formRow}>
+                        {/* Entry Fee */}
+                        <div className={styles.formGroup}>
+                            <FormField
+                                control={form.control}
+                                name="entry_fee"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className={styles.label}>
+                                            <FiDollarSign className={styles.fieldIcon} />
+                                            Entry Fee (₹)
+                                        </FormLabel>
+                                        <div className={styles.inputWithIcon}>
+                                            <FiDollarSign className={styles.inputIcon} />
+                                            <FormControl>
+                                                <Input
+                                                    type="text"
+                                                    placeholder="e.g., 50, 100.50, or Free"
+                                                    {...field}
+                                                    className={styles.input}
+                                                    disabled={isSubmitting}
+                                                />
+                                            </FormControl>
+                                        </div>
+                                        <p className={styles.helperText}>
+                                            Enter amount in rupees or 'Free'
+                                        </p>
+                                        <FormMessage className={styles.errorMessage} />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        {/* Best Time to Visit */}
+                        <div className={styles.formGroup}>
+                            <FormField
+                                control={form.control}
+                                name="best_time_to_visit"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className={styles.label}>
+                                            <FiCalendar className={styles.fieldIcon} />
+                                            Best Time to Visit
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="e.g., October to March, Early morning"
+                                                {...field}
+                                                className={styles.input}
+                                                disabled={isSubmitting}
+                                            />
+                                        </FormControl>
+                                        <p className={styles.helperText}>
+                                            Recommended season/time for visiting
+                                        </p>
+                                        <FormMessage className={styles.errorMessage} />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.timeFields}>
+                        {/* Opening Time */}
+                        <div className={styles.timeField}>
+                            <FormField
+                                control={form.control}
+                                name="opening_time"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className={styles.label}>
+                                            <FiClock className={styles.fieldIcon} />
+                                            Opening Time
+                                        </FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            value={field.value || ""}
+                                            disabled={isSubmitting}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className={styles.select}>
+                                                    <SelectValue placeholder="Select opening time">
+                                                        {field.value || "Select opening time"}
+                                                    </SelectValue>
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent className={styles.selectContent}>
+                                                <SelectItem value="not_specified" className={styles.selectItem}>Not specified</SelectItem>
+                                                {timeOptions.map((time) => (
+                                                    <SelectItem
+                                                        key={`open-${time}`}
+                                                        value={time}
+                                                        className={styles.selectItem}
+                                                    >
+                                                        {time}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage className={styles.errorMessage} />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        {/* Closing Time */}
+                        <div className={styles.timeField}>
+                            <FormField
+                                control={form.control}
+                                name="closing_time"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className={styles.label}>
+                                            <FiClock className={styles.fieldIcon} />
+                                            Closing Time
+                                        </FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            value={field.value || ""}
+                                            disabled={isSubmitting}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className={styles.select}>
+                                                    <SelectValue placeholder="Select closing time">
+                                                        {field.value || "Select closing time"}
+                                                    </SelectValue>
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent className={styles.selectContent}>
+                                                <SelectItem value="not_specified" className={styles.selectItem}>Not specified</SelectItem>
+                                                {timeOptions.map((time) => (
+                                                    <SelectItem
+                                                        key={`close-${time}`}
+                                                        value={time}
+                                                        className={styles.selectItem}
+                                                    >
+                                                        {time}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage className={styles.errorMessage} />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Latitude and Longitude */}

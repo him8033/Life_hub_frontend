@@ -7,6 +7,7 @@ import listingStyles from '@/styles/common/Listing.module.css';
 import { useCreateTravelSpotMutation } from '@/services/api/travelspotApi';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { ROUTES } from '@/routes/routes.constants';
+import TravelSpotMultiStepForm from '@/components/travelspots/TravelSpotMultiStepForm';
 
 export default function CreateTravelSpotPage() {
     const router = useRouter();
@@ -54,6 +55,13 @@ export default function CreateTravelSpotPage() {
                     isSubmitting={isLoading}
                     mode="create"
                 />
+
+                {/* <TravelSpotMultiStepForm
+                    onSubmit={handleSubmit}
+                    onBackendError={(form) => (formRef = form)}
+                    isSubmitting={isLoading}
+                    mode="edit"
+                /> */}
             </div>
         </div>
     );

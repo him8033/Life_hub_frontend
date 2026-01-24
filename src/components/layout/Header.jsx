@@ -90,6 +90,14 @@ export default function Header() {
                         </li>
                         <li>
                             <Link
+                                href={ROUTES.PUBLIC.LOCATIONFINDER}
+                                className={`${styles.navLink} ${isActive(ROUTES.PUBLIC.LOCATIONFINDER)}`}
+                            >
+                                Pincode Finder
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
                                 href="/about"
                                 className={`${styles.navLink} ${isActive('/about')}`}
                             >

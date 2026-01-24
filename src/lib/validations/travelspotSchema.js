@@ -15,6 +15,12 @@ export const travelspotSchema = z.object({
         .optional()
         .or(z.literal('')),
 
+    long_description: z.string()
+        .min(50, 'Long description must be at least 50 characters')
+        .max(5000, 'Long description cannot exceed 5000 characters')
+        .optional()
+        .default(''),
+
     full_address: z.string()
         .max(1000, 'Address cannot exceed 1000 characters')
         .optional()
@@ -24,6 +30,27 @@ export const travelspotSchema = z.object({
         .default('Delhi'),
 
     categories: z.array(z.string()).optional(),
+
+    entry_fee: z.string()
+        .regex(/^\d*\.?\d*$/, 'Enter a valid number for entry fee')
+        .optional()
+        .default(''), // Changed this line
+
+    opening_time: z.string()
+        .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Enter time in HH:MM format (24-hour)')
+        .optional()
+        .default(''), // Changed this line
+
+    closing_time: z.string()
+        .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Enter time in HH:MM format (24-hour)')
+        .optional()
+        .default(''), // Changed this line
+
+    best_time_to_visit: z.string()
+        .min(5, 'Best time to visit must be at least 5 characters')
+        .max(100, 'Best time to visit cannot exceed 100 characters')
+        .optional()
+        .default(''), // Changed this line
 
     latitude: z.string()
         .refine((val) => !val || (!isNaN(parseFloat(val)) && parseFloat(val) >= -90 && parseFloat(val) <= 90), {
