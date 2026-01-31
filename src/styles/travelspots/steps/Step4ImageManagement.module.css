@@ -1,0 +1,701 @@
+/* styles/travelspots/steps/Step4ImageManagement.module.css */
+
+.stepContainer {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: var(--background);
+    border-radius: 12px;
+}
+
+.stepHeader {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.headerContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.stepTitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.stepDescription {
+    font-size: 1rem;
+    color: var(--muted-foreground);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Stats Container */
+.statsContainer {
+    display: flex;
+    gap: 2rem;
+    margin-top: 0.5rem;
+}
+
+.statItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.statLabel {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+.statValue {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-50);
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+}
+
+/* Content Section */
+.contentSection {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+/* Upload Section */
+.uploadSection {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.uploadHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.uploadHeader .sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.titleIcon {
+    color: var(--primary);
+}
+
+.uploadHint {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    background: var(--muted);
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+}
+
+/* Upload Container - Side by side */
+.uploadContainer {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.uploadLeft {
+    min-height: 200px;
+}
+
+.uploadRight {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Caption Container */
+.captionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.captionLabel {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.captionInput {
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Upload Actions */
+.uploadActions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.uploadButton {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    min-width: 160px;
+}
+
+.buttonIcon {
+    font-size: 1rem;
+}
+
+.uploadNote {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+.fileInfo {
+    font-size: 0.75rem;
+    color: var(--primary);
+    background: var(--primary-50);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Images List Section */
+.imagesListSection {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.listHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.listHeader .sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.listControls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.controlHint {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+.primaryNote {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--warning);
+    background: var(--warning-50);
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+}
+
+.primaryBadge {
+    color: var(--warning);
+}
+
+/* Images Grid - 5 columns on laptop */
+.imagesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    overflow: visible;
+    margin-bottom: 1.5rem;
+}
+
+.gridItem {
+    transition: transform 0.2s ease;
+    position: relative;
+    overflow: visible !important;
+}
+
+.gridItem:hover {
+    transform: translateY(-4px);
+    position: relative;
+    overflow: visible !important;
+}
+
+/* Loading State */
+.loadingState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 4rem;
+    color: var(--muted-foreground);
+}
+
+.loadingSpinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Empty State */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 3rem;
+    text-align: center;
+    background: var(--muted);
+    border-radius: 12px;
+    border: 2px dashed var(--border);
+}
+
+.emptyIllustration {
+    font-size: 3rem;
+    opacity: 0.5;
+}
+
+.emptyContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 400px;
+}
+
+.emptyTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.emptyDescription {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Navigation Actions */
+.navigationActions {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+}
+
+.rightActions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.cancelButton {
+    padding: 0.75rem 1.5rem;
+}
+
+.nextButton {
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+}
+
+.nextButton:hover:not(:disabled) {
+    background: var(--primary-600);
+}
+
+/* Responsive Design */
+@media (min-width: 1200px) {
+    .imagesGrid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 1199px) {
+    .imagesGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .uploadContainer {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .uploadLeft {
+        max-width: 200px;
+    }
+
+    .imagesGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stepContainer {
+        padding: 1.5rem;
+    }
+
+    .uploadSection,
+    .imagesListSection {
+        padding: 1.25rem;
+    }
+
+    .statsContainer {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .listHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .listControls {
+        align-items: flex-start;
+    }
+
+    .imagesGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .actionButtons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .rightActions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .backButton,
+    .cancelButton,
+    .nextButton {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .imagesGrid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stepTitle {
+        font-size: 1.5rem;
+    }
+}
+
+/* Add to Step4ImageManagement.module.css */
+
+/* Edit Modal Styles */
+.editModal {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.editModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.editModalHeader h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.closeButton:hover {
+    color: #111827;
+    background-color: #f3f4f6;
+}
+
+.editModalContent {
+    padding: 24px;
+}
+
+/* Section Styles */
+.sectionSubtitle {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 12px;
+    display: block;
+}
+
+/* Current Image Section */
+.currentImageSection {
+    margin-bottom: 24px;
+}
+
+.currentImagePreview {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f9fafb;
+}
+
+.currentImage {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.currentImageInfo {
+    padding: 12px;
+    background-color: white;
+    border-top: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.imageInfoText {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Replace Image Section */
+.replaceImageSection {
+    margin-bottom: 24px;
+}
+
+.replaceImageContainer {
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f9fafb;
+    transition: border-color 0.2s;
+}
+
+.replaceImageContainer:hover {
+    border-color: #9ca3af;
+}
+
+.editImagePreview {
+    position: relative;
+}
+
+.previewImage {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.removeImageButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background-color 0.2s;
+}
+
+.removeImageButton:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.editImageUpload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.uploadHint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+    margin-top: 8px;
+}
+
+/* Caption Section */
+.captionSection {
+    margin-bottom: 24px;
+}
+
+.editTextarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 80px;
+    max-height: 200px;
+}
+
+.captionHint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 6px;
+}
+
+/* Edit Modal Actions */
+.editModalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.saveButton {
+    min-width: 120px;
+}
+
+.buttonSpinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Make SquareImageUpload compact for modal */
+.compactUpload {
+    padding: 12px;
+}
+
+.compactUpload .uploadArea {
+    min-height: 80px;
+}
+
+/* Modal Overlay */
+.editModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

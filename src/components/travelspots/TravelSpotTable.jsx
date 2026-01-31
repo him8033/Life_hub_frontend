@@ -36,12 +36,12 @@ export default function TravelSpotTable({
                                     <div className={listingStyles.slug}>{spot.slug}</div>
                                 </div>
                             </td>
-                            <td>{spot.city || 'N/A'}</td>
+                            <td>{spot.location.sub_district || 'N/A'}</td>
                             <td>
                                 <button
                                     type="button"
                                     className={spot.is_active ? listingStyles.statusActive : listingStyles.statusInactive}
-                                    onClick={() => !isLoading && onToggleStatus(spot.slug, spot.is_active, spot.name)}
+                                    onClick={() => !isLoading && onToggleStatus(spot.travelspot_id, spot.is_active, spot.name)}
                                     style={{
                                         cursor: isLoading ? 'not-allowed' : 'pointer',
                                         opacity: isLoading ? 0.7 : 1
@@ -71,7 +71,7 @@ export default function TravelSpotTable({
                                         <FaEdit />
                                     </button>
                                     <button
-                                        onClick={() => !isLoading && onDelete(spot.slug, spot.name)}
+                                        onClick={() => !isLoading && onDelete(spot.travelspot_id, spot.name)}
                                         className={`${listingStyles.actionButton} ${listingStyles.deleteButton}`}
                                         title="Delete"
                                         disabled={isLoading}

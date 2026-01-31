@@ -31,8 +31,8 @@ export const ROUTES = {
             SPOTCATEGORY: {
                 LIST: '/dashboard/travelspots/spotcategory',
                 CREATE: '/dashboard/travelspots/spotcategory/create',
-                EDIT: (slug) => `/dashboard/travelspots/spotcategory/edit/${slug}`,
-                VIEW: (slug) => `/dashboard/travelspots/spotcategory/view/${slug}`,
+                EDIT: (travelspot_id) => `/dashboard/travelspots/spotcategory/edit/${travelspot_id}`,
+                VIEW: (travelspot_id) => `/dashboard/travelspots/spotcategory/view/${travelspot_id}`,
             },
         },
     },

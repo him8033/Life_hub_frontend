@@ -1,0 +1,402 @@
+.stepContainer {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.stepHeader {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.stepTitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.stepDescription {
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Form Styles */
+.form {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.formSection {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.sectionHeader {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sectionSubtitle {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Form Groups */
+.formGroup {
+    margin-bottom: 1.25rem;
+}
+
+.formGroup:last-child {
+    margin-bottom: 0;
+}
+
+.labelContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 0.5rem;
+}
+
+.label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.required {
+    color: #dc2626;
+}
+
+.fieldInfo {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Input Fields */
+.input,
+.textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    background: white;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.input:focus,
+.textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input:disabled,
+.textarea:disabled {
+    background-color: #f9fafb;
+    cursor: not-allowed;
+    color: #6b7280;
+}
+
+/* Pricing Section */
+.pricingSection {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.pricingRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.feeInputContainer {
+    position: relative;
+}
+
+.currencySymbol {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.feeInput {
+    padding-left: 2.5rem;
+}
+
+.freeCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.checkboxLabel {
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Timing Section */
+.timingSection {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.timingRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.timeField {
+    display: flex;
+    flex-direction: column;
+}
+
+.timeSelect {
+    width: 100%;
+}
+
+.selectItem {
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.selectItem:hover {
+    background-color: #f3f4f6;
+}
+
+.selectItem[data-state="checked"] {
+    background-color: #f5f3ff;
+    color: #4F46E5;
+    font-weight: 500;
+}
+
+/* Season Section */
+.seasonSection {
+    margin-top: 1rem;
+}
+
+.seasonInput {
+    width: 100%;
+}
+
+/* Helper Text */
+.helperText {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
+/* Character Count */
+.charCount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.charCountText {
+    color: #6b7280;
+}
+
+.charCountLimit {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.charCountNearLimit {
+    color: #d97706;
+}
+
+.charCountGood {
+    color: #059669;
+}
+
+/* Form Actions */
+.formActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.backButton {
+    padding: 0.75rem 1.5rem;
+    background: white;
+    color: #374151;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.backButton:hover:not(:disabled) {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.backButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.nextButton {
+    padding: 0.75rem 2rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nextButton:hover:not(:disabled) {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.nextButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Loading State */
+.loadingButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error Messages */
+.errorMessage {
+    font-size: 0.75rem;
+    color: #dc2626;
+    margin-top: 0.25rem;
+    word-break: break-word;
+}
+
+/* Icon Styles */
+.icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+/* Checkbox Styles */
+.checkbox {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.checkbox:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+/* Time Options */
+.timeOptions {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stepContainer {
+        padding: 0 1rem;
+    }
+
+    .pricingRow,
+    .timingRow {
+        grid-template-columns: 1fr;
+    }
+
+    .formActions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .backButton,
+    .nextButton {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Free Entry Badge */
+.freeBadge {
+    display: inline-block;
+    background: #10b981;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}

@@ -29,7 +29,7 @@ export default function TravelSpotsPage() {
 
     const travelSpots = data?.data || [];
 
-    const handleDelete = async (slug, name) => {
+    const handleDelete = async (travelspot_id, name) => {
         try {
             setIsDeleting(true);
             const ok = await confirm({
@@ -46,7 +46,7 @@ export default function TravelSpotsPage() {
                 return;
             }
 
-            const res = await deleteTravelSpot(slug).unwrap();
+            const res = await deleteTravelSpot(travelspot_id).unwrap();
             showSnackbar(res?.message || 'Travel spot deleted successfully', 'success', 5000);
             refetch();
         } catch (error) {
@@ -62,7 +62,7 @@ export default function TravelSpotsPage() {
         }
     };
 
-    const handleToggleStatus = async (slug, currentStatus, name) => {
+    const handleToggleStatus = async (travelspot_id, currentStatus, name) => {
         try {
             setIsToggling(true);
             const ok = await confirm({
@@ -82,7 +82,7 @@ export default function TravelSpotsPage() {
             }
 
             const res = await updateTravelSpot({
-                slug,
+                travelspot_id,
                 data: { is_active: !currentStatus },
             }).unwrap();
 
@@ -247,8 +247,8 @@ export default function TravelSpotsPage() {
                         travelSpots={filteredTravelSpots}
                         onDelete={handleDelete}
                         onToggleStatus={handleToggleStatus}
-                        onEdit={(slug) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.EDIT(slug))}
-                        onView={(slug) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.VIEW(slug))}
+                        onEdit={(travelspot_id) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.EDIT(travelspot_id))}
+                        onView={(travelspot_id) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.VIEW(travelspot_id))}
                         isLoading={isDeleting || isToggling}
                     />
                 )}

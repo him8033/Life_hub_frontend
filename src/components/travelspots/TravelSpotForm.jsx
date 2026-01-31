@@ -203,18 +203,21 @@ export default function TravelSpotForm({
                                                 URL-friendly identifier
                                             </FormDescription>
                                         </div>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="e.g., lotus-temple"
-                                                {...field}
-                                                onChange={(e) => {
-                                                    field.onChange(e);
-                                                    updateManually(e.target.value);
-                                                }}
-                                                className={styles.input}
-                                                disabled={isSubmitting}
-                                            />
-                                        </FormControl>
+                                        <div className={styles.slugContainer}>
+                                            <span className={styles.slugPrefix}>travelhub.com/</span>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="e.g., lotus-temple"
+                                                    {...field}
+                                                    onChange={(e) => {
+                                                        field.onChange(e);
+                                                        updateManually(e.target.value);
+                                                    }}
+                                                    className={styles.input}
+                                                    disabled={isSubmitting}
+                                                />
+                                            </FormControl>
+                                        </div>
 
                                         {/* Slug Validation */}
                                         {field.value && (

@@ -2,24 +2,25 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Step1BasicInfo from '@/components/travelspots/steps/Step1BasicInfo';
+import TravelSpotForm from '@/components/travelspots/TravelSpotForm';
 import listingStyles from '@/styles/common/Listing.module.css';
-import { useCreateBasicInfoMutation } from '@/services/api/travelspotApi';
+import { useCreateTravelSpotMutation } from '@/services/api/travelspotApi';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { ROUTES } from '@/routes/routes.constants';
+import TravelSpotMultiStepForm from '@/components/travelspots/TravelSpotMultiStepForm';
 
 export default function CreateTravelSpotPage() {
     const router = useRouter();
     const { showSnackbar } = useSnackbar();
-    const [createBasicInfo, { isLoading }] = useCreateBasicInfoMutation();
+    const [createTravelSpot, { isLoading }] = useCreateTravelSpotMutation();
     let formRef = null;
 
-    const handleStep1Submit = async (formData) => {
+    const handleSubmit = async (formData) => {
         if (isLoading) return;
         try {
-            const res = await createBasicInfo(formData).unwrap();
+            const res = await createTravelSpot(formData).unwrap();
             showSnackbar(res.message, 'success', 5000);
-            router.push(ROUTES.DASHBOARD.TRAVELSPOT.EDIT(formData.slug));
+            router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST);
         } catch (error) {
             const backendErrors = error?.data?.errors;
 
@@ -37,30 +38,30 @@ export default function CreateTravelSpotPage() {
 
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
-            } else {
-                showSnackbar('Failed to save basic information', 'error', 3000);
             }
         }
-    };
-
-    const handleCancel = () => {
-        router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST);
     };
 
     return (
         <div className={listingStyles.listingContainer}>
             <div className={listingStyles.listingHeader}>
-                <h1 className={listingStyles.listingTitle}>Create Travel Spot</h1>
+                <h1 className={listingStyles.listingTitle}>Add New Travel Spot</h1>
             </div>
 
-            <div className={listingStyles.listingContent}>
-                <Step1BasicInfo
-                    onSubmit={handleStep1Submit}
+            <div style={{ padding: '24px' }}>
+                <TravelSpotForm
+                    onSubmit={handleSubmit}
                     onBackendError={(form) => (formRef = form)}
                     isSubmitting={isLoading}
-                    onCancel={handleCancel}
                     mode="create"
                 />
+
+                {/* <TravelSpotMultiStepForm
+                    onSubmit={handleSubmit}
+                    onBackendError={(form) => (formRef = form)}
+                    isSubmitting={isLoading}
+                    mode="edit"
+                /> */}
             </div>
         </div>
     );
