@@ -2,7 +2,7 @@
 
 import listingStyles from '@/styles/common/Listing.module.css';
 import { formatDateTime } from '@/utils/date.utils';
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function SpotCategoryTable({
     spotCategories,
@@ -19,6 +19,7 @@ export default function SpotCategoryTable({
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
+                        <th>Total Spots</th>
                         <th>Status</th>
                         <th>Created</th>
                         <th>Actions</th>
@@ -33,6 +34,11 @@ export default function SpotCategoryTable({
                                     <div className={listingStyles.name}>{category.name}</div>
                                     <div className={listingStyles.slug}>{category.slug}</div>
                                 </div>
+                            </td>
+                            <td>
+                                <span className={listingStyles.badge}>
+                                    {category.total_spots || 0}
+                                </span>
                             </td>
                             <td>
                                 <button

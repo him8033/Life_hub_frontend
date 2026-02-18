@@ -1,13 +1,11 @@
 /* Header Styles */
 
 .header {
-    background-color: var(--color-background);
-    /* Uses your theme's background */
+    background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
-    border-bottom: 1px solid var(--color-border);
 }
 
 .container {
@@ -35,8 +33,7 @@
 .logoText {
     font-size: 24px;
     font-weight: 800;
-    /* Updated to use your brand gradient variable */
-    background: var(--background-image-brand-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -65,8 +62,7 @@
 
 .navLink {
     text-decoration: none;
-    color: var(--color-muted-foreground);
-    /* Soft gray from theme */
+    color: #4b5563;
     font-weight: 500;
     font-size: 16px;
     padding: 8px 0;
@@ -75,13 +71,11 @@
 }
 
 .navLink:hover {
-    color: var(--color-foreground);
-    /* Darker text on hover */
+    color: #111827;
 }
 
 .navLink.active {
-    color: var(--color-primary);
-    /* Use your primary purple oklch */
+    color: #667eea;
 }
 
 .navLink.active::after {
@@ -91,7 +85,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--background-image-brand-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 2px;
 }
 
@@ -114,12 +108,12 @@
 
 .welcomeText {
     font-size: 14px;
-    color: var(--color-muted-foreground);
+    color: #6b7280;
 }
 
 .userName {
     font-weight: 600;
-    color: var(--color-foreground);
+    color: #111827;
 }
 
 .authButtons {
@@ -133,8 +127,7 @@
 .dashboardButton {
     padding: 8px 20px;
     border: none;
-    border-radius: var(--radius-md);
-    /* Use theme radius */
+    border-radius: 6px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -143,18 +136,18 @@
 
 .loginButton {
     background-color: transparent;
-    color: var(--color-foreground);
-    border: 1px solid var(--color-border);
+    color: #4b5563;
+    border: 1px solid #d1d5db;
 }
 
 .loginButton:hover {
-    background-color: var(--color-accent);
-    color: var(--color-accent-foreground);
+    background-color: #f9fafb;
+    border-color: #9ca3af;
 }
 
 .registerButton,
 .dashboardButton {
-    background: var(--background-image-brand-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
 }
 
@@ -162,17 +155,16 @@
 .dashboardButton:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    opacity: 0.9;
 }
 
 .logoutButton {
-    background-color: var(--color-destructive);
-    color: white;
-    /* Contrast better with oklch destructive red */
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
 }
 
 .logoutButton:hover {
-    filter: brightness(1.1);
+    background-color: #fecaca;
 }
 
 /* Mobile Menu Button */
@@ -192,7 +184,7 @@
 
 .menuIcon {
     font-size: 24px;
-    color: var(--color-foreground);
+    color: #4b5563;
 }
 
 /* Mobile Menu */
@@ -201,9 +193,9 @@
     top: 70px;
     left: 0;
     right: 0;
-    background-color: var(--color-background);
+    background-color: white;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid #e5e7eb;
     animation: slideDown 0.3s ease-out;
 }
 
@@ -233,16 +225,16 @@
     display: block;
     padding: 12px 0;
     text-decoration: none;
-    color: var(--color-muted-foreground);
+    color: #4b5563;
     font-weight: 500;
     font-size: 16px;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid #f3f4f6;
     transition: color 0.2s;
 }
 
 .mobileNavLink:hover,
 .mobileNavLink.active {
-    color: var(--color-primary);
+    color: #667eea;
 }
 
 .mobileAuthSection {
@@ -253,7 +245,17 @@
 
 .mobileUserInfo {
     padding: 12px 0;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.mobileWelcomeText {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.mobileUserName {
+    font-weight: 600;
+    color: #111827;
 }
 
 .mobileLoginButton,
@@ -263,7 +265,7 @@
     width: 100%;
     padding: 12px;
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: 6px;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
@@ -272,17 +274,22 @@
 
 .mobileLoginButton {
     background-color: transparent;
-    color: var(--color-foreground);
-    border: 1px solid var(--color-border);
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.mobileLoginButton:hover {
+    background-color: #f9fafb;
 }
 
 .mobileRegisterButton,
 .mobileDashboardButton {
-    background: var(--background-image-brand-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
 }
 
 .mobileLogoutButton {
-    background-color: var(--color-destructive);
-    color: white;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
 }

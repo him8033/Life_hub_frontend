@@ -8,6 +8,7 @@ export const travelspotApi = createApi({
     tagTypes: [
         "TravelSpotList",
         "TravelSpotDetail",
+        "TravelSpotVisitors",
     ],
 
     endpoints: (builder) => ({
@@ -17,10 +18,19 @@ export const travelspotApi = createApi({
         // =========================
 
         getPublicTravelSpots: builder.query({
-            query: () => ({
-                url: "travel-spots/",
+            query: (params = {}) => ({
+                url: '/travel-spots/',
+                params,
                 method: "GET",
             }),
+            transformResponse: (response) => {
+                return {
+                    results: response.data.results,
+                    next: response.data.next,
+                    previous: response.data.previous,
+                    count: response.data.results.length,
+                };
+            },
             providesTags: ["TravelSpotList"],
         }),
 
@@ -35,13 +45,42 @@ export const travelspotApi = createApi({
                     : [],
         }),
 
+        getNearbyTravelSpots: builder.query({
+            query: ({ slug, radius = 50, sort = 'distance', cursor = null }) => {
+                const params = { radius, sort };
+
+                if (cursor) {
+                    params.cursor = cursor;
+                }
+
+                return {
+                    url: `/travel-spots/${slug}/nearby/`,
+                    params
+                };
+            },
+        }),
+
         // =========================
         // ADMIN LEGACY CRUD
         // =========================
 
         getAdminTravelSpots: builder.query({
-            query: () => ({
+            query: (params = {}) => ({
                 url: "admin/travel-spots/",
+                params: {
+                    page: params.page || 1,
+                    page_size: params.page_size || 10,
+                    ordering: params.ordering || '-created_at',
+                    search: params.search || '',
+                    state: params.state || '',
+                    district: params.district || '',
+                    sub_district: params.sub_district || '',
+                    village: params.village || '',
+                    category: params.category || '',
+                    min_views: params.min_views || '',
+                    is_active: params.is_active || '',
+                    ...params,
+                },
                 method: "GET",
             }),
             providesTags: ["TravelSpotList"],
@@ -133,14 +172,46 @@ export const travelspotApi = createApi({
             ],
         }),
 
+        // =========================
+        // Duplicate Name Check APIs
+        // =========================
+
+        checkTravelSpotName: builder.query({
+            query: ({ name, exclude_id }) => {
+                let url = `admin/travel-spots/check-name/?name=${encodeURIComponent(name)}`;
+                if (exclude_id) {
+                    url += `&exclude_id=${exclude_id}`;
+                }
+                return {
+                    url,
+                    method: "GET",
+                };
+            },
+        }),
+
+        // ==============================
+        // GET VISITORS OF A TRAVEL SPOT
+        // ==============================
+        getTravelSpotVisitors: builder.query({
+            query: (travelspotId) => ({
+                url: `/admin/travel-spots/${travelspotId}/visitors/`,
+                method: "GET",
+            }),
+            providesTags: (res, error, travelspotId) => [
+                { type: "TravelSpotVisitors", id: travelspotId },
+            ],
+        }),
+
     }),
 });
 
 
 export const {
     // Public
+    useLazyGetPublicTravelSpotsQuery,
     useGetPublicTravelSpotsQuery,
     useGetTravelSpotBySlugQuery,
+    useGetNearbyTravelSpotsQuery,
 
     // Admin legacy
     useGetAdminTravelSpotsQuery,
@@ -154,4 +225,10 @@ export const {
     useUpdateLocationStepMutation,
     useUpdateDetailsStepMutation,
     useSubmitTravelSpotMutation,
+
+    // Duplicate Title check
+    useCheckTravelSpotNameQuery,
+
+    // Get Visitors List
+    useGetTravelSpotVisitorsQuery,
 } = travelspotApi;

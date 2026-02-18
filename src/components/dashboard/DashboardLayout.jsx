@@ -37,15 +37,6 @@ const DashboardLayout = ({ children }) => {
     };
 
     return (
-        // <div className={styles.dashboardLayout}>
-        //     <Header />
-        //     <div className={styles.mainContent}>
-        //         <Sidebar />
-        //         <main className={styles.content}>
-        //             {children}
-        //         </main>
-        //     </div>
-        // </div>
         <div className={styles.dashboardLayout}>
             <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
             <div className={styles.mainContent}>

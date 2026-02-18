@@ -182,43 +182,6 @@ export default function EditTravelSpotPage() {
         }
     };
 
-    // Handle step 4 submission (Pricing & Timing)
-    const handleStep4Submit = async (data) => {
-        console.log(data)
-        console.log("image submitted")
-        // try {
-        //     const res = await updateDetails({
-        //         travelspot_id: travelSpot.travelspot_id,
-        //         data: data
-        //     }).unwrap();
-
-        //     showSnackbar(res.message, 'success', 5000);
-        //     setFormData(prev => ({ ...prev, ...data }));
-        //     setCurrentStep(4);
-        //     refetch();
-        // } catch (error) {
-        //     const backendErrors = error?.data?.errors;
-
-        //     // Field-Level Errors
-        //     if (backendErrors?.field_errors && formRef) {
-        //         Object.entries(backendErrors.field_errors).forEach(
-        //             ([field, messages]) => {
-        //                 formRef.setError(field, {
-        //                     type: 'server',
-        //                     message: messages[0],
-        //                 });
-        //             }
-        //         );
-        //     }
-
-        //     if (backendErrors?.non_field_errors?.length) {
-        //         showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
-        //     } else {
-        //         showSnackbar('Failed to update pricing & timing', 'error', 3000);
-        //     }
-        // }
-    };
-
     // Handle final submission
     const handleFinalSubmit = async () => {
         try {
@@ -369,6 +332,7 @@ export default function EditTravelSpotPage() {
                 {currentStep === 1 && (
                     <Step1BasicInfo
                         initialData={{
+                            travelspot_id: travelSpot.travelspot_id,
                             name: travelSpot.name,
                             slug: travelSpot.slug,
                             short_description: travelSpot.short_description,
@@ -423,11 +387,8 @@ export default function EditTravelSpotPage() {
                 {currentStep === 4 && (
                     <Step4ImageManagement
                         travelSpot={travelSpot}
-                        onSubmit={handleStep4Submit}
-                        onCancel={handleCancel}
                         onBack={() => setCurrentStep(3)}
                         onNext={() => setCurrentStep(5)}
-                        mode="edit"
                     />
                 )}
 

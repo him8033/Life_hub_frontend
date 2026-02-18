@@ -69,33 +69,6 @@ export const travelspotSchema = z.object({
     is_active: z.boolean().default(true),
 });
 
-// For API response validation
-// export const travelspotResponseSchema = travelspotSchema.extend({
-//     id: z.number(),
-//     travelspot_id: z.string(),
-//     created_at: z.string().datetime(),
-//     updated_at: z.string().datetime(),
-//     deleted_at: z.string().datetime().nullable(),
-//     created_by: z.string().nullable(),
-//     updated_by: z.string().nullable(),
-// });
-
-// // For list response
-// export const travelspotListSchema = z.array(travelspotResponseSchema);
-
-// // For form data transformation
-// export const transformTravelspotData = (data) => {
-//     const transformed = { ...data };
-
-//     // Convert empty strings to null for optional fields
-//     if (transformed.short_description === '') transformed.short_description = null;
-//     if (transformed.full_address === '') transformed.full_address = null;
-//     if (transformed.latitude === '') transformed.latitude = null;
-//     if (transformed.longitude === '') transformed.longitude = null;
-
-//     return transformed;
-// };
-
 // Step 1: Basic Information Schema
 export const basicInfoSchema = z.object({
     name: z.string()
@@ -118,15 +91,15 @@ export const basicInfoSchema = z.object({
 
 // Step 2: Location & Address Schema
 export const locationSchema = z.object({
-    // Hierarchical location (required)
+    // REQUIRED
     country: z.string().min(1, 'Country is required'),
     state: z.string().min(1, 'State is required'),
-    district: z.string().min(1, 'District is required'),
-    sub_district: z.string().min(1, 'Sub-district is required'),
-    village: z.string().min(1, 'Village is required'),
 
-    // Optional fields
-    pincode: z.string().optional(),
+    // OPTIONAL hierarchy
+    district: z.string().optional().or(z.literal('')),
+    sub_district: z.string().optional().or(z.literal('')),
+    village: z.string().optional().or(z.literal('')),
+    pincode: z.string().optional().or(z.literal('')),
 
     // Address
     full_address: z.string()

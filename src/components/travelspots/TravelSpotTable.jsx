@@ -10,6 +10,7 @@ export default function TravelSpotTable({
     onToggleStatus,
     onEdit,
     onView,
+    onViewVisitors,
     isLoading = false
 }) {
 
@@ -20,7 +21,8 @@ export default function TravelSpotTable({
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>City</th>
+                        <th>State</th>
+                        <th>Total Views</th>
                         <th>Status</th>
                         <th>Created</th>
                         <th>Actions</th>
@@ -36,7 +38,17 @@ export default function TravelSpotTable({
                                     <div className={listingStyles.slug}>{spot.slug}</div>
                                 </div>
                             </td>
-                            <td>{spot.location.sub_district || 'N/A'}</td>
+                            <td>{spot.location.state || 'N/A'}</td>
+                            <td>
+                                <button
+                                    className={listingStyles.viewCountButton}
+                                    onClick={() => !isLoading && onViewVisitors(spot.travelspot_id)}
+                                    disabled={isLoading}
+                                    title="View visitors"
+                                >
+                                    {spot.view_count || 0}
+                                </button>
+                            </td>
                             <td>
                                 <button
                                     type="button"

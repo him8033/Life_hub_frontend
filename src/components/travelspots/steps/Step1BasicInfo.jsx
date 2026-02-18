@@ -3,33 +3,35 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FiCheck, FiGlobe, FiTag, FiFileText, FiChevronRight } from 'react-icons/fi';
+import { FiTag, FiGlobe, FiFileText, FiChevronRight, FiCheck } from 'react-icons/fi';
 
-// Shadcn Components
+// UI
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    FormDescription,
+    Form, FormField, FormItem, FormLabel,
+    FormControl, FormMessage, FormDescription
 } from '@/components/ui/form';
-
-// Custom Components
 import ReactMultiSelect from '@/components/ui/ReactMultiSelect';
 
-// Hooks & Utils
+// Hooks & API
 import useSlugGenerator from '@/hooks/useSlugGenerator';
 import { basicInfoSchema } from '@/lib/validations/travelspotSchema';
-
-// API
 import { useGetPublicSpotCategoriesQuery } from '@/services/api/spotcategoryApi';
+import { useCheckTravelSpotNameQuery } from '@/services/api/travelspotApi';
 
 // Styles
 import styles from '@/styles/travelspots/steps/Step1BasicInfo.module.css';
+
+/* ---------------- Helpers ---------------- */
+const useDebounce = (value, delay = 500) => {
+    const [debounced, setDebounced] = useState(value);
+    useEffect(() => {
+        const t = setTimeout(() => setDebounced(value), delay);
+        return () => clearTimeout(t);
+    }, [value, delay]);
+    return debounced;
+};
 
 const Step1BasicInfo = ({
     initialData = {},
@@ -39,15 +41,22 @@ const Step1BasicInfo = ({
     onCancel,
     mode = 'create'
 }) => {
-    // Fetch categories
-    const { data: categoriesData, isLoading: isLoadingCategories } = useGetPublicSpotCategoriesQuery();
-
-    // Format categories for multi-select
-    const categories = categoriesData?.data?.map(cat => ({
-        value: cat.spotcategory_id,
-        label: cat.name,
-        // count: cat.spotCount || 0,
+    /* Categories */
+    const { data: catRes, isLoading: isLoadingCategories } = useGetPublicSpotCategoriesQuery();
+    const categories = catRes?.data?.map(c => ({
+        value: c.spotcategory_id,
+        label: c.name,
+        count: c.total_spots || 0,
     })) || [];
+
+    const [name, setName] = useState("");
+    const debouncedName = useDebounce(name, 500);
+    const { data, isFetching } = useCheckTravelSpotNameQuery({
+        name: debouncedName,
+        exclude_id: initialData?.travelspot_id,
+    }, {
+        skip: !debouncedName || debouncedName.length < 3,
+    });
 
     // Get default values
     const getDefaultValues = () => {
@@ -176,6 +185,7 @@ const Step1BasicInfo = ({
                                                 onChange={(e) => {
                                                     field.onChange(e);
                                                     generateFrom(e.target.value);
+                                                    setName(e.target.value);
                                                 }}
                                                 className={styles.input}
                                                 autoFocus={mode === 'create'}
@@ -186,6 +196,24 @@ const Step1BasicInfo = ({
                                         <p className={styles.helperText}>
                                             Enter the official or commonly known name of the travel spot
                                         </p>
+                                        {/* Duplicate Name Check */}
+                                        {isFetching && (
+                                            <span className="text-sm text-gray-500">
+                                                Checking name availability...
+                                            </span>
+                                        )}
+
+                                        {data?.data?.exists && !isFetching && (
+                                            <span className="text-sm text-red-500">
+                                                This travel spot name already exists
+                                            </span>
+                                        )}
+
+                                        {data && !data.data.exists && !isFetching && name.length >= 3 && (
+                                            <span className="text-sm text-green-600">
+                                                Name is available
+                                            </span>
+                                        )}
                                     </FormItem>
                                 )}
                             />

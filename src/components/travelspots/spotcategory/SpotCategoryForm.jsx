@@ -1,7 +1,7 @@
 // src/components/travelspots/SpotCategoryForm.jsx
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,17 @@ import { FiHash, FiTag, FiCheck } from 'react-icons/fi';
 import { spotCategorySchema } from '@/lib/validations/spotCategorySchema';
 import useSlugGenerator from '@/hooks/useSlugGenerator';
 import styles from '@/styles/travelspots/spotcategory/SpotCategoryForm.module.css';
+import { useCheckSpotCategoryNameQuery } from '@/services/api/spotcategoryApi';
+
+/* ---------------- Helpers ---------------- */
+const useDebounce = (value, delay = 500) => {
+    const [debounced, setDebounced] = useState(value);
+    useEffect(() => {
+        const t = setTimeout(() => setDebounced(value), delay);
+        return () => clearTimeout(t);
+    }, [value, delay]);
+    return debounced;
+};
 
 const SpotCategoryForm = ({
     initialData = {},
@@ -27,6 +38,15 @@ const SpotCategoryForm = ({
     mode = 'create' // 'create' or 'edit'
 }) => {
     const { slug, generateFrom, updateManually, reset: resetSlug } = useSlugGenerator(initialData.slug);
+
+    const [name, setName] = useState("");
+    const debouncedName = useDebounce(name, 500);
+    const { data, isFetching } = useCheckSpotCategoryNameQuery({
+        name: debouncedName,
+        exclude_id: initialData?.spotcategory_id,
+    }, {
+        skip: !debouncedName || debouncedName.length < 3,
+    });
 
     // Initialize form
     const form = useForm({
@@ -91,6 +111,7 @@ const SpotCategoryForm = ({
                                         onChange={(e) => {
                                             field.onChange(e);
                                             generateFrom(e.target.value);
+                                            setName(e.target.value);
                                         }}
                                         placeholder="e.g., Beaches, Mountains, Cities"
                                         className={styles.formInput}
@@ -101,6 +122,24 @@ const SpotCategoryForm = ({
                                 <div className={styles.helperText}>
                                     Enter a descriptive name for the category
                                 </div>
+                                {/* Duplicate Name Check */}
+                                {isFetching && (
+                                    <span className="text-sm text-gray-500">
+                                        Checking name availability...
+                                    </span>
+                                )}
+
+                                {data?.data?.exists && !isFetching && (
+                                    <span className="text-sm text-red-500">
+                                        This travel spot name already exists
+                                    </span>
+                                )}
+
+                                {data && !data.data.exists && !isFetching && name.length >= 3 && (
+                                    <span className="text-sm text-green-600">
+                                        Name is available
+                                    </span>
+                                )}
                                 <FormMessage className={styles.errorMessage} />
                             </FormItem>
                         )}

@@ -31,8 +31,16 @@ export const spotcategoryApi = createApi({
 
         // ADMIN LIST (FULL DATA)
         getAdminSpotCategories: builder.query({
-            query: () => ({
+            query: (params = {}) => ({
                 url: "admin/spot-categories/",
+                params: {
+                    page: params.page || 1,
+                    page_size: params.page_size || 10,
+                    ordering: params.ordering || '-created_at',
+                    search: params.search || '',
+                    is_active: params.is_active || '',
+                    ...params,
+                },
                 method: "GET",
             }),
             providesTags: ["SpotCategoryList"],
@@ -66,6 +74,21 @@ export const spotcategoryApi = createApi({
             }),
             invalidatesTags: ["SpotCategoryList", "SpotCategoryDetail"],
         }),
+
+        // Duplicate Name Check APIs
+
+        checkSpotCategoryName: builder.query({
+            query: ({ name, exclude_id }) => {
+                let url = `admin/spot-categories/check-name/?name=${encodeURIComponent(name)}`;
+                if (exclude_id) {
+                    url += `&exclude_id=${exclude_id}`;
+                }
+                return {
+                    url,
+                    method: "GET",
+                };
+            },
+        }),
     }),
 });
 
@@ -79,4 +102,7 @@ export const {
     useCreateSpotCategoryMutation,
     useUpdateSpotCategoryMutation,
     useDeleteSpotCategoryMutation,
+
+    // Duplicate Title check
+    useCheckSpotCategoryNameQuery,
 } = spotcategoryApi;

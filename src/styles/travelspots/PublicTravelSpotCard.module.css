@@ -1,137 +1,162 @@
-/* Public TravelSpot Card Styles */
+/* PublicTravelSpotCard.module.css */
 
 .card {
-    background-color: white;
+    background: white;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    border: 1px solid #e5e7eb;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: #3b82f6;
+}
+
+.card:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.cardImageContainer {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .cardImage {
+    transform: scale(1.05);
+}
+
+.cardBadge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 4px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badgeCity {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.cardContent {
+    padding: 20px;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-/* Card Header */
 .cardHeader {
-    padding: 24px;
-    border-bottom: 1px solid #f3f4f6;
-}
-
-.cardBadge {
     margin-bottom: 12px;
 }
 
-.badgeCity {
-    display: inline-block;
-    padding: 6px 12px;
-    background-color: #dbeafe;
-    color: #1e40af;
-    font-size: 12px;
+.cardTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.categoriesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.categoryTag {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 11px;
     font-weight: 600;
-    border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.cardTitle {
-    font-size: 20px;
-    font-weight: 700;
-    color: #111827;
-    margin: 0 0 8px 0;
-    line-height: 1.3;
-}
-
-.cardSubtitle {
-    font-size: 14px;
+.cardDescription {
     color: #6b7280;
-    margin: 0;
+    font-size: 14px;
     line-height: 1.5;
+    margin-bottom: 16px;
+    flex-grow: 1;
 }
 
-/* Card Body */
-.cardBody {
-    padding: 24px;
-    flex: 1;
+.cardFooter {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #f3f4f6;
 }
 
 .details {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
 }
 
 .detailItem {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 .detailLabel {
     font-size: 12px;
     font-weight: 600;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: #374151;
+    min-width: 80px;
 }
 
 .detailValue {
-    font-size: 14px;
-    color: #374151;
-    margin: 0;
-    line-height: 1.5;
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.4;
 }
 
-/* Card Footer */
-.cardFooter {
-    padding: 24px;
-    border-top: 1px solid #f3f4f6;
-    background-color: #f9fafb;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cardImageContainer {
+        height: 180px;
+    }
 
-.viewButton {
-    width: 100%;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.viewButton:hover {
-    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.viewButton:focus {
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-
-    .cardHeader,
-    .cardBody,
-    .cardFooter {
-        padding: 20px;
+    .cardContent {
+        padding: 16px;
     }
 
     .cardTitle {
-        font-size: 18px;
+        font-size: 16px;
     }
 
-    .viewButton {
-        padding: 14px 20px;
-        font-size: 15px;
+    .cardDescription {
+        font-size: 13px;
+    }
+
+    .detailLabel {
+        min-width: 70px;
+        font-size: 11px;
+    }
+
+    .detailValue {
+        font-size: 12px;
     }
 }

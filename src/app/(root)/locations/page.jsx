@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import styles from '@/styles/pages/PincodeFinder.module.css';
+import common from '@/styles/pages/common.module.css';
 import PincodeSearchForm from '@/components/pages/pincode/PincodeSearchForm';
 import PincodeDirectSearchForm from '@/components/pages/pincode/PincodeDirectSearchForm';
 import PincodeResults from '@/components/pages/pincode/PincodeResults';
@@ -27,11 +28,11 @@ const PincodeFinder = () => {
     };
 
     return (
-        <div className={styles.pincodeContainer}>
+        <div className={common.container}>
             {/* Hero Section */}
-            <section className={styles.heroSection}>
-                <h1 className={styles.heroTitle}>Pincode Finder</h1>
-                <p className={styles.heroSubtitle}>
+            <section className={common.heroSection}>
+                <h1 className={common.heroTitle}>Pincode Finder</h1>
+                <p className={common.heroSubtitle}>
                     Find pincodes by location or discover village details by pincode
                 </p>
             </section>

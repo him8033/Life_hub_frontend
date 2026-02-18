@@ -1,6 +1,7 @@
 'use client';
 
 import styles from '@/styles/pages/Services.module.css';
+import common from '@/styles/pages/common.module.css';
 
 export default function ServicesPage() {
     const services = [
@@ -37,11 +38,11 @@ export default function ServicesPage() {
     ];
 
     return (
-        <div className={styles.servicesContainer}>
+        <div className={common.container}>
             {/* Hero Section */}
-            <section className={styles.heroSection}>
-                <h1 className={styles.heroTitle}>Our Services</h1>
-                <p className={styles.heroDescription}>
+            <section className={common.heroSection}>
+                <h1 className={common.heroTitle}>Our Services</h1>
+                <p className={common.heroDescription}>
                     Discover all the amazing features and services we offer to enhance your travel experience.
                 </p>
             </section>

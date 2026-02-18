@@ -33,11 +33,8 @@ import { useConfirm } from '@/context/ConfirmContext';
 
 const Step4ImageManagement = ({
     travelSpot,
-    onSubmit,
-    onCancel,
     onBack,
     onNext,
-    mode = 'edit'
 }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
@@ -127,17 +124,15 @@ const Step4ImageManagement = ({
     };
 
     // Handle image select
-    const handleImageSelect = (file) => {
+    const handleImageSelect = (file, url) => {
         setNewImage(file);
-        const url = URL.createObjectURL(file);
-        setPreviewUrl(url);
+        setPreviewUrl(url || URL.createObjectURL(file));
     };
 
     // Handle image select for editing
-    const handleEditImageSelect = (file) => {
+    const handleEditImageSelect = (file, url) => {
         setEditImageFile(file);
-        const url = URL.createObjectURL(file);
-        setEditPreviewUrl(url);
+        setEditPreviewUrl(url || URL.createObjectURL(file));
     };
 
     // Handle remove edit image
@@ -260,7 +255,7 @@ const Step4ImageManagement = ({
         setEditPreviewUrl('');
     };
 
-    const handleSaveEdit = async (imageId) => {
+    const handleSaveEdit = async () => {
         if (!editingImage) return;
         try {
             const formData = new FormData();
@@ -274,7 +269,7 @@ const Step4ImageManagement = ({
 
             // Add new image file if selected
             if (editImageFile) {
-                formData.append('image', editImageFile);
+                formData.append('image', editImageFile, editImageFile.name);
             }
 
             const res = await replaceSpotImage({
@@ -453,6 +448,9 @@ const Step4ImageManagement = ({
                                             maxSizeMB={5}
                                             label="Choose New Image"
                                             compact={true}
+                                            enableCrop={true} // Enable cropping for replacement too
+                                            aspectRatio={16 / 9} // Square aspect ratio
+                                            showCropControls={false}
                                         />
                                         <div className={styles.uploadHint}>
                                             Max 5MB • JPG, PNG, WebP
@@ -557,6 +555,9 @@ const Step4ImageManagement = ({
                                 maxSizeMB={5}
                                 label="Upload Image"
                                 size='medium'
+                                enableCrop={true} // Enable cropping
+                                aspectRatio={16 / 9} // Square aspect ratio
+                                showCropControls={false}
                             />
                         </div>
 

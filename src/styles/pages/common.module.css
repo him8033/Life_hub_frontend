@@ -1,0 +1,42 @@
+.container {
+    min-height: 100vh;
+    background-color: #f9fafb;
+}
+
+.heroSection {
+    background: var(--background-image-brand-gradient);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+    height: 225px;
+}
+
+.heroTitle {
+    font-size: 48px;
+    font-weight: 800;
+    margin: 0 0 16px 0;
+    line-height: 1.1;
+}
+
+.heroDescription {
+    font-size: 18px;
+    opacity: 0.9;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .heroSection {
+        padding: 40px 20px;
+        height: 200px;
+    }
+
+    .heroTitle {
+        font-size: 36px;
+    }
+
+    .heroDescription {
+        font-size: 16px;
+    }
+}

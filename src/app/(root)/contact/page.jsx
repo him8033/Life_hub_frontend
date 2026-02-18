@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import styles from '@/styles/pages/Contact.module.css';
+import common from '@/styles/pages/common.module.css';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 
 export default function ContactPage() {
@@ -34,11 +35,11 @@ export default function ContactPage() {
     };
 
     return (
-        <div className={styles.contactContainer}>
+        <div className={common.container}>
             {/* Hero Section */}
-            <section className={styles.heroSection}>
-                <h1 className={styles.heroTitle}>Contact Us</h1>
-                <p className={styles.heroDescription}>
+            <section className={common.heroSection}>
+                <h1 className={common.heroTitle}>Contact Us</h1>
+                <p className={common.heroDescription}>
                     Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
                 </p>
             </section>

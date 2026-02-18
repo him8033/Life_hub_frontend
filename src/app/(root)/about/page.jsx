@@ -1,13 +1,14 @@
 'use client';
 
 import styles from '@/styles/pages/About.module.css';
+import common from '@/styles/pages/common.module.css';
 
 export default function AboutPage() {
     return (
-        <div className={styles.aboutContainer}>
-            <div className={styles.heroSection}>
-                <h1 className={styles.heroTitle}>About LifeHub</h1>
-                <p className={styles.heroDescription}>
+        <div className={common.container}>
+            <div className={common.heroSection}>
+                <h1 className={common.heroTitle}>About LifeHub</h1>
+                <p className={common.heroDescription}>
                     We're passionate about making travel planning and management easier for everyone.
                 </p>
             </div>

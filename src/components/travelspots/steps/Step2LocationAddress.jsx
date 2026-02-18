@@ -340,7 +340,6 @@ const Step2LocationAddress = ({
                                                     <FormLabel className={styles.label}>
                                                         <FaBuilding className={styles.icon} />
                                                         District
-                                                        <span className={styles.required}>*</span>
                                                     </FormLabel>
                                                     <FormDescription className={styles.fieldInfo}>
                                                         Administrative district
@@ -383,7 +382,6 @@ const Step2LocationAddress = ({
                                                     <FormLabel className={styles.label}>
                                                         <FiMap className={styles.icon} />
                                                         City/Sub-District
-                                                        <span className={styles.required}>*</span>
                                                     </FormLabel>
                                                     <FormDescription className={styles.fieldInfo}>
                                                         City or sub-district area
@@ -429,7 +427,6 @@ const Step2LocationAddress = ({
                                                     <FormLabel className={styles.label}>
                                                         <FiHome className={styles.icon} />
                                                         Village/Town
-                                                        <span className={styles.required}>*</span>
                                                     </FormLabel>
                                                     <FormDescription className={styles.fieldInfo}>
                                                         Specific village or town
