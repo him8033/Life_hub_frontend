@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import PageLayout from '@/components/layout/PageLayout';
 import styles from '@/styles/pages/Contact.module.css';
-import common from '@/styles/pages/common.module.css';
-import { FaMapMarkerAlt } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -23,7 +23,6 @@ export default function ContactPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission here
         console.log('Form submitted:', formData);
         alert('Thank you for your message! We will get back to you soon.');
         setFormData({
@@ -35,16 +34,11 @@ export default function ContactPage() {
     };
 
     return (
-        <div className={common.container}>
-            {/* Hero Section */}
-            <section className={common.heroSection}>
-                <h1 className={common.heroTitle}>Contact Us</h1>
-                <p className={common.heroDescription}>
-                    Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-                </p>
-            </section>
-
-            <div className={styles.contentWrapper}>
+        <PageLayout
+            heroTitle="Contact Us"
+            heroDescription="Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible."
+        >
+            <div className={styles.contentWrapper}>   {/* ✅ fixed class name */}
                 {/* Contact Info */}
                 <div className={styles.contactInfoSection}>
                     <h2 className={styles.sectionTitle}>Get in Touch</h2>
@@ -54,7 +48,9 @@ export default function ContactPage() {
 
                     <div className={styles.contactDetails}>
                         <div className={styles.contactItem}>
-                            <div className={styles.contactIcon}><FaMapMarkerAlt title="Location" /></div>
+                            <div className={styles.contactIcon}>
+                                <FaMapMarkerAlt />
+                            </div>
                             <div>
                                 <h3>Visit Us</h3>
                                 <p>123 Travel Street<br />Delhi, India 110001</p>
@@ -62,7 +58,9 @@ export default function ContactPage() {
                         </div>
 
                         <div className={styles.contactItem}>
-                            <div className={styles.contactIcon}>📞</div>
+                            <div className={styles.contactIcon}>
+                                <FaPhoneAlt />
+                            </div>
                             <div>
                                 <h3>Call Us</h3>
                                 <p>+91 9876543210<br />Mon-Fri, 9am-6pm</p>
@@ -70,7 +68,9 @@ export default function ContactPage() {
                         </div>
 
                         <div className={styles.contactItem}>
-                            <div className={styles.contactIcon}>✉️</div>
+                            <div className={styles.contactIcon}>
+                                <FaEnvelope />
+                            </div>
                             <div>
                                 <h3>Email Us</h3>
                                 <p>support@lifehub.com<br />info@lifehub.com</p>
@@ -145,6 +145,6 @@ export default function ContactPage() {
                     </form>
                 </div>
             </div>
-        </div>
+        </PageLayout>
     );
 }

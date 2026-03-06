@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { useSearchPincodesQuery } from '@/services/api/locationsApi';
 import resultsStyles from '@/styles/pages/pincode/Results.module.css';
@@ -15,9 +17,9 @@ const ReverseSearchResults = ({ pincode }) => {
     if (isLoading) {
         return (
             <div className={resultsStyles.resultsSection}>
-                <div className="text-center py-8">
+                <div className={resultsStyles.loadingContainer}>
                     <div className={resultsStyles.loadingSpinner}></div>
-                    <p>Searching for pincode {pincode}...</p>
+                    <p className={resultsStyles.loadingText}>Searching for pincode {pincode}...</p>
                 </div>
             </div>
         );
@@ -26,8 +28,10 @@ const ReverseSearchResults = ({ pincode }) => {
     if (error) {
         return (
             <div className={resultsStyles.resultsSection}>
-                <div className="text-center py-8 text-red-600">
-                    Error searching pincode: {error.message}
+                <div className={resultsStyles.errorContainer}>
+                    <p className={resultsStyles.errorText}>
+                        Error searching pincode: {error.message}
+                    </p>
                 </div>
             </div>
         );
@@ -42,7 +46,7 @@ const ReverseSearchResults = ({ pincode }) => {
             <div className={resultsStyles.resultsSection}>
                 <div className={resultsStyles.resultsHeader}>
                     <h3 className={resultsStyles.resultsTitle}>
-                        <MapPinIcon className="h-6 w-6" />
+                        <MapPinIcon className={resultsStyles.resultsIcon} />
                         Search Results for Pincode: {pincode}
                     </h3>
                 </div>
@@ -61,7 +65,7 @@ const ReverseSearchResults = ({ pincode }) => {
         <div className={resultsStyles.resultsSection}>
             <div className={resultsStyles.resultsHeader}>
                 <h3 className={resultsStyles.resultsTitle}>
-                    <MapPinIcon className="h-6 w-6" />
+                    <MapPinIcon className={resultsStyles.resultsIcon} />
                     Search Results for Pincode: {pincode}
                 </h3>
                 <span className={resultsStyles.resultsCount}>
@@ -69,7 +73,7 @@ const ReverseSearchResults = ({ pincode }) => {
                 </span>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className={resultsStyles.tableWrapper}>
                 <table className={resultsStyles.resultsTable}>
                     <thead className={resultsStyles.tableHeader}>
                         <tr>
@@ -92,10 +96,11 @@ const ReverseSearchResults = ({ pincode }) => {
                                 <td>{item.state_name || 'N/A'}</td>
                                 <td>{item.country_name || 'N/A'}</td>
                                 <td>
-                                    <span className={`${resultsStyles.categoryBadge} ${item.village_category === 'Urban'
+                                    <span className={`${resultsStyles.categoryBadge} ${
+                                        item.village_category === 'Urban'
                                             ? resultsStyles.urban
                                             : resultsStyles.rural
-                                        }`}>
+                                    }`}>
                                         {item.village_category || 'N/A'}
                                     </span>
                                 </td>
@@ -107,7 +112,7 @@ const ReverseSearchResults = ({ pincode }) => {
 
             {/* Summary */}
             <div className={resultsStyles.villageCard}>
-                <h4 className={resultsStyles.resultsTitle}>Search Summary</h4>
+                <h4 className={resultsStyles.summaryTitle}>Search Summary</h4>
                 <div className={resultsStyles.villageGrid}>
                     <div className={resultsStyles.villageDetail}>
                         <span className={resultsStyles.detailLabel}>Pincode</span>

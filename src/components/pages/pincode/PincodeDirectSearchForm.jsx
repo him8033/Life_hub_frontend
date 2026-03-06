@@ -1,5 +1,9 @@
+'use client';
+
 import { useState } from 'react';
-import formStyles from '@/styles/pages/pincode/Form.module.css';
+import { FormContainer, FormRow } from '@/components/common/forms/FormContainer';
+import FormInput from '@/components/common/forms/FormInput';
+import { PrimaryButton, SecondaryButton, ActionButtons } from '@/components/common/forms/FormButtons';
 import { DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const PincodeDirectSearchForm = ({ onSubmit, onClear, isLoading }) => {
@@ -17,44 +21,41 @@ const PincodeDirectSearchForm = ({ onSubmit, onClear, isLoading }) => {
         onClear();
     };
 
-    return (
-        <form onSubmit={handleSubmit} className={formStyles.formContainer}>
-            <div className={formStyles.formRow}>
-                <div className={formStyles.formGroup}>
-                    <label className={formStyles.formLabel}>
-                        Enter Pincode
-                        <span className={formStyles.required}>*</span>
-                    </label>
-                    <input
-                        type="text"
-                        value={pincode}
-                        onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
-                        className={formStyles.formInput}
-                        placeholder="Enter 6-digit pincode (e.g., 229121)"
-                        maxLength="6"
-                        required
-                        disabled={isLoading}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                        Enter exact 6-digit pincode to search
-                    </p>
-                </div>
-            </div>
+    const handlePincodeChange = (e) => {
+        // Only allow digits and limit to 6 characters
+        const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+        setPincode(value);
+    };
 
-            <div className={formStyles.actionButtons}>
-                <button
+    return (
+        <FormContainer onSubmit={handleSubmit}>
+            <FormRow>
+                <FormInput
+                    label="Enter Pincode"
+                    required
+                    type="text"
+                    value={pincode}
+                    onChange={handlePincodeChange}
+                    placeholder="Enter 6-digit pincode (e.g., 229121)"
+                    disabled={isLoading}
+                    hint="Enter exact 6-digit pincode to search"
+                    maxLength="6"
+                />
+            </FormRow>
+
+            <ActionButtons>
+                <PrimaryButton
                     type="submit"
-                    className={formStyles.primaryButton}
                     disabled={pincode.trim().length !== 6 || isLoading}
+                    icon={<DocumentMagnifyingGlassIcon />}
                 >
-                    <DocumentMagnifyingGlassIcon className="h-5 w-5" />
                     {isLoading ? 'Searching...' : 'Find Location'}
-                </button>
-                <button type="button" onClick={handleClear} className={formStyles.secondaryButton}>
+                </PrimaryButton>
+                <SecondaryButton type="button" onClick={handleClear}>
                     Clear
-                </button>
-            </div>
-        </form>
+                </SecondaryButton>
+            </ActionButtons>
+        </FormContainer>
     );
 };
 

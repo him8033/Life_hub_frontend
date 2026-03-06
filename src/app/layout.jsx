@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={`${assistant.className} antialiased`}>
+      <body className={`dark ${assistant.className} antialiased`}>
         <Provider store={store}>
           <SnackbarProvider>
             <GlobalSnackbarRenderer />

@@ -1,18 +1,3 @@
-// "use client";
-
-// import { LandingSections } from "@/config/sections";
-
-// export default function LandingPage() {
-//   return (
-//     <main>
-//       {LandingSections.map((Section, index) => (
-//         <Section key={index} />
-//       ))}
-//     </main>
-//   );
-// }
-
-
 'use client';
 
 import Link from 'next/link';

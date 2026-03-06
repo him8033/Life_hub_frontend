@@ -200,6 +200,15 @@ export default function Header() {
                             </li>
                             <li>
                                 <Link
+                                    href={ROUTES.PUBLIC.LOCATIONFINDER}
+                                    className={`${styles.mobileNavLink} ${isActive(ROUTES.PUBLIC.LOCATIONFINDER)}`}
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Pincode Finder
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
                                     href="/about"
                                     className={`${styles.mobileNavLink} ${isActive('/about')}`}
                                     onClick={() => setIsMenuOpen(false)}

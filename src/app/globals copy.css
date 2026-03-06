@@ -78,7 +78,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Background image for brand gradient */
+  /* Background image for brand gradient (custom property) */
   --background-image-brand-gradient: var(--brand-gradient);
 }
 
@@ -169,7 +169,7 @@
   --brand-gradient: linear-gradient(135deg, var(--primary-500) 0%, var(--secondary-500) 100%);
 
   /* ------------------------------------------------------------------
-     Override shadcn theme variables (light mode)
+     Override shadcn theme variables
   ------------------------------------------------------------------- */
   --background: var(--gray-50);
   --foreground: var(--gray-800);
@@ -206,72 +206,53 @@
 }
 
 .dark {
-  /* Dark mode overrides – background set to pure black */
-  --background: #000000;
-  --foreground: #ededed;
+  /* Dark mode overrides */
+  --primary-500: #5a67d8;
+  --secondary-500: #8b5cf6;
 
-  /* Primary colors (slightly lighter for contrast on black) */
-  --primary-500: #7f9cf5;
-  /* Lighter than light mode primary */
-  --secondary-500: #a78bfa;
-  /* Lighter purple */
-
-  /* Inverted grayscale – darkest to lightest */
-  --gray-50: #0a0a0a;
-  /* near black */
-  --gray-100: #1a1a1a;
-  --gray-200: #2e2e2e;
-  --gray-300: #404040;
-  --gray-400: #666666;
-  --gray-500: #a0a0a0;
-  --gray-600: #c2c2c2;
-  --gray-700: #e0e0e0;
-  --gray-800: #f0f0f0;
+  --gray-50: #1a202c;
+  --gray-100: #2d3748;
+  --gray-200: #4a5568;
+  --gray-300: #718096;
+  --gray-400: #a0aec0;
+  --gray-500: #cbd5e0;
+  --gray-600: #e2e8f0;
+  --gray-700: #edf2f7;
+  --gray-800: #f7fafc;
   --gray-900: #ffffff;
-  /* white */
 
-  /* Semantic colors remain same or adjust if needed */
-  --success: #10b981;
-  --error: #ef4444;
-  /* slightly brighter red */
-  --warning: #f59e0b;
-
-  /* Text aliases using the new grayscale */
   --text-primary: var(--gray-800);
   --text-secondary: var(--gray-600);
   --text-tertiary: var(--gray-400);
 
-  /* Brand gradient now uses the updated primary/secondary */
-  --brand-gradient: linear-gradient(135deg, var(--primary-500) 0%, var(--secondary-500) 100%);
+  --brand-gradient: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
 
-  /* ------------------------------------------------------------------
-     Override shadcn variables for dark mode
-  ------------------------------------------------------------------- */
-  --card: var(--gray-100);
-  --card-foreground: var(--gray-800);
-  --popover: var(--gray-100);
-  --popover-foreground: var(--gray-800);
+  /* Override shadcn variables for dark mode */
+  --background: var(--gray-900);
+  --foreground: var(--gray-100);
+  --card: var(--gray-800);
+  --card-foreground: var(--gray-100);
+  --popover: var(--gray-800);
+  --popover-foreground: var(--gray-100);
   --primary: var(--primary-500);
-  --primary-foreground: #000000;
-  /* black text on light primary */
-  --secondary: var(--gray-200);
-  --secondary-foreground: var(--gray-800);
-  --muted: var(--gray-200);
-  --muted-foreground: var(--gray-500);
-  --accent: var(--gray-200);
-  --accent-foreground: var(--gray-800);
+  --primary-foreground: #ffffff;
+  --secondary: var(--gray-700);
+  --secondary-foreground: var(--gray-200);
+  --muted: var(--gray-700);
+  --muted-foreground: var(--gray-400);
+  --accent: var(--gray-700);
+  --accent-foreground: var(--gray-200);
   --destructive: var(--error);
-  --destructive-foreground: #ffffff;
-  --border: var(--gray-300);
-  --input: var(--gray-300);
+  --border: var(--gray-700);
+  --input: var(--gray-700);
   --ring: var(--primary-500);
-  --sidebar: var(--gray-100);
-  --sidebar-foreground: var(--gray-800);
+  --sidebar: var(--gray-800);
+  --sidebar-foreground: var(--gray-100);
   --sidebar-primary: var(--primary-500);
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: var(--gray-200);
-  --sidebar-accent-foreground: var(--gray-800);
-  --sidebar-border: var(--gray-300);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--gray-700);
+  --sidebar-accent-foreground: var(--gray-200);
+  --sidebar-border: var(--gray-700);
   --sidebar-ring: var(--primary-500);
 }
 
@@ -280,11 +261,13 @@
 ------------------------------------------------------------------- */
 @layer base {
   * {
+    /* Set border color and outline color using CSS variables */
     border-color: var(--border);
     outline-color: color-mix(in srgb, var(--ring) 50%, transparent);
   }
 
   body {
+    /* Use CSS variables directly instead of @apply bg-background text-foreground */
     background-color: var(--background);
     color: var(--foreground);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;

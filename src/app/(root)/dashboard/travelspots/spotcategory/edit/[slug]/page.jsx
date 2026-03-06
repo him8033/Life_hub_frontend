@@ -17,7 +17,7 @@ export default function EditTravelSpotPage() {
     const slug = params.slug;
     let formRef = null;
 
-    const { data, error, isLoading } = useGetSpotCategoryBySlugQuery(slug, { skip: !slug, });
+    const { data, error, isLoading, refetch } = useGetSpotCategoryBySlugQuery(slug, { skip: !slug, });
     const spotCategory = data?.data || null;
 
     const [updateSpotCategory, { isLoading: isSubmitting }] = useUpdateSpotCategoryMutation();

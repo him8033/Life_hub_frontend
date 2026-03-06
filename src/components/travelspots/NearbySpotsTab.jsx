@@ -14,7 +14,7 @@ export default function NearbySpotsTab({ slug }) {
     const [spots, setSpots] = useState([]);
     const [nextCursor, setNextCursor] = useState(null);
     const [hasMore, setHasMore] = useState(true);
-    const [forceRefetch, setForceRefetch] = useState(0); // Add force refetch trigger
+    const [forceRefetch, setForceRefetch] = useState(0);
 
     // Query parameters that should trigger a new API call
     const queryParams = {
@@ -40,7 +40,7 @@ export default function NearbySpotsTab({ slug }) {
         setSpots([]);
         setNextCursor(null);
         setHasMore(true);
-        setForceRefetch(prev => prev + 1); // Trigger refetch
+        setForceRefetch(prev => prev + 1);
     }, []);
 
     // Separate useEffect for filter changes

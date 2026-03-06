@@ -1,6 +1,6 @@
 /* Services Section */
 .servicesSection {
-    padding: 80px 20px;
+    padding: var(--spacing-20) var(--spacing-5);
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -8,7 +8,7 @@
 .servicesGrid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: var(--spacing-8);
 }
 
 @media (min-width: 768px) {
@@ -24,126 +24,156 @@
 }
 
 .serviceCard {
-    background-color: white;
-    border-radius: 16px;
-    padding: 40px 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e5e7eb;
+    background-color: var(--card);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-10) var(--spacing-8);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
     text-align: center;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
 }
 
 .serviceCard:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-xl);
 }
 
 .serviceIcon {
     font-size: 48px;
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-6);
 }
 
 .serviceTitle {
-    font-size: 20px;
+    font-size: var(--text-xl);
     font-weight: 700;
-    color: #111827;
-    margin: 0 0 12px 0;
+    color: var(--foreground);
+    margin: 0 0 var(--spacing-3) 0;
 }
 
 .serviceDescription {
-    font-size: 16px;
-    color: #4b5563;
+    font-size: var(--text-base);
+    color: var(--muted-foreground);
     line-height: 1.6;
     margin: 0;
 }
 
 /* CTA Section */
 .ctaSection {
-    padding: 80px 20px;
-    background-color: white;
+    padding: var(--spacing-20) var(--spacing-5);
+    background-color: var(--background);
     text-align: center;
 }
 
 .ctaTitle {
-    font-size: 36px;
+    font-size: var(--text-4xl);
     font-weight: 700;
-    color: #111827;
-    margin: 0 0 16px 0;
+    color: var(--foreground);
+    margin: 0 0 var(--spacing-4) 0;
 }
 
 .ctaDescription {
-    font-size: 18px;
-    color: #6b7280;
+    font-size: var(--text-lg);
+    color: var(--muted-foreground);
     max-width: 600px;
-    margin: 0 auto 30px;
+    margin: 0 auto var(--spacing-8);
     line-height: 1.6;
 }
 
 .ctaButtons {
     display: flex;
-    gap: 16px;
+    gap: var(--spacing-4);
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .primaryButton,
 .secondaryButton {
-    padding: 14px 32px;
+    padding: var(--spacing-3) var(--spacing-8);
     border: none;
-    border-radius: 10px;
-    font-size: 16px;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     min-width: 140px;
 }
 
 .primaryButton {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-700) 100%);
+    color: var(--primary-foreground);
 }
 
 .primaryButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--shadow-lg);
 }
 
 .secondaryButton {
-    background-color: white;
-    color: #4b5563;
-    border: 2px solid #d1d5db;
+    background-color: var(--background);
+    color: var(--foreground);
+    border: 2px solid var(--border);
 }
 
 .secondaryButton:hover {
-    background-color: #f9fafb;
-    border-color: #9ca3af;
+    background-color: var(--muted);
+    border-color: var(--muted-foreground);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .heroSection {
-        padding: 60px 20px;
-    }
-
-    .heroTitle {
-        font-size: 36px;
-    }
-
-    .heroDescription {
-        font-size: 16px;
-    }
-
-    .servicesSection {
-        padding: 40px 20px;
-    }
-
+    .servicesSection,
     .ctaSection {
-        padding: 40px 20px;
+        padding: var(--spacing-10) var(--spacing-4);
+    }
+
+    .servicesGrid {
+        gap: var(--spacing-6);
+    }
+
+    .serviceCard {
+        padding: var(--spacing-8) var(--spacing-6);
     }
 
     .ctaTitle {
-        font-size: 28px;
+        font-size: var(--text-3xl);
+    }
+
+    .ctaDescription {
+        font-size: var(--text-base);
+        margin-bottom: var(--spacing-6);
+    }
+
+    .serviceTitle {
+        font-size: var(--text-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .servicesSection,
+    .ctaSection {
+        padding: var(--spacing-8) var(--spacing-4);
+    }
+
+    .serviceCard {
+        padding: var(--spacing-6) var(--spacing-4);
+    }
+
+    .serviceIcon {
+        font-size: 40px;
+        margin-bottom: var(--spacing-4);
+    }
+
+    .ctaButtons {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-3);
+    }
+
+    .primaryButton,
+    .secondaryButton {
+        width: 100%;
+        max-width: 280px;
     }
 }

@@ -1,36 +1,52 @@
+/* Results.module.css */
+
 .resultsSection {
-    background: white;
-    border-radius: 15px;
-    padding: 2rem;
-    margin-top: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background: var(--card);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-8);
+    margin-top: var(--spacing-8);
+    box-shadow: var(--shadow-lg);
 }
 
 .resultsHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #f1f5f9;
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 2px solid var(--border);
 }
 
 .resultsTitle {
-    font-size: 1.5rem;
+    font-size: var(--text-xl);
     font-weight: 700;
-    color: #1e293b;
+    color: var(--foreground);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--spacing-2);
+    margin: 0;
+}
+
+.resultsIcon {
+    width: 24px;
+    height: 24px;
+    color: var(--primary);
 }
 
 .resultsCount {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--brand-gradient);
     color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-2xl);
+    font-size: var(--text-sm);
     font-weight: 600;
+}
+
+/* Table Wrapper for horizontal scroll */
+.tableWrapper {
+    overflow-x: auto;
+    margin-top: var(--spacing-4);
+    border-radius: var(--radius-lg);
 }
 
 /* Results Table */
@@ -38,57 +54,93 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    margin-top: 1rem;
+    min-width: 800px;
 }
 
 .tableHeader {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--brand-gradient);
     color: white;
 }
 
 .tableHeader th {
-    padding: 1rem;
+    padding: var(--spacing-4);
     text-align: left;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
+.tableHeader th:first-child {
+    border-top-left-radius: var(--radius-lg);
+}
+
+.tableHeader th:last-child {
+    border-top-right-radius: var(--radius-lg);
+}
+
 .tableBody tr {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border);
     transition: all 0.2s ease;
 }
 
 .tableBody tr:hover {
-    background: #f8fafc;
+    background: var(--accent);
 }
 
 .tableBody td {
-    padding: 1rem;
-    color: #475569;
+    padding: var(--spacing-4);
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
 }
 
 .pincodeCell {
     font-family: 'Courier New', monospace;
     font-weight: 700;
-    font-size: 1.1rem;
-    color: #1e293b;
+    font-size: var(--text-base);
+    color: var(--foreground);
+}
+
+/* Category Badges */
+.categoryBadge {
+    display: inline-block;
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-2xl);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.categoryBadge.urban {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.categoryBadge.rural {
+    background: var(--success);
+    color: white;
 }
 
 /* Village Details Card */
 .villageCard {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    border-radius: 12px;
-    padding: 2rem;
-    margin-top: 2rem;
-    border-left: 5px solid #667eea;
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    margin-top: var(--spacing-8);
+    border-left: 5px solid var(--primary);
+}
+
+.summaryTitle {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0 0 var(--spacing-4) 0;
 }
 
 .villageGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+    gap: var(--spacing-6);
 }
 
 .villageDetail {
@@ -97,74 +149,136 @@
 }
 
 .detailLabel {
-    font-size: 0.8rem;
-    color: #64748b;
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--spacing-1);
 }
 
 .detailValue {
-    font-size: 1.1rem;
+    font-size: var(--text-base);
     font-weight: 600;
-    color: #1e293b;
+    color: var(--foreground);
 }
 
-.categoryBadge {
+/* Loading States */
+.loadingContainer {
+    text-align: center;
+    padding: var(--spacing-8);
+}
+
+.loadingSpinner {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s linear infinite;
+    margin-bottom: var(--spacing-4);
 }
 
-.categoryBadge.urban {
-    background: #667eea;
-    color: white;
+.loadingText {
+    color: var(--muted-foreground);
+    font-size: var(--text-base);
 }
 
-.categoryBadge.rural {
-    background: #48bb78;
-    color: white;
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error States */
+.errorContainer {
+    text-align: center;
+    padding: var(--spacing-8);
+}
+
+.errorText {
+    color: var(--destructive);
+    font-size: var(--text-base);
 }
 
 /* No Results */
 .noResults {
     text-align: center;
-    padding: 4rem 2rem;
-    color: #64748b;
+    padding: var(--spacing-12) var(--spacing-8);
+    color: var(--muted-foreground);
 }
 
 .noResultsIcon {
     font-size: 4rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-4);
     opacity: 0.5;
 }
 
 .noResultsTitle {
-    font-size: 1.2rem;
+    font-size: var(--text-xl);
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    color: var(--foreground);
+    margin-bottom: var(--spacing-2);
 }
 
 .noResultsText {
-    font-size: 0.9rem;
-    color: #94a3b8;
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
 }
 
+/* Responsive */
 @media (max-width: 768px) {
+    .resultsSection {
+        padding: var(--spacing-6) var(--spacing-4);
+        margin-top: var(--spacing-6);
+    }
+
+    .resultsHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-3);
+        margin-bottom: var(--spacing-4);
+        padding-bottom: var(--spacing-3);
+    }
+
+    .resultsTitle {
+        font-size: var(--text-lg);
+    }
+
+    .resultsCount {
+        align-self: flex-start;
+    }
+
     .tableHeader th {
-        padding: 0.75rem 0.5rem;
-        font-size: 0.8rem;
+        padding: var(--spacing-3) var(--spacing-2);
+        font-size: var(--text-xs);
     }
 
     .tableBody td {
-        padding: 0.75rem 0.5rem;
-        font-size: 0.9rem;
+        padding: var(--spacing-3) var(--spacing-2);
+        font-size: var(--text-xs);
+    }
+
+    .pincodeCell {
+        font-size: var(--text-sm);
+    }
+
+    .villageCard {
+        padding: var(--spacing-4);
+        margin-top: var(--spacing-6);
     }
 
     .villageGrid {
         grid-template-columns: 1fr;
+        gap: var(--spacing-4);
+    }
+
+    .summaryTitle {
+        font-size: var(--text-base);
+        margin-bottom: var(--spacing-3);
+    }
+
+    .detailValue {
+        font-size: var(--text-sm);
     }
 }

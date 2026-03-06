@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+'use client';
+
+import { useState } from 'react';
 import {
     useGetCountriesQuery,
     useGetStatesByCountryQuery,
@@ -6,7 +8,9 @@ import {
     useGetSubDistrictsByDistrictQuery,
     useGetVillagesBySubDistrictQuery,
 } from '@/services/api/locationsApi';
-import formStyles from '@/styles/pages/pincode/Form.module.css';
+import { FormContainer, FormRow } from '@/components/common/forms/FormContainer';
+import FormSelect from '@/components/common/forms/FormSelect';
+import { PrimaryButton, SecondaryButton, ActionButtons } from '@/components/common/forms/FormButtons';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const PincodeSearchForm = ({ onSubmit, onClear }) => {
@@ -87,136 +91,109 @@ const PincodeSearchForm = ({ onSubmit, onClear }) => {
 
     const isLoading = isCountryLoading || isStateLoading || isDistrictLoading || isSubDistrictLoading || isVillageLoading;
 
+    // Transform data for select options
+    const countryOptions = countries.map(country => ({
+        value: country.id,
+        label: `${country.name} (${country.iso_code})`
+    }));
+
+    const stateOptions = states.map(state => ({
+        value: state.id,
+        label: `${state.name} (${state.type})`
+    }));
+
+    const districtOptions = districts.map(district => ({
+        value: district.id,
+        label: district.name
+    }));
+
+    const subDistrictOptions = subDistricts.map(subDistrict => ({
+        value: subDistrict.id,
+        label: subDistrict.name
+    }));
+
+    const villageOptions = villages.map(village => ({
+        value: village.id,
+        label: `${village.name} (${village.category})`
+    }));
+
     return (
-        <form onSubmit={handleSubmit} className={formStyles.formContainer}>
-            <div className={formStyles.formRow}>
+        <FormContainer onSubmit={handleSubmit}>
+            <FormRow>
                 {/* Country Select */}
-                <div className={formStyles.formGroup}>
-                    <label className={formStyles.formLabel}>
-                        Country
-                        <span className={formStyles.required}>*</span>
-                    </label>
-                    <select
-                        value={formData.country}
-                        onChange={(e) => handleInputChange('country', e.target.value)}
-                        className={formStyles.formSelect}
-                        required
-                        disabled={isCountryLoading}
-                    >
-                        <option value="">Select Country</option>
-                        {countries.map(country => (
-                            <option key={country.id} value={country.id}>
-                                {country.name} ({country.iso_code})
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <FormSelect
+                    label="Country"
+                    required
+                    value={formData.country}
+                    onChange={(e) => handleInputChange('country', e.target.value)}
+                    options={countryOptions}
+                    disabled={isCountryLoading}
+                    loading={isCountryLoading}
+                    placeholder="Select Country"
+                />
 
                 {/* State Select */}
-                <div className={formStyles.formGroup}>
-                    <label className={formStyles.formLabel}>
-                        State
-                        <span className={formStyles.required}>*</span>
-                    </label>
-                    <select
-                        value={formData.state}
-                        onChange={(e) => handleInputChange('state', e.target.value)}
-                        className={formStyles.formSelect}
-                        required
-                        disabled={!formData.country || isStateLoading}
-                    >
-                        <option value="">Select State</option>
-                        {states.map(state => (
-                            <option key={state.id} value={state.id}>
-                                {state.name} ({state.type})
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <FormSelect
+                    label="State"
+                    required
+                    value={formData.state}
+                    onChange={(e) => handleInputChange('state', e.target.value)}
+                    options={stateOptions}
+                    disabled={!formData.country || isStateLoading}
+                    loading={isStateLoading}
+                    placeholder="Select State"
+                />
 
                 {/* District Select */}
-                <div className={formStyles.formGroup}>
-                    <label className={formStyles.formLabel}>
-                        District
-                        <span className={formStyles.required}>*</span>
-                    </label>
-                    <select
-                        value={formData.district}
-                        onChange={(e) => handleInputChange('district', e.target.value)}
-                        className={formStyles.formSelect}
-                        required
-                        disabled={!formData.state || isDistrictLoading}
-                    >
-                        <option value="">Select District</option>
-                        {districts.map(district => (
-                            <option key={district.id} value={district.id}>
-                                {district.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <FormSelect
+                    label="District"
+                    required
+                    value={formData.district}
+                    onChange={(e) => handleInputChange('district', e.target.value)}
+                    options={districtOptions}
+                    disabled={!formData.state || isDistrictLoading}
+                    loading={isDistrictLoading}
+                    placeholder="Select District"
+                />
 
                 {/* Sub-District Select */}
-                <div className={formStyles.formGroup}>
-                    <label className={formStyles.formLabel}>
-                        City/Sub-District
-                        <span className={formStyles.required}>*</span>
-                    </label>
-                    <select
-                        value={formData.subDistrict}
-                        onChange={(e) => handleInputChange('subDistrict', e.target.value)}
-                        className={formStyles.formSelect}
-                        required
-                        disabled={!formData.district || isSubDistrictLoading}
-                    >
-                        <option value="">Select City/Sub-District</option>
-                        {subDistricts.map(subDistrict => (
-                            <option key={subDistrict.id} value={subDistrict.id}>
-                                {subDistrict.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <FormSelect
+                    label="City/Sub-District"
+                    required
+                    value={formData.subDistrict}
+                    onChange={(e) => handleInputChange('subDistrict', e.target.value)}
+                    options={subDistrictOptions}
+                    disabled={!formData.district || isSubDistrictLoading}
+                    loading={isSubDistrictLoading}
+                    placeholder="Select City/Sub-District"
+                />
 
                 {/* Village Select */}
-                <div className={formStyles.formGroup}>
-                    <label className={formStyles.formLabel}>
-                        Village/Town
-                        <span className={formStyles.required}>*</span>
-                    </label>
-                    <select
-                        value={formData.village}
-                        onChange={(e) => {
-                            handleInputChange('village', e.target.value);
-                        }}
-                        className={formStyles.formSelect}
-                        required
-                        disabled={!formData.subDistrict || isVillageLoading}
-                    >
-                        <option value="">Select Village/Town</option>
-                        {villages.map(village => (
-                            <option key={village.id} value={village.id}>
-                                {village.name} ({village.category})
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            </div>
+                <FormSelect
+                    label="Village/Town"
+                    required
+                    value={formData.village}
+                    onChange={(e) => handleInputChange('village', e.target.value)}
+                    options={villageOptions}
+                    disabled={!formData.subDistrict || isVillageLoading}
+                    loading={isVillageLoading}
+                    placeholder="Select Village/Town"
+                />
+            </FormRow>
 
-            <div className={formStyles.actionButtons}>
-                <button
+            <ActionButtons>
+                <PrimaryButton
                     type="submit"
-                    className={formStyles.primaryButton}
                     disabled={!formData.village || isLoading}
+                    icon={<MagnifyingGlassIcon />}
                 >
-                    <MagnifyingGlassIcon className="h-5 w-5" />
                     {isLoading ? 'Loading...' : 'Search Pincodes'}
-                </button>
-                <button type="button" onClick={handleClear} className={formStyles.secondaryButton}>
+                </PrimaryButton>
+                <SecondaryButton type="button" onClick={handleClear}>
                     Clear All
-                </button>
-            </div>
-        </form>
+                </SecondaryButton>
+            </ActionButtons>
+        </FormContainer>
     );
 };
 

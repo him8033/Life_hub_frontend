@@ -1,0 +1,187 @@
+/* FormElements.module.css */
+
+/* Form Container */
+.formContainer {
+    display: grid;
+    gap: var(--spacing-6);
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-6);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.formLabel {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: var(--spacing-2);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.required {
+    color: var(--destructive);
+}
+
+/* Base Input & Select Styles */
+.baseInput,
+.baseSelect {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    background: var(--background);
+    color: var(--foreground);
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.baseInput:focus,
+.baseSelect:focus {
+    outline: none;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
+}
+
+.baseInput::placeholder,
+.baseSelect::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.7;
+}
+
+.baseSelect {
+    appearance: none;
+    padding-right: var(--spacing-10);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.5em;
+}
+
+.baseInput:disabled,
+.baseSelect:disabled {
+    background-color: var(--muted);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Specific component classes */
+.formInput {
+    composes: baseInput;
+}
+
+.formSelect {
+    composes: baseSelect;
+}
+
+/* Textarea specific */
+.formTextarea {
+    composes: baseInput;
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Hint and Error Text */
+.hintText {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin-top: var(--spacing-1);
+}
+
+.errorText {
+    font-size: var(--text-xs);
+    color: var(--destructive);
+    margin-top: var(--spacing-1);
+}
+
+/* Action Buttons */
+.actionButtons {
+    display: flex;
+    gap: var(--spacing-4);
+    margin-top: var(--spacing-8);
+    padding-top: var(--spacing-8);
+    border-top: 2px solid var(--border);
+}
+
+.primaryButton {
+    padding: var(--spacing-4) var(--spacing-10);
+    background: var(--brand-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    box-shadow: var(--shadow-md);
+    min-width: 160px;
+}
+
+.primaryButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.primaryButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.secondaryButton {
+    padding: var(--spacing-4) var(--spacing-10);
+    background: var(--background);
+    color: var(--foreground);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    min-width: 160px;
+}
+
+.secondaryButton:hover {
+    background: var(--muted);
+    border-color: var(--muted-foreground);
+}
+
+.buttonIcon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-4);
+    }
+
+    .actionButtons {
+        flex-direction: column;
+        gap: var(--spacing-3);
+    }
+
+    .primaryButton,
+    .secondaryButton {
+        width: 100%;
+        padding: var(--spacing-3) var(--spacing-6);
+    }
+}

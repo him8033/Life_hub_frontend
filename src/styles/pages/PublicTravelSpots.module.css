@@ -1,21 +1,21 @@
-/* PublicTravelSpots.module.css - Cleaned Version */
+/* PublicTravelSpots.module.css */
 
-/* Top Bar Styles */
+/* Top Bar Styles (unchanged) */
 .topBar {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-6);
+    background: var(--card);
+    padding: var(--spacing-4);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
 }
 
 @media (min-width: 768px) {
     .topBar {
         grid-template-columns: 1fr auto auto;
-        gap: 1.5rem;
+        gap: var(--spacing-6);
         align-items: center;
     }
 }
@@ -31,44 +31,46 @@
 
 .searchBox {
     display: flex;
-    background: white;
-    border-radius: 8px;
+    background: var(--background);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    border: 1px solid #ddd;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
 }
 
 .searchBox:focus-within {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
 }
 
 .searchIcon {
     width: 20px;
     height: 20px;
-    color: #666;
-    margin-left: 1rem;
+    color: var(--muted-foreground);
+    margin-left: var(--spacing-4);
     align-self: center;
 }
 
 .searchInput {
     flex: 1;
-    padding: 0.875rem 1rem;
+    padding: var(--spacing-3) var(--spacing-4);
     border: none;
     background: transparent;
-    font-size: 1rem;
+    font-size: var(--text-base);
     outline: none;
     min-width: 0;
+    color: var(--foreground);
 }
 
 .searchInput::placeholder {
-    color: #999;
+    color: var(--muted-foreground);
+    opacity: 0.7;
 }
 
 .searchButton {
-    padding: 0.875rem 1.5rem;
-    background: var(--primary-color);
-    color: rgb(0, 0, 0);
+    padding: var(--spacing-3) var(--spacing-6);
+    background: var(--primary);
+    color: var(--primary-foreground);
     border: none;
     font-weight: 500;
     cursor: pointer;
@@ -77,7 +79,7 @@
 }
 
 .searchButton:hover {
-    background: var(--primary-dark);
+    background: var(--primary-600);
 }
 
 /* Category Filter */
@@ -87,54 +89,56 @@
 
 .categorySelect {
     width: 100%;
-    padding: 0.875rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: white;
-    font-size: 1rem;
+    padding: var(--spacing-3) var(--spacing-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    font-size: var(--text-base);
     cursor: pointer;
     outline: none;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    color: var(--foreground);
+    box-shadow: var(--shadow-sm);
 }
 
 .categorySelect:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
 }
 
 .categorySelect:disabled {
-    background: #f8f9fa;
-    color: #999;
+    background: var(--muted);
+    color: var(--muted-foreground);
     cursor: not-allowed;
 }
 
 /* Controls Container */
 .controlsContainer {
     display: flex;
-    gap: 1rem;
+    gap: var(--spacing-4);
     align-items: center;
 }
 
 .filterButton {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.875rem 1.5rem;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 500;
     transition: all 0.2s;
     position: relative;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    color: var(--foreground);
+    box-shadow: var(--shadow-sm);
 }
 
 .filterButton:hover {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
+    border-color: var(--primary);
+    color: var(--primary);
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
 }
 
 .filterIcon {
@@ -146,16 +150,16 @@
     position: absolute;
     top: -8px;
     right: -8px;
-    background: var(--primary-color);
-    color: white;
-    font-size: 0.75rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: var(--text-xs);
     min-width: 20px;
     height: 20px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 4px;
+    padding: 0 var(--spacing-1);
     font-weight: 600;
 }
 
@@ -165,29 +169,30 @@
 
 .sortSelect {
     width: 100%;
-    padding: 0.875rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: white;
-    font-size: 1rem;
+    padding: var(--spacing-3) var(--spacing-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    font-size: var(--text-base);
     cursor: pointer;
     outline: none;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    color: var(--foreground);
+    box-shadow: var(--shadow-sm);
 }
 
 .sortSelect:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
 }
 
 /* Main Content */
 .mainContent {
     display: flex;
-    gap: 2rem;
+    gap: var(--spacing-8);
     position: relative;
 }
 
-/* Filter Sidebar */
+/* Filter Modal */
 .filterOverlay {
     position: fixed;
     top: 0;
@@ -196,135 +201,163 @@
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
 }
 
 .filterSidebar {
     position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 320px;
-    background: white;
+    max-width: 500px;
+    max-height: 85vh;
+    background: var(--background);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-2xl);
     z-index: 1001;
     display: flex;
     flex-direction: column;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-    transform: translateX(100%);
-    animation: slideIn 0.3s ease forwards;
+    animation: modalFadeIn 0.3s ease;
 }
 
-@keyframes slideIn {
-    to {
-        transform: translateX(0);
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
     }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .filterHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
+    padding: var(--spacing-6);
+    border-bottom: 1px solid var(--border);
 }
 
 .filterTitle {
-    font-size: 1.25rem;
+    font-size: var(--text-xl);
     font-weight: 600;
+    color: var(--foreground);
     margin: 0;
 }
 
 .filterClose {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: var(--text-2xl);
     cursor: pointer;
-    color: #666;
+    color: var(--muted-foreground);
     width: 32px;
     height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
 }
 
 .filterClose:hover {
-    background: #f8f9fa;
-    color: #333;
+    background: var(--muted);
+    color: var(--foreground);
 }
 
 .filterContent {
     flex: 1;
     overflow-y: auto;
-    padding: 1.5rem;
+    padding: var(--spacing-6);
 }
 
 .filterSection {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-6);
 }
 
 .filterSectionTitle {
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
     font-weight: 600;
-    color: #333;
-    margin-bottom: 0.25rem;
+    color: var(--foreground);
+    margin-bottom: var(--spacing-2);
 }
 
 .filterSelect {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background: white;
-    font-size: 0.95rem;
+    padding: var(--spacing-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    font-size: var(--text-sm);
     cursor: pointer;
     outline: none;
-    margin-top: 0.5rem;
     transition: all 0.2s;
+    color: var(--foreground);
 }
 
 .filterSelect:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
+    border-color: var(--ring);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 20%, transparent);
 }
 
 .filterSelect:disabled {
-    background: #f8f9fa;
-    color: #999;
+    background: var(--muted);
+    color: var(--muted-foreground);
     cursor: not-allowed;
 }
 
 .filterFooter {
-    padding: 1.5rem;
-    border-top: 1px solid #e0e0e0;
+    padding: var(--spacing-6);
+    border-top: 1px solid var(--border);
     display: flex;
-    gap: 1rem;
+    gap: var(--spacing-4);
 }
 
 .filterClearButton {
     flex: 1;
-    padding: 0.75rem;
-    background: #f8f9fa;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
+    padding: var(--spacing-3);
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 500;
-    color: #666;
+    color: var(--foreground);
+    transition: all 0.2s;
+}
+
+.filterClearButton:hover {
+    background: var(--accent);
 }
 
 .filterApplyButton {
     flex: 1;
-    padding: 0.75rem;
-    background: var(--primary-color);
-    color: white;
+    padding: var(--spacing-3);
+    background: var(--primary);
+    color: var(--primary-foreground);
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 500;
+    transition: all 0.2s;
 }
 
-.filterApplyButton:hover {
-    background: var(--primary-dark);
+.filterApplyButton:hover:not(:disabled) {
+    background: var(--primary-600);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.filterApplyButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* Results Section */
@@ -336,66 +369,66 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid #eee;
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-3);
+    border-bottom: 1px solid var(--border);
 }
 
 .resultsCount {
-    margin-left:3rem;
-    font-size: 0.95rem;
-    color: #666;
+    margin-left: var(--spacing-12);
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
     font-weight: 500;
 }
 
 .spotsContainer {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px 60px;
+    padding: 0 var(--spacing-5) var(--spacing-16);
 }
 
 .noResults {
     text-align: center;
-    padding: 4rem 2rem;
-    background: white;
-    border-radius: 8px;
-    border: 1px solid #eee;
+    padding: var(--spacing-16) var(--spacing-8);
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
 }
 
 .noResultsIcon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: var(--text-5xl);
+    margin-bottom: var(--spacing-4);
     opacity: 0.7;
 }
 
 .noResultsMessage {
-    font-size: 1.1rem;
-    color: #666;
-    margin-bottom: 1.5rem;
+    font-size: var(--text-lg);
+    color: var(--muted-foreground);
+    margin-bottom: var(--spacing-6);
     line-height: 1.5;
 }
 
 .clearButton {
-    padding: 0.75rem 1.5rem;
-    background: var(--primary-color);
-    color: white;
+    padding: var(--spacing-3) var(--spacing-6);
+    background: var(--primary);
+    color: var(--primary-foreground);
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .clearButton:hover {
-    background: var(--primary-dark);
+    background: var(--primary-600);
 }
 
 /* Spots Grid */
 .spotsGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
 }
 
 /* Pagination Controls */
@@ -403,37 +436,34 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
-    margin-top: 3rem;
-    padding: 2rem 0;
-    border-top: 1px solid #eee;
+    gap: var(--spacing-8);
+    margin-top: var(--spacing-12);
+    padding: var(--spacing-8) 0;
+    border-top: 1px solid var(--border);
 }
 
 .paginationButton {
-    padding: 0.75rem 1.5rem;
-    border: 1px solid #ddd;
-    background: white;
-    border-radius: 6px;
+    padding: var(--spacing-3) var(--spacing-6);
+    border: 1px solid var(--border);
+    background: var(--background);
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 500;
     transition: all 0.2s;
     min-width: 120px;
+    color: var(--foreground);
 }
 
 .paginationButton:hover:not(.disabled) {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
+    border-color: var(--primary);
+    color: var(--primary);
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
 }
 
 .paginationButton.disabled {
     opacity: 0.5;
     cursor: not-allowed;
-}
-
-.nextButton {
-    /* Additional styles for next button if needed */
 }
 
 /* Loading Overlay */
@@ -443,7 +473,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.9);
+    background: color-mix(in srgb, var(--background) 90%, transparent);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -452,32 +482,10 @@
 }
 
 /* Responsive */
-@media (min-width: 1024px) {
-    .filterSidebar {
-        position: sticky;
-        top: 2rem;
-        height: calc(100vh - 4rem);
-        max-width: 280px;
-        transform: none;
-        box-shadow: none;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    .filterOverlay {
-        display: none;
-    }
-
-    .filterClose {
-        display: none;
-    }
-}
-
 @media (max-width: 767px) {
     .topBar {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: var(--spacing-4);
     }
 
     .searchBox {
@@ -493,14 +501,14 @@
     }
 
     .searchInput {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        margin-bottom: 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-2);
     }
 
     .searchButton {
         width: 100%;
-        border-radius: 8px;
+        border-radius: var(--radius-md);
     }
 
     .categoryFilter,
@@ -515,12 +523,12 @@
 
     .spotsGrid {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: var(--spacing-4);
     }
 
     .paginationControls {
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--spacing-4);
         text-align: center;
     }
 
@@ -532,13 +540,13 @@
 @media (min-width: 768px) and (max-width: 1023px) {
     .spotsGrid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1.25rem;
+        gap: var(--spacing-5);
     }
 }
 
 @media (min-width: 1024px) {
     .spotsGrid {
         grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
+        gap: var(--spacing-6);
     }
 }

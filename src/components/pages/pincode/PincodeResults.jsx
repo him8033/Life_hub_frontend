@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { useSearchPincodesQuery } from '@/services/api/locationsApi';
 import resultsStyles from '@/styles/pages/pincode/Results.module.css';
@@ -15,9 +17,9 @@ const PincodeResults = ({ villageId }) => {
     if (isLoading) {
         return (
             <div className={resultsStyles.resultsSection}>
-                <div className="text-center py-8">
+                <div className={resultsStyles.loadingContainer}>
                     <div className={resultsStyles.loadingSpinner}></div>
-                    <p>Loading pincodes...</p>
+                    <p className={resultsStyles.loadingText}>Loading pincodes...</p>
                 </div>
             </div>
         );
@@ -26,8 +28,10 @@ const PincodeResults = ({ villageId }) => {
     if (error) {
         return (
             <div className={resultsStyles.resultsSection}>
-                <div className="text-center py-8 text-red-600">
-                    Error loading pincodes: {error.message}
+                <div className={resultsStyles.errorContainer}>
+                    <p className={resultsStyles.errorText}>
+                        Error loading pincodes: {error.message}
+                    </p>
                 </div>
             </div>
         );
@@ -42,7 +46,7 @@ const PincodeResults = ({ villageId }) => {
             <div className={resultsStyles.resultsSection}>
                 <div className={resultsStyles.resultsHeader}>
                     <h3 className={resultsStyles.resultsTitle}>
-                        <TagIcon className="h-6 w-6" />
+                        <TagIcon className={resultsStyles.resultsIcon} />
                         Pincode Results
                     </h3>
                 </div>
@@ -61,7 +65,7 @@ const PincodeResults = ({ villageId }) => {
         <div className={resultsStyles.resultsSection}>
             <div className={resultsStyles.resultsHeader}>
                 <h3 className={resultsStyles.resultsTitle}>
-                    <TagIcon className="h-6 w-6" />
+                    <TagIcon className={resultsStyles.resultsIcon} />
                     Pincode Results
                 </h3>
                 <span className={resultsStyles.resultsCount}>
@@ -69,7 +73,7 @@ const PincodeResults = ({ villageId }) => {
                 </span>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className={resultsStyles.tableWrapper}>
                 <table className={resultsStyles.resultsTable}>
                     <thead className={resultsStyles.tableHeader}>
                         <tr>
@@ -92,10 +96,11 @@ const PincodeResults = ({ villageId }) => {
                                 <td>{item?.state_name || 'N/A'}</td>
                                 <td>{item?.country_name || 'N/A'}</td>
                                 <td>
-                                    <span className={`${resultsStyles.categoryBadge} ${item.village_category === 'Urban'
-                                        ? resultsStyles.urban
-                                        : resultsStyles.rural
-                                        }`}>
+                                    <span className={`${resultsStyles.categoryBadge} ${
+                                        item.village_category === 'Urban'
+                                            ? resultsStyles.urban
+                                            : resultsStyles.rural
+                                    }`}>
                                         {item.village_category || 'N/A'}
                                     </span>
                                 </td>

@@ -4,7 +4,7 @@ import styles from '@/styles/common/Loader.module.css';
 
 export default function Loader({
     size = 'large', // 'small', 'medium', 'large'
-    color = '#2563eb', // Custom color
+    color,
     showText = true,
     text = 'Loading...',
     fullPage = true,
@@ -31,14 +31,11 @@ export default function Loader({
             <div className={styles.loaderContent}>
                 <div
                     className={`${styles.loadingSpinner} ${getSize()}`}
-                    style={{ borderTopColor: color }}
+                    style={color ? { borderTopColor: color } : undefined}
                 ></div>
 
                 {showText && (
-                    <p
-                        className={styles.loadingText}
-                        style={{ color: color }}
-                    >
+                    <p className={styles.loadingText}>
                         {text}
                     </p>
                 )}

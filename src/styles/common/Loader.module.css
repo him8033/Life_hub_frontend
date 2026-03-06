@@ -1,4 +1,4 @@
-/* Loader Styles - Minimal Design */
+/* Loader.module.css */
 
 .loaderContainer {
     display: flex;
@@ -9,7 +9,7 @@
 .fullPage {
     width: 100%;
     height: 80vh;
-    background-color: #f9fafb;
+    background-color: var(--background);
 }
 
 .loaderContent {
@@ -18,9 +18,9 @@
 
 /* Spinner */
 .loadingSpinner {
-    border: 3px solid #f3f4f6;
+    border: 3px solid var(--border);
     border-radius: 50%;
-    border-top-color: #2563eb;
+    border-top-color: var(--primary);
     animation: spin 1s linear infinite;
     margin: 0 auto;
 }
@@ -48,7 +48,6 @@
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
     }
@@ -56,9 +55,9 @@
 
 /* Text */
 .loadingText {
-    margin-top: 12px;
-    font-size: 14px;
-    color: #4b5563;
+    margin-top: var(--spacing-3);
+    font-size: var(--text-sm);
+    color: var(--foreground);
     font-weight: 500;
 }
 
@@ -75,7 +74,7 @@
     }
 
     .loadingText {
-        font-size: 13px;
-        margin-top: 10px;
+        font-size: var(--text-xs);
+        margin-top: var(--spacing-2);
     }
 }

@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import PageLayout from '@/components/layout/PageLayout';
 import TravelSpotCard from '@/components/travelspots/TravelSpotCard';
 import Loader from '@/components/common/Loader';
 import ErrorState from '@/components/common/ErrorState';
+import FormSelect from '@/components/common/forms/FormSelect';
+import { PrimaryButton, SecondaryButton } from '@/components/common/forms/FormButtons';
 import styles from '@/styles/pages/PublicTravelSpots.module.css';
-import common from '@/styles/pages/common.module.css';
 
 import { useLazyGetPublicTravelSpotsQuery } from '@/services/api/travelspotApi';
 import { useGetPublicSpotCategoriesQuery } from '@/services/api/spotcategoryApi';
@@ -80,6 +82,47 @@ export default function PublicTravelSpotsPage() {
     const subDistricts = subDistrictsData?.data || [];
     const villages = villagesData?.data?.results || [];
 
+    // Transform data for select options
+    const categoryOptions = categories.map(cat => ({
+        value: cat.id,
+        label: cat.name
+    }));
+
+    const stateOptions = states.map(state => ({
+        value: state.id,
+        label: state.name
+    }));
+
+    const districtOptions = districts.map(district => ({
+        value: district.id,
+        label: district.name
+    }));
+
+    const subDistrictOptions = subDistricts.map(subDistrict => ({
+        value: subDistrict.id,
+        label: subDistrict.name
+    }));
+
+    const villageOptions = villages.map(village => ({
+        value: village.id,
+        label: village.name
+    }));
+
+    const minViewsOptions = [
+        { value: '100', label: '100+ Views' },
+        { value: '500', label: '500+ Views' },
+        { value: '1000', label: '1000+ Views' },
+        { value: '5000', label: '5000+ Views' },
+    ];
+
+    const sortOptions = [
+        { value: 'most_visited', label: 'Most Visited' },
+        { value: 'newest', label: 'Newest First' },
+        { value: 'oldest', label: 'Oldest First' },
+        { value: 'name', label: 'Name (A-Z)' },
+        { value: 'desc_name', label: 'Name (Z-A)' },
+    ];
+
     // Debounce search
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -130,7 +173,6 @@ export default function PublicTravelSpotsPage() {
 
             setNextCursor(result.next ? extractCursor(result.next) : null);
             setHasMore(!!result.next);
-
             setTotalCount(result.count || result.results?.length || 0);
 
             if (!cursor) {
@@ -187,7 +229,6 @@ export default function PublicTravelSpotsPage() {
         setFilters(prev => {
             const newFilters = { ...prev, [key]: value };
 
-            // Reset dependent fields when parent changes
             if (key === 'state') {
                 newFilters.district = '';
                 newFilters.sub_district = '';
@@ -220,24 +261,6 @@ export default function PublicTravelSpotsPage() {
         setAppliedFilters([]);
     };
 
-    const handleClearFilter = (filterText) => {
-        const [key] = filterText.split(': ');
-
-        if (key === 'State') {
-            handleFilterChange('state', '');
-        } else if (key === 'District') {
-            handleFilterChange('district', '');
-        } else if (key === 'Sub-district') {
-            handleFilterChange('sub_district', '');
-        } else if (key === 'Village') {
-            handleFilterChange('village', '');
-        } else if (key === 'Category') {
-            handleFilterChange('category', '');
-        } else if (key === 'Min Views') {
-            handleFilterChange('min_views', '');
-        }
-    };
-
     const handleSearch = (e) => {
         e.preventDefault();
         fetchTravelSpots();
@@ -265,18 +288,13 @@ export default function PublicTravelSpotsPage() {
     }
 
     return (
-        <div className={common.container}>
-            {/* Hero Section */}
-            <div className={common.heroSection}>
-                <h1 className={common.heroTitle}>Explore Travel Spots</h1>
-                <p className={common.heroDescription}>
-                    Discover amazing places to visit across India
-                </p>
-            </div>
-
+        <PageLayout
+            heroTitle="Explore Travel Spots"
+            heroDescription="Discover amazing places to visit across India"
+            showHero={true}
+        >
             {/* Top Bar - Search, Filters Button, Sort */}
             <div className={styles.topBar}>
-                {/* Search Bar */}
                 <div className={styles.searchContainer}>
                     <form onSubmit={handleSearch} className={styles.searchForm}>
                         <div className={styles.searchBox}>
@@ -295,26 +313,26 @@ export default function PublicTravelSpotsPage() {
                     </form>
                 </div>
 
-                {/* Category Filter - Main */}
                 <div className={styles.categoryFilter}>
-                    <select
+                    <FormSelect
                         value={filters.category}
                         onChange={(e) => handleFilterChange('category', e.target.value)}
-                        className={styles.categorySelect}
+                        options={categoryOptions}
                         disabled={isLoadingCategories}
-                    >
-                        <option value="">All Categories</option>
-                        {categories.map(category => (
-                            <option key={category.id} value={category.id}>
-                                {category.name}
-                            </option>
-                        ))}
-                    </select>
+                        placeholder="All Categories"
+                    />
                 </div>
 
-                {/* Controls Container */}
                 <div className={styles.controlsContainer}>
-                    {/* Filters Button */}
+                    <div className={styles.sortContainer}>
+                        <FormSelect
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            options={sortOptions}
+                            placeholder="Sort By"
+                        />
+                    </div>
+
                     <button
                         onClick={() => setIsFilterOpen(true)}
                         className={styles.filterButton}
@@ -327,22 +345,6 @@ export default function PublicTravelSpotsPage() {
                             </span>
                         )}
                     </button>
-
-                    {/* Sort Dropdown */}
-                    <div className={styles.sortContainer}>
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className={styles.sortSelect}
-                        >
-                            <option value="">Sort By</option>
-                            <option value="most_visited">Most Visited</option>
-                            <option value="newest">Newest First</option>
-                            <option value="oldest">Oldest First</option>
-                            <option value="name">Name (A-Z)</option>
-                            <option value="desc_name">Name (Z-A)</option>
-                        </select>
-                    </div>
                 </div>
             </div>
 
@@ -366,107 +368,74 @@ export default function PublicTravelSpotsPage() {
                             <div className={styles.filterContent}>
                                 {/* State Filter */}
                                 <div className={styles.filterSection}>
-                                    <h4 className={styles.filterSectionTitle}>State</h4>
-                                    <select
+                                    <FormSelect
+                                        label="State"
                                         value={filters.state}
                                         onChange={(e) => handleFilterChange('state', e.target.value)}
-                                        className={styles.filterSelect}
+                                        options={stateOptions}
                                         disabled={isStateLoading}
-                                    >
-                                        <option value="">All States</option>
-                                        {states.map(state => (
-                                            <option key={state.id} value={state.id}>
-                                                {state.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        placeholder="All States"
+                                    />
                                 </div>
 
                                 {/* District Filter */}
                                 <div className={styles.filterSection}>
-                                    <h4 className={styles.filterSectionTitle}>District</h4>
-                                    <select
+                                    <FormSelect
+                                        label="District"
                                         value={filters.district}
                                         onChange={(e) => handleFilterChange('district', e.target.value)}
-                                        className={styles.filterSelect}
+                                        options={districtOptions}
                                         disabled={!filters.state || isDistrictLoading}
-                                    >
-                                        <option value="">All Districts</option>
-                                        {districts.map(district => (
-                                            <option key={district.id} value={district.id}>
-                                                {district.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        placeholder="All Districts"
+                                    />
                                 </div>
 
                                 {/* Sub-district Filter */}
                                 <div className={styles.filterSection}>
-                                    <h4 className={styles.filterSectionTitle}>City/Sub-district</h4>
-                                    <select
+                                    <FormSelect
+                                        label="City/Sub-district"
                                         value={filters.sub_district}
                                         onChange={(e) => handleFilterChange('sub_district', e.target.value)}
-                                        className={styles.filterSelect}
+                                        options={subDistrictOptions}
                                         disabled={!filters.district || isSubDistrictLoading}
-                                    >
-                                        <option value="">All Sub-districts</option>
-                                        {subDistricts.map(subDistrict => (
-                                            <option key={subDistrict.id} value={subDistrict.id}>
-                                                {subDistrict.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        placeholder="All Sub-districts"
+                                    />
                                 </div>
 
                                 {/* Village Filter */}
                                 <div className={styles.filterSection}>
-                                    <h4 className={styles.filterSectionTitle}>Village/Town</h4>
-                                    <select
+                                    <FormSelect
+                                        label="Village/Town"
                                         value={filters.village}
                                         onChange={(e) => handleFilterChange('village', e.target.value)}
-                                        className={styles.filterSelect}
+                                        options={villageOptions}
                                         disabled={!filters.sub_district || isVillageLoading}
-                                    >
-                                        <option value="">All Villages</option>
-                                        {villages.map(village => (
-                                            <option key={village.id} value={village.id}>
-                                                {village.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        placeholder="All Villages"
+                                    />
                                 </div>
 
                                 {/* Minimum Views Filter */}
                                 <div className={styles.filterSection}>
-                                    <h4 className={styles.filterSectionTitle}>Minimum Views</h4>
-                                    <select
+                                    <FormSelect
+                                        label="Minimum Views"
                                         value={filters.min_views}
                                         onChange={(e) => handleFilterChange('min_views', e.target.value)}
-                                        className={styles.filterSelect}
-                                    >
-                                        <option value="">Any Popularity</option>
-                                        <option value="100">100+ Views</option>
-                                        <option value="500">500+ Views</option>
-                                        <option value="1000">1000+ Views</option>
-                                        <option value="5000">5000+ Views</option>
-                                    </select>
+                                        options={minViewsOptions}
+                                        placeholder="Any Popularity"
+                                    />
                                 </div>
                             </div>
 
                             <div className={styles.filterFooter}>
-                                <button
-                                    onClick={handleClearFilters}
-                                    className={styles.filterClearButton}
-                                >
+                                <SecondaryButton onClick={handleClearFilters}>
                                     Clear All
-                                </button>
-                                <button
+                                </SecondaryButton>
+                                <PrimaryButton
                                     onClick={handleApplyFilters}
-                                    className={styles.filterApplyButton}
                                     disabled={isStateLoading || isDistrictLoading || isSubDistrictLoading || isVillageLoading}
                                 >
                                     Apply Filters
-                                </button>
+                                </PrimaryButton>
                             </div>
                         </div>
                     </>
@@ -474,7 +443,6 @@ export default function PublicTravelSpotsPage() {
 
                 {/* Results Section */}
                 <div className={styles.resultsSection}>
-                    {/* Results Info */}
                     <div className={styles.resultsInfo}>
                         <p className={styles.resultsCount}>
                             {totalCount > 0
@@ -483,7 +451,6 @@ export default function PublicTravelSpotsPage() {
                         </p>
                     </div>
 
-                    {/* Travel Spots Grid */}
                     <div className={styles.spotsContainer}>
                         {travelSpots.length === 0 && !isFetching ? (
                             <div className={styles.noResults}>
@@ -494,12 +461,9 @@ export default function PublicTravelSpotsPage() {
                                         : 'No travel spots available at the moment.'}
                                 </p>
                                 {(debouncedSearch || appliedFilters.length > 0) && (
-                                    <button
-                                        onClick={handleClearFilters}
-                                        className={styles.clearButton}
-                                    >
+                                    <SecondaryButton onClick={handleClearFilters}>
                                         Clear all filters
-                                    </button>
+                                    </SecondaryButton>
                                 )}
                             </div>
                         ) : (
@@ -513,17 +477,14 @@ export default function PublicTravelSpotsPage() {
                                     ))}
                                 </div>
 
-                                {/* Load More */}
                                 {hasMore && travelSpots.length > 0 && (
                                     <div className={styles.paginationControls}>
                                         <button
                                             onClick={handleLoadMore}
                                             disabled={!nextCursor || isFetching}
-                                            className={`${styles.paginationButton} ${styles.nextButton} ${!nextCursor ? styles.disabled : ''}`}
+                                            className={`${styles.paginationButton} ${!nextCursor ? styles.disabled : ''}`}
                                         >
-                                            {isFetching
-                                                ? 'Loading...'
-                                                : 'Load More'}
+                                            {isFetching ? 'Loading...' : 'Load More'}
                                         </button>
                                     </div>
                                 )}
@@ -533,12 +494,11 @@ export default function PublicTravelSpotsPage() {
                 </div>
             </div>
 
-            {/* Loading overlay for additional fetches */}
             {isFetching && travelSpots.length > 0 && (
                 <div className={styles.loadingOverlay}>
                     <Loader text="Loading more spots..." />
                 </div>
             )}
-        </div>
+        </PageLayout>
     );
 }

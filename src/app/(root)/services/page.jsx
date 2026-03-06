@@ -1,9 +1,13 @@
 'use client';
 
+import PageLayout from '@/components/layout/PageLayout';
 import styles from '@/styles/pages/Services.module.css';
-import common from '@/styles/pages/common.module.css';
+import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/routes/routes.constants';
 
 export default function ServicesPage() {
+    const router = useRouter();
+    
     const services = [
         {
             title: 'Travel Spot Management',
@@ -37,16 +41,15 @@ export default function ServicesPage() {
         },
     ];
 
-    return (
-        <div className={common.container}>
-            {/* Hero Section */}
-            <section className={common.heroSection}>
-                <h1 className={common.heroTitle}>Our Services</h1>
-                <p className={common.heroDescription}>
-                    Discover all the amazing features and services we offer to enhance your travel experience.
-                </p>
-            </section>
+    const handleGetStarted = () => {
+        router.push(ROUTES.AUTH.REGISTER);
+    };
 
+    return (
+        <PageLayout
+            heroTitle="Our Services"
+            heroDescription="Discover all the amazing features and services we offer to enhance your travel experience."
+        >
             {/* Services Grid */}
             <section className={styles.servicesSection}>
                 <div className={styles.servicesGrid}>
@@ -54,7 +57,7 @@ export default function ServicesPage() {
                         <div key={index} className={styles.serviceCard}>
                             <div className={styles.serviceIcon}>{service.icon}</div>
                             <h3 className={styles.serviceTitle}>{service.title}</h3>
-                            <p className={services.serviceDescription}>{service.description}</p>
+                            <p className={styles.serviceDescription}>{service.description}</p>
                         </div>
                     ))}
                 </div>
@@ -67,7 +70,10 @@ export default function ServicesPage() {
                     Join LifeHub today and start exploring amazing travel destinations.
                 </p>
                 <div className={styles.ctaButtons}>
-                    <button className={styles.primaryButton}>
+                    <button 
+                        onClick={handleGetStarted}
+                        className={styles.primaryButton}
+                    >
                         Sign Up Free
                     </button>
                     <button className={styles.secondaryButton}>
@@ -75,6 +81,6 @@ export default function ServicesPage() {
                     </button>
                 </div>
             </section>
-        </div>
+        </PageLayout>
     );
 }
