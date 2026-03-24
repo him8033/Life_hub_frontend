@@ -1,0 +1,421 @@
+/* AuthLayout.module.css */
+
+.authContainer {
+    min-height: 100vh;
+    display: flex;
+    background: var(--background);
+    position: relative;
+    overflow: hidden;
+    /* Prevent whole page scroll */
+}
+
+/* Left Side - Branding (Fixed) */
+.brandSide {
+    flex: 1;
+    background: var(--brand-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-8);
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+    /* Full viewport height */
+    position: sticky;
+    top: 0;
+}
+
+.brandSide::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    top: -200px;
+    right: -200px;
+}
+
+.brandSide::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    bottom: -150px;
+    left: -150px;
+}
+
+.brandContent {
+    text-align: center;
+    color: white;
+    position: relative;
+    z-index: 1;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+    max-height: 90vh;
+    /* Prevent overflow */
+    overflow-y: auto;
+    /* Allow left side to scroll if content is too tall */
+}
+
+/* Hide scrollbar for left side (optional) */
+.brandContent::-webkit-scrollbar {
+    width: 4px;
+}
+
+.brandContent::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.brandContent::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-full);
+}
+
+.brandLogo {
+    width: 120px;
+    height: 120px;
+    margin-bottom: var(--spacing-4);
+    border-radius: 50%;
+    background: white;
+    padding: var(--spacing-2);
+    box-shadow: var(--shadow-xl);
+    align-self: center;
+}
+
+.brandName {
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    margin-bottom: var(--spacing-2);
+    letter-spacing: -0.02em;
+}
+
+.brandTagline {
+    font-size: var(--text-lg);
+    opacity: 0.9;
+    margin-bottom: var(--spacing-8);
+    line-height: 1.5;
+}
+
+.brandFeatures {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    text-align: left;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: var(--spacing-6);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: var(--spacing-8);
+}
+
+.featureItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--text-base);
+}
+
+.featureIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    font-size: var(--text-sm);
+    font-weight: bold;
+}
+
+/* Brand Footer - Desktop */
+.brandFooter {
+    margin-top: auto;
+    text-align: center;
+    display: block;
+}
+
+.copyright {
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 var(--spacing-2);
+    line-height: 1.5;
+}
+
+.footerLinks {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.footerLink {
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footerLink:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.footerSeparator {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: var(--text-xs);
+}
+
+/* Right Side - Form Only (Scrollable) */
+.formSide {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    /* Align to top instead of center */
+    justify-content: center;
+    padding: var(--spacing-8);
+    background: var(--background);
+    height: 100vh;
+    /* Full viewport height */
+    overflow-y: auto;
+    /* Make right side scrollable */
+}
+
+/* Custom scrollbar for right side */
+.formSide::-webkit-scrollbar {
+    width: 6px;
+}
+
+.formSide::-webkit-scrollbar-track {
+    background: var(--muted);
+}
+
+.formSide::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: var(--radius-full);
+}
+
+.formSide::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-600);
+}
+
+.formWrapper {
+    width: 100%;
+    margin: auto 0;
+    /* Center vertically when content is short */
+    padding: var(--spacing-4) 0;
+    /* Add padding for scroll */
+}
+
+/* Form Header inside form section */
+.formHeader {
+    text-align: center;
+    margin-bottom: var(--spacing-6);
+}
+
+.formTitle {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0 0 var(--spacing-2);
+    letter-spacing: -0.02em;
+}
+
+.formSubtitle {
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.authCard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-xl);
+}
+
+.mobileFooter {
+    display: none;
+}
+
+/* Responsive - Tablet and Mobile */
+@media (max-width: 968px) {
+    .authContainer {
+        flex-direction: column;
+        overflow-y: auto;
+        /* Allow page scroll on mobile */
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .brandSide {
+        height: auto;
+        min-height: auto;
+        position: relative;
+        padding: var(--spacing-6);
+        flex: none;
+    }
+
+    .brandContent {
+        min-height: auto;
+        max-width: 100%;
+        max-height: none;
+    }
+
+    .brandLogo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: var(--spacing-2);
+    }
+
+    .brandName {
+        font-size: var(--text-3xl);
+    }
+
+    .brandTagline {
+        font-size: var(--text-base);
+        margin-bottom: var(--spacing-4);
+    }
+
+    .brandFeatures {
+        display: none;
+    }
+
+    .brandFooter {
+        display: none;
+    }
+
+    .formSide {
+        height: auto;
+        min-height: auto;
+        padding: var(--spacing-4);
+        flex: 1;
+        overflow-y: visible;
+        /* Remove scroll on mobile */
+    }
+
+    .formWrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: var(--spacing-2) 0;
+    }
+
+    .authCard {
+        padding: var(--spacing-4);
+        flex: 1;
+    }
+
+    /* Mobile Footer - shows at bottom of page */
+    .mobileFooter {
+        display: block;
+        margin-top: var(--spacing-6);
+        padding-top: var(--spacing-4);
+        border-top: 1px solid var(--border);
+        text-align: center;
+    }
+
+    .mobileCopyright {
+        font-size: var(--text-xs);
+        color: var(--muted-foreground);
+        margin: 0 0 var(--spacing-2);
+        line-height: 1.5;
+    }
+
+    .mobileFooterLinks {
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-3);
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .mobileFooterLink {
+        font-size: var(--text-xs);
+        color: var(--muted-foreground);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .mobileFooterLink:hover {
+        color: var(--foreground);
+    }
+
+    .mobileFooterSeparator {
+        color: var(--border);
+        font-size: var(--text-xs);
+    }
+}
+
+@media (max-width: 640px) {
+    .brandSide {
+        padding: var(--spacing-4);
+    }
+
+    .brandLogo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .brandName {
+        font-size: var(--text-2xl);
+    }
+
+    .brandTagline {
+        font-size: var(--text-sm);
+    }
+
+    .formTitle {
+        font-size: var(--text-xl);
+    }
+
+    .formSubtitle {
+        font-size: var(--text-xs);
+    }
+
+    .mobileFooter {
+        margin-top: var(--spacing-4);
+        padding-top: var(--spacing-3);
+    }
+}
+
+/* Animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.formWrapper {
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.brandContent {
+    animation: fadeIn 0.5s ease;
+}

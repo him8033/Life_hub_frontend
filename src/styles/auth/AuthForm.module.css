@@ -1,0 +1,37 @@
+/* AuthForm.module.css */
+
+.authForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-5);
+    width: 100%;
+    padding: var(--spacing-3);
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .authForm {
+        gap: var(--spacing-4);
+        padding: var(--spacing-3);
+    }
+}
+
+@media (max-width: 480px) {
+    .authForm {
+        gap: var(--spacing-3);
+    }
+}

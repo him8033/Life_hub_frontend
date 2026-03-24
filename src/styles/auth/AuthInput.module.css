@@ -1,0 +1,121 @@
+/* AuthInput.module.css */
+
+.formItem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    width: 100%;
+}
+
+.labelRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.formLabel {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin: 0;
+}
+
+.labelIcon {
+    display: flex;
+    align-items: center;
+    color: var(--primary);
+    font-size: var(--text-base);
+}
+
+.required {
+    color: var(--destructive);
+    margin-left: var(--spacing-1);
+}
+
+.charCount {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+}
+
+.inputContainer {
+    position: relative;
+    width: 100%;
+}
+
+.input {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--text-base);
+    background: var(--background);
+    color: var(--foreground);
+    transition: all 0.3s ease;
+    border: 2px solid var(--border);
+}
+
+.input:focus {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
+    outline: none;
+}
+
+.input.hasValue {
+    border-color: var(--primary);
+}
+
+.eyeButton {
+    position: absolute;
+    right: var(--spacing-3);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    padding: var(--spacing-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+    font-size: var(--text-lg);
+    z-index: 10;
+}
+
+.eyeButton:hover {
+    color: var(--foreground);
+}
+
+.description {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin-top: var(--spacing-1);
+}
+
+.errorMessage {
+    color: var(--destructive);
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-1);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .input {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: var(--text-sm);
+    }
+
+    .eyeButton {
+        font-size: var(--text-base);
+    }
+
+    .formLabel {
+        font-size: var(--text-xs);
+    }
+
+    .charCount {
+        font-size: var(--text-xs);
+    }
+}

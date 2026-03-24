@@ -1,0 +1,175 @@
+/* AuthSocialButtons.module.css */
+
+.socialContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    width: 100%;
+    margin-top: var(--spacing-4);
+}
+
+/* Divider */
+.dividerWrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    width: 100%;
+    margin: var(--spacing-2) 0;
+}
+
+.dividerLine {
+    flex: 1;
+    background: var(--border);
+}
+
+.dividerText {
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* Buttons Container */
+.buttonsContainer {
+    display: flex;
+    gap: var(--spacing-3);
+    width: 100%;
+}
+
+/* Layouts */
+.layoutrow {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.layoutcolumn {
+    flex-direction: column;
+}
+
+.layoutgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-2);
+}
+
+/* Social Button */
+.socialButton {
+    flex: 1;
+    min-width: 120px;
+    transition: all 0.2s ease;
+}
+
+.socialButton.hovered {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.socialButton.loading {
+    opacity: 0.8;
+    cursor: wait;
+}
+
+/* Column Layout Button */
+.columnButton {
+    width: 100%;
+}
+
+/* Grid Layout Button */
+.gridButton {
+    width: 100%;
+}
+
+/* Button Icon */
+.buttonIcon {
+    width: 18px;
+    height: 18px;
+    margin-right: var(--spacing-2);
+}
+
+/* Button Label */
+.buttonLabel {
+    font-size: var(--text-sm);
+    font-weight: 500;
+}
+
+/* Loading Spinner */
+.spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.spinnerCircle {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error Message */
+.errorMessage {
+    padding: var(--spacing-2) var(--spacing-3);
+    background: color-mix(in srgb, var(--destructive) 10%, transparent);
+    border: 1px solid var(--destructive);
+    border-radius: var(--radius-md);
+    color: var(--destructive);
+    font-size: var(--text-sm);
+    text-align: center;
+    margin-bottom: var(--spacing-2);
+}
+
+/* Security Note */
+.securityNote {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    text-align: center;
+    margin-top: var(--spacing-2);
+    opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .socialContainer {
+        gap: var(--spacing-3);
+        margin-top: var(--spacing-3);
+    }
+
+    .dividerWrapper {
+        gap: var(--spacing-2);
+    }
+
+    .dividerText {
+        font-size: var(--text-xs);
+    }
+
+    .layoutrow {
+        flex-direction: column;
+    }
+
+    .layoutgrid {
+        grid-template-columns: 1fr;
+    }
+
+    .socialButton {
+        width: 100%;
+    }
+
+    .buttonLabel {
+        font-size: var(--text-sm);
+    }
+
+    .securityNote {
+        font-size: var(--text-xs);
+    }
+}

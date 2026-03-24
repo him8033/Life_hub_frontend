@@ -1,0 +1,57 @@
+/* AuthCheckbox.module.css */
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    cursor: pointer;
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    user-select: none;
+}
+
+.checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.checkbox:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.checkbox:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.checkboxText {
+    line-height: 1;
+}
+
+/* Hover effect when not disabled */
+.checkboxLabel:hover .checkbox:not(:disabled) {
+    transform: scale(1.05);
+}
+
+.errorMessage {
+    color: var(--destructive);
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-1);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .checkboxLabel {
+        font-size: var(--text-sm);
+    }
+
+    .checkbox {
+        width: 18px;
+        height: 18px;
+    }
+}
