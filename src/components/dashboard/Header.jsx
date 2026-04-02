@@ -1,17 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { FiUser, FiLogOut, FiSettings, FiEye, FiMenu, FiX } from 'react-icons/fi';
+import { FiUser, FiMenu, FiX } from 'react-icons/fi';
 import { AiOutlineDashboard } from 'react-icons/ai';
-import PopupMenu from '@/components/Application/PopupMenu';
+import UserPopup from '@/components/dashboard/UserPopup';
 import styles from '@/styles/dashboard/Header.module.css';
-import { useRouter } from "next/navigation";
-import { ROUTES } from '@/routes/routes.constants';
 import { tokenService } from '@/services/auth/token.service';
 
 const Header = ({ toggleSidebar, sidebarOpen }) => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const router = useRouter();
     const [userData, setUserData] = useState(null);
     const [isMobile, setIsMobile] = useState(false);
 
@@ -38,22 +35,6 @@ const Header = ({ toggleSidebar, sidebarOpen }) => {
     }, []);
 
     if (!userData) return null;
-
-    const handleLogout = () => {
-        tokenService.remove();
-        router.push(ROUTES.AUTH.LOGIN);
-        setIsPopupOpen(false);
-    };
-
-    const handleProfileView = () => {
-        router.push(ROUTES.DASHBOARD.PROFILE);
-        setIsPopupOpen(false);
-    };
-
-    const handleChangePassword = () => {
-        router.push(ROUTES.AUTH.CHANGE_PASSWORD);
-        setIsPopupOpen(false);
-    };
 
     return (
         <header className={styles.header}>
@@ -92,70 +73,11 @@ const Header = ({ toggleSidebar, sidebarOpen }) => {
                     </div>
                 </div>
 
-                <PopupMenu
+                <UserPopup
                     isOpen={isPopupOpen}
                     onClose={() => setIsPopupOpen(false)}
-                >
-                    {/* User Info Section - Same as before */}
-                    <div className={styles.userInfoSection}>
-                        <div className={styles.userAvatar}>
-                            {userData.avatar ? (
-                                <img
-                                    src={userData.avatar}
-                                    alt={userData.name}
-                                    className={styles.userAvatarImage}
-                                />
-                            ) : (
-                                <div className={styles.userAvatarPlaceholder}>
-                                    <FiUser size={32} />
-                                </div>
-                            )}
-                        </div>
-
-                        <div className={styles.userDetails}>
-                            <h4 className={styles.userName}>{userData.name}</h4>
-                            <p className={styles.userEmail}>{userData.email}</p>
-                            <span className={styles.userRole}>{userData.role}</span>
-                        </div>
-                    </div>
-
-                    <div className={styles.popupDivider} />
-
-                    {/* Menu Items - Same as before */}
-                    <ul className={styles.popupList}>
-                        <li className={styles.popupItem}>
-                            <button
-                                onClick={handleProfileView}
-                                className={styles.popupLink}
-                                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
-                            >
-                                <FiEye className={styles.popupIcon} />
-                                View Profile
-                            </button>
-                        </li>
-                        <li className={styles.popupItem}>
-                            <button
-                                onClick={handleChangePassword}
-                                className={styles.popupLink}
-                                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
-                            >
-                                <FiSettings className={styles.popupIcon} />
-                                Change Password
-                            </button>
-                        </li>
-                        <div className={styles.popupDivider} />
-                        <li className={styles.popupItem}>
-                            <button
-                                onClick={handleLogout}
-                                className={styles.popupLink}
-                                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
-                            >
-                                <FiLogOut className={styles.popupIcon} />
-                                Logout
-                            </button>
-                        </li>
-                    </ul>
-                </PopupMenu>
+                    userData={userData}
+                />
             </div>
         </header>
     );

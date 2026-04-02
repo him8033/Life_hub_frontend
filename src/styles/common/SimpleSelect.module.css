@@ -1,0 +1,70 @@
+/* SimpleSelect.module.css */
+
+.selectWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.select {
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-3);
+    padding-right: var(--spacing-8);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    color: var(--foreground);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    appearance: none;
+    transition: all 0.2s ease;
+}
+
+.select:hover:not(:disabled) {
+    border-color: var(--primary);
+}
+
+.select:focus {
+    outline: none;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 20%, transparent);
+}
+
+.select:disabled {
+    background: var(--muted);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.selectIcon {
+    position: absolute;
+    right: var(--spacing-2);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-foreground);
+    font-size: var(--text-base);
+    pointer-events: none;
+    transition: transform 0.2s ease;
+}
+
+/* Loading state */
+.selectWrapper.loading .select {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.selectWrapper.loading .selectIcon {
+    opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .select {
+        padding: var(--spacing-2);
+        font-size: var(--text-xs);
+    }
+
+    .selectIcon {
+        right: var(--spacing-2);
+        font-size: var(--text-sm);
+    }
+}

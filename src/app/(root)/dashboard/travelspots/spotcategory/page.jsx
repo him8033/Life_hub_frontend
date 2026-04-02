@@ -4,19 +4,20 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import SpotCategoryTable from '@/components/travelspots/spotcategory/SpotCategoryTable';
-import listingStyles from '@/styles/common/Listing.module.css';
-import { 
-  useDeleteSpotCategoryMutation, 
-  useGetAdminSpotCategoriesQuery, 
-  useUpdateSpotCategoryMutation 
+import TableLayout from '@/components/common/table/TableLayout';
+import {
+    useDeleteSpotCategoryMutation,
+    useGetAdminSpotCategoriesQuery,
+    useUpdateSpotCategoryMutation
 } from '@/services/api/spotcategoryApi';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { ROUTES } from '@/routes/routes.constants';
 import Loader from '@/components/common/Loader';
 import ErrorState from '@/components/common/ErrorState';
 import { useConfirm } from '@/context/ConfirmContext';
-import { FiFilter, FiX, FiSearch } from 'react-icons/fi';
 import { MdOutlineCategory } from 'react-icons/md';
+import styles from '@/styles/common/CommonListing.module.css';
+import { FiPlus } from 'react-icons/fi';
 
 export default function SpotCategoriesPage() {
     const router = useRouter();
@@ -31,9 +32,6 @@ export default function SpotCategoriesPage() {
         is_active: '',
     });
 
-    // UI states
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -43,12 +41,12 @@ export default function SpotCategoriesPage() {
     const [isToggling, setIsToggling] = useState(false);
 
     // API hooks
-    const { 
-        data, 
-        error, 
-        isLoading, 
+    const {
+        data,
+        error,
+        isLoading,
         isFetching,
-        refetch 
+        refetch
     } = useGetAdminSpotCategoriesQuery({
         page: currentPage,
         page_size: pageSize,
@@ -67,7 +65,7 @@ export default function SpotCategoriesPage() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchTerm);
-            setCurrentPage(1); // Reset to first page when search changes
+            setCurrentPage(1);
         }, 500);
 
         return () => clearTimeout(timer);
@@ -79,7 +77,7 @@ export default function SpotCategoriesPage() {
             ...prev,
             [key]: value
         }));
-        setCurrentPage(1); // Reset to first page when filters change
+        setCurrentPage(1);
     }, []);
 
     const handleClearFilters = () => {
@@ -90,7 +88,6 @@ export default function SpotCategoriesPage() {
         });
         setOrdering('-created_at');
         setCurrentPage(1);
-        setIsFilterOpen(false);
     };
 
     const handleDelete = async (slug, name) => {
@@ -102,16 +99,12 @@ export default function SpotCategoriesPage() {
                 confirmText: 'Delete',
                 cancelText: 'Cancel',
                 type: 'danger',
-                isLoading: false,
             });
 
-            if (!ok) {
-                setIsDeleting(false);
-                return;
-            }
+            if (!ok) return;
 
-            const res = await deleteSpotCategory(slug).unwrap();
-            showSnackbar(res?.message || 'Spot Category deleted successfully', 'success', 5000);
+            await deleteSpotCategory(slug).unwrap();
+            showSnackbar('Spot Category deleted successfully', 'success', 5000);
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
@@ -131,28 +124,24 @@ export default function SpotCategoriesPage() {
             const ok = await confirm({
                 title: currentStatus ? 'Hide Spot Category' : 'Show Spot Category',
                 message: currentStatus
-                    ? `"${name}" will be hidden from users. Users will no longer be able to see this spot category.`
-                    : `"${name}" will be visible to users. Users will be able to see and use this spot category.`,
+                    ? `"${name}" will be hidden from users.`
+                    : `"${name}" will be visible to users.`,
                 confirmText: currentStatus ? 'Hide' : 'Show',
                 cancelText: 'Cancel',
                 type: currentStatus ? 'warning' : 'info',
-                isLoading: false,
             });
 
-            if (!ok) {
-                setIsToggling(false);
-                return;
-            }
+            if (!ok) return;
 
-            const res = await updateSpotCategory({
+            await updateSpotCategory({
                 slug,
                 data: { is_active: !currentStatus },
             }).unwrap();
 
             showSnackbar(
                 currentStatus
-                    ? `"${name}" is now hidden from users`
-                    : `"${name}" is now visible to users`,
+                    ? `"${name}" is now hidden`
+                    : `"${name}" is now visible`,
                 'success',
                 3000
             );
@@ -186,11 +175,33 @@ export default function SpotCategoriesPage() {
         }
     };
 
-    const handlePageSizeChange = (e) => {
-        const newSize = parseInt(e.target.value);
+    const handlePageSizeChange = (newSize) => {
         setPageSize(newSize);
         setCurrentPage(1);
     };
+
+    // Define filters for header
+    const headerFilters = [
+        {
+            value: filters.is_active,
+            onChange: (value) => handleFilterChange('is_active', value),
+            options: [
+                { value: 'all', label: 'All Status' },
+                { value: 'true', label: 'Active' },
+                { value: 'false', label: 'Inactive' },
+            ],
+        },
+        {
+            value: ordering,
+            onChange: (value) => setOrdering(value),
+            options: [
+                { value: '-created_at', label: 'Newest First' },
+                { value: 'created_at', label: 'Oldest First' },
+                { value: 'name', label: 'Name A-Z' },
+                { value: '-name', label: 'Name Z-A' },
+            ],
+        },
+    ];
 
     if (isLoading) {
         return <Loader text="Loading Spot Categories..." />;
@@ -208,221 +219,56 @@ export default function SpotCategoriesPage() {
     }
 
     return (
-        <div className={listingStyles.listingContainer}>
-            {/* Header */}
-            <div className={listingStyles.listingHeader}>
-                <div className={listingStyles.titleSection}>
-                    <h1 className={listingStyles.listingTitle}>Spot Categories</h1>
-                    <div className={listingStyles.headerActions}>
-                        <div className={listingStyles.searchContainer}>
-                            <FiSearch className={listingStyles.searchIcon} />
-                            <input
-                                type="text"
-                                placeholder="Search by name..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className={listingStyles.searchInput}
-                                disabled={isDeleting || isToggling}
-                            />
-                        </div>
-                        <Link
-                            href={ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.CREATE}
-                            className={listingStyles.primaryButton}
-                            style={isDeleting || isToggling ? { opacity: 0.7, pointerEvents: 'none' } : {}}
-                        >
-                            Add Spot Category
-                        </Link>
-                    </div>
+        <div className={styles.pageContainer}>
+            {/* Page Header */}
+            <div className={styles.pageHeader}>
+                <div className={styles.pageTitleWrapper}>
+                    <MdOutlineCategory className={styles.pageIcon} />
+                    <h1 className={styles.pageTitle}>Spot Categories</h1>
                 </div>
-
-                {/* Quick Filters Bar */}
-                <div className={listingStyles.quickFilters}>
-                    <div className={listingStyles.filterControls}>
-                        <button
-                            onClick={() => setIsFilterOpen(!isFilterOpen)}
-                            className={listingStyles.filterToggle}
-                        >
-                            <FiFilter />
-                            <span>Filters</span>
-                            {activeFilterCount > 0 && (
-                                <span className={listingStyles.filterBadge}>
-                                    {activeFilterCount}
-                                </span>
-                            )}
-                        </button>
-                        
-                        <div className={listingStyles.quickFilterRow}>
-                            <div className={listingStyles.quickFilter}>
-                                <select
-                                    value={filters.is_active}
-                                    onChange={(e) => handleFilterChange('is_active', e.target.value)}
-                                    className={listingStyles.quickSelect}
-                                >
-                                    <option value="">All Status</option>
-                                    <option value="true">Active</option>
-                                    <option value="false">Inactive</option>
-                                </select>
-                            </div>
-                            
-                            <div className={listingStyles.quickFilter}>
-                                <select
-                                    value={ordering}
-                                    onChange={(e) => setOrdering(e.target.value)}
-                                    className={listingStyles.quickSelect}
-                                >
-                                    <option value="">Sort by</option>
-                                    <option value="-created_at">Newest First</option>
-                                    <option value="created_at">Oldest First</option>
-                                    <option value="name">Name A-Z</option>
-                                    <option value="-name">Name Z-A</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        {activeFilterCount > 0 && (
-                            <button
-                                onClick={handleClearFilters}
-                                className={listingStyles.clearFiltersButton}
-                            >
-                                <FiX />
-                                Clear Filters
-                            </button>
-                        )}
-                    </div>
-                </div>
+                <Link
+                    href={ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.CREATE}
+                    className={styles.addButton}
+                >
+                    <FiPlus className={styles.addIcon} />
+                    Create Spot Category
+                </Link>
             </div>
 
-            {/* Results Section */}
-            <div className={listingStyles.resultsSection}>
-                {/* Results Info and Controls */}
-                <div className={listingStyles.resultsHeader}>
-                    <div className={listingStyles.resultsInfo}>
-                        <span className={listingStyles.resultsCount}>
-                            Showing {spotCategories.length} of {totalCount} spot categories
-                            {totalPages > 0 && ` (Page ${currentPage} of ${totalPages})`}
-                        </span>
-                        <div className={listingStyles.pageControls}>
-                            <div className={listingStyles.pageSizeSelector}>
-                                <label>Show:</label>
-                                <select
-                                    value={pageSize}
-                                    onChange={handlePageSizeChange}
-                                    className={listingStyles.pageSizeSelect}
-                                    disabled={isFetching}
-                                >
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Table */}
-                {spotCategories.length === 0 ? (
-                    <div className={listingStyles.emptyState}>
-                        <div className={listingStyles.emptyIcon}>
-                            <MdOutlineCategory/>
-                        </div>
-                        <p className={listingStyles.emptyText}>
-                            {debouncedSearch || activeFilterCount > 0
-                                ? 'No spot categories match your search criteria.'
-                                : 'No spot categories found. Add your first spot category!'
-                            }
-                        </p>
-                        {(debouncedSearch || activeFilterCount > 0) && (
-                            <button
-                                onClick={handleClearFilters}
-                                className={listingStyles.clearButton}
-                            >
-                                Clear all filters
-                            </button>
-                        )}
-                    </div>
-                ) : (
-                    <>
-                        <SpotCategoryTable
-                            spotCategories={spotCategories}
-                            onDelete={handleDelete}
-                            onToggleStatus={handleToggleStatus}
-                            onEdit={(slug) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.EDIT(slug))}
-                            isLoading={isDeleting || isToggling || isFetching}
-                        />
-
-                        {/* Pagination */}
-                        {totalPages > 1 && (
-                            <div className={listingStyles.pagination}>
-                                <div className={listingStyles.paginationInfo}>
-                                    Page {currentPage} of {totalPages}
-                                </div>
-                                <div className={listingStyles.paginationButtons}>
-                                    <button
-                                        onClick={() => handlePageChange(1)}
-                                        disabled={currentPage === 1 || isFetching}
-                                        className={listingStyles.paginationButton}
-                                    >
-                                        First
-                                    </button>
-                                    <button
-                                        onClick={() => handlePageChange(currentPage - 1)}
-                                        disabled={currentPage === 1 || isFetching}
-                                        className={listingStyles.paginationButton}
-                                    >
-                                        Previous
-                                    </button>
-                                    
-                                    <div className={listingStyles.pageNumbers}>
-                                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                                            let pageNum;
-                                            if (totalPages <= 5) {
-                                                pageNum = i + 1;
-                                            } else if (currentPage <= 3) {
-                                                pageNum = i + 1;
-                                            } else if (currentPage >= totalPages - 2) {
-                                                pageNum = totalPages - 4 + i;
-                                            } else {
-                                                pageNum = currentPage - 2 + i;
-                                            }
-
-                                            return (
-                                                <button
-                                                    key={pageNum}
-                                                    onClick={() => handlePageChange(pageNum)}
-                                                    disabled={isFetching}
-                                                    className={`${listingStyles.pageNumber} ${currentPage === pageNum ? listingStyles.activePage : ''}`}
-                                                >
-                                                    {pageNum}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                    
-                                    <button
-                                        onClick={() => handlePageChange(currentPage + 1)}
-                                        disabled={currentPage === totalPages || isFetching}
-                                        className={listingStyles.paginationButton}
-                                    >
-                                        Next
-                                    </button>
-                                    <button
-                                        onClick={() => handlePageChange(totalPages)}
-                                        disabled={currentPage === totalPages || isFetching}
-                                        className={listingStyles.paginationButton}
-                                    >
-                                        Last
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
+            {/* Table Layout */}
+            <TableLayout
+                headerProps={{
+                    searchTerm,
+                    setSearchTerm,
+                    filters: headerFilters,
+                    activeFilterCount,
+                    onClearFilters: handleClearFilters,
+                    placeholder: "Search by name...",
+                    size: "md",
+                }}
+                paginationProps={{
+                    dataLength: spotCategories.length,
+                    totalCount,
+                    currentPage,
+                    totalPages,
+                    pageSize,
+                    onPageChange: handlePageChange,
+                    onPageSizeChange: handlePageSizeChange,
+                    isFetching,
+                }}
+            >
+                <SpotCategoryTable
+                    spotCategories={spotCategories}
+                    onDelete={handleDelete}
+                    onToggleStatus={handleToggleStatus}
+                    onEdit={(slug) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.EDIT(slug))}
+                    isLoading={isDeleting || isToggling || isFetching}
+                />
+            </TableLayout>
 
             {/* Loading Overlay */}
             {isFetching && spotCategories.length > 0 && (
-                <div className={listingStyles.loadingOverlay}>
+                <div className={styles.loadingOverlay}>
                     <Loader text="Loading..." />
                 </div>
             )}

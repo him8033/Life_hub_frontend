@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Step1BasicInfo from '@/components/travelspots/steps/Step1BasicInfo';
-import listingStyles from '@/styles/common/Listing.module.css';
 import { useCreateBasicInfoMutation } from '@/services/api/travelspotApi';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { ROUTES } from '@/routes/routes.constants';
+import styles from '@/styles/common/CommonForm.module.css';
+import { FiMapPin } from 'react-icons/fi';
+import { IoLocationOutline } from 'react-icons/io5';
 
 export default function CreateTravelSpotPage() {
     const router = useRouter();
@@ -14,11 +15,11 @@ export default function CreateTravelSpotPage() {
     const [createBasicInfo, { isLoading }] = useCreateBasicInfoMutation();
     let formRef = null;
 
-    const handleStep1Submit = async (formData) => {
+    const handleSubmit = async (formData) => {
         if (isLoading) return;
         try {
             const res = await createBasicInfo(formData).unwrap();
-            showSnackbar(res.message, 'success', 5000);
+            showSnackbar(res.message || 'Travel spot created successfully!', 'success', 5000);
             router.push(ROUTES.DASHBOARD.TRAVELSPOT.EDIT(formData.slug));
         } catch (error) {
             const backendErrors = error?.data?.errors;
@@ -37,8 +38,8 @@ export default function CreateTravelSpotPage() {
 
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
-            } else {
-                showSnackbar('Failed to save basic information', 'error', 3000);
+            } else if (!backendErrors?.field_errors) {
+                showSnackbar('Failed to create travel spot', 'error', 3000);
             }
         }
     };
@@ -48,14 +49,24 @@ export default function CreateTravelSpotPage() {
     };
 
     return (
-        <div className={listingStyles.listingContainer}>
-            <div className={listingStyles.listingHeader}>
-                <h1 className={listingStyles.listingTitle}>Create Travel Spot</h1>
+        <div className={styles.pageContainer}>
+            {/* Page Header */}
+            <div className={styles.pageHeader}>
+                <div className={styles.headerContent}>
+                    <div className={styles.pageTitleWrapper}>
+                        <FiMapPin className={styles.pageIcon} />
+                        <h1 className={styles.pageTitle}>Create Travel Spot</h1>
+                    </div>
+                    {/* <p className={styles.pageDescription}>
+                        Create a new travel spot to showcase amazing destinations
+                    </p> */}
+                </div>
             </div>
 
-            <div className={listingStyles.listingContent}>
+            {/* Page Content */}
+            <div className={styles.pageContent}>
                 <Step1BasicInfo
-                    onSubmit={handleStep1Submit}
+                    onSubmit={handleSubmit}
                     onBackendError={(form) => (formRef = form)}
                     isSubmitting={isLoading}
                     onCancel={handleCancel}

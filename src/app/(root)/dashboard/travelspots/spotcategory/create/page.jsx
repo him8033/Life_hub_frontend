@@ -1,12 +1,13 @@
-// src/app/(root)/dashboard/travelspots/categories/create/page.jsx
 'use client';
 
 import { useRouter } from 'next/navigation';
 import SpotCategoryForm from '@/components/travelspots/spotcategory/SpotCategoryForm';
-import listingStyles from '@/styles/common/Listing.module.css';
 import { useCreateSpotCategoryMutation } from '@/services/api/spotcategoryApi';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { ROUTES } from '@/routes/routes.constants';
+import styles from '@/styles/common/CommonForm.module.css';
+import { MdOutlineCategory } from 'react-icons/md';
+import { FiArrowLeft } from 'react-icons/fi';
 
 export default function CreateSpotCategoryPage() {
     const router = useRouter();
@@ -19,7 +20,7 @@ export default function CreateSpotCategoryPage() {
         try {
             const res = await createSpotCategory(formData).unwrap();
             showSnackbar(res.message || 'Spot Category created successfully!', 'success', 5000);
-            router.push(ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST); // Or categories list if you have one
+            router.push(ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST);
         } catch (error) {
             const backendErrors = error?.data?.errors;
 
@@ -42,15 +43,22 @@ export default function CreateSpotCategoryPage() {
     };
 
     return (
-        <div className={listingStyles.listingContainer}>
-            <div className={listingStyles.listingHeader}>
-                <h1 className={listingStyles.listingTitle}>Add New Category</h1>
-                <p className={listingStyles.listingSubtitle}>
-                    Create a new category to organize your travel spots
-                </p>
+        <div className={styles.pageContainer}>
+            {/* Page Header */}
+            <div className={styles.pageHeader}>
+                <div className={styles.headerContent}>
+                    <div className={styles.pageTitleWrapper}>
+                        <MdOutlineCategory className={styles.pageIcon} />
+                        <h1 className={styles.pageTitle}>Create Spot Category</h1>
+                    </div>
+                    {/* <p className={styles.pageDescription}>
+                        Create a new category to organize your travel spots
+                    </p> */}
+                </div>
             </div>
 
-            <div className={listingStyles.listingContent}>
+            {/* Page Content */}
+            <div className={styles.pageContent}>
                 <SpotCategoryForm
                     onSubmit={handleSubmit}
                     onBackendError={(form) => (formRef = form)}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useParams } from 'next/navigation';
-import listingStyles from '@/styles/common/Listing.module.css';
+import styles from '@/styles/common/CommonForm.module.css';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { ROUTES } from '@/routes/routes.constants';
 import Loader from '@/components/common/Loader';
@@ -9,6 +9,7 @@ import ErrorState from '@/components/common/ErrorState';
 import NotFoundState from '@/components/common/NotFoundState';
 import SpotCategoryForm from '@/components/travelspots/spotcategory/SpotCategoryForm';
 import { useGetSpotCategoryBySlugQuery, useUpdateSpotCategoryMutation } from '@/services/api/spotcategoryApi';
+import { MdOutlineCategory } from 'react-icons/md';
 
 export default function EditTravelSpotPage() {
     const router = useRouter();
@@ -82,30 +83,22 @@ export default function EditTravelSpotPage() {
     }
 
     return (
-        <div className={listingStyles.listingContainer}>
-            <div className={listingStyles.listingHeader}>
-                <div>
-                    <button
-                        onClick={() => router.back()}
-                        style={{
-                            color: '#4b5563',
-                            marginBottom: '8px',
-                            background: 'none',
-                            border: 'none',
-                            cursor: 'pointer',
-                            fontSize: '14px'
-                        }}
-                    >
-                        ← Back
-                    </button>
-                    <h1 className={listingStyles.listingTitle}>Edit Spot Category</h1>
-                    <p style={{ color: '#6b7280', fontSize: '14px' }}>
+        <div className={styles.pageContainer}>
+            {/* Page Header */}
+            <div className={styles.pageHeader}>
+                <div className={styles.headerContent}>
+                    <div className={styles.pageTitleWrapper}>
+                        <MdOutlineCategory className={styles.pageIcon} />
+                        <h1 className={styles.pageTitle}>Edit Spot Category: ({spotCategory.name})</h1>
+                    </div>
+                    {/* <p className={styles.pageDescription}>
                         Editing: {spotCategory.name}
-                    </p>
+                    </p> */}
                 </div>
             </div>
 
-            <div style={{ padding: '24px' }}>
+            {/* Form Content */}
+            <div className={styles.pageContent}>
                 <SpotCategoryForm
                     initialData={spotCategory}
                     onSubmit={handleSubmit}
@@ -114,6 +107,6 @@ export default function EditTravelSpotPage() {
                     mode="edit"
                 />
             </div>
-        </div>
+        </div >
     );
 }

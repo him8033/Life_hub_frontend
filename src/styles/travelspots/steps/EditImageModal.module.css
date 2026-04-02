@@ -1,0 +1,390 @@
+/* EditImageModal.module.css */
+
+/* Modal Overlay */
+.editModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+/* Modal Container */
+.editModal {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    animation: slideUp 0.2s ease;
+}
+
+/* Modal Header */
+.editModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-4) var(--spacing-6);
+    border-bottom: 1px solid var(--border);
+    background: var(--muted);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.editModalTitle {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    padding: var(--spacing-1);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closeButton:hover {
+    background: var(--muted);
+    color: var(--foreground);
+    transform: rotate(90deg);
+}
+
+/* Modal Content */
+.editModalContent {
+    padding: var(--spacing-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+}
+
+/* Section Styles */
+.currentImageSection,
+.replaceImageSection,
+.captionSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.editSectionSubtitle {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.editSectionSubtitle::before {
+    content: '';
+    width: 3px;
+    height: 16px;
+    background: var(--primary);
+    border-radius: var(--radius-full);
+    display: inline-block;
+}
+
+/* Current Image Preview */
+.currentImagePreview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-4);
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.currentImage {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+}
+
+/* Replace Image Section */
+.replaceImageContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.editImagePreview {
+    position: relative;
+    display: inline-block;
+}
+
+.previewImage {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--border);
+}
+
+.removeImageButton {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--destructive);
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.removeImageButton:hover {
+    transform: scale(1.1);
+    background: var(--destructive-600);
+}
+
+.editImageUpload {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.uploadHint {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    text-align: center;
+}
+
+/* Caption Section */
+.captionHint {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin-top: var(--spacing-1);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+}
+
+.captionHint::before {
+    content: '💡';
+    font-size: 0.75rem;
+}
+
+/* Modal Actions */
+.editModalActions {
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--border);
+}
+
+/* Loading State */
+.loadingOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    z-index: 20;
+}
+
+.dark .loadingOverlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.loadingSpinner {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scrollbar Styling */
+.editModal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.editModal::-webkit-scrollbar-track {
+    background: var(--muted);
+    border-radius: var(--radius-full);
+}
+
+.editModal::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--radius-full);
+}
+
+.editModal::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .editModal {
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .editModalHeader {
+        padding: var(--spacing-3) var(--spacing-4);
+    }
+
+    .editModalTitle {
+        font-size: var(--text-base);
+    }
+
+    .editModalContent {
+        padding: var(--spacing-4);
+        gap: var(--spacing-4);
+    }
+
+    .currentImagePreview {
+        padding: var(--spacing-3);
+    }
+
+    .currentImage {
+        max-height: 150px;
+    }
+
+    .previewImage {
+        width: 120px;
+        height: 120px;
+    }
+
+    .editSectionSubtitle {
+        font-size: var(--text-sm);
+    }
+}
+
+@media (max-width: 640px) {
+    .editModal {
+        width: 98%;
+        max-height: 90vh;
+    }
+
+    .editModalHeader {
+        padding: var(--spacing-2) var(--spacing-3);
+    }
+
+    .editModalContent {
+        padding: var(--spacing-3);
+        gap: var(--spacing-3);
+    }
+
+    .currentImagePreview {
+        padding: var(--spacing-2);
+    }
+
+    .currentImage {
+        max-height: 120px;
+    }
+
+    .previewImage {
+        width: 100px;
+        height: 100px;
+    }
+
+    .editSectionSubtitle {
+        font-size: var(--text-xs);
+    }
+
+    .editSectionSubtitle::before {
+        height: 12px;
+    }
+
+    .removeImageButton {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+}
+
+/* Dark Mode Specific */
+.dark .editModal {
+    background: var(--card);
+    border-color: var(--border);
+}
+
+.dark .currentImagePreview {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+.dark .editModalHeader {
+    background: var(--gray-800);
+    border-bottom-color: var(--gray-700);
+}
+
+.dark .closeButton:hover {
+    background: var(--gray-700);
+}
+
+.dark .editModal::-webkit-scrollbar-track {
+    background: var(--gray-800);
+}
+
+.dark .editModal::-webkit-scrollbar-thumb {
+    background: var(--gray-600);
+}
+
+.dark .editModal::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-500);
+}

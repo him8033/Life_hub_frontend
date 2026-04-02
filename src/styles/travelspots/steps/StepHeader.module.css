@@ -1,0 +1,44 @@
+/* StepHeader.module.css */
+.stepHeader {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+}
+
+.stepTitle {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--foreground);
+    margin-bottom: var(--spacing-2);
+}
+
+.stepDescription {
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .stepHeader {
+        margin-bottom: var(--spacing-6);
+    }
+
+    .stepTitle {
+        font-size: var(--text-xl);
+    }
+
+    .stepDescription {
+        font-size: var(--text-xs);
+    }
+}
+
+@media (max-width: 640px) {
+    .stepHeader {
+        margin-bottom: var(--spacing-4);
+    }
+
+    .stepTitle {
+        font-size: var(--text-lg);
+    }
+}

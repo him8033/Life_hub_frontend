@@ -1,0 +1,223 @@
+/* FormInput.module.css - Uses global CSS variables */
+
+.formItem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    width: 100%;
+}
+
+/* Label Styles */
+.formLabel {
+    font-weight: 600;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin: 0;
+}
+
+/* Label Size Variants */
+.labelSm {
+    font-size: var(--text-xs);
+    gap: var(--spacing-1);
+}
+
+.labelMd {
+    font-size: var(--text-sm);
+    gap: var(--spacing-2);
+}
+
+.labelLg {
+    font-size: var(--text-base);
+    gap: var(--spacing-2);
+}
+
+.labelIcon {
+    display: flex;
+    align-items: center;
+    color: var(--primary);
+    font-size: var(--text-base);
+}
+
+.labelSm .labelIcon {
+    font-size: var(--text-sm);
+}
+
+.labelMd .labelIcon {
+    font-size: var(--text-base);
+}
+
+.labelLg .labelIcon {
+    font-size: var(--text-lg);
+}
+
+.required {
+    color: var(--destructive);
+    margin-left: var(--spacing-1);
+}
+
+/* Input Base Styles */
+.input,
+.textarea {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    color: var(--foreground);
+    transition: all 0.2s ease;
+}
+
+/* Input Size Variants */
+.inputSm {
+    padding: var(--spacing-1) var(--spacing-2);
+    font-size: var(--text-sm);
+    line-height: 1.25rem;
+}
+
+.inputMd {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--text-base);
+    line-height: 1.5rem;
+}
+
+.inputLg {
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--text-lg);
+    line-height: 1.75rem;
+}
+
+/* Textarea Size Variants */
+.textareaSm {
+    padding: var(--spacing-1) var(--spacing-2);
+    font-size: var(--text-sm);
+    line-height: 1.25rem;
+    min-height: 60px;
+}
+
+.textareaMd {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--text-base);
+    line-height: 1.5rem;
+    min-height: 80px;
+}
+
+.textareaLg {
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--text-lg);
+    line-height: 1.75rem;
+    min-height: 100px;
+}
+
+/* States */
+.input:focus,
+.textarea:focus {
+    outline: none;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
+}
+
+.input.hasValue,
+.textarea.hasValue {
+    border-color: var(--primary);
+}
+
+.inputError {
+    border-color: var(--destructive);
+}
+
+.inputError:focus {
+    border-color: var(--destructive);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+
+.input:disabled,
+.textarea:disabled {
+    background: var(--muted);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.7;
+}
+
+/* Textarea specific */
+.textarea {
+    resize: vertical;
+}
+
+/* Description */
+.description {
+    color: var(--muted-foreground);
+    margin-top: var(--spacing-1);
+}
+
+.descriptionSm {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-0);
+}
+
+.descriptionMd {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-1);
+}
+
+.descriptionLg {
+    font-size: var(--text-sm);
+    margin-top: var(--spacing-1);
+}
+
+/* Error Message */
+.errorMessage {
+    color: var(--destructive);
+    margin-top: var(--spacing-1);
+}
+
+.errorSm {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-0);
+}
+
+.errorMd {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-1);
+}
+
+.errorLg {
+    font-size: var(--text-sm);
+    margin-top: var(--spacing-1);
+}
+
+.rightContent {
+    margin-top: var(--spacing-1);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .inputSm {
+        padding: var(--spacing-1) var(--spacing-1);
+    }
+
+    .inputMd {
+        padding: var(--spacing-2) var(--spacing-2);
+    }
+
+    .inputLg {
+        padding: var(--spacing-2) var(--spacing-3);
+    }
+
+    .textareaSm {
+        padding: var(--spacing-1) var(--spacing-1);
+    }
+
+    .textareaMd {
+        padding: var(--spacing-2) var(--spacing-2);
+    }
+
+    .textareaLg {
+        padding: var(--spacing-2) var(--spacing-3);
+    }
+}

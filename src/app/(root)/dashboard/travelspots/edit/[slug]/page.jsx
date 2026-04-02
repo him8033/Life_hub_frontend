@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import listingStyles from '@/styles/common/Listing.module.css';
 import {
     useGetTravelSpotBySlugQuery,
     useUpdateBasicInfoMutation,
@@ -15,6 +14,8 @@ import { ROUTES } from '@/routes/routes.constants';
 import Loader from '@/components/common/Loader';
 import ErrorState from '@/components/common/ErrorState';
 import NotFoundState from '@/components/common/NotFoundState';
+import styles from '@/styles/common/CommonForm.module.css';
+import { FiMapPin, FiEdit2 } from 'react-icons/fi';
 
 // Step Components
 import Step1BasicInfo from '@/components/travelspots/steps/Step1BasicInfo';
@@ -32,17 +33,14 @@ export default function EditTravelSpotPage() {
     const params = useParams();
     const slug = params.slug;
     let formRef = null;
-    // console.log(slug)
 
     const [currentStep, setCurrentStep] = useState(1);
+    const [completedSteps, setCompletedSteps] = useState(new Set());
     const [formData, setFormData] = useState({});
-    const [updateId, setUpdateId] = useState(null);
 
     // Fetch travel spot data
-    const { data, error, isLoading, refetch } = useGetTravelSpotBySlugQuery(slug, { skip: !slug, });
+    const { data, error, isLoading, refetch } = useGetTravelSpotBySlugQuery(slug, { skip: !slug });
     const travelSpot = data?.data || null;
-
-    // console.log(travelSpot)
 
     // Mutation hooks for each step
     const [updateBasicInfo, { isLoading: isUpdatingBasicInfo }] = useUpdateBasicInfoMutation();
@@ -50,31 +48,63 @@ export default function EditTravelSpotPage() {
     const [updateDetails, { isLoading: isUpdatingDetails }] = useUpdateDetailsStepMutation();
     const [finalSubmit, { isLoading: isFinalSubmit }] = useSubmitTravelSpotMutation();
 
-    // Determine initial step based on completion_status
-    const getInitialStep = () => {
-        if (!travelSpot) return 1;
-
-        switch (travelSpot.completion_status) {
-            case 'basic_info':
-                return 2; // move to Location
-            case 'location':
-                return 3; // move to Details
-            case 'details':
-                return 4; // move to Images
-            case 'images':
-                return 5; // move to Review
-            case 'complete':
-                return 5;
-            default:
-                return 1;
-        }
-    };
-
+    // Initialize completed steps based on completion_status
     useEffect(() => {
         if (travelSpot?.completion_status) {
+            const newCompletedSteps = new Set();
+            
+            switch (travelSpot.completion_status) {
+                case 'basic_info':
+                    newCompletedSteps.add(1);
+                    break;
+                case 'location':
+                    newCompletedSteps.add(1);
+                    newCompletedSteps.add(2);
+                    break;
+                case 'details':
+                    newCompletedSteps.add(1);
+                    newCompletedSteps.add(2);
+                    newCompletedSteps.add(3);
+                    break;
+                case 'images':
+                    newCompletedSteps.add(1);
+                    newCompletedSteps.add(2);
+                    newCompletedSteps.add(3);
+                    newCompletedSteps.add(4);
+                    break;
+                case 'complete':
+                    newCompletedSteps.add(1);
+                    newCompletedSteps.add(2);
+                    newCompletedSteps.add(3);
+                    newCompletedSteps.add(4);
+                    newCompletedSteps.add(5);
+                    break;
+                default:
+                    break;
+            }
+            
+            setCompletedSteps(newCompletedSteps);
+            
+            const getInitialStep = () => {
+                if (!travelSpot.completion_status) return 1;
+                switch (travelSpot.completion_status) {
+                    case 'basic_info': return 2;
+                    case 'location': return 3;
+                    case 'details': return 4;
+                    case 'images': return 5;
+                    case 'complete': return 5;
+                    default: return 1;
+                }
+            };
+            
             setCurrentStep(getInitialStep());
         }
     }, [travelSpot]);
+
+    // Mark a step as completed
+    const markStepCompleted = (step) => {
+        setCompletedSteps(prev => new Set([...prev, step]));
+    };
 
     // Handle step 1 submission (Basic Info)
     const handleStep1Submit = async (data) => {
@@ -85,14 +115,14 @@ export default function EditTravelSpotPage() {
                 data: data
             }).unwrap();
 
-            showSnackbar(res.message, 'success', 5000);
+            showSnackbar(res.message || 'Basic information updated successfully!', 'success', 5000);
             setFormData(prev => ({ ...prev, ...data }));
+            markStepCompleted(1);
             setCurrentStep(2);
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
 
-            // Field-Level Errors
             if (backendErrors?.field_errors && formRef) {
                 Object.entries(backendErrors.field_errors).forEach(
                     ([field, messages]) => {
@@ -106,7 +136,7 @@ export default function EditTravelSpotPage() {
 
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
-            } else {
+            } else if (!backendErrors?.field_errors) {
                 showSnackbar('Failed to update basic information', 'error', 3000);
             }
         }
@@ -120,14 +150,14 @@ export default function EditTravelSpotPage() {
                 data: data
             }).unwrap();
 
-            showSnackbar(res.message, 'success', 5000);
+            showSnackbar(res.message || 'Location information updated successfully!', 'success', 5000);
             setFormData(prev => ({ ...prev, ...data }));
+            markStepCompleted(2);
             setCurrentStep(3);
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
 
-            // Field-Level Errors
             if (backendErrors?.field_errors && formRef) {
                 Object.entries(backendErrors.field_errors).forEach(
                     ([field, messages]) => {
@@ -141,7 +171,7 @@ export default function EditTravelSpotPage() {
 
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
-            } else {
+            } else if (!backendErrors?.field_errors) {
                 showSnackbar('Failed to update location information', 'error', 3000);
             }
         }
@@ -155,14 +185,14 @@ export default function EditTravelSpotPage() {
                 data: data
             }).unwrap();
 
-            showSnackbar(res.message, 'success', 5000);
+            showSnackbar(res.message || 'Details updated successfully!', 'success', 5000);
             setFormData(prev => ({ ...prev, ...data }));
+            markStepCompleted(3);
             setCurrentStep(4);
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
 
-            // Field-Level Errors
             if (backendErrors?.field_errors && formRef) {
                 Object.entries(backendErrors.field_errors).forEach(
                     ([field, messages]) => {
@@ -176,10 +206,16 @@ export default function EditTravelSpotPage() {
 
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
-            } else {
-                showSnackbar('Failed to update pricing & timing', 'error', 3000);
+            } else if (!backendErrors?.field_errors) {
+                showSnackbar('Failed to update details', 'error', 3000);
             }
         }
+    };
+
+    // Handle step 4 completion (Images)
+    const handleStep4Complete = () => {
+        markStepCompleted(4);
+        setCurrentStep(5);
     };
 
     // Handle final submission
@@ -187,12 +223,12 @@ export default function EditTravelSpotPage() {
         try {
             const res = await finalSubmit(travelSpot.travelspot_id).unwrap();
 
-            showSnackbar(res.message, 'success', 5000);
+            showSnackbar(res.message || 'Travel spot updated successfully!', 'success', 5000);
+            markStepCompleted(5);
             router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST);
         } catch (error) {
             const backendErrors = error?.data?.errors;
 
-            // Field-Level Errors
             if (backendErrors?.field_errors && formRef) {
                 Object.entries(backendErrors.field_errors).forEach(
                     ([field, messages]) => {
@@ -206,33 +242,59 @@ export default function EditTravelSpotPage() {
 
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
-            } else {
-                showSnackbar('Failed to complete update', 'error', 3000);
+            } else if (!backendErrors?.field_errors) {
+                showSnackbar('Failed to update travel spot', 'error', 3000);
             }
         }
     };
 
-    // Handle cancel
-    const handleCancel = () => {
-        router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST);
-    };
-
-    // Navigate to step
+    // Navigate to step - FIXED: Only allow navigation if current step is completed
     const goToStep = (step) => {
         if (step >= 1 && step <= 5) {
-            setCurrentStep(step);
+            // Can navigate to:
+            // 1. Completed steps (already finished)
+            // 2. The next step ONLY IF current step is completed
+            if (completedSteps.has(step)) {
+                setCurrentStep(step);
+            } else if (step === currentStep + 1 && completedSteps.has(currentStep)) {
+                setCurrentStep(step);
+            }
+        }
+    };
+
+    // Check if user can navigate to a step - FIXED
+    const canGoToStep = (step) => {
+        // Can navigate to:
+        // 1. Completed steps (already finished)
+        // 2. The next step ONLY IF current step is completed
+        if (completedSteps.has(step)) return true;
+        if (step === currentStep + 1 && completedSteps.has(currentStep)) return true;
+        return false;
+    };
+
+    // Get current step title
+    const getStepTitle = () => {
+        switch (currentStep) {
+            case 1: return 'Edit Basic Information';
+            case 2: return 'Edit Location';
+            case 3: return 'Edit Details';
+            case 4: return 'Manage Images';
+            case 5: return 'Review & Submit';
+            default: return 'Edit Travel Spot';
         }
     };
 
     // Loading state
     if (isLoading) {
         return (
-            <Loader text="Loading travel spot data..." />
+            <div className={styles.pageContainer}>
+                <Loader text="Loading travel spot data..." />
+            </div>
         );
     }
 
     // Not found state
-    if (error?.status === 404) {
+    if (error?.status === 404 || !travelSpot) {
         return (
             <NotFoundState
                 title="Travel Spot Not Found"
@@ -255,80 +317,38 @@ export default function EditTravelSpotPage() {
         );
     }
 
-    // Determine current step title
-    const getStepTitle = () => {
-        switch (currentStep) {
-            case 1: return 'Edit Basic Information';
-            case 2: return 'Edit Location';
-            case 3: return 'Edit Pricing & Timing';
-            case 4: return 'Edit Spot Images';
-            case 4: return 'Review Changes';
-            default: return 'Edit Travel Spot';
-        }
-    };
-
-    // Check if user can navigate to a step
-    const canGoToStep = (step) => {
-        if (!travelSpot) return false;
-
-        const status = travelSpot.completion_status;
-
-        const completedSteps = {
-            basic_info: 1,
-            location: 2,
-            details: 3,
-            images: 4,
-            complete: 5,
-        };
-
-        const maxAllowedStep = completedSteps[status] + 1;
-
-        return step <= maxAllowedStep;
-    };
-
     return (
-        <div className={listingStyles.listingContainer}>
-            {/* Header */}
-            <div className={listingStyles.listingHeader}>
-                <div>
-                    <button
-                        onClick={() => router.back()}
-                        style={{
-                            color: '#4b5563',
-                            marginBottom: '8px',
-                            background: 'none',
-                            border: 'none',
-                            cursor: 'pointer',
-                            fontSize: '14px'
-                        }}
-                    >
-                        ← Back
-                    </button>
-                    <h1 className={listingStyles.listingTitle}>{getStepTitle()}</h1>
-                    <p style={{ color: '#6b7280', fontSize: '14px' }}>
-                        Editing: {travelSpot.name}
-                    </p>
+        <div className={styles.pageContainer}>
+            {/* Page Header */}
+            <div className={styles.pageHeader}>
+                <div className={styles.headerContent}>
+                    <div className={styles.pageTitleWrapper}>
+                        <FiEdit2 className={styles.pageIcon} />
+                        <h1 className={styles.pageTitle}>{getStepTitle()}: ({travelSpot.name})</h1>
+                    </div>
                 </div>
             </div>
 
             {/* Progress Stepper */}
-            <div style={{ padding: '24px', marginBottom: '4px' }}>
+            <div className={styles.stepperContainer}>
                 <ProgressStepper
                     currentStep={currentStep}
                     steps={[
                         { id: 1, title: 'Basic Info', description: 'Name & description' },
                         { id: 2, title: 'Location', description: 'Address & coordinates' },
                         { id: 3, title: 'Details', description: 'Pricing & timing' },
-                        { id: 4, title: 'Spot Images', description: 'Spot Images' },
+                        { id: 4, title: 'Images', description: 'Spot images' },
                         { id: 5, title: 'Review', description: 'Confirm changes' },
                     ]}
                     onStepClick={goToStep}
                     canNavigateToStep={canGoToStep}
+                    completedSteps={completedSteps}
+                    size="md"
                 />
             </div>
 
-            {/* Step Content */}
-            <div style={{ padding: '0 24px 24px' }}>
+            {/* Page Content */}
+            <div className={styles.pageContent}>
                 {currentStep === 1 && (
                     <Step1BasicInfo
                         initialData={{
@@ -341,7 +361,7 @@ export default function EditTravelSpotPage() {
                         onSubmit={handleStep1Submit}
                         onBackendError={(form) => (formRef = form)}
                         isSubmitting={isUpdatingBasicInfo}
-                        onCancel={handleCancel}
+                        onCancel={() => router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST)}
                         mode="edit"
                     />
                 )}
@@ -361,7 +381,7 @@ export default function EditTravelSpotPage() {
                         }}
                         onSubmit={handleStep2Submit}
                         isSubmitting={isUpdatingLocation}
-                        onCancel={handleCancel}
+                        onCancel={() => router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST)}
                         onBack={() => setCurrentStep(1)}
                         mode="edit"
                     />
@@ -378,7 +398,7 @@ export default function EditTravelSpotPage() {
                         }}
                         onSubmit={handleStep3Submit}
                         isSubmitting={isUpdatingDetails}
-                        onCancel={handleCancel}
+                        onCancel={() => router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST)}
                         onBack={() => setCurrentStep(2)}
                         mode="edit"
                     />
@@ -388,7 +408,7 @@ export default function EditTravelSpotPage() {
                     <Step4ImageManagement
                         travelSpot={travelSpot}
                         onBack={() => setCurrentStep(3)}
-                        onNext={() => setCurrentStep(5)}
+                        onNext={handleStep4Complete}
                     />
                 )}
 
@@ -397,20 +417,10 @@ export default function EditTravelSpotPage() {
                         travelSpot={travelSpot}
                         onSubmit={handleFinalSubmit}
                         isSubmitting={isFinalSubmit}
-                        onCancel={handleCancel}
+                        onCancel={() => router.push(ROUTES.DASHBOARD.TRAVELSPOT.LIST)}
                         onEditStep={goToStep}
                     />
                 )}
-
-                {/* {currentStep === 4 && (
-                    <Step4ReviewSubmit
-                        travelSpot={travelSpot}
-                        onSubmit={handleFinalSubmit}
-                        isSubmitting={isFinalSubmit}
-                        onCancel={handleCancel}
-                        onEditStep={goToStep}
-                    />
-                )} */}
             </div>
         </div>
     );

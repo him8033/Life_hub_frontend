@@ -1,0 +1,216 @@
+/* TableStyles.module.css - Shared CSS for all tables */
+
+/* Table Container */
+.tableContainer {
+    width: 100%;
+    overflow-x: auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
+/* Data Table */
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+}
+
+/* Header Styles */
+.dataTable thead {
+    background: var(--muted);
+    border-bottom: 2px solid var(--border);
+}
+
+.dataTable th {
+    padding: var(--spacing-3) var(--spacing-4);
+    text-align: left;
+    font-weight: 600;
+    color: var(--foreground);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Body Styles */
+.dataTable td {
+    padding: var(--spacing-3) var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+    color: var(--foreground);
+}
+
+.tableRow {
+    transition: background 0.2s ease;
+}
+
+.tableRow:hover {
+    background: var(--accent);
+}
+
+/* Clickable Row */
+.clickableRow {
+    cursor: pointer;
+}
+
+/* Empty State */
+.emptyTable {
+    text-align: center;
+    padding: var(--spacing-12);
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
+.emptyIcon {
+    font-size: 48px;
+    margin-bottom: var(--spacing-4);
+    opacity: 0.5;
+    color: var(--muted-foreground);
+}
+
+.emptyText {
+    color: var(--muted-foreground);
+    font-size: var(--text-base);
+}
+
+/* Common Cell Styles */
+.idCell {
+    font-family: monospace;
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+}
+
+.idBadge {
+    display: inline-block;
+    padding: var(--spacing-1) var(--spacing-2);
+    background: var(--muted);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+}
+
+/* Name Cell with Slug */
+.nameContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+}
+
+.mainName {
+    font-weight: 600;
+    color: var(--foreground);
+    line-height: 1.4;
+}
+
+.subName {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    font-family: monospace;
+}
+
+/* Badge for counts */
+.countBadge {
+    display: inline-block;
+    padding: var(--spacing-1) var(--spacing-2);
+    background: var(--primary);
+    color: white;
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    min-width: 32px;
+    text-align: center;
+}
+
+/* Date Text */
+.dateText {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    white-space: nowrap;
+}
+
+/* Actions Container */
+.actionsContainer {
+    display: flex;
+    gap: var(--spacing-2);
+    align-items: center;
+}
+
+.actionBtn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0;
+}
+
+/* Views Button */
+.viewsButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-1) var(--spacing-2);
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--foreground);
+}
+
+.viewsButton:hover:not(:disabled) {
+    background: var(--accent);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.viewsIcon {
+    font-size: var(--text-xs);
+    color: var(--primary);
+}
+
+.viewsCount {
+    font-weight: 600;
+    font-size: var(--text-sm);
+}
+
+/* Status Toggle - Override for table-specific styling */
+.statusToggle {
+    padding: 0;
+    min-height: auto;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .tableContainer {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .dataTable {
+        min-width: 768px;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .dataTable th,
+    .dataTable td {
+        padding: var(--spacing-2);
+    }
+
+    .actionsContainer {
+        gap: var(--spacing-1);
+    }
+
+    .actionBtn {
+        min-width: 28px;
+        height: 28px;
+    }
+
+    .emptyTable {
+        padding: var(--spacing-8);
+    }
+
+    .emptyIcon {
+        font-size: 36px;
+    }
+
+    .emptyText {
+        font-size: var(--text-sm);
+    }
+}

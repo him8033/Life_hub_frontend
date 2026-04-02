@@ -10,7 +10,11 @@ import {
     FiSettings,
     FiChevronDown,
     FiChevronRight,
-    FiUser
+    FiUser,
+    FiMap,
+    FiTag,
+    FiPlusCircle,
+    FiList
 } from 'react-icons/fi';
 import styles from '@/styles/dashboard/Sidebar.module.css';
 import { ROUTES } from '@/routes/routes.constants';
@@ -45,11 +49,12 @@ const menuItems = [
             {
                 id: 'travelhub',
                 label: 'Travel Hub',
-                icon: <FiFileText />,
+                icon: <FiMap />,
                 href: '#',
                 submenu: [
-                    { label: 'Travel Spots', href: ROUTES.DASHBOARD.TRAVELSPOT.LIST },
-                    { label: 'Spot Categories', href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST },
+                    { label: 'All Travel Spots', href: ROUTES.DASHBOARD.TRAVELSPOT.LIST, icon: <FiList /> },
+                    { label: 'Add Travel Spot', href: ROUTES.DASHBOARD.TRAVELSPOT.CREATE, icon: <FiPlusCircle /> },
+                    { label: 'Spot Categories', href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST, icon: <FiTag /> },
                 ]
             },
         ]
@@ -87,7 +92,7 @@ const MenuItem = ({ item, pathname, openSubmenus, toggleSubmenu, closeSidebar })
 
     const handleClick = () => {
         if (!hasSubmenu) {
-            closeSidebar(); // Close sidebar when clicking a non-submenu item on mobile
+            closeSidebar();
         }
     };
 
@@ -98,17 +103,11 @@ const MenuItem = ({ item, pathname, openSubmenus, toggleSubmenu, closeSidebar })
                     <button
                         onClick={() => toggleSubmenu(item.id)}
                         className={`${styles.menuLink} ${isActive ? styles.menuLinkActive : ''}`}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            width: '100%',
-                            textAlign: 'left',
-                            cursor: 'pointer'
-                        }}
+                        aria-expanded={openSubmenus[item.id]}
                     >
                         <span className={styles.menuIcon}>{item.icon}</span>
                         <span className={styles.menuText}>{item.label}</span>
-                        <span className={styles.menuIcon} style={{ marginLeft: 'auto' }}>
+                        <span className={styles.menuChevron}>
                             {openSubmenus[item.id] ? <FiChevronDown /> : <FiChevronRight />}
                         </span>
                     </button>
@@ -122,7 +121,8 @@ const MenuItem = ({ item, pathname, openSubmenus, toggleSubmenu, closeSidebar })
                                         className={`${styles.submenuLink} ${pathname === subItem.href ? styles.submenuLinkActive : ''}`}
                                         onClick={closeSidebar}
                                     >
-                                        {subItem.label}
+                                        {subItem.icon && <span className={styles.submenuIcon}>{subItem.icon}</span>}
+                                        <span className={styles.submenuText}>{subItem.label}</span>
                                     </Link>
                                 </li>
                             ))}
@@ -147,9 +147,7 @@ const Sidebar = ({ closeSidebar }) => {
     const pathname = usePathname();
     const [openSubmenus, setOpenSubmenus] = useState({
         users: false,
-        content: false,
-        finance: false,
-        ecommerce: false
+        travelhub: false
     });
 
     const toggleSubmenu = (menuId) => {
@@ -161,27 +159,25 @@ const Sidebar = ({ closeSidebar }) => {
 
     return (
         <aside className={styles.sidebar}>
-            <div className={styles.sidebarHeader}>
-                <h3 className={styles.sidebarTitle}>Navigation</h3>
-            </div>
-
-            {menuItems.map((section, index) => (
-                <div key={index}>
-                    <div className={styles.menuTitle}>{section.title}</div>
-                    <ul className={styles.menuList}>
-                        {section.items.map((item) => (
-                            <MenuItem
-                                key={item.id}
-                                item={item}
-                                pathname={pathname}
-                                openSubmenus={openSubmenus}
-                                toggleSubmenu={toggleSubmenu}
-                                closeSidebar={closeSidebar}
-                            />
-                        ))}
-                    </ul>
-                </div>
-            ))}
+            <nav className={styles.sidebarNav}>
+                {menuItems.map((section, index) => (
+                    <div key={index} className={styles.menuSection}>
+                        <div className={styles.menuTitle}>{section.title}</div>
+                        <ul className={styles.menuList}>
+                            {section.items.map((item) => (
+                                <MenuItem
+                                    key={item.id}
+                                    item={item}
+                                    pathname={pathname}
+                                    openSubmenus={openSubmenus}
+                                    toggleSubmenu={toggleSubmenu}
+                                    closeSidebar={closeSidebar}
+                                />
+                            ))}
+                        </ul>
+                    </div>
+                ))}
+            </nav>
         </aside>
     );
 };

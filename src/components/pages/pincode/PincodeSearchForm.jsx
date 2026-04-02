@@ -8,9 +8,9 @@ import {
     useGetSubDistrictsByDistrictQuery,
     useGetVillagesBySubDistrictQuery,
 } from '@/services/api/locationsApi';
-import { FormContainer, FormRow } from '@/components/common/forms/FormContainer';
-import FormSelect from '@/components/common/forms/FormSelect';
-import { PrimaryButton, SecondaryButton, ActionButtons } from '@/components/common/forms/FormButtons';
+import { FormContainer, FormRow } from '@/components/common/forms_old/FormContainer';
+import FormSelect from '@/components/common/forms_old/FormSelect';
+import { PrimaryButton, SecondaryButton, ActionButtons } from '@/components/common/forms_old/FormButtons';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const PincodeSearchForm = ({ onSubmit, onClear }) => {

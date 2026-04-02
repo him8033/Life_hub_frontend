@@ -1,0 +1,346 @@
+/* FilterModal.module.css */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    max-height: 85vh;
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-2xl);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-6);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.title {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--muted-foreground);
+    transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+/* Content */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-6);
+}
+
+.filterSection {
+    margin-bottom: var(--spacing-6);
+}
+
+.filterSection:last-child {
+    margin-bottom: 0;
+}
+
+/* Select Wrapper */
+.selectWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.selectLabel {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.selectField {
+    width: 100%;
+}
+
+/* Radio Group */
+.radioGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.radioLabel {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.radioOptions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) 0;
+}
+
+.radioOption {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    cursor: pointer;
+    font-size: var(--text-sm);
+    color: var(--foreground);
+}
+
+.radioOption input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.radioOption input[type="radio"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.radioOption:hover {
+    background: var(--accent);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-1);
+    margin: calc(-1 * var(--spacing-1));
+}
+
+/* Checkbox Group */
+.checkboxGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.checkboxLabel {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.checkboxOptions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) 0;
+}
+
+.checkboxOption {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    cursor: pointer;
+    font-size: var(--text-sm);
+    color: var(--foreground);
+}
+
+.checkboxOption input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.checkboxOption input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.checkboxOption:hover {
+    background: var(--accent);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-1);
+    margin: calc(-1 * var(--spacing-1));
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    gap: var(--spacing-4);
+    padding: var(--spacing-6);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.footer button {
+    flex: 1;
+}
+
+/* Loading State */
+.loadingOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: color-mix(in srgb, var(--background) 80%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    z-index: 10;
+}
+
+.loadingSpinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .modal {
+        width: 95%;
+        max-height: 90vh;
+    }
+
+    .header {
+        padding: var(--spacing-4);
+    }
+
+    .content {
+        padding: var(--spacing-4);
+    }
+
+    .footer {
+        padding: var(--spacing-4);
+        flex-direction: column;
+        gap: var(--spacing-3);
+    }
+
+    .footer button {
+        width: 100%;
+    }
+
+    .radioOptions,
+    .checkboxOptions {
+        gap: var(--spacing-3);
+    }
+
+    .radioOption,
+    .checkboxOption {
+        padding: var(--spacing-1) 0;
+    }
+}
+
+/* Scrollbar Styling */
+.content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: var(--muted);
+    border-radius: var(--radius-full);
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--radius-full);
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+}
+
+/* Dark Mode Specific */
+:global(.dark) .overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+:global(.dark) .modal {
+    background: var(--card);
+}
+
+:global(.dark) .radioOption:hover,
+:global(.dark) .checkboxOption:hover {
+    background: var(--accent);
+}
+
+/* Animation for content */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.filterSection {
+    animation: slideUp 0.2s ease forwards;
+    animation-delay: calc(var(--index, 0) * 0.05s);
+}

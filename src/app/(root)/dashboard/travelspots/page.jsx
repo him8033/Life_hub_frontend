@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import TravelSpotTable from '@/components/travelspots/TravelSpotTable';
-import listingStyles from '@/styles/common/Listing.module.css';
+import TableLayout from '@/components/common/table/TableLayout';
+import FilterModal from '@/components/common/FilterModal';
 import {
     useDeleteTravelSpotMutation,
     useGetAdminTravelSpotsQuery,
@@ -23,9 +24,10 @@ import {
     useGetVillagesBySubDistrictQuery,
 } from '@/services/api/locationsApi';
 import { useGetPublicSpotCategoriesQuery } from '@/services/api/spotcategoryApi';
-import { FiFilter, FiX, FiSearch, FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import { MountainIcon } from 'lucide-react';
+import { MdOutlineTour } from 'react-icons/md';
+import { FiPlus } from 'react-icons/fi';
 import { formatDateTime } from '@/utils/date.utils';
+import styles from '@/styles/common/CommonListing.module.css';
 
 export default function TravelSpotsPage() {
     const router = useRouter();
@@ -47,8 +49,7 @@ export default function TravelSpotsPage() {
     });
 
     // UI states
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isAdvancedFiltersOpen, setIsAdvancedFiltersOpen] = useState(false);
+    const [isLocationFilterOpen, setIsLocationFilterOpen] = useState(false);
 
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
@@ -98,7 +99,7 @@ export default function TravelSpotsPage() {
         skip: !selectedSpotId,
     });
 
-    // Transform categories data
+    // Transform data
     const categories = catRes?.data?.map(c => ({
         id: c.id,
         name: c.name,
@@ -109,14 +110,26 @@ export default function TravelSpotsPage() {
     const subDistricts = subDistrictsData?.data || [];
     const villages = villagesData?.data?.results || [];
 
+    // Min Views Options
+    const minViewsOptions = [
+        { value: '', label: 'Any Views' },
+        { value: '100', label: '100+ Views' },
+        { value: '500', label: '500+ Views' },
+        { value: '1000', label: '1000+ Views' },
+        { value: '5000', label: '5000+ Views' },
+        { value: '10000', label: '10000+ Views' },
+        { value: '50000', label: '50000+ Views' },
+    ];
+
     // Count active filters
-    const activeFilterCount = Object.values(filters).filter(value => value).length;
+    const activeFilterCount = Object.values(filters).filter(value => value).length + (debouncedSearch ? 1 : 0);
+    const locationFilterCount = [filters.state, filters.district, filters.sub_district, filters.village].filter(Boolean).length;
 
     // Debounce search
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchTerm);
-            setCurrentPage(1); // Reset to first page when search changes
+            setCurrentPage(1);
         }, 500);
 
         return () => clearTimeout(timer);
@@ -139,7 +152,7 @@ export default function TravelSpotsPage() {
                 newFilters.village = '';
             }
 
-            setCurrentPage(1); // Reset to first page when filters change
+            setCurrentPage(1);
             return newFilters;
         });
     }, []);
@@ -158,7 +171,7 @@ export default function TravelSpotsPage() {
         });
         setOrdering('-created_at');
         setCurrentPage(1);
-        setIsFilterOpen(false);
+        setIsLocationFilterOpen(false);
     };
 
     const handleViewVisitors = (travelspotId) => {
@@ -174,16 +187,12 @@ export default function TravelSpotsPage() {
                 confirmText: 'Delete',
                 cancelText: 'Cancel',
                 type: 'danger',
-                isLoading: false,
             });
 
-            if (!ok) {
-                setIsDeleting(false);
-                return;
-            }
+            if (!ok) return;
 
-            const res = await deleteTravelSpot(travelspot_id).unwrap();
-            showSnackbar(res?.message || 'Travel spot deleted successfully', 'success', 5000);
+            await deleteTravelSpot(travelspot_id).unwrap();
+            showSnackbar('Travel spot deleted successfully', 'success', 5000);
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
@@ -203,28 +212,24 @@ export default function TravelSpotsPage() {
             const ok = await confirm({
                 title: currentStatus ? 'Hide Travel Spot' : 'Show Travel Spot',
                 message: currentStatus
-                    ? `"${name}" will be hidden from users. Users will no longer be able to see this travel spot.`
-                    : `"${name}" will be visible to users. Users will be able to see and interact with this travel spot.`,
+                    ? `"${name}" will be hidden from users.`
+                    : `"${name}" will be visible to users.`,
                 confirmText: currentStatus ? 'Hide' : 'Show',
                 cancelText: 'Cancel',
                 type: currentStatus ? 'warning' : 'info',
-                isLoading: false,
             });
 
-            if (!ok) {
-                setIsToggling(false);
-                return;
-            }
+            if (!ok) return;
 
-            const res = await updateTravelSpot({
+            await updateTravelSpot({
                 travelspot_id,
                 data: { is_active: !currentStatus },
             }).unwrap();
 
             showSnackbar(
                 currentStatus
-                    ? `"${name}" is now hidden from users`
-                    : `"${name}" is now visible to users`,
+                    ? `"${name}" is now hidden`
+                    : `"${name}" is now visible`,
                 'success',
                 3000
             );
@@ -258,11 +263,102 @@ export default function TravelSpotsPage() {
         }
     };
 
-    const handlePageSizeChange = (e) => {
-        const newSize = parseInt(e.target.value);
+    const handlePageSizeChange = (newSize) => {
         setPageSize(newSize);
         setCurrentPage(1);
     };
+
+    // Define location filters for modal
+    const locationFiltersConfig = [
+        {
+            type: 'select',
+            label: 'State',
+            value: filters.state,
+            onChange: (value) => handleFilterChange('state', value),
+            options: states.map(state => ({
+                value: state.id,
+                label: state.name
+            })),
+            disabled: isStateLoading,
+            placeholder: 'All States',
+        },
+        {
+            type: 'select',
+            label: 'District',
+            value: filters.district,
+            onChange: (value) => handleFilterChange('district', value),
+            options: districts.map(district => ({
+                value: district.id,
+                label: district.name
+            })),
+            disabled: !filters.state || isDistrictLoading,
+            placeholder: 'All Districts',
+        },
+        {
+            type: 'select',
+            label: 'City/Sub-district',
+            value: filters.sub_district,
+            onChange: (value) => handleFilterChange('sub_district', value),
+            options: subDistricts.map(subDistrict => ({
+                value: subDistrict.id,
+                label: subDistrict.name
+            })),
+            disabled: !filters.district || isSubDistrictLoading,
+            placeholder: 'All Sub-districts',
+        },
+        {
+            type: 'select',
+            label: 'Village/Town',
+            value: filters.village,
+            onChange: (value) => handleFilterChange('village', value),
+            options: villages.map(village => ({
+                value: village.id,
+                label: village.name
+            })),
+            disabled: !filters.sub_district || isVillageLoading,
+            placeholder: 'All Villages',
+        },
+        {
+            type: 'select',
+            label: 'Minimum Views',
+            value: filters.min_views,
+            onChange: (value) => handleFilterChange('min_views', value),
+            options: minViewsOptions,
+            placeholder: 'Any Views',
+        },
+    ];
+
+    // Define header filters (status, category, sort)
+    const headerFilters = [
+        {
+            value: filters.is_active,
+            onChange: (value) => handleFilterChange('is_active', value),
+            options: [
+                { value: '', label: 'All Status' },
+                { value: 'true', label: 'Active' },
+                { value: 'false', label: 'Inactive' },
+            ],
+        },
+        {
+            value: filters.category,
+            onChange: (value) => handleFilterChange('category', value),
+            options: [
+                { value: '', label: 'All Categories' },
+                ...categories.map(cat => ({ value: cat.id, label: cat.name })),
+            ],
+        },
+        {
+            value: ordering,
+            onChange: (value) => setOrdering(value),
+            options: [
+                { value: '-created_at', label: 'Newest First' },
+                { value: 'created_at', label: 'Oldest First' },
+                { value: 'name', label: 'Name A-Z' },
+                { value: '-name', label: 'Name Z-A' },
+                { value: '-view_count', label: 'Most Views' },
+            ],
+        },
+    ];
 
     if (isLoading) {
         return <Loader text="Loading travel spots..." />;
@@ -280,399 +376,105 @@ export default function TravelSpotsPage() {
     }
 
     return (
-        <div className={listingStyles.listingContainer}>
-            {/* Header */}
-            <div className={listingStyles.listingHeader}>
-                <div className={listingStyles.titleSection}>
-                    <h1 className={listingStyles.listingTitle}>Travel Spots</h1>
-                    <div className={listingStyles.headerActions}>
-                        <div className={listingStyles.searchContainer}>
-                            <FiSearch className={listingStyles.searchIcon} />
-                            <input
-                                type="text"
-                                placeholder="Search by name, address, or description..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className={listingStyles.searchInput}
-                                disabled={isDeleting || isToggling}
-                            />
-                        </div>
-                        <Link
-                            href={ROUTES.DASHBOARD.TRAVELSPOT.CREATE}
-                            className={listingStyles.primaryButton}
-                            style={isDeleting || isToggling ? { opacity: 0.7, pointerEvents: 'none' } : {}}
-                        >
-                            Add Travel Spot
-                        </Link>
-                    </div>
+        <div className={styles.pageContainer}>
+            {/* Page Header */}
+            <div className={styles.pageHeader}>
+                <div className={styles.pageTitleWrapper}>
+                    <MdOutlineTour className={styles.pageIcon} />
+                    <h1 className={styles.pageTitle}>Travel Spots</h1>
                 </div>
-
-                {/* Quick Filters Bar */}
-                <div className={listingStyles.quickFilters}>
-                    <div className={listingStyles.filterControls}>
-                        <button
-                            onClick={() => setIsFilterOpen(!isFilterOpen)}
-                            className={listingStyles.filterToggle}
-                        >
-                            <FiFilter />
-                            <span>Filters</span>
-                            {activeFilterCount > 0 && (
-                                <span className={listingStyles.filterBadge}>
-                                    {activeFilterCount}
-                                </span>
-                            )}
-                        </button>
-
-                        <div className={listingStyles.quickFilterRow}>
-
-                            <div className={listingStyles.quickFilter}>
-                                <select
-                                    value={filters.is_active}
-                                    onChange={(e) => handleFilterChange('is_active', e.target.value)}
-                                    className={listingStyles.quickSelect}
-                                >
-                                    <option value="">All Status</option>
-                                    <option value="true">Active</option>
-                                    <option value="false">Inactive</option>
-                                </select>
-                            </div>
-
-                            {/* Category Filter */}
-                            <div className={listingStyles.quickFilter}>
-                                <select
-                                    value={filters.category}
-                                    onChange={(e) => handleFilterChange('category', e.target.value)}
-                                    className={listingStyles.quickSelect}
-                                >
-                                    <option value="">All Categories</option>
-                                    {categories.map(category => (
-                                        <option key={category.id} value={category.id}>
-                                            {category.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* Min Views Filter */}
-                            <div className={listingStyles.quickFilter}>
-                                <select
-                                    value={filters.min_views}
-                                    onChange={(e) => handleFilterChange('min_views', e.target.value)}
-                                    className={listingStyles.quickSelect}
-                                >
-                                    <option value="">Any Views</option>
-                                    <option value="100">100+</option>
-                                    <option value="500">500+</option>
-                                    <option value="1000">1000+</option>
-                                </select>
-                            </div>
-
-                            <div className={listingStyles.quickFilter}>
-                                <select
-                                    value={ordering}
-                                    onChange={(e) => setOrdering(e.target.value)}
-                                    className={listingStyles.quickSelect}
-                                >
-                                    <option value="">Sort by</option>
-                                    <option value="-created_at">Newest First</option>
-                                    <option value="created_at">Oldest First</option>
-                                    <option value="name">Name A-Z</option>
-                                    <option value="-name">Name Z-A</option>
-                                    <option value="-view_count">Most Views</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        {activeFilterCount > 0 && (
-                            <button
-                                onClick={handleClearFilters}
-                                className={listingStyles.clearFiltersButton}
-                            >
-                                <FiX />
-                                Clear Filters
-                            </button>
-                        )}
-                    </div>
-
-                    {/* Expanded Filters Panel */}
-                    {isFilterOpen && (
-                        <div className={listingStyles.expandedFilters}>
-                            <div className={listingStyles.filterGrid}>
-                                {/* State Filter */}
-                                <div className={listingStyles.filterField}>
-                                    <label className={listingStyles.filterLabel}>State</label>
-                                    <select
-                                        value={filters.state}
-                                        onChange={(e) => handleFilterChange('state', e.target.value)}
-                                        className={listingStyles.filterSelect}
-                                    >
-                                        <option value="">All States</option>
-                                        {states.map(state => (
-                                            <option key={state.id} value={state.id}>
-                                                {state.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* District Filter */}
-                                <div className={listingStyles.filterField}>
-                                    <label className={listingStyles.filterLabel}>District</label>
-                                    <select
-                                        value={filters.district}
-                                        onChange={(e) => handleFilterChange('district', e.target.value)}
-                                        className={listingStyles.filterSelect}
-                                        disabled={!filters.state}
-                                    >
-                                        <option value="">All Districts</option>
-                                        {districts.map(district => (
-                                            <option key={district.id} value={district.id}>
-                                                {district.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* Sub-district Filter */}
-                                <div className={listingStyles.filterField}>
-                                    <label className={listingStyles.filterLabel}>Sub-district</label>
-                                    <select
-                                        value={filters.sub_district}
-                                        onChange={(e) => handleFilterChange('sub_district', e.target.value)}
-                                        className={listingStyles.filterSelect}
-                                        disabled={!filters.district}
-                                    >
-                                        <option value="">All Sub-districts</option>
-                                        {subDistricts.map(subDistrict => (
-                                            <option key={subDistrict.id} value={subDistrict.id}>
-                                                {subDistrict.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* Village Filter */}
-                                <div className={listingStyles.filterField}>
-                                    <label className={listingStyles.filterLabel}>Village</label>
-                                    <select
-                                        value={filters.village}
-                                        onChange={(e) => handleFilterChange('village', e.target.value)}
-                                        className={listingStyles.filterSelect}
-                                        disabled={!filters.sub_district}
-                                    >
-                                        <option value="">All Villages</option>
-                                        {villages.map(village => (
-                                            <option key={village.id} value={village.id}>
-                                                {village.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-
-                            {/* Advanced Filters Toggle */}
-                            <button
-                                onClick={() => setIsAdvancedFiltersOpen(!isAdvancedFiltersOpen)}
-                                className={listingStyles.advancedToggle}
-                            >
-                                {isAdvancedFiltersOpen ? <FiChevronUp /> : <FiChevronDown />}
-                                Advanced Filters
-                            </button>
-
-                            {/* Advanced Filters (Hidden by default) */}
-                            {isAdvancedFiltersOpen && (
-                                <div className={listingStyles.advancedFilters}>
-                                    <div className={listingStyles.filterGrid}>
-                                        {/* Sub-district Filter */}
-                                        {/* <div className={listingStyles.filterField}>
-                                            <label className={listingStyles.filterLabel}>Sub-district</label>
-                                            <select
-                                                value={filters.sub_district}
-                                                onChange={(e) => handleFilterChange('sub_district', e.target.value)}
-                                                className={listingStyles.filterSelect}
-                                                disabled={!filters.district}
-                                            >
-                                                <option value="">All Sub-districts</option>
-                                                {subDistricts.map(subDistrict => (
-                                                    <option key={subDistrict.id} value={subDistrict.id}>
-                                                        {subDistrict.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div> */}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
+                <Link
+                    href={ROUTES.DASHBOARD.TRAVELSPOT.CREATE}
+                    className={styles.addButton}
+                >
+                    <FiPlus className={styles.addIcon} />
+                    Add Travel Spot
+                </Link>
             </div>
 
-            {/* Results Section */}
-            <div className={listingStyles.resultsSection}>
-                {/* Results Info and Controls */}
-                <div className={listingStyles.resultsHeader}>
-                    <div className={listingStyles.resultsInfo}>
-                        <span className={listingStyles.resultsCount}>
-                            Showing {travelSpots.length} of {totalCount} travel spots
-                            {totalPages > 0 && ` (Page ${currentPage} of ${totalPages})`}
-                        </span>
-                        <div className={listingStyles.pageControls}>
-                            <div className={listingStyles.pageSizeSelector}>
-                                <label>Show:</label>
-                                <select
-                                    value={pageSize}
-                                    onChange={handlePageSizeChange}
-                                    className={listingStyles.pageSizeSelect}
-                                    disabled={isFetching}
-                                >
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            {/* Table Layout with Integrated Filter Button */}
+            <TableLayout
+                headerProps={{
+                    searchTerm,
+                    setSearchTerm,
+                    filters: headerFilters,
+                    activeFilterCount: activeFilterCount - locationFilterCount,
+                    onOpenFilters: () => setIsLocationFilterOpen(true),
+                    onClearFilters: handleClearFilters,
+                    placeholder: "Search by name, address, or description...",
+                    size: "md",
+                    showFilterButton: true,
+                    filterButtonText: "Location & Views",
+                }}
+                paginationProps={{
+                    dataLength: travelSpots.length,
+                    totalCount,
+                    currentPage,
+                    totalPages,
+                    pageSize,
+                    onPageChange: handlePageChange,
+                    onPageSizeChange: handlePageSizeChange,
+                    isFetching,
+                }}
+            >
+                <TravelSpotTable
+                    travelSpots={travelSpots}
+                    onDelete={handleDelete}
+                    onToggleStatus={handleToggleStatus}
+                    onEdit={(slug) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.EDIT(slug))}
+                    onView={(slug) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.VIEW(slug))}
+                    onViewVisitors={handleViewVisitors}
+                    isLoading={isDeleting || isToggling || isFetching}
+                />
+            </TableLayout>
 
-                {/* Table */}
-                {travelSpots.length === 0 ? (
-                    <div className={listingStyles.emptyState}>
-                        <div className={listingStyles.emptyIcon}>
-                            <MountainIcon/>
-                        </div>
-                        <p className={listingStyles.emptyText}>
-                            {debouncedSearch || activeFilterCount > 0
-                                ? 'No travel spots match your search criteria.'
-                                : 'No travel spots found. Add your first travel spot!'
-                            }
-                        </p>
-                        {(debouncedSearch || activeFilterCount > 0) && (
-                            <button
-                                onClick={handleClearFilters}
-                                className={listingStyles.clearButton}
-                            >
-                                Clear all filters
-                            </button>
-                        )}
-                    </div>
-                ) : (
-                    <>
-                        <TravelSpotTable
-                            travelSpots={travelSpots}
-                            onDelete={handleDelete}
-                            onToggleStatus={handleToggleStatus}
-                            onEdit={(travelspot_id) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.EDIT(travelspot_id))}
-                            onView={(travelspot_id) => router.push(ROUTES.DASHBOARD.TRAVELSPOT.VIEW(travelspot_id))}
-                            onViewVisitors={handleViewVisitors}
-                            isLoading={isDeleting || isToggling || isFetching}
-                        />
-
-                        {/* Pagination */}
-                        {totalPages > 1 && (
-                            <div className={listingStyles.pagination}>
-                                <div className={listingStyles.paginationInfo}>
-                                    Page {currentPage} of {totalPages}
-                                </div>
-                                <div className={listingStyles.paginationButtons}>
-                                    <button
-                                        onClick={() => handlePageChange(1)}
-                                        disabled={currentPage === 1 || isFetching}
-                                        className={listingStyles.paginationButton}
-                                    >
-                                        First
-                                    </button>
-                                    <button
-                                        onClick={() => handlePageChange(currentPage - 1)}
-                                        disabled={currentPage === 1 || isFetching}
-                                        className={listingStyles.paginationButton}
-                                    >
-                                        Previous
-                                    </button>
-
-                                    <div className={listingStyles.pageNumbers}>
-                                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                                            let pageNum;
-                                            if (totalPages <= 5) {
-                                                pageNum = i + 1;
-                                            } else if (currentPage <= 3) {
-                                                pageNum = i + 1;
-                                            } else if (currentPage >= totalPages - 2) {
-                                                pageNum = totalPages - 4 + i;
-                                            } else {
-                                                pageNum = currentPage - 2 + i;
-                                            }
-
-                                            return (
-                                                <button
-                                                    key={pageNum}
-                                                    onClick={() => handlePageChange(pageNum)}
-                                                    disabled={isFetching}
-                                                    className={`${listingStyles.pageNumber} ${currentPage === pageNum ? listingStyles.activePage : ''}`}
-                                                >
-                                                    {pageNum}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-
-                                    <button
-                                        onClick={() => handlePageChange(currentPage + 1)}
-                                        disabled={currentPage === totalPages || isFetching}
-                                        className={listingStyles.paginationButton}
-                                    >
-                                        Next
-                                    </button>
-                                    <button
-                                        onClick={() => handlePageChange(totalPages)}
-                                        disabled={currentPage === totalPages || isFetching}
-                                        className={listingStyles.paginationButton}
-                                    >
-                                        Last
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
+            {/* Location & Views Filters Modal */}
+            <FilterModal
+                isOpen={isLocationFilterOpen}
+                onClose={() => setIsLocationFilterOpen(false)}
+                onClear={handleClearFilters}
+                filters={locationFiltersConfig}
+                title="Location & Views Filters"
+                clearButtonText="Clear All"
+                closeButtonText="Close"
+                isLoading={isStateLoading || isDistrictLoading || isSubDistrictLoading || isVillageLoading}
+            />
 
             {/* Visitors Modal */}
             {selectedSpotId && (
-                <div className={listingStyles.modalOverlay} onClick={() => setSelectedSpotId(null)}>
-                    <div className={listingStyles.modalContent} onClick={(e) => e.stopPropagation()}>
-                        <div className={listingStyles.modalHeader}>
+                <div className={styles.modalOverlay} onClick={() => setSelectedSpotId(null)}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
                             <h3>Visitor Details</h3>
                             <button
                                 onClick={() => setSelectedSpotId(null)}
-                                className={listingStyles.modalClose}
+                                className={styles.modalClose}
                             >
                                 ×
                             </button>
                         </div>
-                        <div className={listingStyles.modalBody}>
+                        <div className={styles.modalBody}>
                             {isVisitorsLoading ? (
                                 <Loader text="Loading visitors..." />
                             ) : visitorsData?.data?.length > 0 ? (
-                                <div className={listingStyles.visitorsList}>
-                                    <div className={listingStyles.visitorHeader}>
+                                <div className={styles.visitorsList}>
+                                    <div className={styles.visitorHeader}>
                                         <span>User</span>
                                         <span>IP Address</span>
                                         <span>Visited At</span>
                                     </div>
                                     {visitorsData.data.map((visitor) => (
-                                        <div key={visitor.id} className={listingStyles.visitorItem}>
+                                        <div key={visitor.id} className={styles.visitorItem}>
                                             <span>{visitor.user_email || "Guest"}</span>
-                                            <span className={listingStyles.ipAddress}>{visitor.ip_address}</span>
-                                            <span className={listingStyles.visitTime}>
+                                            <span className={styles.ipAddress}>{visitor.ip_address}</span>
+                                            <span className={styles.visitTime}>
                                                 {visitor.viewed_at ? formatDateTime(visitor.viewed_at) : '—'}
                                             </span>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className={listingStyles.noVisitors}>No visitors found for this travel spot.</p>
+                                <p className={styles.noVisitors}>No visitors found for this travel spot.</p>
                             )}
                         </div>
                     </div>
@@ -681,7 +483,7 @@ export default function TravelSpotsPage() {
 
             {/* Loading Overlay */}
             {isFetching && travelSpots.length > 0 && (
-                <div className={listingStyles.loadingOverlay}>
+                <div className={styles.loadingOverlay}>
                     <Loader text="Loading..." />
                 </div>
             )}

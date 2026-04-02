@@ -1,0 +1,505 @@
+/* FormSelect.module.css - Uses global CSS variables */
+
+.formItem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    width: 100%;
+}
+
+/* Label Styles */
+.formLabel {
+    font-weight: 600;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin: 0;
+}
+
+/* Label Size Variants */
+.labelSm {
+    font-size: var(--text-xs);
+    gap: var(--spacing-1);
+}
+
+.labelMd {
+    font-size: var(--text-sm);
+    gap: var(--spacing-2);
+}
+
+.labelLg {
+    font-size: var(--text-base);
+    gap: var(--spacing-2);
+}
+
+.labelIcon {
+    display: flex;
+    align-items: center;
+    color: var(--primary);
+}
+
+.labelSm .labelIcon {
+    font-size: var(--text-sm);
+}
+
+.labelMd .labelIcon {
+    font-size: var(--text-base);
+}
+
+.labelLg .labelIcon {
+    font-size: var(--text-lg);
+}
+
+.required {
+    color: var(--destructive);
+    margin-left: var(--spacing-1);
+}
+
+/* Select Wrapper */
+.selectWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.wrapperSm {
+    height: 2.25rem;
+}
+
+.wrapperMd {
+    height: 2.75rem;
+}
+
+.wrapperLg {
+    height: 3.25rem;
+}
+
+/* Select Base */
+.select {
+    width: 100%;
+    appearance: none;
+    background: var(--background);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Select Size Variants */
+.selectSm {
+    padding: 0.375rem 2rem 0.375rem 0.75rem;
+    font-size: var(--text-sm);
+    line-height: 1.25rem;
+}
+
+.selectMd {
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    font-size: var(--text-base);
+    line-height: 1.5rem;
+}
+
+.selectLg {
+    padding: 0.75rem 3rem 0.75rem 1.25rem;
+    font-size: var(--text-lg);
+    line-height: 1.75rem;
+}
+
+/* Select States */
+.select:focus {
+    outline: none;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
+}
+
+.select.hasValue {
+    border-color: var(--primary);
+}
+
+.selectError {
+    border-color: var(--destructive);
+}
+
+.selectError:focus {
+    border-color: var(--destructive);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+
+.select:disabled {
+    background: var(--muted);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Select Icon */
+.selectIcon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-foreground);
+    pointer-events: none;
+    transition: transform 0.2s ease;
+}
+
+.iconSm {
+    width: 1rem;
+    height: 1rem;
+    right: 0.5rem;
+}
+
+.iconMd {
+    width: 1.25rem;
+    height: 1.25rem;
+    right: 0.75rem;
+}
+
+.iconLg {
+    width: 1.5rem;
+    height: 1.5rem;
+    right: 1rem;
+}
+
+.iconRotated {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Loading Spinner */
+.loadingSpinner {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* MultiSelect */
+.multiSelectWrapper {
+    position: relative;
+    width: 100%;
+    z-index: 9999;
+}
+
+.multiSelect {
+    width: 100%;
+    background: var(--background);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* MultiSelect Size Variants */
+.multiSelectSm {
+    min-height: 2.25rem;
+    padding: 0.25rem 2rem 0.25rem 0.5rem;
+    font-size: var(--text-sm);
+}
+
+.multiSelectMd {
+    min-height: 2.75rem;
+    padding: 0.375rem 2.5rem 0.375rem 0.75rem;
+    font-size: var(--text-base);
+}
+
+.multiSelectLg {
+    min-height: 3.25rem;
+    padding: 0.5rem 3rem 0.5rem 1rem;
+    font-size: var(--text-lg);
+}
+
+/* Selected Tags */
+.selectedTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+/* Tag Size Variants */
+.tagSm {
+    padding: 0.125rem 0.5rem;
+    font-size: var(--text-xs);
+    margin: 0.125rem;
+}
+
+.tagMd {
+    padding: 0.25rem 0.625rem;
+    font-size: var(--text-sm);
+    margin: 0.1875rem;
+}
+
+.tagLg {
+    padding: 0.375rem 0.75rem;
+    font-size: var(--text-base);
+    margin: 0.25rem;
+}
+
+.selectedTag {
+    background: var(--primary);
+    color: white;
+    border-radius: var(--radius-full, 9999px);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.removeTag {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin-left: 0.25rem;
+}
+
+.removeTag:hover {
+    opacity: 0.8;
+}
+
+/* Placeholder */
+.placeholder {
+    color: var(--muted-foreground);
+}
+
+.placeholderSm {
+    font-size: var(--text-sm);
+}
+
+.placeholderMd {
+    font-size: var(--text-base);
+}
+
+.placeholderLg {
+    font-size: var(--text-lg);
+}
+
+/* Dropdown */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    margin-top: 0.25rem;
+    z-index: 9999;
+    overflow-y: auto;
+    box-shadow: var(--shadow-md-value);
+}
+
+.dropdownSm {
+    max-height: 200px;
+}
+
+.dropdownMd {
+    max-height: 250px;
+}
+
+.dropdownLg {
+    max-height: 300px;
+}
+
+/* Dropdown Item */
+.dropdownItem {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s ease;
+}
+
+.dropdownItemSm {
+    padding: 0.375rem 0.75rem;
+    font-size: var(--text-sm);
+}
+
+.dropdownItemMd {
+    padding: 0.5rem 1rem;
+    font-size: var(--text-base);
+}
+
+.dropdownItemLg {
+    padding: 0.625rem 1.25rem;
+    font-size: var(--text-lg);
+}
+
+.dropdownItem:hover {
+    background: var(--muted);
+}
+
+.dropdownItem.selected {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+}
+
+/* Checkbox */
+.checkbox {
+    cursor: pointer;
+}
+
+.checkboxSm {
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-right: 0.5rem;
+}
+
+.checkboxMd {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.625rem;
+}
+
+.checkboxLg {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-right: 0.75rem;
+}
+
+/* Count Badge */
+.count {
+    margin-left: auto;
+    color: var(--muted-foreground);
+    font-size: var(--text-xs);
+}
+
+/* No Options */
+.noOptions {
+    text-align: center;
+    color: var(--muted-foreground);
+}
+
+.noOptionsSm {
+    padding: 0.75rem;
+    font-size: var(--text-sm);
+}
+
+.noOptionsMd {
+    padding: 1rem;
+    font-size: var(--text-base);
+}
+
+.noOptionsLg {
+    padding: 1.25rem;
+    font-size: var(--text-lg);
+}
+
+/* Max Warning */
+.maxWarning {
+    color: var(--warning);
+    margin-top: var(--spacing-1);
+}
+
+.warningSm {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-0);
+}
+
+.warningMd {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-1);
+}
+
+.warningLg {
+    font-size: var(--text-sm);
+    margin-top: var(--spacing-1);
+}
+
+/* Description */
+.description {
+    color: var(--muted-foreground);
+    margin-top: var(--spacing-1);
+}
+
+.descriptionSm {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-0);
+}
+
+.descriptionMd {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-1);
+}
+
+.descriptionLg {
+    font-size: var(--text-sm);
+    margin-top: var(--spacing-1);
+}
+
+/* Error Message */
+.errorMessage {
+    color: var(--destructive);
+    margin-top: var(--spacing-1);
+}
+
+.errorSm {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-0);
+}
+
+.errorMd {
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-1);
+}
+
+.errorLg {
+    font-size: var(--text-sm);
+    margin-top: var(--spacing-1);
+}
+
+/* Animations */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .selectSm {
+        padding: 0.25rem 1.75rem 0.25rem 0.5rem;
+    }
+
+    .selectMd {
+        padding: 0.375rem 2rem 0.375rem 0.75rem;
+    }
+
+    .selectLg {
+        padding: 0.5rem 2.5rem 0.5rem 1rem;
+    }
+
+    .multiSelectSm {
+        min-height: 2rem;
+        padding: 0.25rem 1.75rem 0.25rem 0.5rem;
+    }
+
+    .multiSelectMd {
+        min-height: 2.5rem;
+        padding: 0.375rem 2rem 0.375rem 0.75rem;
+    }
+
+    .multiSelectLg {
+        min-height: 3rem;
+        padding: 0.5rem 2.5rem 0.5rem 1rem;
+    }
+
+    .dropdownSm,
+    .dropdownMd,
+    .dropdownLg {
+        max-height: 180px;
+    }
+}

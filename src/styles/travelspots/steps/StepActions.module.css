@@ -1,0 +1,28 @@
+/* StepActions.module.css */
+.stepActions {
+    margin-top: var(--spacing-6);
+    padding-top: var(--spacing-6);
+    border-top: 1px solid var(--border);
+}
+
+.rightActions {
+    display: flex;
+    gap: var(--spacing-3);
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .stepActions {
+        margin-top: var(--spacing-4);
+        padding-top: var(--spacing-4);
+    }
+
+    .rightActions {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    .rightActions button {
+        width: 100%;
+    }
+}

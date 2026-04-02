@@ -1,18 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-    FiChevronLeft,
-    FiChevronRight,
-    FiPlus,
-    FiUpload,
-    FiX
-} from 'react-icons/fi';
+import { FiUpload, FiImage } from 'react-icons/fi';
 
-// Shadcn Components
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+// Custom Components
+import Button from '@/components/common/buttons/Button';
+import SimpleInput from '@/components/common/forms/SimpleInput';
+import SquareImageUpload from '@/components/common/SquareImageUpload';
+import SquareImageItem from '@/components/common/SquareImageItem';
 
 // RTK Query hooks
 import {
@@ -25,11 +20,13 @@ import {
 } from '@/services/api/spotImageApi';
 
 // Styles
-import styles from '@/styles/travelspots/steps/Step4ImageManagement.module.css';
+import styles from '@/styles/travelspots/steps/CommonStepStyles.module.css';
 import { useSnackbar } from '@/context/SnackbarContext';
-import SquareImageItem from '@/components/common/SquareImageItem';
-import SquareImageUpload from '@/components/common/SquareImageUpload';
 import { useConfirm } from '@/context/ConfirmContext';
+import StepHeader from './StepHeader';
+import StepActions from './StepActions';
+import FormSection from './FormSection';
+import EditImageModal from './EditImageModal';
 
 const Step4ImageManagement = ({
     travelSpot,
@@ -38,15 +35,13 @@ const Step4ImageManagement = ({
 }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
+
     const [images, setImages] = useState([]);
     const [newImage, setNewImage] = useState(null);
     const [imageCaption, setImageCaption] = useState('');
-    const [editingImage, setEditingImage] = useState(null); // Store entire image object
-    const [editCaption, setEditCaption] = useState('');
-    const [editImageFile, setEditImageFile] = useState(null); // New state for image replacement
-    const [editPreviewUrl, setEditPreviewUrl] = useState('');
     const [previewUrl, setPreviewUrl] = useState('');
-    const [openMenuId, setOpenMenuId] = useState(null); // Track which menu is open
+    const [editingImage, setEditingImage] = useState(null);
+    const [openMenuId, setOpenMenuId] = useState(null);
 
     // Fetch images
     const { data: imagesData, isLoading: imagesLoading, refetch } = useGetTravelSpotImagesQuery(travelSpot.travelspot_id);
@@ -58,43 +53,6 @@ const Step4ImageManagement = ({
     const [deleteSpotImage, { isLoading: isDeleteSpotImage }] = useDeleteSpotImageMutation();
     const [replaceSpotImage, { isLoading: isReplaceSpotImage }] = useReplaceSpotImageMutation();
 
-    // Close menu when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            // Only close if click is outside any menu button or menu
-            if (openMenuId && !event.target.closest('.menu-button-selector')) {
-                setOpenMenuId(null);
-            }
-        };
-
-        // Close on Escape key
-        const handleEscapeKey = (event) => {
-            if (event.key === 'Escape' && openMenuId) {
-                setOpenMenuId(null);
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-        document.addEventListener('keydown', handleEscapeKey);
-
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-            document.removeEventListener('keydown', handleEscapeKey);
-        };
-    }, [openMenuId]);
-
-    // Cleanup preview URLs
-    useEffect(() => {
-        return () => {
-            if (editPreviewUrl) {
-                URL.revokeObjectURL(editPreviewUrl);
-            }
-            if (previewUrl) {
-                URL.revokeObjectURL(previewUrl);
-            }
-        };
-    }, [editPreviewUrl, previewUrl]);
-
     // Initialize images
     useEffect(() => {
         if (imagesData?.data) {
@@ -102,49 +60,25 @@ const Step4ImageManagement = ({
         }
     }, [imagesData]);
 
-    // Handle menu toggle
-    const handleMenuToggle = (imageId, e) => {
-        if (e) {
-            e.stopPropagation();
-        }
+    // Cleanup preview URL
+    useEffect(() => {
+        return () => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+        };
+    }, [previewUrl]);
 
-        // Close all other menus if a different one is opening
-        setOpenMenuId(openMenuId === imageId ? null : imageId);
-    };
-
-    // Close menu helper
     const closeMenu = () => {
         setOpenMenuId(null);
     };
 
-    // Handle menu actions - automatically close menu
-    const handleMenuAction = (action, imageId) => {
-        closeMenu();
-        action();
-    };
-
-    // Handle image select
+    // Image Upload Handlers
     const handleImageSelect = (file, url) => {
         setNewImage(file);
-        setPreviewUrl(url || URL.createObjectURL(file));
+        setPreviewUrl(url);
     };
 
-    // Handle image select for editing
-    const handleEditImageSelect = (file, url) => {
-        setEditImageFile(file);
-        setEditPreviewUrl(url || URL.createObjectURL(file));
-    };
-
-    // Handle remove edit image
-    const handleRemoveEditImage = () => {
-        setEditImageFile(null);
-        if (editPreviewUrl) {
-            URL.revokeObjectURL(editPreviewUrl);
-            setEditPreviewUrl('');
-        }
-    };
-
-    // Handle remove image
     const handleRemoveImage = () => {
         setNewImage(null);
         if (previewUrl) {
@@ -152,20 +86,6 @@ const Step4ImageManagement = ({
         }
         setPreviewUrl('');
         setImageCaption('');
-    };
-
-    // Handle back button
-    const handleBack = () => {
-        if (onBack) {
-            onBack();
-        }
-    };
-
-    // Handle next to review
-    const handleNext = () => {
-        if (onNext) {
-            onNext();
-        }
     };
 
     const handleUploadImage = async () => {
@@ -200,15 +120,15 @@ const Step4ImageManagement = ({
         }
     };
 
+    // Image Management Handlers
     const handleSetPrimary = async (imageId) => {
-        closeMenu(); // Close menu when editing starts
+        closeMenu();
         try {
             const res = await setPrimarySpotImage(imageId).unwrap();
             showSnackbar(res.message, 'success', 5000);
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
-
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
             } else {
@@ -218,7 +138,7 @@ const Step4ImageManagement = ({
     };
 
     const handleDeleteImage = async (imageId) => {
-        closeMenu(); // Close menu when editing starts
+        closeMenu();
         const ok = await confirm({
             title: 'Delete Spot Image',
             message: `Are you sure you want to delete this image? This action cannot be undone.`,
@@ -228,9 +148,7 @@ const Step4ImageManagement = ({
             isLoading: false,
         });
 
-        if (!ok) {
-            return;
-        }
+        if (!ok) return;
 
         try {
             const res = await deleteSpotImage(imageId).unwrap();
@@ -238,7 +156,6 @@ const Step4ImageManagement = ({
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
-
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
             } else {
@@ -248,28 +165,24 @@ const Step4ImageManagement = ({
     };
 
     const handleStartEdit = (image) => {
-        closeMenu(); // Close menu when editing starts
+        closeMenu();
         setEditingImage(image);
-        setEditCaption(image.caption || '');
-        setEditImageFile(null);
-        setEditPreviewUrl('');
     };
 
-    const handleSaveEdit = async () => {
+    const handleSaveEdit = async (updatedData) => {
         if (!editingImage) return;
+
         try {
             const formData = new FormData();
 
-            // Add caption if it exists
-            if (editCaption.trim()) {
-                formData.append('caption', editCaption.trim());
+            if (updatedData.caption?.trim()) {
+                formData.append('caption', updatedData.caption.trim());
             } else {
-                formData.append('caption', ''); // Send empty string to clear caption
+                formData.append('caption', '');
             }
 
-            // Add new image file if selected
-            if (editImageFile) {
-                formData.append('image', editImageFile, editImageFile.name);
+            if (updatedData.imageFile) {
+                formData.append('image', updatedData.imageFile, updatedData.imageFile.name);
             }
 
             const res = await replaceSpotImage({
@@ -278,11 +191,10 @@ const Step4ImageManagement = ({
             }).unwrap();
 
             showSnackbar(res.message, 'success', 5000);
-            handleCancelEdit();
+            setEditingImage(null);
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
-
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
             } else {
@@ -293,22 +205,15 @@ const Step4ImageManagement = ({
 
     const handleCancelEdit = () => {
         setEditingImage(null);
-        setEditCaption('');
-        setEditImageFile(null);
-        if (editPreviewUrl) {
-            URL.revokeObjectURL(editPreviewUrl);
-        }
-        setEditPreviewUrl('');
     };
 
     const handleMoveUp = async (index) => {
-        closeMenu(); // Close menu when editing starts
+        closeMenu();
         if (index === 0) return;
 
         const items = [...images];
         [items[index], items[index - 1]] = [items[index - 1], items[index]];
 
-        // Update positions
         const updatedItems = items.map((item, i) => ({
             ...item,
             position: i + 1
@@ -318,9 +223,9 @@ const Step4ImageManagement = ({
 
         try {
             const reorderData = {
-                order: updatedItems.map((item, index) => ({
+                order: updatedItems.map((item, idx) => ({
                     spotimage_id: item.spotimage_id,
-                    position: index + 1
+                    position: idx + 1
                 }))
             };
 
@@ -332,7 +237,6 @@ const Step4ImageManagement = ({
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
-
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
             } else {
@@ -342,13 +246,12 @@ const Step4ImageManagement = ({
     };
 
     const handleMoveDown = async (index) => {
-        closeMenu(); // Close menu when editing starts
+        closeMenu();
         if (index === images.length - 1) return;
 
         const items = [...images];
         [items[index], items[index + 1]] = [items[index + 1], items[index]];
 
-        // Update positions
         const updatedItems = items.map((item, i) => ({
             ...item,
             position: i + 1
@@ -358,9 +261,9 @@ const Step4ImageManagement = ({
 
         try {
             const reorderData = {
-                order: updatedItems.map((item, index) => ({
+                order: updatedItems.map((item, idx) => ({
                     spotimage_id: item.spotimage_id,
-                    position: index + 1
+                    position: idx + 1
                 }))
             };
 
@@ -372,7 +275,6 @@ const Step4ImageManagement = ({
             refetch();
         } catch (error) {
             const backendErrors = error?.data?.errors;
-
             if (backendErrors?.non_field_errors?.length) {
                 showSnackbar(backendErrors.non_field_errors[0], 'error', 5000);
             } else {
@@ -381,170 +283,33 @@ const Step4ImageManagement = ({
         }
     };
 
-    // Edit modal content - Updated to include image replacement
-    const renderEditModal = () => {
-        if (!editingImage) return null;
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
 
-        return (
-            <div className={styles.editModalOverlay} onClick={handleCancelEdit}>
-                <div className={styles.editModal} onClick={(e) => e.stopPropagation()}>
-                    <div className={styles.editModalHeader}>
-                        <h3>Edit Image & Caption</h3>
-                        <button
-                            onClick={handleCancelEdit}
-                            className={styles.closeButton}
-                        >
-                            <FiX />
-                        </button>
-                    </div>
-                    <div className={styles.editModalContent}>
-                        {/* Current Image Preview */}
-                        <div className={styles.currentImageSection}>
-                            <h4 className={styles.sectionSubtitle}>Current Image</h4>
-                            <div className={styles.currentImagePreview}>
-                                <img
-                                    src={editingImage.image_url}
-                                    alt={editingImage.caption || 'Current image'}
-                                    className={styles.currentImage}
-                                />
-                                <div className={styles.currentImageInfo}>
-                                    <span className={styles.imageInfoText}>
-                                        Current image
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+        if (images.length === 0) {
+            showSnackbar("Please upload at least one image", "error");
+            return;
+        }
 
-                        {/* Replace Image Section */}
-                        <div className={styles.replaceImageSection}>
-                            <h4 className={styles.sectionSubtitle}>
-                                Replace Image (Optional)
-                            </h4>
-                            <div className={styles.replaceImageContainer}>
-                                {editPreviewUrl ? (
-                                    <div className={styles.editImagePreview}>
-                                        <img
-                                            src={editPreviewUrl}
-                                            alt="New image preview"
-                                            className={styles.previewImage}
-                                        />
-                                        <button
-                                            onClick={handleRemoveEditImage}
-                                            className={styles.removeImageButton}
-                                            type="button"
-                                        >
-                                            <FiX />
-                                            Remove
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className={styles.editImageUpload}>
-                                        <SquareImageUpload
-                                            onImageSelect={handleEditImageSelect}
-                                            onRemove={handleRemoveEditImage}
-                                            previewUrl={editPreviewUrl}
-                                            disabled={isReplaceSpotImage}
-                                            loading={false}
-                                            maxSizeMB={5}
-                                            label="Choose New Image"
-                                            compact={true}
-                                            enableCrop={true} // Enable cropping for replacement too
-                                            aspectRatio={16 / 9} // Square aspect ratio
-                                            showCropControls={false}
-                                        />
-                                        <div className={styles.uploadHint}>
-                                            Max 5MB • JPG, PNG, WebP
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Caption Section */}
-                        <div className={styles.captionSection}>
-                            <h4 className={styles.sectionSubtitle}>Caption</h4>
-                            <Textarea
-                                value={editCaption}
-                                onChange={(e) => setEditCaption(e.target.value)}
-                                placeholder="Enter caption for this image"
-                                rows={3}
-                                className={styles.editTextarea}
-                                autoFocus
-                            />
-                            <div className={styles.captionHint}>
-                                Leave empty to remove caption
-                            </div>
-                        </div>
-
-                        {/* Edit Modal Actions */}
-                        <div className={styles.editModalActions}>
-                            <Button
-                                variant="outline"
-                                onClick={handleCancelEdit}
-                                disabled={isReplaceSpotImage}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={handleSaveEdit}
-                                disabled={isReplaceSpotImage}
-                                className={styles.saveButton}
-                            >
-                                {isReplaceSpotImage ? (
-                                    <>
-                                        <div className={styles.buttonSpinner}></div>
-                                        Saving...
-                                    </>
-                                ) : (
-                                    'Save Changes'
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
+        onNext();
     };
 
     return (
         <div className={styles.stepContainer}>
-            {/* Step Header */}
-            <div className={styles.stepHeader}>
-                <div className={styles.headerContent}>
-                    <h1 className={styles.stepTitle}>Image Management</h1>
-                    <p className={styles.stepDescription}>
-                        Upload and manage images for this travel spot. Use the menu options to reorder, set primary, edit, or delete images.
-                    </p>
-                    <div className={styles.statsContainer}>
-                        <div className={styles.statItem}>
-                            <span className={styles.statLabel}>Total Images:</span>
-                            <span className={styles.statValue}>{images.length}</span>
-                        </div>
-                        <div className={styles.statItem}>
-                            <span className={styles.statLabel}>Primary:</span>
-                            <span className={styles.statValue}>
-                                {images.filter(img => img.is_primary).length}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div className={styles.form}>
+                {/* Step Header */}
+                <StepHeader
+                    title="Image Management"
+                    description="Upload and manage images for this travel spot. Use the menu options to reorder, set primary, edit, or delete images."
+                />
 
-            <div className={styles.contentSection}>
-                {/* Upload Section - Side by side */}
-                <div className={styles.uploadSection}>
-                    <div className={styles.uploadHeader}>
-                        <h2 className={styles.sectionTitle}>
-                            <FiUpload className={styles.titleIcon} />
-                            Upload New Image
-                        </h2>
-                        <div className={styles.uploadHint}>
-                            Max 5MB • JPG, PNG, WebP
-                        </div>
-                    </div>
-
+                {/* Upload Section */}
+                <FormSection
+                    icon={FiUpload}
+                    title="Upload New Image"
+                    subtitle="Allowed Types: JPG, PNG, WebP"
+                >
                     <div className={styles.uploadContainer}>
-                        {/* Left: Image Upload */}
                         <div className={styles.uploadLeft}>
                             <SquareImageUpload
                                 onImageSelect={handleImageSelect}
@@ -552,78 +317,55 @@ const Step4ImageManagement = ({
                                 previewUrl={previewUrl}
                                 disabled={isUploadSpotImage}
                                 loading={isUploadSpotImage}
-                                maxSizeMB={5}
+                                maxSizeMB={50}
                                 label="Upload Image"
-                                size='medium'
-                                enableCrop={true} // Enable cropping
-                                aspectRatio={16 / 9} // Square aspect ratio
-                                showCropControls={false}
+                                size="medium"
+                                enableCrop={true}
+                                aspectRatio={16 / 9}
+                                showCropControls={true}
                             />
                         </div>
 
-                        {/* Right: Caption & Actions */}
                         <div className={styles.uploadRight}>
-                            <div className={styles.captionContainer}>
-                                <label className={styles.captionLabel}>
-                                    Image Caption (Optional)
-                                </label>
-                                <Input
-                                    type="text"
-                                    placeholder="Describe this image..."
-                                    value={imageCaption}
-                                    onChange={(e) => setImageCaption(e.target.value)}
-                                    disabled={isUploadSpotImage}
-                                    className={styles.captionInput}
-                                />
-                                <div className={styles.captionHint}>
-                                    Keep it short and descriptive
-                                </div>
-                            </div>
+                            <SimpleInput
+                                name="image_caption"
+                                label="Image Caption (Optional)"
+                                placeholder="Describe this image..."
+                                value={imageCaption}
+                                onChange={(e) => setImageCaption(e.target.value)}
+                                size="md"
+                                disabled={isUploadSpotImage}
+                                description="Keep it short and descriptive"
+                            />
 
                             <div className={styles.uploadActions}>
                                 <Button
+                                    variant="primary"
+                                    size="md"
                                     onClick={handleUploadImage}
+                                    isLoading={isUploadSpotImage}
+                                    loadingText="Uploading..."
                                     disabled={!newImage || isUploadSpotImage}
-                                    className={styles.uploadButton}
-                                    size="default"
+                                    icon={<FiUpload />}
                                 >
-                                    {isUploadSpotImage ? (
-                                        <>
-                                            <div className={styles.buttonSpinner}></div>
-                                            Uploading...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <FiPlus className={styles.buttonIcon} />
-                                            Upload Image
-                                        </>
-                                    )}
+                                    Upload Image
                                 </Button>
-                                <div className={styles.uploadNote}>
-                                    {newImage && (
-                                        <span className={styles.fileInfo}>
-                                            Selected: {newImage.name}, Size: {(newImage.size / 1024 / 1024).toFixed(2)} MB
-                                        </span>
-                                    )}
-                                </div>
+                                {newImage && (
+                                    <div className={styles.fileInfo}>
+                                        Selected: {newImage.name}, Size: {(newImage.size / 1024 / 1024).toFixed(2)} MB
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
-                </div>
+                </FormSection>
 
-                {/* Images List Section */}
-                <div className={styles.imagesListSection}>
-                    <div className={styles.listHeader}>
-                        <h2 className={styles.sectionTitle}>
-                            Image Gallery ({images.length})
-                        </h2>
-                        <div className={styles.listControls}>
-                            <div className={styles.controlHint}>
-                                Use menu options to reorder images
-                            </div>
-                        </div>
-                    </div>
-
+                {/* Gallery Section */}
+                <FormSection
+                    icon={FiImage}
+                    title={`Image Gallery (${images.length})`}
+                    subtitle="Use menu options to reorder images"
+                >
                     {imagesLoading ? (
                         <div className={styles.loadingState}>
                             <div className={styles.loadingSpinner}></div>
@@ -643,58 +385,48 @@ const Step4ImageManagement = ({
                             </div>
                         </div>
                     ) : (
-                        <>
-                            <div className={styles.imagesGrid}>
-                                {images.map((image, index) => (
-                                    <div key={image.spotimage_id} className={styles.gridItem}>
-                                        <SquareImageItem
-                                            image={image}
-                                            index={index}
-                                            totalItems={images.length}
-                                            isPrimary={image.is_primary}
-                                            isMenuOpen={openMenuId === image.spotimage_id}
-                                            onMenuToggle={(e) => handleMenuToggle(image.spotimage_id, e)}
-                                            onSetPrimary={() => handleMenuAction(() => handleSetPrimary(image.spotimage_id), image.spotimage_id)}
-                                            onEdit={() => handleStartEdit(image)}
-                                            onDelete={() => handleMenuAction(() => handleDeleteImage(image.spotimage_id), image.spotimage_id)}
-                                            onMoveUp={() => handleMenuAction(() => handleMoveUp(index), image.spotimage_id)}
-                                            onMoveDown={() => handleMenuAction(() => handleMoveDown(index), image.spotimage_id)}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </>
+                        <div className={styles.imagesGrid}>
+                            {images.map((image, index) => (
+                                <SquareImageItem
+                                    key={image.spotimage_id}
+                                    image={image}
+                                    index={index}
+                                    totalItems={images.length}
+                                    isPrimary={image.is_primary}
+                                    isMenuOpen={openMenuId === image.spotimage_id}
+                                    onMenuToggle={() => setOpenMenuId(openMenuId === image.spotimage_id ? null : image.spotimage_id)}
+                                    onSetPrimary={() => handleSetPrimary(image.spotimage_id)}
+                                    onEdit={() => handleStartEdit(image)}
+                                    onDelete={() => handleDeleteImage(image.spotimage_id)}
+                                    onMoveUp={() => handleMoveUp(index)}
+                                    onMoveDown={() => handleMoveDown(index)}
+                                />
+                            ))}
+                        </div>
                     )}
-                </div>
-            </div>
+                </FormSection>
 
-            {/* Edit Modal */}
-            {renderEditModal()}
+                {/* Edit Modal */}
+                <EditImageModal
+                    image={editingImage}
+                    isSaving={isReplaceSpotImage}
+                    onSave={handleSaveEdit}
+                    onCancel={handleCancelEdit}
+                />
 
-            {/* Navigation Actions */}
-            <div className={styles.navigationActions}>
-                <div className={styles.actionButtons}>
-                    <Button
-                        variant="outline"
-                        onClick={handleBack}
-                        className={styles.backButton}
-                        size="lg"
-                    >
-                        <FiChevronLeft className={styles.buttonIcon} />
-                        Back to Details
-                    </Button>
-
-                    <div className={styles.rightActions}>
-                        <Button
-                            onClick={handleNext}
-                            className={styles.nextButton}
-                            size="lg"
-                        >
-                            Save & Continue
-                            <FiChevronRight className={styles.icon} />
-                        </Button>
-                    </div>
-                </div>
+                {/* Form Actions */}
+                <StepActions
+                    onBack={onBack}
+                    onNext={handleFormSubmit}
+                    isSubmitting={false}
+                    isValid={true}
+                    backText="Back to Details"
+                    nextText="Save & Continue"
+                    showBack={true}
+                    showCancel={false}
+                    showNext={true}
+                    align="between"
+                />
             </div>
         </div>
     );

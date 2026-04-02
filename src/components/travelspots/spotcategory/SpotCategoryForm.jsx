@@ -1,24 +1,23 @@
-// src/components/travelspots/SpotCategoryForm.jsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/ui/input';
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from '@/components/ui/form';
-import ButtonLoading from '@/components/Application/ButtonLoading';
-import { FiHash, FiTag, FiCheck } from 'react-icons/fi';
-import { spotCategorySchema } from '@/lib/validations/spotCategorySchema';
+import { FormProvider } from 'react-hook-form';
+import { FiTag, FiHash, FiCheck, FiX } from 'react-icons/fi';
+
+// Reusable Components
+import FormInput from '@/components/common/forms/FormInput';
+import Button from '@/components/common/buttons/Button';
+import ButtonGroup from '@/components/common/buttons/ButtonGroup';
+
+// Hooks & Schema
 import useSlugGenerator from '@/hooks/useSlugGenerator';
-import styles from '@/styles/travelspots/spotcategory/SpotCategoryForm.module.css';
+import { spotCategorySchema } from '@/lib/validations/spotCategorySchema';
 import { useCheckSpotCategoryNameQuery } from '@/services/api/spotcategoryApi';
+
+// Styles
+import styles from '@/styles/travelspots/spotcategory/SpotCategoryForm.module.css';
 
 /* ---------------- Helpers ---------------- */
 const useDebounce = (value, delay = 500) => {
@@ -41,7 +40,7 @@ const SpotCategoryForm = ({
 
     const [name, setName] = useState("");
     const debouncedName = useDebounce(name, 500);
-    const { data, isFetching } = useCheckSpotCategoryNameQuery({
+    const { data, isFetching: isCheckingName } = useCheckSpotCategoryNameQuery({
         name: debouncedName,
         exclude_id: initialData?.spotcategory_id,
     }, {
@@ -49,21 +48,39 @@ const SpotCategoryForm = ({
     });
 
     // Initialize form
-    const form = useForm({
+    const methods = useForm({
         resolver: zodResolver(spotCategorySchema),
         defaultValues: {
-            name: '',
-            slug: '',
+            name: initialData?.name || '',
+            slug: initialData?.slug || '',
         },
     });
 
     const {
-        handleSubmit,
         setValue,
         watch,
         reset,
+        setError,
+        clearErrors,
         formState: { errors },
-    } = form;
+    } = methods;
+
+    useEffect(() => {
+        if (!debouncedName || debouncedName.length < 3) return;
+
+        if (data?.data?.exists === true) {
+            setError('name', {
+                type: 'manual',
+                message: 'This category name already exists',
+            });
+        } else if (data?.data?.exists === false) {
+            clearErrors('name');
+        }
+    }, [data, debouncedName, setError, clearErrors]);
+
+    const watchedSlug = watch('slug');
+    const isSlugValid = (value) =>
+        /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
 
     /* Sync slug hook → form */
     useEffect(() => {
@@ -83,144 +100,113 @@ const SpotCategoryForm = ({
 
     useEffect(() => {
         if (onBackendError) {
-            onBackendError(form);
+            onBackendError(methods);
         }
-    }, [form, onBackendError]);
+    }, [methods, onBackendError]);
 
-    const isSlugValid = (value) =>
-        /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
+    // Determine name field status
+    const isNameAvailable = data?.data?.exists === false && name.length >= 3;
+    const isNameDuplicate = data?.data?.exists === true && name.length >= 3;
+    const isChecking = isCheckingName && name.length >= 3;
 
     return (
         <div className={styles.categoryForm}>
-            <Form {...form}>
-                <form onSubmit={handleSubmit(onSubmit)}>
+            <FormProvider {...methods}>
+                <form onSubmit={methods.handleSubmit(onSubmit)}>
                     {/* Name Field */}
-                    <FormField
-                        control={form.control}
+                    <FormInput
                         name="name"
-                        render={({ field }) => (
-                            <FormItem className={styles.formItem}>
-                                <FormLabel className={styles.formLabel}>
-                                    <FiTag className={styles.inputIcon} />
-                                    Category Name
-                                    <span className={styles.required}>*</span>
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            generateFrom(e.target.value);
-                                            setName(e.target.value);
-                                        }}
-                                        placeholder="e.g., Beaches, Mountains, Cities"
-                                        className={styles.formInput}
-                                        autoFocus={mode === 'create'}
-                                        disabled={isSubmitting}
-                                    />
-                                </FormControl>
-                                <div className={styles.helperText}>
-                                    Enter a descriptive name for the category
-                                </div>
-                                {/* Duplicate Name Check */}
-                                {isFetching && (
-                                    <span className="text-sm text-gray-500">
-                                        Checking name availability...
-                                    </span>
-                                )}
-
-                                {data?.data?.exists && !isFetching && (
-                                    <span className="text-sm text-red-500">
-                                        This travel spot name already exists
-                                    </span>
-                                )}
-
-                                {data && !data.data.exists && !isFetching && name.length >= 3 && (
-                                    <span className="text-sm text-green-600">
-                                        Name is available
-                                    </span>
-                                )}
-                                <FormMessage className={styles.errorMessage} />
-                            </FormItem>
-                        )}
+                        label="Category Name"
+                        placeholder="e.g., Beaches, Mountains, Cities"
+                        icon={<FiTag />}
+                        required
+                        autoFocus={mode === 'create'}
+                        disabled={isSubmitting}
+                        description="Enter a descriptive name for the category"
+                        className={styles.formItem}
+                        onChange={(e) => {
+                            generateFrom(e.target.value);
+                            setName(e.target.value);
+                        }}
+                        rightContent={
+                            isChecking ? (
+                                <span className={styles.checkingStatus}>Checking...</span>
+                            ) : isNameDuplicate ? (
+                                <span className={styles.errorStatus}>
+                                    <FiX /> Name already exists
+                                </span>
+                            ) : isNameAvailable ? (
+                                <span className={styles.successStatus}>
+                                    <FiCheck /> Name available
+                                </span>
+                            ) : null
+                        }
                     />
 
                     {/* Slug Field */}
-                    <FormField
-                        control={form.control}
+                    <FormInput
                         name="slug"
-                        render={({ field }) => (
-                            <FormItem className={styles.formItem}>
-                                <FormLabel className={styles.formLabel}>
-                                    <FiHash className={styles.inputIcon} />
-                                    URL Slug
-                                    <span className={styles.required}>*</span>
-                                </FormLabel>
-                                <FormControl>
-                                    <div className={styles.slugContainer}>
-                                        <div className={styles.slugPrefix}>/category/</div>
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e);
-                                                updateManually(e.target.value);
-                                            }}
-                                            placeholder="beaches"
-                                            className={styles.slugInput}
-                                            disabled={isSubmitting}
-                                        />
-                                    </div>
-                                </FormControl>
-
-                                {/* Slug Validation */}
-                                {field.value && (
-                                    <div className={styles.validationContainer}>
-                                        <div className={styles.validationItem}>
-                                            {isSlugValid(field.value) ? (
-                                                <div className={styles.validationValid}>
-                                                    <FiCheck /> Valid URL slug format
-                                                </div>
-                                            ) : (
-                                                <div className={styles.validationInvalid}>
-                                                    Use lowercase letters, numbers, and hyphens only
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className={styles.helperText}>
-                                    This will be used in the URL. Use lowercase letters, numbers, and hyphens.
+                        label="URL Slug"
+                        placeholder="beaches"
+                        icon={<FiHash />}
+                        required
+                        disabled={isSubmitting}
+                        description="This will be used in the URL. Use lowercase letters, numbers, and hyphens."
+                        className={styles.formItem}
+                        onChange={(e) => {
+                            updateManually(e.target.value);
+                        }}
+                        rightContent={
+                            watchedSlug && (
+                                <div className={styles.slugValidation}>
+                                    {isSlugValid(watchedSlug) ? (
+                                        <span className={styles.validStatus}>
+                                            <FiCheck /> Valid format
+                                        </span>
+                                    ) : (
+                                        <span className={styles.invalidStatus}>
+                                            <FiX /> Use lowercase, numbers, and hyphens only
+                                        </span>
+                                    )}
                                 </div>
-                                <FormMessage className={styles.errorMessage} />
-                            </FormItem>
-                        )}
+                            )
+                        }
                     />
 
-                    {/* Preview */}
-                    {watch('slug') && (
+                    {/* URL Preview */}
+                    {watchedSlug && isSlugValid(watchedSlug) && (
                         <div className={styles.previewSection}>
                             <h4 className={styles.previewTitle}>URL Preview</h4>
                             <div className={styles.previewUrl}>
                                 https://lifehub.com/category/
                                 <span className={styles.previewSlug}>
-                                    {watch('slug')}
+                                    {watchedSlug}
                                 </span>
                             </div>
                         </div>
                     )}
 
                     {/* Form Actions */}
-                    <div className={styles.formActions}>
-                        <ButtonLoading
+                    <ButtonGroup align="end" className={styles.formActions}>
+                        <Button
+                            variant="secondary"
+                            onClick={() => reset()}
+                            disabled={isSubmitting}
+                        >
+                            Reset
+                        </Button>
+                        <Button
                             type="submit"
-                            text={mode === 'create' ? 'Create Category' : 'Update Category'}
+                            variant="primary"
                             isLoading={isSubmitting}
-                            className={styles.submitButton}
-                        />
-                    </div>
+                            loadingText={mode === 'create' ? 'Creating...' : 'Updating...'}
+                            disabled={isSubmitting || isNameDuplicate || isChecking}
+                        >
+                            {mode === 'create' ? 'Create Category' : 'Update Category'}
+                        </Button>
+                    </ButtonGroup>
                 </form>
-            </Form>
+            </FormProvider>
         </div>
     );
 };

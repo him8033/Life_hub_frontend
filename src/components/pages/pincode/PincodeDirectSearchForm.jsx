@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { FormContainer, FormRow } from '@/components/common/forms/FormContainer';
-import FormInput from '@/components/common/forms/FormInput';
-import { PrimaryButton, SecondaryButton, ActionButtons } from '@/components/common/forms/FormButtons';
+import { FormContainer, FormRow } from '@/components/common/forms_old/FormContainer';
+import FormInput from '@/components/common/forms_old/FormInput';
+import { PrimaryButton, SecondaryButton, ActionButtons } from '@/components/common/forms_old/FormButtons';
 import { DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const PincodeDirectSearchForm = ({ onSubmit, onClear, isLoading }) => {

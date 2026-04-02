@@ -1,0 +1,126 @@
+/* FormSection.module.css */
+
+.formSection {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.formSection:hover {
+    border-color: var(--ring);
+    box-shadow: var(--shadow-sm-value);
+}
+
+/* Section Header */
+.sectionHeader {
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+}
+
+/* Section Title Wrapper */
+.sectionTitleWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-1);
+}
+
+/* Section Title */
+.sectionTitle {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    color: var(--foreground);
+    margin: 0;
+}
+
+.sectionIcon {
+    font-size: 1.25rem;
+    color: var(--primary);
+}
+
+/* Section Subtitle */
+.sectionSubtitle {
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Section Content */
+.sectionContent {
+    margin-top: var(--spacing-4);
+}
+
+/* Edit Button */
+.editButton {
+    opacity: 0.8;
+    transition: all 0.2s ease;
+}
+
+.editButton:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+.editButton:active {
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formSection {
+        padding: var(--spacing-4);
+    }
+
+    .sectionHeader {
+        margin-bottom: var(--spacing-4);
+        padding-bottom: var(--spacing-3);
+    }
+
+    .sectionTitle {
+        font-size: var(--text-base);
+    }
+
+    .sectionIcon {
+        font-size: 1rem;
+    }
+
+    .sectionSubtitle {
+        font-size: var(--text-xs);
+    }
+
+    .sectionContent {
+        margin-top: var(--spacing-3);
+    }
+}
+
+@media (max-width: 640px) {
+    .formSection {
+        padding: var(--spacing-3);
+    }
+
+    .sectionHeader {
+        margin-bottom: var(--spacing-3);
+        padding-bottom: var(--spacing-2);
+    }
+
+    .sectionTitle {
+        font-size: var(--text-sm);
+    }
+
+    .sectionSubtitle {
+        font-size: var(--text-xs);
+    }
+
+    .sectionContent {
+        margin-top: var(--spacing-2);
+    }
+}

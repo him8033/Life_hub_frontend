@@ -1,7 +1,8 @@
 'use client';
 
-import listingStyles from '@/styles/common/Listing.module.css';
+import tableStyles from '@/styles/common/TableStyles.module.css';
 import { formatDateTime } from '@/utils/date.utils';
+import Button from '@/components/common/buttons/Button';
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function SpotCategoryTable({
@@ -9,12 +10,23 @@ export default function SpotCategoryTable({
     onDelete,
     onToggleStatus,
     onEdit,
+    onView,
     isLoading = false
 }) {
+    if (!spotCategories || spotCategories.length === 0) {
+        return (
+            <div className={tableStyles.emptyTable}>
+                <div className={tableStyles.emptyIcon}>
+                    📋
+                </div>
+                <p className={tableStyles.emptyText}>No spot categories available</p>
+            </div>
+        );
+    }
 
     return (
-        <div className={listingStyles.tableWrapper}>
-            <table className={listingStyles.listingTable}>
+        <div className={tableStyles.tableContainer}>
+            <table className={tableStyles.dataTable}>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -27,52 +39,64 @@ export default function SpotCategoryTable({
                 </thead>
                 <tbody>
                     {spotCategories.map((category) => (
-                        <tr key={category.id || category.slug}>
-                            <td>{category.spotcategory_id || 'N/A'}</td>
+                        <tr key={category.spotcategory_id || category.id || category.slug} className={tableStyles.tableRow}>
+                            <td className={tableStyles.idCell}>
+                                <span className={tableStyles.idBadge}>{category.spotcategory_id || category.id || 'N/A'}</span>
+                            </td>
                             <td>
-                                <div className={listingStyles.nameCell}>
-                                    <div className={listingStyles.name}>{category.name}</div>
-                                    <div className={listingStyles.slug}>{category.slug}</div>
+                                <div className={tableStyles.nameContainer}>
+                                    <div className={tableStyles.mainName}>{category.name}</div>
+                                    <div className={tableStyles.subName}>{category.slug}</div>
                                 </div>
                             </td>
                             <td>
-                                <span className={listingStyles.badge}>
+                                <span className={tableStyles.countBadge}>
                                     {category.total_spots || 0}
                                 </span>
                             </td>
                             <td>
-                                <button
-                                    type="button"
-                                    className={category.is_active ? listingStyles.statusActive : listingStyles.statusInactive}
+                                <Button
+                                    variant={category.is_active ? 'success' : 'danger'}
+                                    size="sm"
                                     onClick={() => !isLoading && onToggleStatus(category.slug, category.is_active, category.name)}
-                                    style={{
-                                        cursor: isLoading ? 'not-allowed' : 'pointer',
-                                        opacity: isLoading ? 0.7 : 1
-                                    }}
-                                    title={category.is_active ? 'Click to hide' : 'Click to show'}
+                                    disabled={isLoading}
                                 >
                                     {category.is_active ? 'Active' : 'Inactive'}
-                                </button>
+                                </Button>
                             </td>
-                            <td>{category.created_at ? formatDateTime(category.created_at) : '—'}</td>
                             <td>
-                                <div className={listingStyles.actionButtons}>
-                                    <button
+                                <span className={tableStyles.dateText}>
+                                    {category.created_at ? formatDateTime(category.created_at) : '—'}
+                                </span>
+                            </td>
+                            <td>
+                                <div className={tableStyles.actionsContainer}>
+                                    {onView && (
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            icon={<FaEye />}
+                                            onClick={() => !isLoading && onView(category.slug)}
+                                            disabled={isLoading}
+                                            className={tableStyles.iconButton}
+                                        />
+                                    )}
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        icon={<FaEdit />}
                                         onClick={() => !isLoading && onEdit(category.slug)}
-                                        className={`${listingStyles.actionButton} ${listingStyles.editButton}`}
-                                        title="Edit"
                                         disabled={isLoading}
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                    <button
+                                        className={tableStyles.iconButton}
+                                    />
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        icon={<FaTrash />}
                                         onClick={() => !isLoading && onDelete(category.slug, category.name)}
-                                        className={`${listingStyles.actionButton} ${listingStyles.deleteButton}`}
-                                        title="Delete"
                                         disabled={isLoading}
-                                    >
-                                        <FaTrash />
-                                    </button>
+                                        className={tableStyles.iconButton}
+                                    />
                                 </div>
                             </td>
                         </tr>

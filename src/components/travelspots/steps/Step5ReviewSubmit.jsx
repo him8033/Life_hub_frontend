@@ -20,14 +20,17 @@ import {
     FiTag
 } from 'react-icons/fi';
 
-// Shadcn Components
-import { Button } from '@/components/ui/button';
+// Custom Button Component
+import Button from '@/components/common/buttons/Button';
 
 // RTK Query hooks
 import { useGetTravelSpotImagesQuery } from '@/services/api/spotImageApi';
 
 // Styles
-import styles from '@/styles/travelspots/steps/Step5ReviewSubmit.module.css';
+import styles from '@/styles/travelspots/steps/CommonStepStyles.module.css';
+import StepHeader from './StepHeader';
+import StepActions from './StepActions';
+import FormSection from './FormSection';
 
 const Step5ReviewSubmit = ({
     travelSpot,
@@ -141,336 +144,271 @@ const Step5ReviewSubmit = ({
 
     return (
         <div className={styles.stepContainer}>
-            {/* Step Header */}
-            <div className={styles.stepHeader}>
-                <h1 className={styles.stepTitle}>Review & Update</h1>
-                <p className={styles.stepDescription}>
-                    Review your changes before final submission
-                </p>
-            </div>
+            <StepHeader
+                title="Review & Update"
+                description="Review your changes before final submission"
+            />
 
-            {/* All Fields in Consistent Format */}
-            <div className={styles.compactReviewSections}>
-                {/* 1. Basic Information */}
-                <div className={styles.compactSection}>
-                    <div className={styles.sectionHeaderCompact}>
-                        <div className={styles.sectionTitleCompact}>
-                            <FiHash className={styles.iconCompact} />
-                            <span>Basic Information</span>
+            <div className={styles.reviewSections}>
+                {/* Basic Information - With Edit */}
+                <FormSection
+                    icon={FiTag}
+                    title="Basic Information"
+                    showEdit={true}
+                    editText="Edit"
+                    editVariant="outline"
+                    editSize="sm"
+                    onEdit={() => handleEditStep(1)}
+                >
+                    <div className={styles.infoGrid}>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Name:</span>
+                            <span className={styles.infoValue}>{displayData.name || 'Not specified'}</span>
                         </div>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditStep(1)}
-                            className={styles.editButtonCompact}
-                        >
-                            <FiEdit2 size={14} />
-                        </Button>
-                    </div>
-                    <div className={styles.compactContent}>
-                        <div className={styles.compactInfo}>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Name:</span>
-                                <span className={styles.compactValue}>{displayData.name || 'Not specified'}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Slug:</span>
-                                <span className={styles.compactValue}>{displayData.slug || 'Not specified'}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Short Description:</span>
-                                <span className={styles.compactValue}>{displayData.short_description_preview}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Categories:</span>
-                                <span className={styles.compactValue}>{displayData.categories_display}</span>
-                            </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Slug:</span>
+                            <span className={styles.infoValue}>{displayData.slug || 'Not specified'}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Short Description:</span>
+                            <span className={styles.infoValue}>{displayData.short_description_preview}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Categories:</span>
+                            <span className={styles.infoValue}>{displayData.categories_display}</span>
                         </div>
                     </div>
-                </div>
+                </FormSection>
 
-                {/* 2. Location Details */}
-                <div className={styles.compactSection}>
-                    <div className={styles.sectionHeaderCompact}>
-                        <div className={styles.sectionTitleCompact}>
-                            <FiMapPin className={styles.iconCompact} />
-                            <span>Location Details</span>
+                {/* Location Details - With Edit */}
+                <FormSection
+                    icon={FiMapPin}
+                    title="Location Details"
+                    showEdit={true}
+                    editText="Edit"
+                    editVariant="outline"
+                    editSize="sm"
+                    onEdit={() => handleEditStep(2)}
+                >
+                    <div className={styles.infoGrid}>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Full Address:</span>
+                            <span className={styles.infoValue}>{displayData.full_address || 'Not specified'}</span>
                         </div>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditStep(2)}
-                            className={styles.editButtonCompact}
-                        >
-                            <FiEdit2 size={14} />
-                        </Button>
-                    </div>
-                    <div className={styles.compactContent}>
-                        <div className={styles.compactInfo}>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Full Address:</span>
-                                <span className={styles.compactValue}>{displayData.full_address || 'Not specified'}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Country:</span>
-                                <span className={styles.compactValue}>{displayData.country_name}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>State:</span>
-                                <span className={styles.compactValue}>{displayData.state_name}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>District:</span>
-                                <span className={styles.compactValue}>{displayData.district_name}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Sub-district:</span>
-                                <span className={styles.compactValue}>{displayData.sub_district_name}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Village:</span>
-                                <span className={styles.compactValue}>{displayData.village_name}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Pincode:</span>
-                                <span className={styles.compactValue}>{displayData.pincode_display}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Latitude:</span>
-                                <span className={styles.compactValue}>{displayData.latitude || 'Not specified'}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Longitude:</span>
-                                <span className={styles.compactValue}>{displayData.longitude || 'Not specified'}</span>
-                            </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Country:</span>
+                            <span className={styles.infoValue}>{displayData.country_name}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>State:</span>
+                            <span className={styles.infoValue}>{displayData.state_name}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>District:</span>
+                            <span className={styles.infoValue}>{displayData.district_name}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Sub-district:</span>
+                            <span className={styles.infoValue}>{displayData.sub_district_name}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Village:</span>
+                            <span className={styles.infoValue}>{displayData.village_name}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Pincode:</span>
+                            <span className={styles.infoValue}>{displayData.pincode_display}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Latitude:</span>
+                            <span className={styles.infoValue}>{displayData.latitude || 'Not specified'}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Longitude:</span>
+                            <span className={styles.infoValue}>{displayData.longitude || 'Not specified'}</span>
                         </div>
                     </div>
-                </div>
+                </FormSection>
 
-                {/* 3. Pricing & Timing */}
-                <div className={styles.compactSection}>
-                    <div className={styles.sectionHeaderCompact}>
-                        <div className={styles.sectionTitleCompact}>
-                            <FiDollarSign className={styles.iconCompact} />
-                            <span>Pricing & Timing</span>
+                {/* Pricing & Timing - With Edit */}
+                <FormSection
+                    icon={FiDollarSign}
+                    title="Pricing & Timing"
+                    showEdit={true}
+                    editText="Edit"
+                    editVariant="outline"
+                    editSize="sm"
+                    onEdit={() => handleEditStep(3)}
+                >
+                    <div className={styles.infoGrid}>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Entry Fee:</span>
+                            <span className={styles.infoValue}>{displayData.entry_fee_display}</span>
                         </div>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditStep(3)}
-                            className={styles.editButtonCompact}
-                        >
-                            <FiEdit2 size={14} />
-                        </Button>
-                    </div>
-                    <div className={styles.compactContent}>
-                        <div className={styles.compactInfo}>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Entry Fee:</span>
-                                <span className={styles.compactValue}>{displayData.entry_fee_display}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Opening Time:</span>
-                                <span className={styles.compactValue}>{displayData.opening_time_display}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Closing Time:</span>
-                                <span className={styles.compactValue}>{displayData.closing_time_display}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Best Time to Visit:</span>
-                                <span className={styles.compactValue}>{displayData.best_time_to_visit || 'Not specified'}</span>
-                            </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Opening Time:</span>
+                            <span className={styles.infoValue}>{displayData.opening_time_display}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Closing Time:</span>
+                            <span className={styles.infoValue}>{displayData.closing_time_display}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Best Time to Visit:</span>
+                            <span className={styles.infoValue}>{displayData.best_time_to_visit || 'Not specified'}</span>
                         </div>
                     </div>
-                </div>
+                </FormSection>
 
-                {/* 4. Detailed Information */}
-                <div className={styles.compactSection}>
-                    <div className={styles.sectionHeaderCompact}>
-                        <div className={styles.sectionTitleCompact}>
-                            <FiFileText className={styles.iconCompact} />
-                            <span>Detailed Information</span>
-                        </div>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditStep(3)}
-                            className={styles.editButtonCompact}
-                        >
-                            <FiEdit2 size={14} />
-                        </Button>
-                    </div>
-                    <div className={styles.compactContent}>
-                        <div className={styles.compactInfo}>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Long Description:</span>
-                                <span className={styles.compactValue}>{displayData.long_description_preview}</span>
-                            </div>
+                {/* Detailed Information - With Edit */}
+                <FormSection
+                    icon={FiFileText}
+                    title="Detailed Information"
+                    showEdit={true}
+                    editText="Edit"
+                    editVariant="outline"
+                    editSize="sm"
+                    onEdit={() => handleEditStep(3)}
+                >
+                    <div className={styles.infoGrid}>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Long Description:</span>
+                            <span className={styles.infoValue}>{displayData.long_description_preview}</span>
                         </div>
                     </div>
-                </div>
+                </FormSection>
 
-                {/* 5. Images Overview */}
-                <div className={styles.compactSection}>
-                    <div className={styles.sectionHeaderCompact}>
-                        <div className={styles.sectionTitleCompact}>
-                            <FiImage className={styles.iconCompact} />
-                            <span>Images Overview</span>
+                {/* Images Overview - With Edit */}
+                <FormSection
+                    icon={FiImage}
+                    title={`Images Overview (${images.length})`}
+                    showEdit={true}
+                    editText="Edit Images"
+                    editVariant="outline"
+                    editSize="sm"
+                    onEdit={() => handleEditStep(4)}
+                >
+                    {imagesLoading ? (
+                        <div className={styles.imagesLoading}>
+                            <div className={styles.loadingSpinnerSmall}></div>
+                            <span>Loading images...</span>
                         </div>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditStep(4)}
-                            className={styles.editButtonCompact}
-                        >
-                            <FiEdit2 size={14} />
-                        </Button>
-                    </div>
-                    <div className={styles.imagesOverview}>
-                        {imagesLoading ? (
-                            <div className={styles.imagesLoading}>
-                                <div className={styles.loadingSpinnerSmall}></div>
-                                <span>Loading images...</span>
-                            </div>
-                        ) : images.length === 0 ? (
-                            <div className={styles.noImages}>
-                                <FiImage className={styles.noImagesIcon} />
-                                <span>No images added</span>
-                            </div>
-                        ) : (
-                            <div className={styles.imagesPreview}>
-                                {primaryImage && (
-                                    <div className={styles.primaryImagePreview}>
-                                        <div className={styles.imageContainer}>
-                                            <img
-                                                src={primaryImage.image_url}
-                                                alt={primaryImage.caption || 'Primary image'}
-                                                className={styles.previewImage}
-                                            />
-                                            {primaryImage.is_primary && (
-                                                <div className={styles.primaryBadge}>Primary</div>
-                                            )}
+                    ) : images.length === 0 ? (
+                        <div className={styles.noImages}>
+                            <FiImage className={styles.noImagesIcon} />
+                            <span>No images added</span>
+                        </div>
+                    ) : (
+                        <>
+                            {primaryImage && (
+                                <div className={styles.primaryImagePreview}>
+                                    <div className={styles.imageContainer}>
+                                        <img
+                                            src={primaryImage.image_url}
+                                            alt={primaryImage.caption || 'Primary image'}
+                                            className={styles.previewImage}
+                                        />
+                                        {primaryImage.is_primary && (
+                                            <div className={styles.primaryBadge}>Primary</div>
+                                        )}
+                                    </div>
+                                    <div className={styles.imageInfo}>
+                                        <div className={styles.infoRow}>
+                                            <span className={styles.infoLabel}>Caption:</span>
+                                            <span className={styles.infoValue}>
+                                                {primaryImage.caption || 'No caption'}
+                                            </span>
                                         </div>
-                                        <div className={styles.imageInfo}>
-                                            <div className={styles.compactRow}>
-                                                <span className={styles.compactLabel}>Caption:</span>
-                                                <span className={styles.compactValue}>
-                                                    {primaryImage.caption || 'No caption'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className={styles.imageStats}>
-                                    <div className={styles.statItemCompact}>
-                                        <span className={styles.statLabelCompact}>Total Images:</span>
-                                        <span className={styles.statValueCompact}>{images.length}</span>
-                                    </div>
-                                    <div className={styles.statItemCompact}>
-                                        <span className={styles.statLabelCompact}>With Caption:</span>
-                                        <span className={styles.statValueCompact}>
-                                            {images.filter(img => img.caption).length}
-                                        </span>
-                                    </div>
-                                    <div className={styles.statItemCompact}>
-                                        <span className={styles.statLabelCompact}>Primary Set:</span>
-                                        <span className={styles.statValueCompact}>
-                                            {images.some(img => img.is_primary) ? 'Yes' : 'No'}
-                                        </span>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
+                            )}
 
-                {/* 6. Status Information */}
-                <div className={styles.compactSection}>
-                    <div className={styles.sectionHeaderCompact}>
-                        <div className={styles.sectionTitleCompact}>
-                            <FiBriefcase className={styles.iconCompact} />
-                            <span>Status Information</span>
+                            <div className={styles.imageStats}>
+                                <div className={styles.statItem}>
+                                    <span className={styles.statLabel}>Total Images:</span>
+                                    <span className={styles.statValue}>{images.length}</span>
+                                </div>
+                                <div className={styles.statItem}>
+                                    <span className={styles.statLabel}>With Caption:</span>
+                                    <span className={styles.statValue}>
+                                        {images.filter(img => img.caption).length}
+                                    </span>
+                                </div>
+                                <div className={styles.statItem}>
+                                    <span className={styles.statLabel}>Primary Set:</span>
+                                    <span className={styles.statValue}>
+                                        {images.some(img => img.is_primary) ? 'Yes' : 'No'}
+                                    </span>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </FormSection>
+
+                {/* Status Information - No Edit Button */}
+                <FormSection
+                    icon={FiBriefcase}
+                    title="Status Information"
+                    showEdit={false}
+                >
+                    <div className={styles.infoGrid}>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Completion Status:</span>
+                            <span className={styles.infoValue}>{displayData.completion_status || 'Not specified'}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Ready for Review:</span>
+                            <span className={styles.infoValue}>
+                                {displayData.is_ready_for_review ? 'Yes' : 'No'}
+                            </span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Active Status:</span>
+                            <span className={styles.infoValue}>
+                                {displayData.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.infoLabel}>Last Updated:</span>
+                            <span className={styles.infoValue}>
+                                {displayData.updated_at ? new Date(displayData.updated_at).toLocaleDateString() : 'Not available'}
+                            </span>
                         </div>
                     </div>
-                    <div className={styles.compactContent}>
-                        <div className={styles.compactInfo}>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Completion Status:</span>
-                                <span className={styles.compactValue}>{displayData.completion_status || 'Not specified'}</span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Ready for Review:</span>
-                                <span className={styles.compactValue}>
-                                    {displayData.is_ready_for_review ? 'Yes' : 'No'}
-                                </span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Active Status:</span>
-                                <span className={styles.compactValue}>
-                                    {displayData.is_active ? 'Active' : 'Inactive'}
-                                </span>
-                            </div>
-                            <div className={styles.compactRow}>
-                                <span className={styles.compactLabel}>Last Updated:</span>
-                                <span className={styles.compactValue}>
-                                    {displayData.updated_at ? new Date(displayData.updated_at).toLocaleDateString() : 'Not available'}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </FormSection>
             </div>
 
             {/* Summary & Actions */}
-            <div className={styles.compactSummary}>
-                <div className={styles.summaryHeaderCompact}>
-                    <h3 className={styles.summaryTitleCompact}>Ready to Update</h3>
-                    <p className={styles.summaryDescriptionCompact}>
+            <div className={styles.reviewSummary}>
+                <div className={styles.summaryHeader}>
+                    <h3 className={styles.summaryTitle}>Ready to Update</h3>
+                    <p className={styles.summaryDescription}>
                         Review all information carefully before submitting.
                     </p>
                 </div>
 
-                <div className={styles.compactActions}>
-                    <div className={styles.actionButtonsCompact}>
-                        <Button
-                            variant="outline"
-                            onClick={onCancel}
-                            disabled={isSubmitting}
-                            className={styles.cancelButtonCompact}
-                            size="sm"
-                        >
-                            <FiX className={styles.buttonIcon} />
-                            Cancel
-                        </Button>
+                <StepActions
+                    onBack={() => { }}
+                    onNext={handleSubmit}
+                    onCancel={onCancel}
+                    isSubmitting={isSubmitting}
+                    isValid={true}
+                    backText=""
+                    nextText="Update Travel Spot"
+                    cancelText="Cancel"
+                    showBack={false}
+                    showCancel={true}
+                    showNext={true}
+                    nextVariant="primary"
+                    cancelVariant="outline"
+                    align="center"
+                />
 
-                        <Button
-                            onClick={handleSubmit}
-                            disabled={isSubmitting}
-                            className={styles.submitButtonCompact}
-                            size="sm"
-                        >
-                            {isSubmitting ? (
-                                <>
-                                    <div className={styles.spinnerSmall}></div>
-                                    Updating...
-                                </>
-                            ) : (
-                                <>
-                                    <FiUpload className={styles.buttonIcon} />
-                                    Update Travel Spot
-                                </>
-                            )}
-                        </Button>
-                    </div>
-
-                    <div className={styles.confirmationNote}>
-                        <FiCheckCircle className={styles.confirmationIcon} />
-                        <span className={styles.confirmationText}>
-                            All changes will be updated immediately.
-                        </span>
-                    </div>
+                <div className={styles.confirmationNote}>
+                    <FiCheckCircle className={styles.confirmationIcon} />
+                    <span className={styles.confirmationText}>
+                        All changes will be updated immediately.
+                    </span>
                 </div>
             </div>
         </div>

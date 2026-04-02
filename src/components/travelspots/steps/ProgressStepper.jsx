@@ -3,16 +3,21 @@
 import { FiCheck } from 'react-icons/fi';
 import styles from '@/styles/travelspots/steps/ProgressStepper.module.css';
 
-const SimpleProgressBar = ({
+const ProgressStepper = ({
     currentStep,
     steps,
     onStepClick,
-    canNavigateToStep
+    canNavigateToStep,
+    completedSteps = new Set(),
+    size = 'md',
 }) => {
-    // Determine step status
+    // Determine step status - CURRENT takes priority over COMPLETED
     const getStepStatus = (stepId) => {
-        if (stepId < currentStep) return 'completed';
+        // Current step takes highest priority
         if (stepId === currentStep) return 'current';
+        // Check if step is completed
+        if (completedSteps.has(stepId)) return 'completed';
+        // Otherwise it's upcoming
         return 'upcoming';
     };
 
@@ -22,8 +27,15 @@ const SimpleProgressBar = ({
         return canNavigateToStep(stepId);
     };
 
+    // Size classes
+    const containerSizeClass = styles[`progressBarContainer${size.charAt(0).toUpperCase() + size.slice(1)}`] || '';
+    const circleSizeClass = styles[`stepCircle${size.charAt(0).toUpperCase() + size.slice(1)}`] || '';
+    const labelSizeClass = styles[`stepLabel${size.charAt(0).toUpperCase() + size.slice(1)}`] || '';
+    const descriptionSizeClass = styles[`stepDescription${size.charAt(0).toUpperCase() + size.slice(1)}`] || '';
+    const connectorSizeClass = styles[`connector${size.charAt(0).toUpperCase() + size.slice(1)}`] || '';
+
     return (
-        <div className={styles.progressBarContainer}>
+        <div className={`${styles.progressBarContainer} ${containerSizeClass}`}>
             <div className={styles.progressBar}>
                 {steps.map((step, index) => {
                     const stepStatus = getStepStatus(step.id);
@@ -36,7 +48,7 @@ const SimpleProgressBar = ({
                                 {/* Step circle */}
                                 <button
                                     type="button"
-                                    className={`${styles.stepCircle} ${styles[stepStatus]}`}
+                                    className={`${styles.stepCircle} ${circleSizeClass} ${styles[stepStatus]} ${!isAccessible ? styles.disabled : ''}`}
                                     onClick={() => isAccessible && onStepClick?.(step.id)}
                                     disabled={!isAccessible}
                                     title={`Step ${step.id}: ${step.title}`}
@@ -51,11 +63,11 @@ const SimpleProgressBar = ({
 
                                 {/* Step label and description */}
                                 <div className={styles.labelContainer}>
-                                    <div className={`${styles.stepLabel} ${stepStatus === 'current' ? styles.currentLabel : ''}`}>
+                                    <div className={`${styles.stepLabel} ${labelSizeClass} ${stepStatus === 'current' ? styles.currentLabel : ''}`}>
                                         {step.title}
                                     </div>
                                     {step.description && (
-                                        <div className={`${styles.stepDescription} ${stepStatus === 'current' ? styles.currentDescription : ''}`}>
+                                        <div className={`${styles.stepDescription} ${descriptionSizeClass} ${stepStatus === 'current' ? styles.currentDescription : ''}`}>
                                             {step.description}
                                         </div>
                                     )}
@@ -65,7 +77,7 @@ const SimpleProgressBar = ({
                             {/* Connector line (except for last step) */}
                             {!isLastStep && (
                                 <div className={styles.connectorWrapper}>
-                                    <div className={`${styles.connector} ${stepStatus === 'completed' ? styles.completedConnector : ''}`} />
+                                    <div className={`${styles.connector} ${connectorSizeClass} ${stepStatus === 'completed' || stepStatus === 'current' ? styles.completedConnector : ''}`} />
                                 </div>
                             )}
                         </div>
@@ -76,4 +88,4 @@ const SimpleProgressBar = ({
     );
 };
 
-export default SimpleProgressBar;
+export default ProgressStepper;

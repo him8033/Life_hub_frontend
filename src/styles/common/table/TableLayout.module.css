@@ -1,0 +1,57 @@
+/* TableLayout.module.css */
+
+.tableLayoutContainer {
+    width: 100%;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.tableContent {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tableContent>table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+}
+
+.tableContent>table thead {
+    background: var(--muted);
+    border-bottom: 2px solid var(--border);
+}
+
+.tableContent>table th {
+    padding: var(--spacing-3) var(--spacing-4);
+    text-align: left;
+    font-weight: 600;
+    color: var(--foreground);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tableContent>table td {
+    padding: var(--spacing-3) var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+    color: var(--foreground);
+}
+
+.tableContent>table tr:hover {
+    background: var(--accent);
+    transition: background 0.2s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .tableContent>table th,
+    .tableContent>table td {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: var(--text-xs);
+    }
+}

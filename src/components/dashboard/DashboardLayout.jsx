@@ -12,11 +12,11 @@ const DashboardLayout = ({ children }) => {
 
     useEffect(() => {
         const checkMobile = () => {
-            setIsMobile(window.innerWidth < 1024); // Adjust breakpoint as needed
+            setIsMobile(window.innerWidth < 1024);
             if (window.innerWidth >= 1024) {
-                setSidebarOpen(true); // Open sidebar by default on desktop
+                setSidebarOpen(true);
             } else {
-                setSidebarOpen(false); // Close sidebar by default on mobile/tablet
+                setSidebarOpen(false);
             }
         };
 
@@ -40,15 +40,17 @@ const DashboardLayout = ({ children }) => {
         <div className={styles.dashboardLayout}>
             <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
             <div className={styles.mainContent}>
-                <div className={`${styles.sidebarOverlay} ${sidebarOpen ? styles.overlayActive : ''}`}
-                    onClick={closeSidebar} />
-
+                <div 
+                    className={`${styles.sidebarOverlay} ${sidebarOpen ? styles.overlayActive : ''}`}
+                    onClick={closeSidebar} 
+                />
                 <aside className={`${styles.sidebarContainer} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
                     <Sidebar closeSidebar={closeSidebar} />
                 </aside>
-
-                <main className={styles.content} onClick={closeSidebar}>
-                    {children}
+                <main className={styles.contentArea}>
+                    <div className={styles.contentWrapper}>
+                        {children}
+                    </div>
                 </main>
             </div>
         </div>

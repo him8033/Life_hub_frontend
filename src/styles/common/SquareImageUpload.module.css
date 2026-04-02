@@ -1,4 +1,5 @@
-/* SquareImageUpload.module.css */
+/* SquareImageUpload.module.css - Compact Version */
+
 .uploadContainer {
     position: relative;
 }
@@ -15,9 +16,9 @@
 
 .uploadBox {
     position: relative;
-    border: 2px dashed #ddd;
-    border-radius: 8px;
-    background-color: #f8f9fa;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+    background-color: var(--muted);
     cursor: pointer;
     transition: all 0.3s ease;
     overflow: hidden;
@@ -27,8 +28,8 @@
 }
 
 .uploadBox:hover:not(.disabled) {
-    border-color: #3498db;
-    background-color: #f0f7ff;
+    border-color: var(--primary);
+    background-color: color-mix(in srgb, var(--primary) 5%, var(--muted));
 }
 
 .uploadBox.disabled {
@@ -38,7 +39,7 @@
 
 .uploadBox.hasPreview {
     border-style: solid;
-    border-color: #e0e0e0;
+    border-color: var(--border);
 }
 
 /* Size variations */
@@ -71,33 +72,33 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: var(--spacing-4);
     text-align: center;
 }
 
 .uploadIcon {
     font-size: 2rem;
-    color: #7f8c8d;
-    margin-bottom: 10px;
+    color: var(--muted-foreground);
+    margin-bottom: var(--spacing-2);
 }
 
 .uploadText {
-    color: #555;
-    font-size: 0.9rem;
+    color: var(--foreground);
+    font-size: var(--text-sm);
     font-weight: 500;
 }
 
 .cropHint {
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-size: 0.8rem;
-    color: #3498db;
-    margin-top: 5px;
+    gap: var(--spacing-1);
+    font-size: var(--text-xs);
+    color: var(--primary);
+    margin-top: var(--spacing-1);
 }
 
 .cropHint svg {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
 }
 
 .previewContainer {
@@ -110,25 +111,25 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: var(--radius-md);
 }
 
 .removeButton {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: var(--spacing-1);
+    right: var(--spacing-1);
     background: rgba(0, 0, 0, 0.7);
     color: white;
     border: none;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     width: 24px;
     height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 0.8rem;
-    transition: all 0.2s;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
 }
 
 .removeButton:hover {
@@ -137,9 +138,9 @@
 }
 
 .errorMessage {
-    color: #e74c3c;
-    font-size: 0.85rem;
-    margin-top: 5px;
+    color: var(--destructive);
+    font-size: var(--text-xs);
+    margin-top: var(--spacing-1);
     text-align: center;
 }
 
@@ -154,182 +155,265 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
-    padding: 20px;
+    z-index: 10000;
+    padding: var(--spacing-4);
 }
 
 .cropperContainer {
-    background: white;
-    border-radius: 12px;
+    background: var(--card);
+    border-radius: var(--radius-lg);
     width: 90%;
-    max-width: 800px;
+    max-width: 750px;
     max-height: 90vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    border: 1px solid var(--border);
 }
 
 .cropperHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #eee;
+    padding: var(--spacing-3) var(--spacing-4);
+    border-bottom: 1px solid var(--border);
 }
 
 .cropperHeader h3 {
     margin: 0;
-    color: #2c3e50;
-    font-size: 1.2rem;
+    color: var(--foreground);
+    font-size: var(--text-base);
+    font-weight: 600;
 }
 
 .closeButton {
     background: none;
     border: none;
-    font-size: 1.2rem;
-    color: #7f8c8d;
+    font-size: 1rem;
+    color: var(--muted-foreground);
     cursor: pointer;
-    padding: 5px;
-    border-radius: 4px;
+    padding: var(--spacing-1);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
 }
 
 .closeButton:hover {
-    background: #f5f5f5;
-    color: #333;
+    background: var(--muted);
+    color: var(--foreground);
 }
 
 .cropperArea {
     position: relative;
-    height: 400px;
-    background: #333;
+    height: 380px;
+    background: var(--gray-900);
 }
 
-.cropControls {
-    padding: 20px;
-    border-top: 1px solid #eee;
-    background: #f8f9fa;
+/* Compact Controller Design */
+.cropControlsCompact {
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
 }
 
-.controlGroup {
-    margin-bottom: 15px;
+.controlRowCompact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-3);
 }
 
-.controlGroup:last-child {
-    margin-bottom: 0;
+.controlGroupCompact {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex: 1;
 }
 
-.controlGroup label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    color: #555;
-    font-weight: 500;
+.controlIconCompact {
+    font-size: 0.875rem;
+    color: var(--primary);
+    flex-shrink: 0;
 }
 
-.zoomSlider,
-.rotationSlider {
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: #ddd;
+.sliderCompact {
+    flex: 1;
+    height: 3px;
+    border-radius: var(--radius-full);
+    background: var(--border);
     outline: none;
     -webkit-appearance: none;
 }
 
-.zoomSlider::-webkit-slider-thumb,
-.rotationSlider::-webkit-slider-thumb {
+.sliderCompact::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: #3498db;
+    background: var(--primary);
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.zoomSlider::-moz-range-thumb,
-.rotationSlider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+.sliderCompact::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.sliderCompact::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: #3498db;
+    background: var(--primary);
     cursor: pointer;
     border: none;
 }
 
-.rotationControls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.rotationButton {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: #f0f7ff;
-    color: #3498db;
-    border: 1px solid #d1e3ff;
-    border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 0.85rem;
+.iconButtonCompact {
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-1);
     cursor: pointer;
-    transition: all 0.2s;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 0.75rem;
 }
 
-.rotationButton:hover {
-    background: #e1f0ff;
-    border-color: #3498db;
+.iconButtonCompact:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
 }
 
-.cropActions {
+.valueCompact {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    min-width: 45px;
+    text-align: right;
+}
+
+.resetButtonCompact {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-1) var(--spacing-3);
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: auto;
+    align-self: flex-start;
+}
+
+.resetButtonCompact:hover {
+    background: var(--muted);
+    border-color: var(--destructive);
+    color: var(--destructive);
+}
+
+.cropActionsCompact {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    padding: 20px;
-    border-top: 1px solid #eee;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-4);
+    border-top: 1px solid var(--border);
+    background: var(--card);
 }
 
-.cancelButton {
-    min-width: 100px;
+/* Dark Mode */
+.dark .cropperArea {
+    background: var(--gray-800);
 }
 
-.confirmButton {
-    min-width: 120px;
-    background: linear-gradient(135deg, #27ae60, #219653);
-    color: white;
-    border: none;
+.dark .iconButtonCompact {
+    background: var(--gray-800);
+    border-color: var(--gray-600);
 }
 
-.confirmButton:hover {
-    background: linear-gradient(135deg, #219653, #1e8449);
-}
-
-.confirmButton svg {
-    margin-right: 5px;
+.dark .iconButtonCompact:hover {
+    background: var(--primary);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .cropperContainer {
         width: 95%;
-        max-height: 80vh;
+        max-height: 85vh;
     }
 
     .cropperArea {
         height: 300px;
     }
 
-    .rotationControls {
-        flex-direction: column;
-        gap: 10px;
+    .cropperHeader {
+        padding: var(--spacing-2) var(--spacing-3);
     }
 
-    .cropActions {
-        flex-direction: column;
+    .cropperHeader h3 {
+        font-size: var(--text-sm);
     }
 
-    .cancelButton,
-    .confirmButton {
+    .cropControlsCompact {
+        padding: var(--spacing-2) var(--spacing-3);
+    }
+
+    .controlRowCompact {
+        flex-wrap: wrap;
+    }
+
+    .controlGroupCompact {
         width: 100%;
     }
+
+    .valueCompact {
+        min-width: 40px;
+    }
+
+    .cropActionsCompact {
+        padding: var(--spacing-2) var(--spacing-3);
+    }
+}
+
+@media (max-width: 640px) {
+    .cropperArea {
+        height: 250px;
+    }
+
+    .controlIconCompact {
+        font-size: 0.75rem;
+    }
+
+    .sliderCompact {
+        height: 3px;
+    }
+
+    .iconButtonCompact {
+        padding: var(--spacing-0) var(--spacing-1);
+    }
+
+    .valueCompact {
+        font-size: var(--text-xs);
+        min-width: 35px;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.cropperContainer {
+    animation: fadeIn 0.2s ease;
 }

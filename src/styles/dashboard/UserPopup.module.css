@@ -1,0 +1,115 @@
+/* UserPopup.module.css */
+
+/* User Info Section */
+.userInfoSection {
+    padding: var(--spacing-6);
+    text-align: center;
+    background: var(--background)
+}
+
+.userAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto var(--spacing-2);
+    overflow: hidden;
+    background: var(--brand-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: var(--shadow-md);
+}
+
+.userAvatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userAvatarPlaceholder {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: var(--brand-gradient);
+}
+
+.userDetails {
+    text-align: center;
+}
+
+.userName {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0 0 var(--spacing-1);
+}
+
+.userEmail {
+    font-size: var(--text-sm);
+    color: var(--foreground);
+    margin: var(--spacing-1) 0;
+}
+
+.userRole {
+    display: inline-block;
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-2xl);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    background: var(--primary-100);
+    color: var(--primary);
+    text-transform: uppercase;
+    backdrop-filter: blur(4px);
+}
+
+/* Popup Menu List */
+.popupList {
+    list-style: none;
+    padding: var(--spacing-2) 0;
+    margin: 0;
+}
+
+.popupItem {
+    padding: 0;
+}
+
+.popupLink {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--foreground);
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.popupLink:hover {
+    background: var(--accent);
+    color: var(--foreground);
+    padding-left: var(--spacing-7);
+}
+
+.popupIcon {
+    font-size: var(--text-base);
+    color: var(--muted-foreground);
+}
+
+.popupLink:hover .popupIcon {
+    color: var(--primary);
+}
+
+/* Divider */
+.popupDivider {
+    height: 1px;
+    margin: var(--spacing-2) var(--spacing-6);
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+}

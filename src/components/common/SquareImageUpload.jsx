@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { FiImage, FiX, FiUpload, FiCrop, FiCheck, FiRotateCw } from 'react-icons/fi';
+import { FiImage, FiX, FiUpload, FiCrop, FiCheck, FiRotateCw, FiZoomIn, FiZoomOut, FiRotateCcw } from 'react-icons/fi';
 import Cropper from 'react-easy-crop';
 
-// Shadcn Components
-import { Button } from '@/components/ui/button';
+// Custom Button Component
+import Button from '@/components/common/buttons/Button';
 
 // Styles
 import styles from '@/styles/common/SquareImageUpload.module.css';
@@ -14,8 +14,8 @@ import imageCompression from "browser-image-compression";
 
 const compressImage = async (file) => {
     const options = {
-        maxSizeMB: 1,            // target size
-        maxWidthOrHeight: 1600,  // resize large images
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1600,
         useWebWorker: true,
     };
 
@@ -24,7 +24,7 @@ const compressImage = async (file) => {
         return compressedFile;
     } catch (err) {
         console.error("Compression error:", err);
-        return file; // fallback to original
+        return file;
     }
 };
 
@@ -40,10 +40,10 @@ const SquareImageUpload = ({
     size = 'medium',
     showLabel = true,
     compact = false,
-    enableCrop = true, // New prop to enable/disable cropping
-    aspectRatio = 1, // Default square aspect ratio
-    onCropComplete: onCropCompleteProp, // Rename prop to avoid conflict
-    showCropControls = true // Show crop controls
+    enableCrop = true,
+    aspectRatio = 1,
+    onCropComplete: onCropCompleteProp,
+    showCropControls = true
 }) => {
     const [error, setError] = useState('');
     const [cropState, setCropState] = useState({
@@ -62,7 +62,6 @@ const SquareImageUpload = ({
         large: styles.large
     };
 
-    // Create a blob URL from the cropped image
     const createImage = (url) =>
         new Promise((resolve, reject) => {
             const image = new Image();
@@ -80,17 +79,13 @@ const SquareImageUpload = ({
         const maxSize = Math.max(image.width, image.height);
         const safeArea = 2 * ((maxSize / 2) * Math.sqrt(2));
 
-        // set each dimensions to double largest dimension to allow for a safe area for the
-        // image to rotate in without being clipped by canvas context
         canvas.width = safeArea;
         canvas.height = safeArea;
 
-        // translate canvas context to a central location on image to allow rotating around the center.
         ctx.translate(safeArea / 2, safeArea / 2);
         ctx.rotate((rotation * Math.PI) / 180);
         ctx.translate(-safeArea / 2, -safeArea / 2);
 
-        // draw rotated image and store data.
         ctx.drawImage(
             image,
             safeArea / 2 - image.width * 0.5,
@@ -99,18 +94,15 @@ const SquareImageUpload = ({
 
         const data = ctx.getImageData(0, 0, safeArea, safeArea);
 
-        // set canvas width to final desired crop size - this will clear existing context
         canvas.width = pixelCrop.width;
         canvas.height = pixelCrop.height;
 
-        // paste generated rotate image with correct offsets for x,y crop values.
         ctx.putImageData(
             data,
             Math.round(0 - safeArea / 2 + image.width * 0.5 - pixelCrop.x),
             Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
         );
 
-        // As a blob
         return new Promise((resolve) => {
             canvas.toBlob((blob) => {
                 resolve(blob);
@@ -122,13 +114,11 @@ const SquareImageUpload = ({
         const file = e.target.files[0];
         if (!file) return;
 
-        // Validate file size
         if (file.size > maxSizeMB * 1024 * 1024) {
             setError(`File size must be less than ${maxSizeMB}MB`);
             return;
         }
 
-        // Validate file type
         if (!file.type.startsWith('image/')) {
             setError('Please select an image file');
             return;
@@ -137,15 +127,16 @@ const SquareImageUpload = ({
         setError('');
 
         if (enableCrop) {
-            // Show cropper
             const imageUrl = URL.createObjectURL(file);
             setCropState(prev => ({
                 ...prev,
                 image: imageUrl,
-                showCropper: true
+                showCropper: true,
+                zoom: 1,
+                rotation: 0,
+                crop: { x: 0, y: 0 }
             }));
         } else {
-            // Compress before direct upload
             const compressed = await compressImage(file);
             const preview = URL.createObjectURL(compressed);
             onImageSelect(compressed, preview);
@@ -179,17 +170,14 @@ const SquareImageUpload = ({
         setCropState(prev => ({ ...prev, rotation }));
     }, []);
 
-    // Renamed this function to avoid conflict with prop
     const handleCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
         setCropState(prev => ({ ...prev, croppedAreaPixels }));
-        // Call the prop callback if provided
         if (onCropCompleteProp) {
             onCropCompleteProp(croppedArea, croppedAreaPixels);
         }
     }, [onCropCompleteProp]);
 
     const handleCropCancel = useCallback(() => {
-        // Cleanup the image URL
         if (cropState.image) {
             URL.revokeObjectURL(cropState.image);
         }
@@ -217,18 +205,15 @@ const SquareImageUpload = ({
                 cropState.rotation
             );
 
-            // Convert blob to file
             const fileName = `cropped-${Date.now()}.jpg`;
             let file = new File([croppedImage], fileName, { type: 'image/jpeg' });
 
-            // Compress the cropped image
             file = await compressImage(file);
 
             const croppedUrl = URL.createObjectURL(file);
 
             onImageSelect(file, croppedUrl);
 
-            // Cleanup
             URL.revokeObjectURL(cropState.image);
             setCropState({
                 image: null,
@@ -244,6 +229,20 @@ const SquareImageUpload = ({
         }
     }, [cropState, onImageSelect]);
 
+    const handleZoomIn = useCallback(() => {
+        setCropState(prev => ({
+            ...prev,
+            zoom: Math.min(prev.zoom + 0.1, 3)
+        }));
+    }, []);
+
+    const handleZoomOut = useCallback(() => {
+        setCropState(prev => ({
+            ...prev,
+            zoom: Math.max(prev.zoom - 0.1, 1)
+        }));
+    }, []);
+
     const rotateImage = useCallback(() => {
         setCropState(prev => ({
             ...prev,
@@ -251,7 +250,23 @@ const SquareImageUpload = ({
         }));
     }, []);
 
-    // Render cropper modal
+    const rotateImageAnti = useCallback(() => {
+        setCropState(prev => ({
+            ...prev,
+            rotation: (prev.rotation - 90 + 360) % 360
+        }));
+    }, []);
+
+    const resetCrop = useCallback(() => {
+        setCropState(prev => ({
+            ...prev,
+            zoom: 1,
+            rotation: 0,
+            crop: { x: 0, y: 0 }
+        }));
+    }, []);
+
+    // Render compact cropper modal
     const renderCropper = () => {
         if (!cropState.showCropper) return null;
 
@@ -259,10 +274,11 @@ const SquareImageUpload = ({
             <div className={styles.cropperModal}>
                 <div className={styles.cropperContainer}>
                     <div className={styles.cropperHeader}>
-                        <h3>Crop Image</h3>
+                        <h3 className={styles.cropperTitle}>Crop Image</h3>
                         <button
                             onClick={handleCropCancel}
                             className={styles.closeButton}
+                            type="button"
                         >
                             <FiX />
                         </button>
@@ -277,35 +293,49 @@ const SquareImageUpload = ({
                             aspect={aspectRatio}
                             onCropChange={onCropChange}
                             onZoomChange={onZoomChange}
-                            onCropComplete={handleCropComplete} // Use renamed function
+                            onCropComplete={handleCropComplete}
                         />
                     </div>
 
                     {showCropControls && (
-                        <div className={styles.cropControls}>
-                            <div className={styles.controlGroup}>
-                                <label>Zoom</label>
-                                <input
-                                    type="range"
-                                    min={1}
-                                    max={3}
-                                    step={0.1}
-                                    value={cropState.zoom}
-                                    onChange={(e) => onZoomChange(parseFloat(e.target.value))}
-                                    className={styles.zoomSlider}
-                                />
+                        <div className={styles.cropControlsCompact}>
+                            {/* Zoom Control - Compact */}
+                            <div className={styles.controlRowCompact}>
+                                <div className={styles.controlGroupCompact}>
+                                    <FiZoomIn className={styles.controlIconCompact} />
+                                    <input
+                                        type="range"
+                                        min={1}
+                                        max={3}
+                                        step={0.01}
+                                        value={cropState.zoom}
+                                        onChange={(e) => onZoomChange(parseFloat(e.target.value))}
+                                        className={styles.sliderCompact}
+                                    />
+                                    <button
+                                        onClick={handleZoomIn}
+                                        className={styles.iconButtonCompact}
+                                        type="button"
+                                    >
+                                        <FiZoomIn />
+                                    </button>
+                                    <button
+                                        onClick={handleZoomOut}
+                                        className={styles.iconButtonCompact}
+                                        type="button"
+                                    >
+                                        <FiZoomOut />
+                                    </button>
+                                </div>
+                                <span className={styles.valueCompact}>
+                                    {Math.round(cropState.zoom * 100)}%
+                                </span>
                             </div>
 
-                            <div className={styles.controlGroup}>
-                                <label>Rotation</label>
-                                <div className={styles.rotationControls}>
-                                    <button
-                                        onClick={rotateImage}
-                                        className={styles.rotationButton}
-                                    >
-                                        <FiRotateCw />
-                                        Rotate 90°
-                                    </button>
+                            {/* Rotation Control - Compact */}
+                            <div className={styles.controlRowCompact}>
+                                <div className={styles.controlGroupCompact}>
+                                    <FiRotateCw className={styles.controlIconCompact} />
                                     <input
                                         type="range"
                                         min={0}
@@ -313,27 +343,55 @@ const SquareImageUpload = ({
                                         step={1}
                                         value={cropState.rotation}
                                         onChange={(e) => onRotationChange(parseInt(e.target.value))}
-                                        className={styles.rotationSlider}
+                                        className={styles.sliderCompact}
                                     />
+                                    <button
+                                        onClick={rotateImageAnti}
+                                        className={styles.iconButtonCompact}
+                                        type="button"
+                                    >
+                                        <FiRotateCcw />
+                                    </button>
+                                    <button
+                                        onClick={rotateImage}
+                                        className={styles.iconButtonCompact}
+                                        type="button"
+                                    >
+                                        <FiRotateCw />
+                                    </button>
                                 </div>
+                                <span className={styles.valueCompact}>
+                                    {cropState.rotation}°
+                                </span>
                             </div>
+
+                            {/* Reset Button - Compact */}
+                            <button
+                                onClick={resetCrop}
+                                className={styles.resetButtonCompact}
+                                type="button"
+                            >
+                                Reset
+                            </button>
                         </div>
                     )}
 
-                    <div className={styles.cropActions}>
+                    <div className={styles.cropActionsCompact}>
                         <Button
                             variant="outline"
+                            size="sm"
                             onClick={handleCropCancel}
-                            className={styles.cancelButton}
                         >
                             Cancel
                         </Button>
                         <Button
+                            variant="primary"
+                            size="sm"
                             onClick={handleCropConfirm}
-                            className={styles.confirmButton}
+                            icon={<FiCheck />}
+                            iconPosition="left"
                         >
-                            <FiCheck />
-                            Crop & Save
+                            Apply
                         </Button>
                     </div>
                 </div>
@@ -400,7 +458,6 @@ const SquareImageUpload = ({
                 </div>
             </div>
 
-            {/* Cropper Modal */}
             {renderCropper()}
         </div>
     );

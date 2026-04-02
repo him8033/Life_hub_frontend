@@ -1,0 +1,416 @@
+/* TableHeader.module.css */
+
+.tableHeader {
+    padding: var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+}
+
+/* Header Row */
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+/* Left Section - Filters and Filter Button */
+.leftSection {
+    flex: 1;
+    min-width: 0;
+}
+
+.filtersContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+    align-items: center;
+}
+
+.filterGroup {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+/* Filter Label Sizes */
+.filterLabel {
+    font-weight: 500;
+    color: var(--foreground);
+    white-space: nowrap;
+}
+
+.filterLabelSm {
+    font-size: var(--text-xs);
+}
+
+.filterLabelMd {
+    font-size: var(--text-sm);
+}
+
+.filterLabelLg {
+    font-size: var(--text-base);
+}
+
+.filterSelect {
+    min-width: 120px;
+}
+
+/* Override SimpleSelect to ensure consistent height with button */
+.filterGroup :global(.formItem) {
+    margin-bottom: 0;
+    gap: 0;
+}
+
+.filterGroup :global(.formLabel) {
+    display: none;
+}
+
+.filterGroup :global(.selectWrapper),
+.filterGroup :global(.multiSelectWrapper) {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Select size overrides for consistent heights */
+.filterGroup :global(.selectSm) {
+    min-height: 32px;
+    height: 32px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 32px;
+}
+
+.filterGroup :global(.selectMd) {
+    min-height: 40px;
+    height: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 40px;
+}
+
+.filterGroup :global(.selectLg) {
+    min-height: 48px;
+    height: 48px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 48px;
+}
+
+/* MultiSelect size overrides */
+.filterGroup :global(.multiSelectSm) {
+    min-height: 32px;
+    height: auto;
+    min-height: 32px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.filterGroup :global(.multiSelectMd) {
+    min-height: 40px;
+    height: auto;
+    min-height: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.filterGroup :global(.multiSelectLg) {
+    min-height: 48px;
+    height: auto;
+    min-height: 48px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Filter Button - Consistent sizing */
+.filterButton {
+    white-space: nowrap;
+    position: relative;
+}
+
+/* Ensure button has consistent height with selects */
+.filterButton.btnSm {
+    min-height: 32px;
+    height: 32px;
+}
+
+.filterButton.btnMd {
+    min-height: 40px;
+    height: 40px;
+}
+
+.filterButton.btnLg {
+    min-height: 48px;
+    height: 48px;
+}
+
+/* Filter Badge */
+.filterBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    border-radius: var(--radius-full, 9999px);
+    margin-left: var(--spacing-1);
+}
+
+.filterBadgeSm {
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 var(--spacing-1);
+    font-size: var(--text-xs);
+}
+
+.filterBadgeMd {
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0 var(--spacing-1);
+    font-size: var(--text-sm);
+}
+
+.filterBadgeLg {
+    min-width: 1.75rem;
+    height: 1.75rem;
+    padding: 0 var(--spacing-1);
+    font-size: var(--text-base);
+}
+
+/* Search Section - Right Side */
+.searchSection {
+    flex-shrink: 0;
+    min-width: 260px;
+}
+
+/* Search Input wrapper for consistent height */
+.searchInputWrapper {
+    width: 100%;
+}
+
+/* Override SimpleInput to match select/button heights */
+.searchSection :global(.formItem) {
+    margin-bottom: 0;
+    gap: 0;
+}
+
+.searchSection :global(.formLabel) {
+    display: none;
+}
+
+/* Input size overrides for consistent heights */
+.searchSection :global(.inputSm) {
+    min-height: 32px;
+    height: 32px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 32px;
+}
+
+.searchSection :global(.inputMd) {
+    min-height: 40px;
+    height: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 40px;
+}
+
+.searchSection :global(.inputLg) {
+    min-height: 48px;
+    height: 48px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 48px;
+}
+
+/* Adjust icon positioning for input with fixed height */
+.searchSection :global(.inputSm)~ :global(.labelIcon),
+.searchSection :global(.inputMd)~ :global(.labelIcon),
+.searchSection :global(.inputLg)~ :global(.labelIcon) {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Clear Filters Row */
+.clearFiltersRow {
+    margin-top: var(--spacing-3);
+    padding-top: var(--spacing-3);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.clearFiltersButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-2);
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: var(--radius-md);
+}
+
+.clearFiltersButtonSm {
+    font-size: var(--text-xs);
+    padding: var(--spacing-1) var(--spacing-2);
+}
+
+.clearFiltersButtonMd {
+    font-size: var(--text-sm);
+    padding: var(--spacing-1) var(--spacing-2);
+}
+
+.clearFiltersButtonLg {
+    font-size: var(--text-base);
+    padding: var(--spacing-1) var(--spacing-3);
+}
+
+.clearFiltersButton:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+/* Helper class for consistent heights */
+.smHeight {
+    height: 32px;
+}
+
+.mdHeight {
+    height: 40px;
+}
+
+.lgHeight {
+    height: 48px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .headerRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .leftSection {
+        width: 100%;
+    }
+
+    .filtersContainer {
+        flex-wrap: wrap;
+    }
+
+    .filterGroup {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .filterSelect {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .searchSection {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .filtersContainer {
+        flex-direction: column;
+        width: 100%;
+        gap: var(--spacing-2);
+    }
+
+    .filterGroup {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-1);
+    }
+
+    .filterLabel {
+        min-width: auto;
+    }
+
+    .filterSelect {
+        width: 100%;
+    }
+
+    .filterButton {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .searchSection {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .tableHeader {
+        padding: var(--spacing-3);
+    }
+
+    /* Adjust heights for mobile */
+    .filterGroup :global(.selectSm) {
+        min-height: 36px;
+        height: 36px;
+    }
+
+    .filterGroup :global(.selectMd) {
+        min-height: 44px;
+        height: 44px;
+    }
+
+    .filterGroup :global(.selectLg) {
+        min-height: 52px;
+        height: 52px;
+    }
+
+    .filterButton.btnSm {
+        min-height: 36px;
+        height: 36px;
+    }
+
+    .filterButton.btnMd {
+        min-height: 44px;
+        height: 44px;
+    }
+
+    .filterButton.btnLg {
+        min-height: 52px;
+        height: 52px;
+    }
+
+    .searchSection :global(.inputSm) {
+        min-height: 36px;
+        height: 36px;
+    }
+
+    .searchSection :global(.inputMd) {
+        min-height: 44px;
+        height: 44px;
+    }
+
+    .searchSection :global(.inputLg) {
+        min-height: 52px;
+        height: 52px;
+    }
+
+    .smHeight {
+        height: 36px;
+    }
+
+    .mdHeight {
+        height: 44px;
+    }
+
+    .lgHeight {
+        height: 52px;
+    }
+}

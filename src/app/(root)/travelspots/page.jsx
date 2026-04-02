@@ -5,8 +5,9 @@ import PageLayout from '@/components/layout/PageLayout';
 import TravelSpotCard from '@/components/travelspots/TravelSpotCard';
 import Loader from '@/components/common/Loader';
 import ErrorState from '@/components/common/ErrorState';
-import FormSelect from '@/components/common/forms/FormSelect';
-import { PrimaryButton, SecondaryButton } from '@/components/common/forms/FormButtons';
+import SimpleSelect from '@/components/common/SimpleSelect';
+import Button from '@/components/common/buttons/Button';
+import FilterModal from '@/components/common/FilterModal';
 import styles from '@/styles/pages/PublicTravelSpots.module.css';
 
 import { useLazyGetPublicTravelSpotsQuery } from '@/services/api/travelspotApi';
@@ -28,7 +29,7 @@ export default function PublicTravelSpotsPage() {
     // Sort state
     const [sortBy, setSortBy] = useState('');
 
-    // Filter states
+    // Filter states (applied immediately)
     const [filters, setFilters] = useState({
         state: '',
         district: '',
@@ -55,7 +56,7 @@ export default function PublicTravelSpotsPage() {
     const [getTravelSpots, { data, error, isLoading, isFetching }] = useLazyGetPublicTravelSpotsQuery();
     const { data: catRes, isLoading: isLoadingCategories } = useGetPublicSpotCategoriesQuery();
 
-    // Location API hooks
+    // Location API hooks - uses current filters to load dependent data
     const { data: statesData, isLoading: isStateLoading } = useGetStatesByCountryQuery(1);
     const { data: districtsData, isLoading: isDistrictLoading } = useGetDistrictsByStateQuery(filters.state, {
         skip: !filters.state
@@ -109,6 +110,7 @@ export default function PublicTravelSpotsPage() {
     }));
 
     const minViewsOptions = [
+        { value: '', label: 'Any Popularity' },
         { value: '100', label: '100+ Views' },
         { value: '500', label: '500+ Views' },
         { value: '1000', label: '1000+ Views' },
@@ -229,6 +231,7 @@ export default function PublicTravelSpotsPage() {
         setFilters(prev => {
             const newFilters = { ...prev, [key]: value };
 
+            // Reset dependent fields when parent changes
             if (key === 'state') {
                 newFilters.district = '';
                 newFilters.sub_district = '';
@@ -244,8 +247,11 @@ export default function PublicTravelSpotsPage() {
         });
     };
 
-    const handleApplyFilters = () => {
-        fetchTravelSpots();
+    const handleOpenFilters = () => {
+        setIsFilterOpen(true);
+    };
+
+    const handleCloseFilters = () => {
         setIsFilterOpen(false);
     };
 
@@ -259,6 +265,7 @@ export default function PublicTravelSpotsPage() {
             min_views: ''
         });
         setAppliedFilters([]);
+        setIsFilterOpen(false);
     };
 
     const handleSearch = (e) => {
@@ -271,6 +278,54 @@ export default function PublicTravelSpotsPage() {
             fetchTravelSpots(nextCursor);
         }
     };
+
+    // Define filter configuration for the modal
+    const filterConfig = [
+        {
+            type: 'select',
+            label: 'State',
+            value: filters.state,
+            onChange: (value) => handleFilterChange('state', value),
+            options: stateOptions,
+            disabled: isStateLoading,
+            placeholder: 'All States',
+        },
+        {
+            type: 'select',
+            label: 'District',
+            value: filters.district,
+            onChange: (value) => handleFilterChange('district', value),
+            options: districtOptions,
+            disabled: !filters.state || isDistrictLoading,
+            placeholder: 'All Districts',
+        },
+        {
+            type: 'select',
+            label: 'City/Sub-district',
+            value: filters.sub_district,
+            onChange: (value) => handleFilterChange('sub_district', value),
+            options: subDistrictOptions,
+            disabled: !filters.district || isSubDistrictLoading,
+            placeholder: 'All Sub-districts',
+        },
+        {
+            type: 'select',
+            label: 'Village/Town',
+            value: filters.village,
+            onChange: (value) => handleFilterChange('village', value),
+            options: villageOptions,
+            disabled: !filters.sub_district || isVillageLoading,
+            placeholder: 'All Villages',
+        },
+        {
+            type: 'select',
+            label: 'Minimum Views',
+            value: filters.min_views,
+            onChange: (value) => handleFilterChange('min_views', value),
+            options: minViewsOptions,
+            placeholder: 'Any Popularity',
+        },
+    ];
 
     if (isLoading && travelSpots.length === 0) {
         return <Loader text="Loading travel spots..." />;
@@ -293,8 +348,9 @@ export default function PublicTravelSpotsPage() {
             heroDescription="Discover amazing places to visit across India"
             showHero={true}
         >
-            {/* Top Bar - Search, Filters Button, Sort */}
+            {/* Top Bar - Search, Category Filter, Sort, Filters Button */}
             <div className={styles.topBar}>
+                {/* Search Container */}
                 <div className={styles.searchContainer}>
                     <form onSubmit={handleSearch} className={styles.searchForm}>
                         <div className={styles.searchBox}>
@@ -306,15 +362,20 @@ export default function PublicTravelSpotsPage() {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className={styles.searchInput}
                             />
-                            <button type="submit" className={styles.searchButton}>
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                size="lg"
+                            >
                                 Search
-                            </button>
+                            </Button>
                         </div>
                     </form>
                 </div>
 
+                {/* Category Filter */}
                 <div className={styles.categoryFilter}>
-                    <FormSelect
+                    <SimpleSelect
                         value={filters.category}
                         onChange={(e) => handleFilterChange('category', e.target.value)}
                         options={categoryOptions}
@@ -323,9 +384,10 @@ export default function PublicTravelSpotsPage() {
                     />
                 </div>
 
+                {/* Sort and Filters */}
                 <div className={styles.controlsContainer}>
                     <div className={styles.sortContainer}>
-                        <FormSelect
+                        <SimpleSelect
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
                             options={sortOptions}
@@ -333,115 +395,36 @@ export default function PublicTravelSpotsPage() {
                         />
                     </div>
 
-                    <button
-                        onClick={() => setIsFilterOpen(true)}
-                        className={styles.filterButton}
+                    <Button
+                        variant="outline"
+                        size="md"
+                        onClick={handleOpenFilters}
+                        icon={<FilterIcon />}
                     >
-                        <FilterIcon className={styles.filterIcon} />
                         Filters
                         {appliedFilters.length > 0 && (
                             <span className={styles.filterBadge}>
                                 {appliedFilters.length}
                             </span>
                         )}
-                    </button>
+                    </Button>
                 </div>
             </div>
 
-            {/* Main Content */}
+            {/* Filter Modal - No Apply Button */}
+            <FilterModal
+                isOpen={isFilterOpen}
+                onClose={handleCloseFilters}
+                onClear={handleClearFilters}
+                filters={filterConfig}
+                title="Filters"
+                clearButtonText="Clear All"
+                closeButtonText="Close"
+                isLoading={isStateLoading || isDistrictLoading || isSubDistrictLoading || isVillageLoading}
+            />
+
+            {/* Results Section */}
             <div className={styles.mainContent}>
-                {/* Filters Sidebar (Modal for mobile) */}
-                {isFilterOpen && (
-                    <>
-                        <div className={styles.filterOverlay} onClick={() => setIsFilterOpen(false)} />
-                        <div className={styles.filterSidebar}>
-                            <div className={styles.filterHeader}>
-                                <h3 className={styles.filterTitle}>Filters</h3>
-                                <button
-                                    onClick={() => setIsFilterOpen(false)}
-                                    className={styles.filterClose}
-                                >
-                                    ×
-                                </button>
-                            </div>
-
-                            <div className={styles.filterContent}>
-                                {/* State Filter */}
-                                <div className={styles.filterSection}>
-                                    <FormSelect
-                                        label="State"
-                                        value={filters.state}
-                                        onChange={(e) => handleFilterChange('state', e.target.value)}
-                                        options={stateOptions}
-                                        disabled={isStateLoading}
-                                        placeholder="All States"
-                                    />
-                                </div>
-
-                                {/* District Filter */}
-                                <div className={styles.filterSection}>
-                                    <FormSelect
-                                        label="District"
-                                        value={filters.district}
-                                        onChange={(e) => handleFilterChange('district', e.target.value)}
-                                        options={districtOptions}
-                                        disabled={!filters.state || isDistrictLoading}
-                                        placeholder="All Districts"
-                                    />
-                                </div>
-
-                                {/* Sub-district Filter */}
-                                <div className={styles.filterSection}>
-                                    <FormSelect
-                                        label="City/Sub-district"
-                                        value={filters.sub_district}
-                                        onChange={(e) => handleFilterChange('sub_district', e.target.value)}
-                                        options={subDistrictOptions}
-                                        disabled={!filters.district || isSubDistrictLoading}
-                                        placeholder="All Sub-districts"
-                                    />
-                                </div>
-
-                                {/* Village Filter */}
-                                <div className={styles.filterSection}>
-                                    <FormSelect
-                                        label="Village/Town"
-                                        value={filters.village}
-                                        onChange={(e) => handleFilterChange('village', e.target.value)}
-                                        options={villageOptions}
-                                        disabled={!filters.sub_district || isVillageLoading}
-                                        placeholder="All Villages"
-                                    />
-                                </div>
-
-                                {/* Minimum Views Filter */}
-                                <div className={styles.filterSection}>
-                                    <FormSelect
-                                        label="Minimum Views"
-                                        value={filters.min_views}
-                                        onChange={(e) => handleFilterChange('min_views', e.target.value)}
-                                        options={minViewsOptions}
-                                        placeholder="Any Popularity"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className={styles.filterFooter}>
-                                <SecondaryButton onClick={handleClearFilters}>
-                                    Clear All
-                                </SecondaryButton>
-                                <PrimaryButton
-                                    onClick={handleApplyFilters}
-                                    disabled={isStateLoading || isDistrictLoading || isSubDistrictLoading || isVillageLoading}
-                                >
-                                    Apply Filters
-                                </PrimaryButton>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {/* Results Section */}
                 <div className={styles.resultsSection}>
                     <div className={styles.resultsInfo}>
                         <p className={styles.resultsCount}>
@@ -461,9 +444,9 @@ export default function PublicTravelSpotsPage() {
                                         : 'No travel spots available at the moment.'}
                                 </p>
                                 {(debouncedSearch || appliedFilters.length > 0) && (
-                                    <SecondaryButton onClick={handleClearFilters}>
+                                    <Button variant="primary" size="sm" onClick={handleClearFilters}>
                                         Clear all filters
-                                    </SecondaryButton>
+                                    </Button>
                                 )}
                             </div>
                         ) : (
@@ -479,13 +462,17 @@ export default function PublicTravelSpotsPage() {
 
                                 {hasMore && travelSpots.length > 0 && (
                                     <div className={styles.paginationControls}>
-                                        <button
+                                        <Button
+                                            variant="outline"
+                                            size="md"
                                             onClick={handleLoadMore}
                                             disabled={!nextCursor || isFetching}
-                                            className={`${styles.paginationButton} ${!nextCursor ? styles.disabled : ''}`}
+                                            isLoading={isFetching}
+                                            loadingText="Loading..."
+                                            fullWidth
                                         >
-                                            {isFetching ? 'Loading...' : 'Load More'}
-                                        </button>
+                                            Load More
+                                        </Button>
                                     </div>
                                 )}
                             </>
