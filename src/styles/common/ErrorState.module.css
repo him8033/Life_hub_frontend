@@ -1,134 +1,159 @@
-/* SimpleErrorState Styles - Minimal with Dynamic Colors */
+/* ErrorState.module.css */
 
 .container {
     width: 100%;
-    height: 80vh;
+    min-height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    background-color: #f9fafb;
+    padding: var(--spacing-5);
+    background: var(--background);
 }
 
 .content {
-    max-width: 400px;
+    max-width: 450px;
     width: 100%;
-    background-color: white;
-    /* Default white */
-    border-radius: 8px;
-    padding: 32px;
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-8);
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    animation: fadeIn 0.3s ease;
 }
 
-/* Type-specific default colors */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Type-specific styles */
 .content.error {
-    border-top: 3px solid #dc2626;
+    border-top: 4px solid var(--destructive);
 }
 
 .content.warning {
-    border-top: 3px solid #d97706;
+    border-top: 4px solid var(--warning);
 }
 
 .content.info {
-    border-top: 3px solid #2563eb;
+    border-top: 4px solid var(--info);
 }
 
 /* Icon */
-.icon {
-    font-size: 48px;
-    margin-bottom: 20px;
-    display: inline-block;
+.iconWrapper {
+    margin-bottom: var(--spacing-6);
+    display: flex;
+    justify-content: center;
 }
 
-.content.error .icon {
-    color: #dc2626;
+.iconSvg {
+    width: 64px;
+    height: 64px;
 }
 
-.content.warning .icon {
-    color: #d97706;
+.content.error .iconSvg {
+    color: var(--destructive);
 }
 
-.content.info .icon {
-    color: #2563eb;
+.content.warning .iconSvg {
+    color: var(--warning);
+}
+
+.content.info .iconSvg {
+    color: var(--info);
 }
 
 /* Text */
 .textContent {
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-6);
+}
+
+.title {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0 0 var(--spacing-2) 0;
+    line-height: 1.3;
 }
 
 .message {
-    font-size: 16px;
+    font-size: var(--text-base);
     line-height: 1.5;
-    color: #4b5563;
-    /* Default text color */
+    color: var(--muted-foreground);
     margin: 0;
     word-break: break-word;
 }
 
-/* Button */
-.retryButton {
-    padding: 10px 24px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    min-width: 120px;
-    color: white;
+/* Dark Mode */
+.dark .content {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
 }
 
-/* Default button colors by type */
-.content.error .retryButton {
-    background-color: #dc2626;
+.dark .content.error {
+    border-top-color: var(--destructive);
 }
 
-.content.error .retryButton:hover {
-    background-color: #b91c1c;
+.dark .content.warning {
+    border-top-color: var(--warning);
 }
 
-.content.warning .retryButton {
-    background-color: #d97706;
-}
-
-.content.warning .retryButton:hover {
-    background-color: #b45309;
-}
-
-.content.info .retryButton {
-    background-color: #2563eb;
-}
-
-.content.info .retryButton:hover {
-    background-color: #1d4ed8;
-}
-
-.retryButton:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+.dark .content.info {
+    border-top-color: var(--info);
 }
 
 /* Responsive */
 @media (max-width: 640px) {
-    .content {
-        padding: 24px;
+    .container {
+        min-height: 60vh;
+        padding: var(--spacing-3);
     }
 
-    .icon {
-        font-size: 40px;
-        margin-bottom: 16px;
+    .content {
+        padding: var(--spacing-6);
+    }
+
+    .iconSvg {
+        width: 48px;
+        height: 48px;
+    }
+
+    .title {
+        font-size: var(--text-lg);
     }
 
     .message {
-        font-size: 15px;
+        font-size: var(--text-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: var(--spacing-5);
     }
 
-    .retryButton {
-        padding: 12px 20px;
-        font-size: 15px;
-        width: 100%;
+    .iconWrapper {
+        margin-bottom: var(--spacing-4);
+    }
+
+    .iconSvg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .title {
+        font-size: var(--text-base);
+    }
+
+    .message {
+        font-size: var(--text-sm);
     }
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
 import {
     useGetCountriesQuery,
     useGetStatesByCountryQuery,
@@ -8,36 +9,55 @@ import {
     useGetSubDistrictsByDistrictQuery,
     useGetVillagesBySubDistrictQuery,
 } from '@/services/api/locationsApi';
-import { FormContainer, FormRow } from '@/components/common/forms_old/FormContainer';
-import FormSelect from '@/components/common/forms_old/FormSelect';
-import { PrimaryButton, SecondaryButton, ActionButtons } from '@/components/common/forms_old/FormButtons';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import FormSelect from '@/components/common/forms/FormSelect';
+import Button from '@/components/common/buttons/Button';
+import ButtonGroup from '@/components/common/buttons/ButtonGroup';
+import { FiSearch, FiX } from 'react-icons/fi';
+import styles from '@/styles/pages/pincode/PincodeSearchForm.module.css';
 
 const PincodeSearchForm = ({ onSubmit, onClear }) => {
-    const [formData, setFormData] = useState({
-        country: '',
-        state: '',
-        district: '',
-        subDistrict: '',
-        village: '',
+    const [isMounted, setIsMounted] = useState(false);
+
+    // Initialize react-hook-form
+    const methods = useForm({
+        defaultValues: {
+            country: '',
+            state: '',
+            district: '',
+            subDistrict: '',
+            village: '',
+        }
     });
+
+    const { watch, setValue, getValues, reset } = methods;
+    
+    // Watch form values
+    const countryId = watch('country');
+    const stateId = watch('state');
+    const districtId = watch('district');
+    const subDistrictId = watch('subDistrict');
+    const villageId = watch('village');
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     // RTK Query Hooks
     const { data: countryData, isLoading: isCountryLoading } = useGetCountriesQuery();
-    const { data: statesData, isLoading: isStateLoading } = useGetStatesByCountryQuery(formData.country, {
-        skip: !formData.country
+    const { data: statesData, isLoading: isStateLoading } = useGetStatesByCountryQuery(countryId, {
+        skip: !countryId
     });
-    const { data: districtsData, isLoading: isDistrictLoading } = useGetDistrictsByStateQuery(formData.state, {
-        skip: !formData.state
+    const { data: districtsData, isLoading: isDistrictLoading } = useGetDistrictsByStateQuery(stateId, {
+        skip: !stateId
     });
-    const { data: subDistrictsData, isLoading: isSubDistrictLoading } = useGetSubDistrictsByDistrictQuery(formData.district, {
-        skip: !formData.district
+    const { data: subDistrictsData, isLoading: isSubDistrictLoading } = useGetSubDistrictsByDistrictQuery(districtId, {
+        skip: !districtId
     });
     const { data: villagesData, isLoading: isVillageLoading } = useGetVillagesBySubDistrictQuery({
-        sub_district_id: formData.subDistrict,
+        sub_district_id: subDistrictId,
         limit: 1000
     }, {
-        skip: !formData.subDistrict
+        skip: !subDistrictId
     });
 
     const countries = countryData?.data || [];
@@ -46,154 +66,180 @@ const PincodeSearchForm = ({ onSubmit, onClear }) => {
     const subDistricts = subDistrictsData?.data || [];
     const villages = villagesData?.data?.results || [];
 
-    const handleInputChange = (field, value) => {
-        setFormData(prev => {
-            const newData = { ...prev, [field]: value };
+    // Handle input changes - reset dependent fields
+    const handleCountryChange = (value) => {
+        setValue('country', value);
+        setValue('state', '');
+        setValue('district', '');
+        setValue('subDistrict', '');
+        setValue('village', '');
+    };
 
-            // Reset dependent fields when parent changes
-            if (field === 'country') {
-                newData.state = '';
-                newData.district = '';
-                newData.subDistrict = '';
-                newData.village = '';
-            } else if (field === 'state') {
-                newData.district = '';
-                newData.subDistrict = '';
-                newData.village = '';
-            } else if (field === 'district') {
-                newData.subDistrict = '';
-                newData.village = '';
-            } else if (field === 'subDistrict') {
-                newData.village = '';
-            }
+    const handleStateChange = (value) => {
+        setValue('state', value);
+        setValue('district', '');
+        setValue('subDistrict', '');
+        setValue('village', '');
+    };
 
-            return newData;
-        });
+    const handleDistrictChange = (value) => {
+        setValue('district', value);
+        setValue('subDistrict', '');
+        setValue('village', '');
+    };
+
+    const handleSubDistrictChange = (value) => {
+        setValue('subDistrict', value);
+        setValue('village', '');
+    };
+
+    const handleVillageChange = (value) => {
+        setValue('village', value);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (formData.village) {
-            onSubmit(formData);
+        if (villageId) {
+            onSubmit({ village: villageId });
         }
     };
 
     const handleClear = () => {
-        setFormData({
-            country: '',
-            state: '',
-            district: '',
-            subDistrict: '',
-            village: '',
-        });
-        onClear();
+        reset();
+        if (onClear) {
+            onClear();
+        }
     };
 
     const isLoading = isCountryLoading || isStateLoading || isDistrictLoading || isSubDistrictLoading || isVillageLoading;
 
     // Transform data for select options
     const countryOptions = countries.map(country => ({
-        value: country.id,
+        value: String(country.id),
         label: `${country.name} (${country.iso_code})`
     }));
 
     const stateOptions = states.map(state => ({
-        value: state.id,
+        value: String(state.id),
         label: `${state.name} (${state.type})`
     }));
 
     const districtOptions = districts.map(district => ({
-        value: district.id,
+        value: String(district.id),
         label: district.name
     }));
 
     const subDistrictOptions = subDistricts.map(subDistrict => ({
-        value: subDistrict.id,
+        value: String(subDistrict.id),
         label: subDistrict.name
     }));
 
     const villageOptions = villages.map(village => ({
-        value: village.id,
+        value: String(village.id),
         label: `${village.name} (${village.category})`
     }));
 
+    if (!isMounted) {
+        return null;
+    }
+
     return (
-        <FormContainer onSubmit={handleSubmit}>
-            <FormRow>
-                {/* Country Select */}
-                <FormSelect
-                    label="Country"
-                    required
-                    value={formData.country}
-                    onChange={(e) => handleInputChange('country', e.target.value)}
-                    options={countryOptions}
-                    disabled={isCountryLoading}
-                    loading={isCountryLoading}
-                    placeholder="Select Country"
-                />
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <div className={styles.formGrid}>
+                    {/* Country Select */}
+                    <FormSelect
+                        name="country"
+                        label="Country"
+                        options={countryOptions}
+                        disabled={isCountryLoading}
+                        placeholder="Select Country"
+                        required
+                        size="md"
+                        description="Select the country"
+                        onChange={handleCountryChange}
+                    />
 
-                {/* State Select */}
-                <FormSelect
-                    label="State"
-                    required
-                    value={formData.state}
-                    onChange={(e) => handleInputChange('state', e.target.value)}
-                    options={stateOptions}
-                    disabled={!formData.country || isStateLoading}
-                    loading={isStateLoading}
-                    placeholder="Select State"
-                />
+                    {/* State Select */}
+                    <FormSelect
+                        name="state"
+                        label="State"
+                        options={stateOptions}
+                        disabled={!countryId || isStateLoading}
+                        placeholder={!countryId ? "Select country first" : "Select State"}
+                        required
+                        size="md"
+                        description="Select state or union territory"
+                        onChange={handleStateChange}
+                    />
 
-                {/* District Select */}
-                <FormSelect
-                    label="District"
-                    required
-                    value={formData.district}
-                    onChange={(e) => handleInputChange('district', e.target.value)}
-                    options={districtOptions}
-                    disabled={!formData.state || isDistrictLoading}
-                    loading={isDistrictLoading}
-                    placeholder="Select District"
-                />
+                    {/* District Select */}
+                    <FormSelect
+                        name="district"
+                        label="District"
+                        options={districtOptions}
+                        disabled={!stateId || isDistrictLoading}
+                        placeholder={!stateId ? "Select state first" : "Select District"}
+                        required
+                        size="md"
+                        description="Administrative district"
+                        onChange={handleDistrictChange}
+                    />
 
-                {/* Sub-District Select */}
-                <FormSelect
-                    label="City/Sub-District"
-                    required
-                    value={formData.subDistrict}
-                    onChange={(e) => handleInputChange('subDistrict', e.target.value)}
-                    options={subDistrictOptions}
-                    disabled={!formData.district || isSubDistrictLoading}
-                    loading={isSubDistrictLoading}
-                    placeholder="Select City/Sub-District"
-                />
+                    {/* Sub-District Select */}
+                    <FormSelect
+                        name="subDistrict"
+                        label="City/Sub-District"
+                        options={subDistrictOptions}
+                        disabled={!districtId || isSubDistrictLoading}
+                        placeholder={!districtId ? "Select district first" : "Select City/Sub-District"}
+                        required
+                        size="md"
+                        description="City or sub-district area"
+                        onChange={handleSubDistrictChange}
+                    />
 
-                {/* Village Select */}
-                <FormSelect
-                    label="Village/Town"
-                    required
-                    value={formData.village}
-                    onChange={(e) => handleInputChange('village', e.target.value)}
-                    options={villageOptions}
-                    disabled={!formData.subDistrict || isVillageLoading}
-                    loading={isVillageLoading}
-                    placeholder="Select Village/Town"
-                />
-            </FormRow>
+                    {/* Village Select */}
+                    <FormSelect
+                        name="village"
+                        label="Village/Town"
+                        options={villageOptions}
+                        disabled={!subDistrictId || isVillageLoading}
+                        placeholder={!subDistrictId ? "Select sub-district first" : "Select Village/Town"}
+                        required
+                        size="md"
+                        description="Specific village or town"
+                        onChange={handleVillageChange}
+                    />
+                </div>
 
-            <ActionButtons>
-                <PrimaryButton
-                    type="submit"
-                    disabled={!formData.village || isLoading}
-                    icon={<MagnifyingGlassIcon />}
-                >
-                    {isLoading ? 'Loading...' : 'Search Pincodes'}
-                </PrimaryButton>
-                <SecondaryButton type="button" onClick={handleClear}>
-                    Clear All
-                </SecondaryButton>
-            </ActionButtons>
-        </FormContainer>
+                {/* Form Actions */}
+                <ButtonGroup align="end" className={styles.formActions}>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="md"
+                        onClick={handleClear}
+                        icon={<FiX />}
+                        iconPosition="left"
+                    >
+                        Clear All
+                    </Button>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        size="md"
+                        disabled={!villageId || isLoading}
+                        isLoading={isLoading}
+                        loadingText="Loading..."
+                        icon={<FiSearch />}
+                        iconPosition="left"
+                    >
+                        Search Pincodes
+                    </Button>
+                </ButtonGroup>
+            </form>
+        </FormProvider>
     );
 };
 

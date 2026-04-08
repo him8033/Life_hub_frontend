@@ -5,6 +5,8 @@ import { useGetNearbyTravelSpotsQuery } from '@/services/api/travelspotApi';
 import { ROUTES } from '@/routes/routes.constants';
 import { useRouter } from 'next/navigation';
 import { FaMapMarkerAlt, FaChevronRight, FaSpinner } from 'react-icons/fa';
+import Button from '@/components/common/buttons/Button';
+import SimpleSelect from '@/components/common/forms/SimpleSelect';
 import styles from '@/styles/travelspots/NearbySpotsTab.module.css';
 
 export default function NearbySpotsTab({ slug }) {
@@ -15,6 +17,22 @@ export default function NearbySpotsTab({ slug }) {
     const [nextCursor, setNextCursor] = useState(null);
     const [hasMore, setHasMore] = useState(true);
     const [forceRefetch, setForceRefetch] = useState(0);
+
+    // Options
+    const radiusOptions = [
+        { value: '1', label: 'Within 1km' },
+        { value: '2.5', label: 'Within 2.5km' },
+        { value: '5', label: 'Within 5km' },
+        { value: '10', label: 'Within 10km' },
+        { value: '25', label: 'Within 25km' },
+        { value: '50', label: 'Within 50km' },
+        { value: '100', label: 'Within 100km' },
+    ];
+
+    const sortOptions = [
+        { value: 'distance', label: 'Closest First' },
+        { value: 'most_visited', label: 'Most Visited' },
+    ];
 
     // Query parameters that should trigger a new API call
     const queryParams = {
@@ -104,9 +122,13 @@ export default function NearbySpotsTab({ slug }) {
         return (
             <div className={styles.errorContainer}>
                 <p>Unable to load nearby spots</p>
-                <button onClick={refetch} className={styles.retryButton}>
+                <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={refetch}
+                >
                     Try Again
-                </button>
+                </Button>
             </div>
         );
     }
@@ -128,30 +150,27 @@ export default function NearbySpotsTab({ slug }) {
                 </h3>
 
                 <div className={styles.filtersRow}>
-                    <select
+                    <SimpleSelect
+                        name="radius"
                         value={radius}
                         onChange={(e) => setRadius(e.target.value)}
-                        className={styles.filterSelect}
+                        options={radiusOptions}
                         disabled={isFetching}
-                    >
-                        <option value="1">Within 1km</option>
-                        <option value="2.5">Within 2.5km</option>
-                        <option value="5">Within 5km</option>
-                        <option value="10">Within 10km</option>
-                        <option value="25">Within 25km</option>
-                        <option value="50">Within 50km</option>
-                        <option value="100">Within 100km</option>
-                    </select>
+                        size="sm"
+                        placeholder="Select Radius"
+                        className={styles.filterSelect}
+                    />
 
-                    <select
+                    <SimpleSelect
+                        name="sort"
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className={styles.filterSelect}
+                        options={sortOptions}
                         disabled={isFetching}
-                    >
-                        <option value="distance">Closest First</option>
-                        <option value="most_visited">Most Visited</option>
-                    </select>
+                        size="sm"
+                        placeholder="Sort By"
+                        className={styles.filterSelect}
+                    />
                 </div>
             </div>
 
@@ -206,9 +225,15 @@ export default function NearbySpotsTab({ slug }) {
                                         )}
                                     </div>
 
-                                    <button className={styles.viewButton}>
-                                        View Details <FaChevronRight />
-                                    </button>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className={styles.viewButton}
+                                        icon={<FaChevronRight />}
+                                        iconPosition="right"
+                                    >
+                                        View Details
+                                    </Button>
                                 </div>
                             </div>
                         ))}
@@ -217,20 +242,16 @@ export default function NearbySpotsTab({ slug }) {
                     {/* Load More Button */}
                     {hasMore && (
                         <div className={styles.loadMoreContainer}>
-                            <button
+                            <Button
+                                variant="outline"
+                                size="md"
                                 onClick={handleLoadMore}
-                                className={styles.loadMoreButton}
                                 disabled={isFetching}
+                                isLoading={isLoadingMore}
+                                loadingText="Loading..."
                             >
-                                {isLoadingMore ? (
-                                    <>
-                                        <FaSpinner className={styles.spinner} />
-                                        Loading...
-                                    </>
-                                ) : (
-                                    'Load More Spots'
-                                )}
-                            </button>
+                                Load More Spots
+                            </Button>
                         </div>
                     )}
                 </>
@@ -241,9 +262,13 @@ export default function NearbySpotsTab({ slug }) {
                 <div className={styles.emptyState}>
                     <FaMapMarkerAlt className={styles.emptyIcon} />
                     <p>No nearby spots found within {radius}km radius</p>
-                    <button onClick={resetFilters} className={styles.resetButton}>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={resetFilters}
+                    >
                         Reset Filters
-                    </button>
+                    </Button>
                 </div>
             )}
         </div>

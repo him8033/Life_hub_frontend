@@ -39,14 +39,14 @@ export default function PincodeFinder() {
                         onClick={() => setActiveTab('pincode')}
                     >
                         <MapPinIcon className={styles.tabIcon} />
-                        Find Pincode
+                        <span>Find Pincode</span>
                     </button>
                     <button
                         className={`${styles.tabButton} ${activeTab === 'village' ? styles.active : ''}`}
                         onClick={() => setActiveTab('village')}
                     >
                         <HomeIcon className={styles.tabIcon} />
-                        Find Village by Pincode
+                        <span>Find Village by Pincode</span>
                     </button>
                 </div>
 

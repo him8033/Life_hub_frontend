@@ -1,5 +1,6 @@
 'use client';
 
+import { FiAlertTriangle, FiInfo, FiHelpCircle, FiX } from 'react-icons/fi';
 import styles from '@/styles/common/ConfirmDialog.module.css';
 
 export default function ConfirmDialog({
@@ -12,21 +13,37 @@ export default function ConfirmDialog({
     type = 'default', // 'default', 'danger', 'warning', 'info'
     isLoading = false,
 }) {
+    // Get icon based on type
+    const getIcon = () => {
+        switch (type) {
+            case 'danger':
+                return <FiAlertTriangle className={styles.iconSvg} />;
+            case 'warning':
+                return <FiAlertTriangle className={styles.iconSvg} />;
+            case 'info':
+                return <FiInfo className={styles.iconSvg} />;
+            default:
+                return <FiHelpCircle className={styles.iconSvg} />;
+        }
+    };
+
     return (
-        <div className={styles.backdrop}>
-            <div className={styles.modal}>
-                {/* Header */}
-                <div className={styles.header}>
-                    <div className={`${styles.icon} ${styles[type]}`}>
-                        {type === 'danger' && '⚠️'}
-                        {type === 'warning' && '⚠️'}
-                        {type === 'info' && 'ℹ️'}
-                        {type === 'default' && '❓'}
-                    </div>
-                    <h3 className={styles.title}>{title}</h3>
+        <div className={styles.backdrop} onClick={onCancel}>
+            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                {/* Close button */}
+                <button onClick={onCancel} className={styles.closeButton}>
+                    <FiX />
+                </button>
+
+                {/* Icon */}
+                <div className={`${styles.iconWrapper} ${styles[type]}`}>
+                    {getIcon()}
                 </div>
 
-                {/* Message with proper text wrapping */}
+                {/* Title */}
+                <h3 className={styles.title}>{title}</h3>
+
+                {/* Message */}
                 <div className={styles.messageContainer}>
                     <p className={styles.message}>{message}</p>
                 </div>
@@ -35,14 +52,14 @@ export default function ConfirmDialog({
                 <div className={styles.actions}>
                     <button
                         onClick={onCancel}
-                        className={styles.cancel}
+                        className={styles.cancelButton}
                         disabled={isLoading}
                     >
                         {cancelText}
                     </button>
                     <button
                         onClick={onConfirm}
-                        className={`${styles.confirm} ${styles[type]}`}
+                        className={`${styles.confirmButton} ${styles[type]}`}
                         disabled={isLoading}
                     >
                         {isLoading ? (

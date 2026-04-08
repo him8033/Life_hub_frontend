@@ -1,8 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { FiArrowLeft, FiHome, FiSearch, FiHelpCircle } from 'react-icons/fi';
+import Button from '@/components/common/buttons/Button';
 import styles from '@/styles/common/PageNotFound.module.css';
-import Image from 'next/image';
 
 export default function PageNotFound({
     title = 'Page Not Found',
@@ -27,7 +28,6 @@ export default function PageNotFound({
         router.back();
     };
 
-    // Container style for custom background
     const containerStyle = customBackground ? {
         background: customBackground,
     } : {};
@@ -41,19 +41,10 @@ export default function PageNotFound({
                 {/* Left side - Illustration/Image */}
                 <div className={styles.illustrationSection}>
                     <div className={styles.illustration}>
-                        {/* You can use an image or SVG here */}
-                        {/* <div className={styles.imageContainer}>
-                            <Image
-                                src="/404pageimgs.webp" // or /404-image.png
-                                alt="404 Not Found"
-                                width={500}
-                                height={400}
-                                className={styles.image}
-                                priority
-                            />
-                        </div> */}
                         <div className={styles.illustrationContent}>
-                            <div className={styles.errorCode}>404</div>
+                            {show404 && (
+                                <div className={styles.errorCode}>404</div>
+                            )}
                             <div className={styles.errorIcon}>🔍</div>
                         </div>
                     </div>
@@ -78,21 +69,27 @@ export default function PageNotFound({
                     {/* Action Buttons */}
                     <div className={styles.actions}>
                         {showBackButton && (
-                            <button
+                            <Button
+                                variant="outline"
+                                size="lg"
                                 onClick={goBack}
-                                className={styles.backButton}
+                                icon={<FiArrowLeft />}
+                                iconPosition="left"
                             >
-                                ← {backLabel}
-                            </button>
+                                {backLabel}
+                            </Button>
                         )}
 
                         {showHomeButton && (
-                            <button
+                            <Button
+                                variant="primary"
+                                size="lg"
                                 onClick={goHome}
-                                className={styles.homeButton}
+                                icon={<FiHome />}
+                                iconPosition="left"
                             >
                                 {homeLabel}
-                            </button>
+                            </Button>
                         )}
                     </div>
 

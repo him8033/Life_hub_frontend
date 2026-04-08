@@ -1,4 +1,3 @@
-// src/components/travelspots/TravelSpotMap.jsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -72,16 +71,20 @@ const TravelSpotMap = ({
     }
 
     return (
-        <DynamicMap
-            latitude={latitude}
-            longitude={longitude}
-            name={name}
-            city={city}
-            address={address}
-            height={height}
-            zoom={zoom}
-            interactive={interactive}
-        />
+        <div className={styles.mapWrapper}>
+            <div className={styles.mapContainer} style={{ height }}>
+                <DynamicMap
+                    latitude={latitude}
+                    longitude={longitude}
+                    name={name}
+                    city={city}
+                    address={address}
+                    height={height}
+                    zoom={zoom}
+                    interactive={interactive}
+                />
+            </div>
+        </div>
     );
 };
 

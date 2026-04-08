@@ -1,104 +1,181 @@
-/* NotFoundState Styles - Simple Design */
+/* NotFoundState.module.css */
 
 .container {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: var(--spacing-5);
 }
 
 .fullPage {
     width: 100%;
-    height: 80vh;
-    background-color: #f9fafb;
+    min-height: 70vh;
+    background: var(--background);
 }
 
 .content {
-    max-width: 400px;
+    max-width: 450px;
     width: 100%;
-    background-color: white; /* Default */
-    border-radius: 8px;
-    padding: 32px;
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-8);
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
-    border-top: 3px solid #6b7280;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Icon */
+.iconWrapper {
+    margin-bottom: var(--spacing-6);
+}
+
 .icon {
-    font-size: 48px;
-    margin-bottom: 20px;
+    font-size: 4rem;
     display: inline-block;
-    color: #6b7280;
+    filter: drop-shadow(var(--shadow-sm));
+}
+
+.iconSvgWrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--muted) 0%, color-mix(in srgb, var(--primary) 5%, var(--muted)) 100%);
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.iconSvg {
+    width: 40px;
+    height: 40px;
+    color: var(--primary);
 }
 
 /* Text */
 .textContent {
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-6);
 }
 
 .title {
-    font-size: 20px;
-    font-weight: 600;
-    color: #111827;
-    margin: 0 0 12px 0;
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0 0 var(--spacing-2) 0;
     line-height: 1.3;
 }
 
 .message {
-    font-size: 16px;
+    font-size: var(--text-base);
     line-height: 1.5;
-    color: #4b5563;
+    color: var(--muted-foreground);
     margin: 0;
     word-break: break-word;
 }
 
-/* Button */
-.backButton {
-    padding: 10px 24px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    min-width: 120px;
-    color: white;
-    background-color: #2563eb; /* Default blue */
+/* Actions */
+.actions {
+    display: flex;
+    gap: var(--spacing-3);
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
-.backButton:hover {
-    background-color: #1d4ed8;
+/* Variants */
+.variantPrimary {
+    border-top-color: var(--primary);
 }
 
-.backButton:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+.variantWarning {
+    border-top-color: var(--warning);
+}
+
+.variantError {
+    border-top-color: var(--destructive);
+}
+
+.variantInfo {
+    border-top-color: var(--info);
+}
+
+/* Dark Mode */
+.dark .iconSvgWrapper {
+    background: linear-gradient(135deg, var(--gray-800) 0%, color-mix(in srgb, var(--primary) 10%, var(--gray-800)) 100%);
 }
 
 /* Responsive */
 @media (max-width: 640px) {
+    .container {
+        padding: var(--spacing-3);
+    }
+
+    .fullPage {
+        min-height: 60vh;
+    }
+
     .content {
-        padding: 24px;
+        padding: var(--spacing-6);
     }
-    
+
     .icon {
-        font-size: 40px;
-        margin-bottom: 16px;
+        font-size: 3rem;
     }
-    
+
+    .iconSvgWrapper {
+        width: 64px;
+        height: 64px;
+    }
+
+    .iconSvg {
+        width: 32px;
+        height: 32px;
+    }
+
     .title {
-        font-size: 18px;
+        font-size: var(--text-xl);
     }
-    
+
     .message {
-        font-size: 15px;
+        font-size: var(--text-sm);
     }
-    
-    .backButton {
-        padding: 12px 20px;
-        font-size: 15px;
+
+    .actions {
+        flex-direction: column;
+        gap: var(--spacing-2);
+    }
+
+    .actions button {
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: var(--spacing-5);
+    }
+
+    .iconWrapper {
+        margin-bottom: var(--spacing-4);
+    }
+
+    .title {
+        font-size: var(--text-lg);
+    }
+
+    .message {
+        font-size: var(--text-sm);
     }
 }

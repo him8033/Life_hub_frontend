@@ -27,7 +27,12 @@ const UserPopup = ({ isOpen, onClose, userData }) => {
     };
 
     return (
-        <PopupMenu isOpen={isOpen} onClose={onClose}>
+        <PopupMenu
+            isOpen={isOpen}
+            onClose={onClose}
+            position="right"
+            offset={10}
+        >
             {/* User Info Section */}
             <div className={styles.userInfoSection}>
                 <div className={styles.userAvatar}>

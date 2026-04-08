@@ -5,7 +5,8 @@ import PageLayout from '@/components/layout/PageLayout';
 import TravelSpotCard from '@/components/travelspots/TravelSpotCard';
 import Loader from '@/components/common/Loader';
 import ErrorState from '@/components/common/ErrorState';
-import SimpleSelect from '@/components/common/SimpleSelect';
+import SimpleSelect from '@/components/common/forms/SimpleSelect';
+import SimpleInput from '@/components/common/forms/SimpleInput';
 import Button from '@/components/common/buttons/Button';
 import FilterModal from '@/components/common/FilterModal';
 import styles from '@/styles/pages/PublicTravelSpots.module.css';
@@ -18,8 +19,7 @@ import {
     useGetSubDistrictsByDistrictQuery,
     useGetVillagesBySubDistrictQuery,
 } from '@/services/api/locationsApi';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { FilterIcon } from 'lucide-react';
+import { FiFilter, FiSearch } from 'react-icons/fi';
 
 export default function PublicTravelSpotsPage() {
     // Search state
@@ -90,22 +90,22 @@ export default function PublicTravelSpotsPage() {
     }));
 
     const stateOptions = states.map(state => ({
-        value: state.id,
+        value: String(state.id),
         label: state.name
     }));
 
     const districtOptions = districts.map(district => ({
-        value: district.id,
+        value: String(district.id),
         label: district.name
     }));
 
     const subDistrictOptions = subDistricts.map(subDistrict => ({
-        value: subDistrict.id,
+        value: String(subDistrict.id),
         label: subDistrict.name
     }));
 
     const villageOptions = villages.map(village => ({
-        value: village.id,
+        value: String(village.id),
         label: village.name
     }));
 
@@ -198,27 +198,27 @@ export default function PublicTravelSpotsPage() {
         const applied = [];
 
         if (filters.state) {
-            const state = states.find(s => s.id.toString() === filters.state.toString());
+            const state = states.find(s => String(s.id) === String(filters.state));
             if (state) applied.push(`State: ${state.name}`);
         }
 
         if (filters.district) {
-            const district = districts.find(d => d.id.toString() === filters.district.toString());
+            const district = districts.find(d => String(d.id) === String(filters.district));
             if (district) applied.push(`District: ${district.name}`);
         }
 
         if (filters.sub_district) {
-            const subDistrict = subDistricts.find(sd => sd.id.toString() === filters.sub_district.toString());
+            const subDistrict = subDistricts.find(sd => String(sd.id) === String(filters.sub_district));
             if (subDistrict) applied.push(`Sub-district: ${subDistrict.name}`);
         }
 
         if (filters.village) {
-            const village = villages.find(v => v.id.toString() === filters.village.toString());
+            const village = villages.find(v => String(v.id) === String(filters.village));
             if (village) applied.push(`Village: ${village.name}`);
         }
 
         if (filters.category) {
-            const category = categories.find(c => c.id.toString() === filters.category.toString());
+            const category = categories.find(c => String(c.id) === String(filters.category));
             if (category) applied.push(`Category: ${category.name}`);
         }
 
@@ -277,6 +277,11 @@ export default function PublicTravelSpotsPage() {
         if (nextCursor && hasMore) {
             fetchTravelSpots(nextCursor);
         }
+    };
+
+    // Handle SimpleSelect onChange (extracts value from event)
+    const handleSimpleSelectChange = (handler) => (e) => {
+        handler(e.target.value);
     };
 
     // Define filter configuration for the modal
@@ -354,18 +359,19 @@ export default function PublicTravelSpotsPage() {
                 <div className={styles.searchContainer}>
                     <form onSubmit={handleSearch} className={styles.searchForm}>
                         <div className={styles.searchBox}>
-                            <MagnifyingGlassIcon className={styles.searchIcon} />
-                            <input
-                                type="text"
+                            <SimpleInput
+                                name="search"
                                 placeholder="Search by name, address, or description..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
+                                size="md"
+                                icon={FiSearch}
                                 className={styles.searchInput}
                             />
                             <Button
                                 type="submit"
                                 variant="primary"
-                                size="lg"
+                                size="md"
                             >
                                 Search
                             </Button>
@@ -376,11 +382,15 @@ export default function PublicTravelSpotsPage() {
                 {/* Category Filter */}
                 <div className={styles.categoryFilter}>
                     <SimpleSelect
+                        name="category"
                         value={filters.category}
-                        onChange={(e) => handleFilterChange('category', e.target.value)}
+                        onChange={handleSimpleSelectChange((value) => handleFilterChange('category', value))}
                         options={categoryOptions}
                         disabled={isLoadingCategories}
                         placeholder="All Categories"
+                        size="md"
+                        emptyOption={true}
+                        emptyOptionLabel="All Categories"
                     />
                 </div>
 
@@ -388,30 +398,37 @@ export default function PublicTravelSpotsPage() {
                 <div className={styles.controlsContainer}>
                     <div className={styles.sortContainer}>
                         <SimpleSelect
+                            name="sort"
                             value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
+                            onChange={handleSimpleSelectChange((value) => setSortBy(value))}
                             options={sortOptions}
                             placeholder="Sort By"
+                            size="md"
+                            emptyOption={true}
+                            emptyOptionLabel="Sort By"
                         />
                     </div>
 
-                    <Button
-                        variant="outline"
-                        size="md"
-                        onClick={handleOpenFilters}
-                        icon={<FilterIcon />}
-                    >
-                        Filters
+                    {/* Filter Button with Badge */}
+                    <div className={styles.filterButtonWrapper}>
+                        <Button
+                            variant="outline"
+                            size="md"
+                            onClick={handleOpenFilters}
+                            icon={<FiFilter size={16} />}
+                        >
+                            Filters
+                        </Button>
                         {appliedFilters.length > 0 && (
                             <span className={styles.filterBadge}>
                                 {appliedFilters.length}
                             </span>
                         )}
-                    </Button>
+                    </div>
                 </div>
             </div>
 
-            {/* Filter Modal - No Apply Button */}
+            {/* Filter Modal */}
             <FilterModal
                 isOpen={isFilterOpen}
                 onClose={handleCloseFilters}
@@ -444,7 +461,7 @@ export default function PublicTravelSpotsPage() {
                                         : 'No travel spots available at the moment.'}
                                 </p>
                                 {(debouncedSearch || appliedFilters.length > 0) && (
-                                    <Button variant="primary" size="sm" onClick={handleClearFilters}>
+                                    <Button variant="primary" size="md" onClick={handleClearFilters}>
                                         Clear all filters
                                     </Button>
                                 )}

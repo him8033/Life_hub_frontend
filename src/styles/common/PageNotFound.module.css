@@ -1,13 +1,13 @@
-/* PageNotFound Styles - Full Page Design */
+/* PageNotFound.module.css */
 
 /* Container */
 .pageContainer {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    padding: var(--spacing-10) var(--spacing-5);
     animation: fadeIn 0.5s ease-out;
 }
 
@@ -15,7 +15,6 @@
     from {
         opacity: 0;
     }
-
     to {
         opacity: 1;
     }
@@ -23,20 +22,19 @@
 
 /* Background Variations */
 .gradient {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--brand-gradient);
 }
 
 .white {
-    background-color: white;
+    background: white;
 }
 
 .light {
-    background-color: #f9fafb;
+    background: var(--background);
 }
 
 .dark {
-    background-color: #111827;
-    color: white;
+    background: var(--gray-900);
 }
 
 /* Content Wrapper */
@@ -45,10 +43,12 @@
     grid-template-columns: 1fr;
     max-width: 1200px;
     width: 100%;
-    background-color: white;
-    border-radius: 24px;
+    background: var(--card);
+    border-radius: var(--radius-2xl);
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-xl-value);
+    backdrop-filter: var(--backdrop-blur);
+    border: 1px solid var(--border);
 }
 
 @media (min-width: 1024px) {
@@ -60,15 +60,15 @@
 
 /* Illustration Section */
 .illustrationSection {
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    background: linear-gradient(135deg, var(--muted) 0%, var(--accent) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 60px 40px;
+    padding: var(--spacing-16) var(--spacing-10);
 }
 
 .dark .illustrationSection {
-    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-700) 100%);
 }
 
 .illustration {
@@ -99,21 +99,18 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 120px;
-    color: #6b7280;
+    color: var(--muted-foreground);
     animation: float 3s ease-in-out infinite;
 }
 
 .dark .errorIcon {
-    color: #d1d5db;
+    color: var(--gray-500);
 }
 
 @keyframes float {
-
-    0%,
-    100% {
+    0%, 100% {
         transform: translate(-50%, -50%) translateY(0);
     }
-
     50% {
         transform: translate(-50%, -50%) translateY(-20px);
     }
@@ -121,157 +118,82 @@
 
 /* Content Section */
 .contentSection {
-    padding: 60px 40px;
+    padding: var(--spacing-16) var(--spacing-10);
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
-
-.dark .contentSection {
-    background-color: #1f2937;
+    background: var(--card);
 }
 
 /* Status Badge */
 .statusBadge {
     display: inline-block;
-    padding: 8px 20px;
-    background-color: #fee2e2;
-    color: #991b1b;
-    font-size: 14px;
+    padding: var(--spacing-2) var(--spacing-5);
+    background: color-mix(in srgb, var(--destructive) 10%, transparent);
+    color: var(--destructive);
+    font-size: var(--text-sm);
     font-weight: 600;
-    border-radius: 20px;
-    margin-bottom: 30px;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--spacing-6);
     letter-spacing: 1px;
+    width: fit-content;
 }
 
 .dark .statusBadge {
-    background-color: #7f1d1d;
-    color: #fca5a5;
+    background: color-mix(in srgb, var(--destructive) 20%, transparent);
+    color: var(--destructive);
 }
 
 /* Title */
 .title {
-    font-size: 48px;
+    font-size: var(--text-5xl);
     font-weight: 800;
-    color: #111827;
-    margin: 0 0 20px 0;
+    color: var(--foreground);
+    margin: 0 0 var(--spacing-4) 0;
     line-height: 1.1;
     letter-spacing: -0.025em;
 }
 
-.dark .title {
-    color: #f9fafb;
-}
-
 @media (max-width: 768px) {
     .title {
-        font-size: 36px;
+        font-size: var(--text-3xl);
     }
 }
 
 /* Message */
 .message {
-    font-size: 18px;
+    font-size: var(--text-base);
     line-height: 1.7;
-    color: #4b5563;
-    margin: 0 0 40px 0;
+    color: var(--muted-foreground);
+    margin: 0 0 var(--spacing-8) 0;
     word-break: break-word;
-}
-
-.dark .message {
-    color: #d1d5db;
 }
 
 @media (max-width: 768px) {
     .message {
-        font-size: 16px;
+        font-size: var(--text-sm);
     }
 }
 
 /* Actions */
 .actions {
     display: flex;
-    gap: 16px;
-    margin-bottom: 40px;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-8);
     flex-wrap: wrap;
-}
-
-.backButton,
-.homeButton {
-    padding: 16px 32px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    min-width: 160px;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.backButton {
-    background-color: white;
-    color: #4b5563;
-    border: 2px solid #d1d5db;
-}
-
-.backButton:hover {
-    background-color: #f9fafb;
-    border-color: #9ca3af;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.dark .backButton {
-    background-color: #374151;
-    color: #f9fafb;
-    border-color: #4b5563;
-}
-
-.dark .backButton:hover {
-    background-color: #4b5563;
-}
-
-.homeButton {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
-}
-
-.homeButton:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
-    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-}
-
-.backButton:focus,
-.homeButton:focus {
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
 }
 
 /* Help Section */
 .helpSection {
-    padding-top: 30px;
-    border-top: 1px solid #e5e7eb;
-}
-
-.dark .helpSection {
-    border-top-color: #374151;
+    padding-top: var(--spacing-6);
+    border-top: 1px solid var(--border);
 }
 
 .helpText {
-    font-size: 14px;
-    color: #6b7280;
-    margin: 0 0 12px 0;
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    margin: 0 0 var(--spacing-3) 0;
     font-weight: 500;
-}
-
-.dark .helpText {
-    color: #9ca3af;
 }
 
 .suggestions {
@@ -281,14 +203,10 @@
 }
 
 .suggestions li {
-    font-size: 14px;
-    color: #4b5563;
-    margin-bottom: 8px;
-    padding-left: 10px;
-}
-
-.dark .suggestions li {
-    color: #d1d5db;
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    margin-bottom: var(--spacing-2);
+    padding-left: var(--spacing-2);
 }
 
 /* Responsive */
@@ -298,11 +216,11 @@
     }
 
     .illustrationSection {
-        padding: 40px 20px;
+        padding: var(--spacing-10) var(--spacing-5);
     }
 
     .contentSection {
-        padding: 40px 30px;
+        padding: var(--spacing-10) var(--spacing-6);
     }
 
     .errorCode {
@@ -316,20 +234,20 @@
 
 @media (max-width: 640px) {
     .pageContainer {
-        padding: 20px 16px;
+        padding: var(--spacing-4) var(--spacing-3);
     }
 
     .contentWrapper {
-        border-radius: 16px;
+        border-radius: var(--radius-xl);
     }
 
     .illustrationSection {
-        padding: 30px 20px;
+        padding: var(--spacing-6) var(--spacing-4);
         min-height: 200px;
     }
 
     .contentSection {
-        padding: 30px 24px;
+        padding: var(--spacing-6) var(--spacing-4);
     }
 
     .errorCode {
@@ -341,31 +259,27 @@
     }
 
     .title {
-        font-size: 32px;
-        margin-bottom: 16px;
+        font-size: var(--text-2xl);
+        margin-bottom: var(--spacing-3);
     }
 
     .message {
-        font-size: 15px;
-        margin-bottom: 30px;
+        font-size: var(--text-sm);
+        margin-bottom: var(--spacing-6);
     }
 
     .actions {
         flex-direction: column;
-        gap: 12px;
+        gap: var(--spacing-3);
     }
 
-    .backButton,
-    .homeButton {
+    .actions button {
         width: 100%;
-        padding: 14px 24px;
-        font-size: 15px;
-        min-width: auto;
     }
 
     .statusBadge {
-        font-size: 12px;
-        padding: 6px 16px;
-        margin-bottom: 20px;
+        font-size: var(--text-xs);
+        padding: var(--spacing-1) var(--spacing-4);
+        margin-bottom: var(--spacing-4);
     }
 }

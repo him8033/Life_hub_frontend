@@ -1,17 +1,17 @@
 'use client';
 
+import { FiAlertCircle, FiAlertTriangle, FiInfo, FiRefreshCw } from 'react-icons/fi';
+import Button from '@/components/common/buttons/Button';
 import styles from '@/styles/common/ErrorState.module.css';
 
-export default function ErrorState({ 
-    message, 
-    onRetry, 
+export default function ErrorState({
+    message,
+    onRetry,
     errorType = 'error', // 'error', 'warning', 'info'
     retryMsg = 'Try Again',
     showIcon = true,
     className = '',
-    cardBackground = 'white', // Custom background color for card
-    textColor = null, // Custom text color
-    buttonBackground = null, // Custom button background
+    title = 'Something went wrong',
 }) {
     const handleRetry = () => {
         if (onRetry) {
@@ -22,57 +22,51 @@ export default function ErrorState({
     const getIcon = () => {
         switch (errorType) {
             case 'warning':
-                return '⚠️';
+                return <FiAlertTriangle className={styles.iconSvg} />;
             case 'info':
-                return 'ℹ️';
+                return <FiInfo className={styles.iconSvg} />;
             case 'error':
             default:
-                return '❌';
+                return <FiAlertCircle className={styles.iconSvg} />;
         }
     };
 
-    // Prepare inline styles for dynamic colors
-    const cardStyle = {
-        backgroundColor: cardBackground,
+    const getTitle = () => {
+        switch (errorType) {
+            case 'warning':
+                return 'Warning';
+            case 'info':
+                return 'Information';
+            case 'error':
+            default:
+                return title || 'Error';
+        }
     };
-
-    const messageStyle = textColor ? {
-        color: textColor,
-    } : {};
-
-    const buttonStyle = buttonBackground ? {
-        backgroundColor: buttonBackground,
-    } : {};
 
     return (
         <div className={`${styles.container} ${className}`}>
-            <div 
-                className={`${styles.content} ${styles[errorType]}`}
-                style={cardStyle}
-            >
+            <div className={`${styles.content} ${styles[errorType]}`}>
                 {showIcon && (
-                    <div className={styles.icon}>
+                    <div className={styles.iconWrapper}>
                         {getIcon()}
                     </div>
                 )}
-                
+
                 <div className={styles.textContent}>
-                    <p 
-                        className={styles.message}
-                        style={messageStyle}
-                    >
-                        {message}
-                    </p>
+                    <h3 className={styles.title}>{getTitle()}</h3>
+                    <p className={styles.message}>{message}</p>
                 </div>
 
                 {onRetry && (
-                    <button 
-                        onClick={handleRetry} 
-                        className={styles.retryButton}
-                        style={buttonStyle}
+                    <Button
+                        variant={errorType === 'error' ? 'danger' : errorType === 'warning' ? 'warning' : 'primary'}
+                        size="md"
+                        onClick={handleRetry}
+                        icon={<FiRefreshCw />}
+                        iconPosition="left"
                     >
                         {retryMsg}
-                    </button>
+                    </Button>
                 )}
             </div>
         </div>

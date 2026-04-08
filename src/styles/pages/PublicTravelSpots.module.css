@@ -1,6 +1,6 @@
 /* PublicTravelSpots.module.css */
 
-/* Top Bar Styles (unchanged) */
+/* Top Bar Styles */
 .topBar {
     display: grid;
     grid-template-columns: 1fr;
@@ -16,7 +16,7 @@
     .topBar {
         grid-template-columns: 1fr auto auto;
         gap: var(--spacing-6);
-        align-items: center;
+        align-items: flex-end;
     }
 }
 
@@ -31,55 +31,26 @@
 
 .searchBox {
     display: flex;
-    background: var(--background);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
+    gap: 0;
+    align-items: stretch;
 }
 
-.searchBox:focus-within {
-    border-color: var(--ring);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
-}
-
-.searchIcon {
-    width: 20px;
-    height: 20px;
-    color: var(--muted-foreground);
-    margin-left: var(--spacing-4);
-    align-self: center;
-}
-
-.searchInput {
+/* Join search input and button */
+.searchBox>div:first-child {
     flex: 1;
-    padding: var(--spacing-3) var(--spacing-4);
-    border: none;
-    background: transparent;
-    font-size: var(--text-base);
-    outline: none;
-    min-width: 0;
-    color: var(--foreground);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-.searchInput::placeholder {
-    color: var(--muted-foreground);
-    opacity: 0.7;
+.searchBox>div:first-child input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-.searchButton {
-    padding: var(--spacing-3) var(--spacing-6);
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border: none;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
+.searchBox button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
     white-space: nowrap;
-}
-
-.searchButton:hover {
-    background: var(--primary-600);
 }
 
 /* Category Filter */
@@ -87,63 +58,15 @@
     min-width: 200px;
 }
 
-.categorySelect {
-    width: 100%;
-    padding: var(--spacing-3) var(--spacing-4);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: var(--background);
-    font-size: var(--text-base);
-    cursor: pointer;
-    outline: none;
-    color: var(--foreground);
-    box-shadow: var(--shadow-sm);
-}
-
-.categorySelect:focus {
-    border-color: var(--ring);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
-}
-
-.categorySelect:disabled {
-    background: var(--muted);
-    color: var(--muted-foreground);
-    cursor: not-allowed;
-}
-
 /* Controls Container */
 .controlsContainer {
     display: flex;
     gap: var(--spacing-4);
-    align-items: center;
+    align-items: flex-end;
 }
 
-.filterButton {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-2);
-    padding: var(--spacing-3) var(--spacing-6);
-    background: var(--background);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-    position: relative;
-    color: var(--foreground);
-    box-shadow: var(--shadow-sm);
-}
-
-.filterButton:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
-.filterIcon {
-    width: 18px;
-    height: 18px;
+.sortContainer {
+    min-width: 180px;
 }
 
 .filterBadge {
@@ -156,33 +79,18 @@
     min-width: 20px;
     height: 20px;
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 0 var(--spacing-1);
     font-weight: 600;
+    margin-left: var(--spacing-1);
 }
 
-.sortContainer {
-    min-width: 180px;
-}
-
-.sortSelect {
-    width: 100%;
-    padding: var(--spacing-3) var(--spacing-4);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: var(--background);
-    font-size: var(--text-base);
-    cursor: pointer;
-    outline: none;
-    color: var(--foreground);
-    box-shadow: var(--shadow-sm);
-}
-
-.sortSelect:focus {
-    border-color: var(--ring);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
+/* Filter Button Wrapper */
+.filterButtonWrapper {
+    position: relative;
+    display: inline-flex;
 }
 
 /* Main Content */
@@ -190,174 +98,6 @@
     display: flex;
     gap: var(--spacing-8);
     position: relative;
-}
-
-/* Filter Modal */
-.filterOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    backdrop-filter: blur(4px);
-    animation: fadeIn 0.2s ease;
-}
-
-.filterSidebar {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 500px;
-    max-height: 85vh;
-    background: var(--background);
-    border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-2xl);
-    z-index: 1001;
-    display: flex;
-    flex-direction: column;
-    animation: modalFadeIn 0.3s ease;
-}
-
-@keyframes modalFadeIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -48%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.filterHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-6);
-    border-bottom: 1px solid var(--border);
-}
-
-.filterTitle {
-    font-size: var(--text-xl);
-    font-weight: 600;
-    color: var(--foreground);
-    margin: 0;
-}
-
-.filterClose {
-    background: none;
-    border: none;
-    font-size: var(--text-2xl);
-    cursor: pointer;
-    color: var(--muted-foreground);
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-md);
-    transition: all 0.2s;
-}
-
-.filterClose:hover {
-    background: var(--muted);
-    color: var(--foreground);
-}
-
-.filterContent {
-    flex: 1;
-    overflow-y: auto;
-    padding: var(--spacing-6);
-}
-
-.filterSection {
-    margin-bottom: var(--spacing-6);
-}
-
-.filterSectionTitle {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--foreground);
-    margin-bottom: var(--spacing-2);
-}
-
-.filterSelect {
-    width: 100%;
-    padding: var(--spacing-3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: var(--background);
-    font-size: var(--text-sm);
-    cursor: pointer;
-    outline: none;
-    transition: all 0.2s;
-    color: var(--foreground);
-}
-
-.filterSelect:focus {
-    border-color: var(--ring);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 20%, transparent);
-}
-
-.filterSelect:disabled {
-    background: var(--muted);
-    color: var(--muted-foreground);
-    cursor: not-allowed;
-}
-
-.filterFooter {
-    padding: var(--spacing-6);
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: var(--spacing-4);
-}
-
-.filterClearButton {
-    flex: 1;
-    padding: var(--spacing-3);
-    background: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--foreground);
-    transition: all 0.2s;
-}
-
-.filterClearButton:hover {
-    background: var(--accent);
-}
-
-.filterApplyButton {
-    flex: 1;
-    padding: var(--spacing-3);
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.filterApplyButton:hover:not(:disabled) {
-    background: var(--primary-600);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
-.filterApplyButton:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 /* Results Section */
@@ -375,18 +115,19 @@
 }
 
 .resultsCount {
-    margin-left: var(--spacing-12);
     font-size: var(--text-sm);
     color: var(--muted-foreground);
     font-weight: 500;
 }
 
+/* Spots Container */
 .spotsContainer {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--spacing-5) var(--spacing-16);
 }
 
+/* No Results */
 .noResults {
     text-align: center;
     padding: var(--spacing-16) var(--spacing-8);
@@ -408,21 +149,6 @@
     line-height: 1.5;
 }
 
-.clearButton {
-    padding: var(--spacing-3) var(--spacing-6);
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border: none;
-    border-radius: var(--radius-md);
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.clearButton:hover {
-    background: var(--primary-600);
-}
-
 /* Spots Grid */
 .spotsGrid {
     display: grid;
@@ -440,30 +166,6 @@
     margin-top: var(--spacing-12);
     padding: var(--spacing-8) 0;
     border-top: 1px solid var(--border);
-}
-
-.paginationButton {
-    padding: var(--spacing-3) var(--spacing-6);
-    border: 1px solid var(--border);
-    background: var(--background);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-    min-width: 120px;
-    color: var(--foreground);
-}
-
-.paginationButton:hover:not(.disabled) {
-    border-color: var(--primary);
-    color: var(--primary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
-.paginationButton.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 /* Loading Overlay */
@@ -490,25 +192,24 @@
 
     .searchBox {
         flex-direction: column;
-        border: none;
-        box-shadow: none;
-        background: transparent;
+        gap: var(--spacing-2);
     }
 
-    .searchBox:focus-within {
-        border: none;
-        box-shadow: none;
+    /* On mobile, reset border radius for joined style */
+    .searchBox>div:first-child {
+        border-top-right-radius: var(--radius-md);
+        border-bottom-right-radius: var(--radius-md);
     }
 
-    .searchInput {
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        margin-bottom: var(--spacing-2);
+    .searchBox>div:first-child input {
+        border-top-right-radius: var(--radius-md);
+        border-bottom-right-radius: var(--radius-md);
     }
 
-    .searchButton {
+    .searchBox button {
+        border-top-left-radius: var(--radius-md);
+        border-bottom-left-radius: var(--radius-md);
         width: 100%;
-        border-radius: var(--radius-md);
     }
 
     .categoryFilter,
@@ -519,6 +220,7 @@
     .controlsContainer {
         width: 100%;
         justify-content: space-between;
+        flex-wrap: wrap;
     }
 
     .spotsGrid {
@@ -532,8 +234,14 @@
         text-align: center;
     }
 
-    .paginationButton {
+    .paginationControls button {
         width: 100%;
+    }
+
+    .resultsInfo {
+        flex-direction: column;
+        gap: var(--spacing-2);
+        align-items: flex-start;
     }
 }
 

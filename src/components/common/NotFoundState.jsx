@@ -1,6 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { FiArrowLeft, FiSearch, FiAlertCircle, FiMapPin } from 'react-icons/fi';
+import Button from '@/components/common/buttons/Button';
 import styles from '@/styles/common/NotFoundState.module.css';
 
 export default function NotFoundState({
@@ -10,11 +12,12 @@ export default function NotFoundState({
     backTo = null, // If null, uses router.back()
     showIcon = true,
     icon = '🔍',
-    cardBackground = 'white',
-    textColor = null,
-    buttonBackground = '#2563eb',
+    iconType = 'default', // 'default', 'search', 'alert', 'location'
+    cardBackground = null,
     fullPage = true,
     className = '',
+    onRetry,
+    retryLabel = 'Try Again',
 }) {
     const router = useRouter();
 
@@ -26,56 +29,64 @@ export default function NotFoundState({
         }
     };
 
-    // Prepare inline styles
-    const cardStyle = {
-        backgroundColor: cardBackground,
+    // Get icon based on type
+    const getIcon = () => {
+        if (icon !== '🔍') return icon;
+
+        switch (iconType) {
+            case 'search':
+                return <FiSearch className={styles.iconSvg} />;
+            case 'alert':
+                return <FiAlertCircle className={styles.iconSvg} />;
+            case 'location':
+                return <FiMapPin className={styles.iconSvg} />;
+            default:
+                return '🔍';
+        }
     };
 
-    const textStyle = textColor ? {
-        color: textColor,
-    } : {};
-
-    const buttonStyle = buttonBackground ? {
-        backgroundColor: buttonBackground,
-    } : {};
+    const iconElement = getIcon();
 
     const Container = fullPage ? 'div' : 'div';
 
     return (
         <Container className={`${styles.container} ${fullPage ? styles.fullPage : ''} ${className}`}>
-            <div 
-                className={styles.content}
-                style={cardStyle}
-            >
+            <div className={styles.content}>
                 {showIcon && (
-                    <div className={styles.icon}>
-                        {icon}
+                    <div className={styles.iconWrapper}>
+                        {typeof iconElement === 'string' ? (
+                            <span className={styles.icon}>{iconElement}</span>
+                        ) : (
+                            <div className={styles.iconSvgWrapper}>{iconElement}</div>
+                        )}
                     </div>
                 )}
-                
+
                 <div className={styles.textContent}>
-                    <h2 
-                        className={styles.title}
-                        style={textStyle}
-                    >
-                        {title}
-                    </h2>
-                    
-                    <p 
-                        className={styles.message}
-                        style={textStyle}
-                    >
-                        {message}
-                    </p>
+                    <h2 className={styles.title}>{title}</h2>
+                    <p className={styles.message}>{message}</p>
                 </div>
 
-                <button
-                    onClick={handleBack}
-                    className={styles.backButton}
-                    style={buttonStyle}
-                >
-                    {backLabel}
-                </button>
+                <div className={styles.actions}>
+                    {onRetry && (
+                        <Button
+                            variant="outline"
+                            size="md"
+                            onClick={onRetry}
+                        >
+                            {retryLabel}
+                        </Button>
+                    )}
+                    <Button
+                        variant="primary"
+                        size="md"
+                        onClick={handleBack}
+                        icon={<FiArrowLeft />}
+                        iconPosition="left"
+                    >
+                        {backLabel}
+                    </Button>
+                </div>
             </div>
         </Container>
     );

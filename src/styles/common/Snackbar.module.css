@@ -1,0 +1,327 @@
+/* ================= WRAPPER ================= */
+
+.snackbarWrapper {
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+}
+
+/* Exit animation */
+.snackbarWrapper.exiting {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+/* ================= POSITION VARIANTS ================= */
+
+/* Bottom Center (default) */
+.bottom-center {
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: center;
+}
+
+/* Bottom Left */
+.bottom-left {
+    bottom: 24px;
+    left: 24px;
+}
+
+/* Bottom Right */
+.bottom-right {
+    bottom: 24px;
+    right: 24px;
+}
+
+/* Top Center */
+.top-center {
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: center;
+}
+
+/* Top Left */
+.top-left {
+    top: 24px;
+    left: 24px;
+}
+
+/* Top Right */
+.top-right {
+    top: 24px;
+    right: 24px;
+}
+
+/* ================= SNACKBAR BOX ================= */
+
+.snackbar {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    min-width: 320px;
+    max-width: 420px;
+}
+
+/* ================= ANIMATIONS ================= */
+
+/* Bottom → slide up */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Top → slide down */
+@keyframes slideDownTop {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Exit animation */
+@keyframes slideDownExit {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+@keyframes slideUpExitTop {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Apply animation based on position */
+
+/* Bottom positions */
+.bottom-center .snackbar,
+.bottom-left .snackbar,
+.bottom-right .snackbar {
+    animation: slideUp 0.3s ease forwards;
+}
+
+/* Top positions */
+.top-center .snackbar,
+.top-left .snackbar,
+.top-right .snackbar {
+    animation: slideDownTop 0.3s ease forwards;
+}
+
+/* Exit animations */
+
+/* Bottom exit */
+.bottom-center.exiting .snackbar,
+.bottom-left.exiting .snackbar,
+.bottom-right.exiting .snackbar {
+    animation: slideDownExit 0.3s ease forwards;
+}
+
+/* Top exit */
+.top-center.exiting .snackbar,
+.top-left.exiting .snackbar,
+.top-right.exiting .snackbar {
+    animation: slideUpExitTop 0.3s ease forwards;
+}
+
+/* ================= LEFT STRIP ================= */
+
+.leftStrip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+}
+
+.success .leftStrip { background: #10b981; }
+.error .leftStrip { background: #ef4444; }
+.warning .leftStrip { background: #f59e0b; }
+.info .leftStrip { background: #3b82f6; }
+
+/* ================= CONTENT ================= */
+
+.snackbarContent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px 10px 16px;
+}
+
+/* ================= ICON ================= */
+
+.iconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.success .iconWrapper { color: #10b981; }
+.error .iconWrapper { color: #ef4444; }
+.warning .iconWrapper { color: #f59e0b; }
+.info .iconWrapper { color: #3b82f6; }
+
+.icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* ================= MESSAGE ================= */
+
+.messageContainer {
+    flex: 1;
+    min-width: 0;
+}
+
+.message {
+    color: #1f2937;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.timeRemaining {
+    color: #6b7280;
+    font-size: 11px;
+    margin-top: 1px;
+}
+
+/* ================= CLOSE BUTTON ================= */
+
+.closeButton {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.closeButton:hover {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.closeButton svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ================= PROGRESS BAR ================= */
+
+.bottomProgress {
+    height: 2px;
+    background: #e5e7eb;
+    overflow: hidden;
+}
+
+.progressBar {
+    height: 100%;
+    width: 100%;
+    transform-origin: left;
+    transition: width 0.1s linear; /* synced with JS */
+}
+
+.success .progressBar { background: #10b981; }
+.error .progressBar { background: #ef4444; }
+.warning .progressBar { background: #f59e0b; }
+.info .progressBar { background: #3b82f6; }
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 640px) {
+
+    .snackbarWrapper {
+        left: 16px !important;
+        right: 16px !important;
+        transform: none !important;
+    }
+
+    .snackbar {
+        width: 100%;
+        min-width: auto;
+        max-width: none;
+    }
+
+    .snackbarContent {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+
+    .message {
+        font-size: 13px;
+    }
+
+    .timeRemaining {
+        font-size: 11px;
+    }
+
+    .icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* ================= DARK MODE ================= */
+
+@media (prefers-color-scheme: dark) {
+
+    .snackbar {
+        background: #1f2937;
+    }
+
+    .message {
+        color: #f9fafb;
+    }
+
+    .timeRemaining {
+        color: #9ca3af;
+    }
+
+    .closeButton {
+        color: #6b7280;
+    }
+
+    .closeButton:hover {
+        background: #374151;
+        color: #e5e7eb;
+    }
+
+    .bottomProgress {
+        background: #374151;
+    }
+}

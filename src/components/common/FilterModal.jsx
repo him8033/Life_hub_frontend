@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import Button from '@/components/common/buttons/Button';
-import SimpleSelect from '@/components/common/SimpleSelect';
+import SimpleSelect from '@/components/common/forms/SimpleSelect';
 import styles from '@/styles/common/FilterModal.module.css';
 import { FiX } from 'react-icons/fi';
 

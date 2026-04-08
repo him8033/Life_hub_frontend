@@ -1,0 +1,487 @@
+/* HeroSection.module.css - Updated Button Styles */
+
+/* Hero Section - Full Width */
+.heroSection {
+    position: relative;
+    height: 90vh;
+    min-height: 600px;
+    max-height: 800px;
+    overflow: hidden;
+    background: var(--color-gray-900);
+    width: 100%;
+}
+
+.heroSlides {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.heroSlide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.heroSlide.active {
+    opacity: 1;
+}
+
+/* Hero Content */
+.heroContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 10;
+    width: 90%;
+    max-width: 1000px;
+    padding: 0 var(--spacing-5);
+}
+
+.heroTag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    padding: var(--spacing-2) var(--spacing-6);
+    border-radius: 40px;
+    font-size: var(--text-sm);
+    letter-spacing: 1.5px;
+    margin-bottom: var(--spacing-6);
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 500;
+}
+
+.heroTitle {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 800;
+    margin-bottom: var(--spacing-4);
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: white;
+}
+
+.heroSubtitle {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 300;
+    margin-bottom: var(--spacing-10);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.4;
+    opacity: 0.95;
+    color: white;
+}
+
+/* Hero Actions - Modern Button Styles */
+.heroActions {
+    display: flex;
+    gap: var(--spacing-4);
+    justify-content: center;
+    margin-top: var(--spacing-10);
+    flex-wrap: wrap;
+}
+
+.heroActionButton {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+    backdrop-filter: blur(10px);
+    color: #1a1a2e;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.heroActionButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.heroActionButton:hover::before {
+    left: 100%;
+}
+
+.heroActionButton:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+}
+
+.heroActionButton:active {
+    transform: translateY(0px) scale(0.98);
+}
+
+/* Individual button color variations */
+.heroActionButton:nth-child(1) {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.heroActionButton:nth-child(2) {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.heroActionButton:nth-child(3) {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.heroActionButton:nth-child(1):hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.heroActionButton:nth-child(2):hover {
+    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+}
+
+.heroActionButton:nth-child(3):hover {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+}
+
+/* Navigation Arrows - Modern Gradient */
+.heroNav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 20;
+    color: #1a1a2e;
+    font-size: var(--text-2xl);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.heroNav:hover {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    transform: translateY(-50%) scale(1.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.heroNav:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.prevNav {
+    left: var(--spacing-8);
+}
+
+.nextNav {
+    right: var(--spacing-8);
+}
+
+/* Hero Dots - Modern Style */
+.heroDots {
+    position: absolute;
+    bottom: var(--spacing-10);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--spacing-3);
+    z-index: 20;
+}
+
+.heroDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+    position: relative;
+}
+
+.heroDot:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.3);
+}
+
+.heroDot.active {
+    background: white;
+    width: 28px;
+    border-radius: 20px;
+    transform: scale(1);
+}
+
+.heroDot.active:hover {
+    transform: scale(1.1);
+}
+
+/* Image Counter - Modern Badge */
+.imageCounter {
+    position: absolute;
+    bottom: var(--spacing-10);
+    right: var(--spacing-8);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: var(--spacing-2) var(--spacing-5);
+    border-radius: 30px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    z-index: 20;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Scroll Indicator - Modern */
+.heroScrollIndicator {
+    position: absolute;
+    bottom: var(--spacing-5);
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: var(--text-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    z-index: 20;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    font-family: inherit;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.heroScrollIndicator:hover {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-3px);
+}
+
+.heroScrollIndicator:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+}
+
+.scrollIcon {
+    font-size: var(--text-2xl);
+    margin-top: var(--spacing-2);
+    animation: bounce 2s infinite;
+}
+
+/* No Images State */
+.heroSection.noImages {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.noImageContent {
+    text-align: center;
+    color: white;
+    padding: var(--spacing-10);
+    max-width: 800px;
+}
+
+.noImageIcon {
+    font-size: var(--text-5xl);
+    margin-bottom: var(--spacing-8);
+    color: rgba(255, 255, 255, 0.7);
+    animation: float 3s ease-in-out infinite;
+}
+
+.noImageTag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: var(--spacing-2) var(--spacing-6);
+    border-radius: 40px;
+    font-size: var(--text-sm);
+    letter-spacing: 1.5px;
+    margin-top: var(--spacing-5);
+    text-transform: uppercase;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Animations */
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .heroSection {
+        height: 80vh;
+        min-height: 500px;
+        max-height: 700px;
+    }
+
+    .heroTitle {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+    }
+
+    .heroSubtitle {
+        font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    }
+
+    .heroNav {
+        width: 48px;
+        height: 48px;
+        font-size: var(--text-xl);
+    }
+
+    .prevNav {
+        left: var(--spacing-5);
+    }
+
+    .nextNav {
+        right: var(--spacing-5);
+    }
+}
+
+@media (max-width: 992px) {
+    .heroSection {
+        height: 70vh;
+        min-height: 400px;
+        max-height: 600px;
+    }
+}
+
+@media (max-width: 768px) {
+    .heroSection {
+        height: 60vh;
+        min-height: 350px;
+    }
+
+    .heroTitle {
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .heroSubtitle {
+        font-size: var(--text-base);
+    }
+
+    .heroActions {
+        gap: var(--spacing-3);
+    }
+
+    .heroActionButton {
+        padding: 10px 22px;
+        font-size: 0.85rem;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .heroSection {
+        height: 50vh;
+        min-height: 300px;
+    }
+
+    .heroTag {
+        padding: var(--spacing-2) var(--spacing-5);
+        font-size: var(--text-xs);
+    }
+
+    .heroNav {
+        width: 40px;
+        height: 40px;
+        font-size: var(--text-base);
+    }
+
+    .prevNav {
+        left: var(--spacing-2);
+    }
+
+    .nextNav {
+        right: var(--spacing-2);
+    }
+
+    .imageCounter {
+        bottom: var(--spacing-5);
+        right: var(--spacing-2);
+        padding: var(--spacing-1) var(--spacing-3);
+        font-size: var(--text-xs);
+    }
+
+    .heroActionButton {
+        padding: 8px 18px;
+        font-size: 0.75rem;
+        gap: 6px;
+    }
+}

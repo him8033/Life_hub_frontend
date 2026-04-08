@@ -12,6 +12,8 @@
     margin-bottom: var(--spacing-5);
     padding-bottom: var(--spacing-4);
     border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
 }
 
 .title {
@@ -41,29 +43,11 @@
 .filtersRow {
     display: flex;
     gap: var(--spacing-2);
+    align-items: center;
 }
 
 .filterSelect {
-    padding: var(--spacing-1) var(--spacing-3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    font-size: var(--text-sm);
-    color: var(--foreground);
-    background: var(--background);
-    cursor: pointer;
     min-width: 140px;
-}
-
-.filterSelect:focus {
-    outline: none;
-    border-color: var(--ring);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
-}
-
-.filterSelect:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background: var(--muted);
 }
 
 /* Loading Skeleton */
@@ -107,6 +91,7 @@
     0% {
         background-position: -200% 0;
     }
+
     100% {
         background-position: 200% 0;
     }
@@ -148,7 +133,8 @@
 .compactImageWrapper {
     position: relative;
     width: 100%;
-    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    padding-top: 56.25%;
+    /* 16:9 Aspect Ratio */
     overflow: hidden;
     background: var(--muted);
 }
@@ -205,30 +191,8 @@
 }
 
 .viewButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-1);
     margin-top: auto;
-    padding: var(--spacing-1) var(--spacing-3);
-    background: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--foreground);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.viewButton:hover {
-    background: var(--accent);
-    border-color: var(--muted-foreground);
-    color: var(--foreground);
-}
-
-.viewButton svg {
-    font-size: var(--text-xs);
+    width: 100%;
 }
 
 /* Empty State */
@@ -250,7 +214,7 @@
 .emptyState p {
     color: var(--muted-foreground);
     font-size: var(--text-sm);
-    margin: 0;
+    margin: 0 0 var(--spacing-3) 0;
 }
 
 /* Error State */
@@ -268,24 +232,6 @@
     margin-bottom: var(--spacing-3);
 }
 
-.retryButton {
-    padding: var(--spacing-1) var(--spacing-4);
-    background: var(--destructive);
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.retryButton:hover {
-    background: var(--destructive);
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
 /* Load More Container */
 .loadMoreContainer {
     text-align: center;
@@ -294,64 +240,39 @@
     border-top: 1px solid var(--border);
 }
 
-.loadMoreButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-2);
-    padding: var(--spacing-2) var(--spacing-6);
-    background: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--foreground);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-width: 150px;
-}
-
-.loadMoreButton:hover:not(:disabled) {
-    background: var(--accent);
-    border-color: var(--muted-foreground);
-    color: var(--foreground);
-    transform: translateY(-1px);
-}
-
-.loadMoreButton:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Spinner for Load More */
-.spinner {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
+/* Responsive */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
     }
-    to {
-        transform: rotate(360deg);
+
+    .filtersRow {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .filterSelect {
+        flex: 1;
+        min-width: auto;
     }
 }
 
-/* Reset Button in Empty State */
-.resetButton {
-    margin-top: var(--spacing-3);
-    padding: var(--spacing-1) var(--spacing-4);
-    background: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--foreground);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+@media (max-width: 480px) {
+    .filtersRow {
+        flex-direction: column;
+        width: 100%;
+    }
 
-.resetButton:hover {
-    background: var(--accent);
-    border-color: var(--muted-foreground);
+    .filterSelect {
+        width: 100%;
+    }
+
+    .compactTitle {
+        font-size: var(--text-sm);
+    }
+
+    .metaItem {
+        font-size: var(--text-xs);
+    }
 }

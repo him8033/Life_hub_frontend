@@ -1,77 +1,148 @@
-/* Enhanced Popup Styles */
+/* PopupMenu.module.css */
+
 .popupMenu {
     position: absolute;
-    top: calc(100% + 10px);
-    right: 20px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    top: calc(100% + var(--spacing-2));
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg-value);
     min-width: 280px;
     z-index: 1000;
-    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-15px) scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+/* Position Variants */
+.popupMenuRight {
+    right: var(--spacing-4);
 }
 
+.popupMenuLeft {
+    left: var(--spacing-4);
+}
+
+.popupMenuCenter {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Arrow for desktop */
 .popupMenu::before {
     content: '';
     position: absolute;
     top: -8px;
-    right: 20px;
     width: 16px;
     height: 16px;
-    background: white;
+    background: var(--card);
     transform: rotate(45deg);
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    border-left: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
 }
 
-/* Responsive Design */
-@media (max-width: 640px) {
+.popupMenuRight::before {
+    right: 20px;
+}
+
+.popupMenuLeft::before {
+    left: 20px;
+}
+
+.popupMenuCenter::before {
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+/* Animations */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive - Mobile Bottom Sheet */
+@media (max-width: 768px) {
     .popupMenu {
         position: fixed;
         top: auto;
         bottom: 0;
-        right: 0;
         left: 0;
-        border-radius: 16px 16px 0 0;
+        right: 0;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
         min-width: auto;
         animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        max-height: 80vh;
+        overflow-y: auto;
     }
 
     .popupMenu::before {
         display: none;
     }
 
-    @keyframes slideUp {
+    /* Remove specific positioning on mobile */
+    .popupMenuRight,
+    .popupMenuLeft,
+    .popupMenuCenter {
+        left: 0;
+        right: 0;
+        transform: none;
+    }
+}
+
+/* Scrollbar styling for mobile */
+@media (max-width: 768px) {
+    .popupMenu::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .popupMenu::-webkit-scrollbar-track {
+        background: var(--muted);
+    }
+
+    .popupMenu::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: var(--radius-full);
+    }
+}
+
+/* Optional: Add backdrop on mobile */
+@media (max-width: 768px) {
+    .popupMenuBackdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
         from {
             opacity: 0;
-            transform: translateY(100%);
         }
 
         to {
             opacity: 1;
-            transform: translateY(0);
         }
-    }
-
-    .userInfoSection {
-        padding: 1.5rem 1rem;
-    }
-
-    .popupLink {
-        padding: 1rem 1.5rem;
     }
 }

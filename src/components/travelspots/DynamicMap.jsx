@@ -1,11 +1,11 @@
-// src/components/travelspots/DynamicMap.jsx (FIXED VERSION)
+// src/components/travelspots/DynamicMap.jsx
 'use client';
 
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import styles from '@/styles/travelspots/TravelSpotMap.module.css';
+import styles from '@/styles/travelspots/DynamicMap.module.css';
 
 // Fix for default marker icons in Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -82,7 +82,7 @@ const DynamicMap = ({
                 </MapContainer>
             </div>
 
-            {/* Buttons moved OUTSIDE the map container */}
+            {/* Buttons */}
             <div className={styles.mapControls}>
                 <button
                     className={styles.mapControlButton}

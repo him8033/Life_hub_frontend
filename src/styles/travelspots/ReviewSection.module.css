@@ -1,0 +1,223 @@
+/* ReviewSection.module.css */
+
+.reviewsTab {
+    animation: fadeIn 0.3s ease;
+}
+
+.reviewsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-6);
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+}
+
+.reviewsHeader h3 {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.averageRating {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    background: var(--warning);
+    color: var(--warning-foreground);
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: var(--radius-2xl);
+    font-size: var(--text-sm);
+    font-weight: 600;
+}
+
+.averageRating svg {
+    color: #f59e0b;
+}
+
+/* Write Review */
+.writeReview {
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+}
+
+.writeReviewTitle {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: var(--spacing-4);
+}
+
+.ratingInput {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
+}
+
+.ratingLabel {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.stars {
+    display: flex;
+    gap: var(--spacing-1);
+}
+
+.starButton {
+    background: none;
+    border: none;
+    color: #d1d5db;
+    cursor: pointer;
+    font-size: var(--text-xl);
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.starButton:hover {
+    color: #f59e0b;
+    transform: scale(1.1);
+}
+
+.reviewNameInput {
+    margin-bottom: var(--spacing-4);
+}
+
+.reviewTextarea {
+    margin-bottom: var(--spacing-4);
+}
+
+/* Reviews List */
+.reviewsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-5);
+}
+
+.reviewCard {
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    transition: all 0.3s ease;
+}
+
+.reviewCard:hover {
+    background: var(--card);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+}
+
+.reviewHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-4);
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+}
+
+.reviewAuthor {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+}
+
+.authorAvatar {
+    width: 50px;
+    height: 50px;
+    background: var(--brand-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--text-xl);
+    font-weight: 600;
+}
+
+.authorInfo {
+    flex: 1;
+}
+
+.authorName {
+    font-weight: 700;
+    color: var(--foreground);
+    font-size: var(--text-base);
+    margin-bottom: var(--spacing-1);
+}
+
+.reviewDate {
+    color: var(--muted-foreground);
+    font-size: var(--text-xs);
+}
+
+.reviewRating {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    color: #f59e0b;
+    font-size: var(--text-base);
+}
+
+.emptyStar {
+    color: var(--border);
+}
+
+.ratingValue {
+    margin-left: var(--spacing-2);
+    color: var(--muted-foreground);
+    font-weight: 600;
+    font-size: var(--text-sm);
+}
+
+.reviewComment {
+    color: var(--muted-foreground);
+    line-height: 1.6;
+    font-size: var(--text-base);
+    margin: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .reviewsHeader {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .writeReview {
+        padding: var(--spacing-4);
+    }
+
+    .reviewCard {
+        padding: var(--spacing-4);
+    }
+
+    .reviewHeader {
+        flex-direction: column;
+    }
+
+    .authorAvatar {
+        width: 40px;
+        height: 40px;
+        font-size: var(--text-base);
+    }
+}

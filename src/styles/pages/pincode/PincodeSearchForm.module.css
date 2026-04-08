@@ -1,0 +1,66 @@
+/* PincodeSearchForm.module.css */
+
+.form {
+    width: 100%;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-6);
+}
+
+/* Direct form - for pincode direct search */
+.directForm {
+    width: 100%;
+}
+
+.directFormGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-6);
+    max-width: 400px;
+}
+
+.formActions {
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-3);
+    }
+
+    .directFormGrid {
+        max-width: 100%;
+    }
+
+    .formActions {
+        flex-direction: column-reverse;
+    }
+
+    .formActions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .formGrid {
+        gap: var(--spacing-2);
+    }
+
+    .directFormGrid {
+        gap: var(--spacing-2);
+    }
+
+    .formActions {
+        margin-top: var(--spacing-3);
+        padding-top: var(--spacing-3);
+    }
+}

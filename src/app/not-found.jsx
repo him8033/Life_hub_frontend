@@ -14,7 +14,7 @@ export default function NotFound() {
             showBackButton={true}
             showHomeButton={true}
             show404={true}
-            background="gradient"
+            background="custom"
         />
     );
 }
