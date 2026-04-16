@@ -177,7 +177,7 @@ export default function NearbySpotsTab({ slug }) {
             {/* Loading State for Initial Load */}
             {isLoadingInitial && (
                 <div className={styles.loadingGrid}>
-                    {[1, 2, 3].map((i) => (
+                    {[1, 2, 3, 4].map((i) => (
                         <div key={`skeleton_${i}`} className={styles.skeletonCard}>
                             <div className={styles.skeletonImage}></div>
                             <div className={styles.skeletonText}></div>

@@ -110,12 +110,12 @@
     padding: var(--spacing-5);
     background: var(--muted);
     border-radius: var(--radius-lg);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .detailCard:hover {
     background: var(--accent);
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 }
 
 .detailIcon {
@@ -172,7 +172,7 @@
     font-size: var(--text-sm);
     font-weight: 600;
     border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .categoryTag:hover {
@@ -220,7 +220,7 @@
     padding: var(--spacing-5);
     background: var(--muted);
     border-radius: var(--radius-lg);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .locationItem:hover {
@@ -333,11 +333,11 @@
     background: var(--muted);
     border-radius: var(--radius-md);
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .quickInfoCard:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     background: var(--accent);
 }
 
@@ -363,7 +363,7 @@
 }
 
 /* ============================================
-   TABS SECTION - Simplified
+   TABS SECTION - Modern Design with Equal Width
    ============================================ */
 
 .tabsSection {
@@ -376,36 +376,109 @@
 
 .tabsHeader {
     display: flex;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4);
     background: var(--muted);
-    border-bottom: 2px solid var(--border);
-    padding: 0 var(--spacing-8);
+    border-bottom: 1px solid var(--border);
 }
 
 .tabBtn {
-    padding: var(--spacing-5) var(--spacing-8);
-    background: none;
+    flex: 1;
+    padding: var(--spacing-4) var(--spacing-6);
+    background: transparent;
     border: none;
+    border-radius: var(--radius-lg);
     font-size: var(--text-base);
     font-weight: 600;
     color: var(--muted-foreground);
     cursor: pointer;
-    position: relative;
-    transition: all 0.3s ease;
-    border-bottom: 3px solid transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
+    justify-content: center;
+    gap: var(--spacing-3);
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover effect with gradient background */
+.tabBtn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--brand-gradient);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 0;
+}
+
+.tabBtn:hover::before {
+    opacity: 0.08;
 }
 
 .tabBtn:hover {
     color: var(--primary);
-    background: color-mix(in srgb, var(--primary) 5%, transparent);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
+/* Icon styling */
+.tabBtn svg {
+    font-size: var(--text-lg);
+    transition: color 0.2s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.tabBtn span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Active tab styling */
 .activeTab {
-    color: var(--primary);
-    border-bottom-color: var(--primary);
-    background: var(--card);
+    background: var(--brand-gradient);
+    color: white;
+    box-shadow: var(--shadow-md), 0 4px 12px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+.activeTab::before {
+    display: none;
+}
+
+.activeTab svg {
+    color: white;
+}
+
+.activeTab:hover {
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md), 0 4px 12px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+/* Ripple effect on click */
+.tabBtn:active {
+    transform: translateY(0);
+}
+
+/* Tab indicator line */
+.activeTab {
+    position: relative;
+}
+
+.activeTab::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 20%;
+    right: 20%;
+    height: 3px;
+    background: white;
+    border-radius: var(--radius-full);
 }
 
 .tabContent {
@@ -415,23 +488,20 @@
 
 /* Nearby Tab Container */
 .nearbyTab {
-    animation: fadeIn 0.3s ease;
+    /* No animation needed */
 }
 
 /* ============================================
-   ANIMATIONS
+   FOCUS STATES - Accessibility
    ============================================ */
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
+.tabBtn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.activeTab:focus-visible {
+    outline-color: white;
 }
 
 /* ============================================
@@ -449,11 +519,11 @@
     }
 
     .tabsHeader {
-        padding: 0 var(--spacing-5);
+        padding: var(--spacing-3);
     }
 
     .tabBtn {
-        padding: var(--spacing-4) var(--spacing-6);
+        padding: var(--spacing-3) var(--spacing-5);
         font-size: var(--text-sm);
     }
 
@@ -473,6 +543,7 @@
     }
 }
 
+/* Mobile - Keep map header in same line */
 @media (max-width: 768px) {
     .contentWrapper {
         padding: 0 var(--spacing-4);
@@ -484,19 +555,67 @@
         gap: var(--spacing-4);
     }
 
+    /* Keep map header in same line */
+    .mapHeader {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    .mapTitle {
+        font-size: var(--text-lg);
+        flex-shrink: 0;
+    }
+
+    .mapHeader .button,
+    .mapHeader button {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
     .tabsHeader {
-        flex-direction: column;
-        padding: 0;
+        flex-direction: row;
+        padding: var(--spacing-3);
+        gap: var(--spacing-2);
+        overflow-x: visible;
     }
 
     .tabBtn {
-        width: 100%;
-        justify-content: center;
-        border-bottom: 1px solid var(--border);
+        flex: 1;
+        min-width: 0;
+        padding: var(--spacing-3) var(--spacing-2);
+        font-size: var(--text-sm);
+        white-space: nowrap;
     }
 
-    .activeTab {
-        border-bottom-color: var(--primary);
+    .tabBtn svg {
+        font-size: var(--text-base);
+    }
+
+    .activeTab::after {
+        bottom: -3px;
+    }
+}
+
+@media (max-width: 640px) {
+    .mapTitle {
+        font-size: var(--text-base);
+    }
+
+    .mapHeader .button,
+    .mapHeader button {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: var(--text-xs);
+    }
+
+    .tabBtn {
+        padding: var(--spacing-2) var(--spacing-2);
+        font-size: var(--text-xs);
+        gap: var(--spacing-1);
+    }
+
+    .tabBtn svg {
+        font-size: var(--text-sm);
     }
 }
 
@@ -510,9 +629,21 @@
         padding: var(--spacing-5);
     }
 
+    /* Keep map header in same line */
     .mapHeader {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    .mapTitle {
+        font-size: var(--text-lg);
+    }
+
+    .mapHeader .button,
+    .mapHeader button {
+        padding: var(--spacing-1) var(--spacing-2);
+        font-size: 11px;
     }
 
     .quickInfoGrid {
@@ -520,8 +651,66 @@
         gap: var(--spacing-3);
     }
 
+    .tabsHeader {
+        padding: var(--spacing-2);
+        gap: var(--spacing-1);
+    }
+
+    .tabBtn {
+        padding: var(--spacing-2) var(--spacing-2);
+    }
+
     .tabContent {
         padding: var(--spacing-4);
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    .mapHeader {
+        gap: var(--spacing-2);
+    }
+
+    .mapTitle {
+        font-size: var(--text-lg);
+    }
+
+    .mapHeader .button,
+    .mapHeader button {
+        padding: var(--spacing-1) var(--spacing-2);
+        font-size: 10px;
+    }
+
+    .mapHeader .button svg,
+    .mapHeader button svg {
+        font-size: var(--text-xs);
+    }
+
+    .tabBtn span {
+        display: none;
+    }
+
+    .tabBtn {
+        padding: var(--spacing-3) var(--spacing-2);
+    }
+
+    .tabBtn svg {
+        font-size: var(--text-lg);
+        margin: 0;
+    }
+}
+
+/* For extremely small screens */
+@media (max-width: 360px) {
+    .mapTitle {
+        font-size: 11px;
+    }
+
+    .mapHeader .button,
+    .mapHeader button {
+        padding: var(--spacing-1) var(--spacing-1);
+        font-size: 9px;
+        gap: var(--spacing-1);
     }
 }
 

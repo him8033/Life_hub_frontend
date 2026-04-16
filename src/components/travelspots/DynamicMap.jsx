@@ -107,7 +107,7 @@ const DynamicMap = ({
                     Open in OSM
                 </button>
                 <div className={styles.mapCredits}>
-                    © OpenStreetMap contributors
+                    © OpenStreetMap contributors by Lifehub
                 </div>
             </div>
         </div>

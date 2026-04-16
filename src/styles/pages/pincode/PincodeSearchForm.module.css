@@ -28,6 +28,15 @@
     margin-top: var(--spacing-4);
     padding-top: var(--spacing-4);
     border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-3);
+}
+
+/* Override ButtonGroup styles to keep buttons inline */
+.formActions button {
+    flex: 0 0 auto;
+    min-width: 120px;
 }
 
 /* Responsive */
@@ -42,11 +51,15 @@
     }
 
     .formActions {
-        flex-direction: column-reverse;
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: var(--spacing-3);
     }
 
     .formActions button {
-        width: 100%;
+        width: auto;
+        min-width: 100px;
+        flex: 0 0 auto;
     }
 }
 
@@ -62,5 +75,21 @@
     .formActions {
         margin-top: var(--spacing-3);
         padding-top: var(--spacing-3);
+        flex-direction: row;
+        justify-content: space-between;
+        gap: var(--spacing-2);
+    }
+
+    .formActions button {
+        flex: 1;
+        min-width: 0;
+        width: 50%;
+    }
+}
+
+@media (max-width: 480px) {
+    .formActions button {
+        font-size: var(--text-xs);
+        padding: var(--spacing-2) var(--spacing-3);
     }
 }

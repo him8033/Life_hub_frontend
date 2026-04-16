@@ -380,22 +380,23 @@ export default function PublicTravelSpotsPage() {
                 </div>
 
                 {/* Category Filter */}
-                <div className={styles.categoryFilter}>
-                    <SimpleSelect
-                        name="category"
-                        value={filters.category}
-                        onChange={handleSimpleSelectChange((value) => handleFilterChange('category', value))}
-                        options={categoryOptions}
-                        disabled={isLoadingCategories}
-                        placeholder="All Categories"
-                        size="md"
-                        emptyOption={true}
-                        emptyOptionLabel="All Categories"
-                    />
-                </div>
+
 
                 {/* Sort and Filters */}
                 <div className={styles.controlsContainer}>
+                    <div className={styles.categoryFilter}>
+                        <SimpleSelect
+                            name="category"
+                            value={filters.category}
+                            onChange={handleSimpleSelectChange((value) => handleFilterChange('category', value))}
+                            options={categoryOptions}
+                            disabled={isLoadingCategories}
+                            placeholder="All Categories"
+                            size="md"
+                            emptyOption={true}
+                            emptyOptionLabel="All Categories"
+                        />
+                    </div>
                     <div className={styles.sortContainer}>
                         <SimpleSelect
                             name="sort"

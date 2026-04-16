@@ -36,21 +36,31 @@
 }
 
 /* Join search input and button */
-.searchBox>div:first-child {
+.searchBox > div:first-child {
     flex: 1;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-.searchBox>div:first-child input {
+.searchBox > div:first-child input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
+/* Search button with outline matching input border */
 .searchBox button {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     white-space: nowrap;
+    background: var(--primary) !important;
+    /* border: 2px solid var(--border) !important; */
+    color: var(--foreground) !important;
+}
+
+.searchBox button:hover {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: white !important;
 }
 
 /* Category Filter */
@@ -91,6 +101,25 @@
 .filterButtonWrapper {
     position: relative;
     display: inline-flex;
+}
+
+/* Ensure consistent sizing for all controls */
+.categoryFilter :global(.selectWrapper),
+.sortContainer :global(.selectWrapper),
+.filterButtonWrapper button {
+    min-height: 40px;
+}
+
+/* Make filter button same size as selects */
+.filterButtonWrapper button {
+    min-width: 100px;
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.filterButtonWrapper button:hover {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
 }
 
 /* Main Content */
@@ -183,44 +212,86 @@
     backdrop-filter: blur(2px);
 }
 
-/* Responsive */
+/* Mobile Responsive - Exactly 2 rows */
 @media (max-width: 767px) {
     .topBar {
         grid-template-columns: 1fr;
-        gap: var(--spacing-4);
+        gap: var(--spacing-3);
+        padding: var(--spacing-3);
     }
 
+    /* Row 1: Search bar and button in one line */
     .searchBox {
-        flex-direction: column;
-        gap: var(--spacing-2);
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+        width: 100%;
     }
 
-    /* On mobile, reset border radius for joined style */
-    .searchBox>div:first-child {
-        border-top-right-radius: var(--radius-md);
-        border-bottom-right-radius: var(--radius-md);
+    .searchBox > div:first-child {
+        flex: 1;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
-    .searchBox>div:first-child input {
-        border-top-right-radius: var(--radius-md);
-        border-bottom-right-radius: var(--radius-md);
+    .searchBox > div:first-child input {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
     .searchBox button {
-        border-top-left-radius: var(--radius-md);
-        border-bottom-left-radius: var(--radius-md);
-        width: 100%;
+        width: auto;
+        min-width: 80px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
 
-    .categoryFilter,
-    .sortContainer {
-        width: 100%;
+    /* Row 2: Category Filter, Sort, and Filter Button in one line */
+    .categoryFilter {
+        width: auto;
+        flex: 1;
+        min-width: 0;
     }
 
     .controlsContainer {
+        display: flex;
+        flex-direction: row;
+        gap: var(--spacing-2);
         width: 100%;
-        justify-content: space-between;
-        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .sortContainer {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .filterButtonWrapper {
+        flex-shrink: 0;
+    }
+
+    /* Make all three elements share the row equally */
+    .categoryFilter,
+    .sortContainer {
+        flex: 1;
+    }
+
+    /* Ensure consistent height for all controls on mobile */
+    .categoryFilter :global(.selectWrapper),
+    .sortContainer :global(.selectWrapper),
+    .filterButtonWrapper button {
+        min-height: 38px;
+    }
+
+    .filterButtonWrapper button {
+        min-width: 80px;
+        font-size: var(--text-sm);
+    }
+
+    /* Adjust select components to be full width */
+    .categoryFilter :global(.selectWrapper),
+    .sortContainer :global(.selectWrapper) {
+        width: 100%;
     }
 
     .spotsGrid {
@@ -242,6 +313,50 @@
         flex-direction: column;
         gap: var(--spacing-2);
         align-items: flex-start;
+    }
+}
+
+/* For very small screens (below 480px) */
+@media (max-width: 480px) {
+    .controlsContainer {
+        gap: var(--spacing-1);
+    }
+
+    .searchBox button {
+        min-width: 70px;
+        font-size: var(--text-xs);
+    }
+
+    .categoryFilter :global(.selectTrigger),
+    .sortContainer :global(.selectTrigger),
+    .filterButtonWrapper button {
+        font-size: var(--text-xs);
+        padding: var(--spacing-1) var(--spacing-2);
+    }
+
+    .categoryFilter :global(.selectWrapper),
+    .sortContainer :global(.selectWrapper),
+    .filterButtonWrapper button {
+        min-height: 34px;
+    }
+
+    .filterButtonWrapper button {
+        min-width: 70px;
+    }
+}
+
+/* For screens between 481px and 767px */
+@media (min-width: 481px) and (max-width: 767px) {
+    .searchBox button {
+        min-width: 90px;
+    }
+
+    .controlsContainer {
+        gap: var(--spacing-3);
+    }
+
+    .filterButtonWrapper button {
+        min-width: 90px;
     }
 }
 

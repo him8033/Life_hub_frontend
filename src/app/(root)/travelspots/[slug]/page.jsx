@@ -363,7 +363,7 @@ export default function PublicTravelSpotViewPage() {
 
                 {/* Tabs Section */}
                 <section className={styles.tabsSection}>
-                    <div className={styles.tabsHeader}>
+                    {/* <div className={styles.tabsHeader}>
                         <button
                             className={`${styles.tabBtn} ${activeTab === 'photos' ? styles.activeTab : ''}`}
                             onClick={() => setActiveTab('photos')}
@@ -382,6 +382,38 @@ export default function PublicTravelSpotViewPage() {
                         >
                             <FaMap /> Nearby Spots
                         </button>
+                    </div> */}
+                    <div className={styles.tabsHeader}>
+                        <Button
+                            variant={activeTab === 'photos' ? 'primary' : 'ghost'}
+                            size="md"
+                            onClick={() => setActiveTab('photos')}
+                            icon={<FaCamera />}
+                            iconPosition="left"
+                            className={`${styles.tabBtn} ${activeTab === 'photos' ? styles.activeTab : ''}`}
+                        >
+                            Gallery
+                        </Button>
+                        {/* <Button
+                            variant={activeTab === 'reviews' ? 'primary' : 'ghost'}
+                            size="md"
+                            onClick={() => setActiveTab('reviews')}
+                            icon={<FaComment />}
+                            iconPosition="left"
+                            className={`${styles.tabBtn} ${activeTab === 'reviews' ? styles.activeTab : ''}`}
+                        >
+                            Reviews
+                        </Button> */}
+                        <Button
+                            variant={activeTab === 'nearby' ? 'primary' : 'ghost'}
+                            size="md"
+                            onClick={() => setActiveTab('nearby')}
+                            icon={<FaMap />}
+                            iconPosition="left"
+                            className={`${styles.tabBtn} ${activeTab === 'nearby' ? styles.activeTab : ''}`}
+                        >
+                            Nearby Spots
+                        </Button>
                     </div>
 
                     <div className={styles.tabContent}>

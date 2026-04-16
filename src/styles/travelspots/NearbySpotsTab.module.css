@@ -40,14 +40,24 @@
     margin-left: var(--spacing-2);
 }
 
+/* Filters Row - Equal width selects */
 .filtersRow {
     display: flex;
-    gap: var(--spacing-2);
+    gap: var(--spacing-3);
     align-items: center;
+    flex: 1;
+    max-width: 320px;
 }
 
 .filterSelect {
-    min-width: 140px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Make selects take equal width */
+.filterSelect:first-child,
+.filterSelect:last-child {
+    flex: 1;
 }
 
 /* Loading Skeleton */
@@ -240,32 +250,43 @@
     border-top: 1px solid var(--border);
 }
 
-/* Responsive */
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet and below - stack header vertically */
 @media (max-width: 768px) {
     .header {
         flex-direction: column;
         align-items: flex-start;
+        gap: var(--spacing-4);
+    }
+
+    .title {
+        width: 100%;
     }
 
     .filtersRow {
         width: 100%;
-        flex-wrap: wrap;
+        max-width: 100%;
+        gap: var(--spacing-3);
     }
 
     .filterSelect {
         flex: 1;
-        min-width: auto;
+        min-width: 0;
     }
 }
 
-@media (max-width: 480px) {
+/* Mobile - keep selects in one line with equal width */
+@media (max-width: 640px) {
     .filtersRow {
-        flex-direction: column;
-        width: 100%;
+        flex-direction: row;
+        gap: var(--spacing-2);
     }
 
     .filterSelect {
-        width: 100%;
+        flex: 1;
     }
 
     .compactTitle {
@@ -274,5 +295,37 @@
 
     .metaItem {
         font-size: var(--text-xs);
+    }
+}
+
+/* Small Mobile - keep equal width, adjust font size */
+@media (max-width: 480px) {
+    .filtersRow {
+        flex-direction: row;
+        gap: var(--spacing-2);
+    }
+
+    .filterSelect {
+        flex: 1;
+    }
+
+    /* Ensure select text doesn't overflow */
+    .filterSelect select {
+        font-size: var(--text-xs);
+        padding-left: var(--spacing-2);
+        padding-right: var(--spacing-2);
+    }
+}
+
+/* Extra Small Mobile - still keep side by side */
+@media (max-width: 360px) {
+    .filtersRow {
+        gap: var(--spacing-1);
+    }
+
+    .filterSelect select {
+        font-size: 11px;
+        padding-left: var(--spacing-1);
+        padding-right: var(--spacing-1);
     }
 }

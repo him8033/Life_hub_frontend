@@ -26,19 +26,75 @@
     align-items: center;
     justify-content: center;
     height: 400px;
-    background: linear-gradient(135deg, var(--muted) 0%, color-mix(in srgb, var(--muted) 90%, var(--primary)) 100%);
+    background: linear-gradient(135deg, var(--muted) 0%, color-mix(in srgb, var(--muted) 95%, var(--primary)) 100%);
     border-radius: var(--radius-lg);
     border: 2px dashed var(--border);
-    gap: var(--spacing-4);
+    gap: var(--spacing-5);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle pulse animation on loading background */
+.mapLoading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, color-mix(in srgb, var(--primary) 5%, transparent) 0%, transparent 70%);
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 .spinner {
-    width: 48px;
-    height: 48px;
-    border: 3px solid color-mix(in srgb, var(--primary) 10%, transparent);
+    width: 56px;
+    height: 56px;
+    border: 3px solid color-mix(in srgb, var(--primary) 15%, transparent);
     border-top-color: var(--primary);
+    border-right-color: var(--primary);
     border-radius: 50%;
-    animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* Inner spinner ring for better visual */
+.spinner::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border: 2px solid color-mix(in srgb, var(--primary) 20%, transparent);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spinReverse 1.2s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinReverse {
+    to {
+        transform: rotate(-360deg);
+    }
 }
 
 .mapLoading p {
@@ -46,12 +102,13 @@
     color: var(--muted-foreground);
     font-weight: 500;
     margin: 0;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+    position: relative;
+    z-index: 1;
+    background: var(--card);
+    padding: var(--spacing-2) var(--spacing-5);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
 }
 
 /* Placeholder State */
@@ -61,32 +118,82 @@
     align-items: center;
     justify-content: center;
     height: 400px;
-    background: linear-gradient(135deg, var(--muted) 0%, color-mix(in srgb, var(--muted) 90%, var(--primary)) 100%);
+    background: linear-gradient(145deg, var(--muted) 0%, color-mix(in srgb, var(--muted) 92%, var(--primary)) 100%);
     border-radius: var(--radius-lg);
-    border: 2px dashed var(--border);
+    border: 2px dashed color-mix(in srgb, var(--primary) 30%, var(--border));
     padding: var(--spacing-10) var(--spacing-8);
     text-align: center;
-    gap: var(--spacing-4);
+    gap: var(--spacing-5);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative background pattern */
+.mapPlaceholder::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--primary) 3%, transparent) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .placeholderIcon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 64px;
-    height: 64px;
-    background: var(--card);
+    width: 80px;
+    height: 80px;
+    background: var(--brand-gradient);
     border-radius: 50%;
-    box-shadow: var(--shadow-md);
-    color: var(--muted-foreground);
+    box-shadow: var(--shadow-lg), 0 8px 24px color-mix(in srgb, var(--primary) 30%, transparent);
+    color: white;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.placeholderIcon:hover {
+    transform: scale(1.05);
+}
+
+/* Pulsing ring effect */
+.placeholderIcon::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, var(--primary) 50%, transparent);
+    animation: ringPulse 2s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
 }
 
 .mapPlaceholder h3 {
     margin: 0;
     color: var(--foreground);
-    font-size: var(--text-xl);
-    font-weight: 600;
+    font-size: var(--text-2xl);
+    font-weight: 700;
     line-height: 1.3;
+    position: relative;
+    z-index: 1;
 }
 
 .mapPlaceholder p {
@@ -94,58 +201,169 @@
     color: var(--muted-foreground);
     font-size: var(--text-sm);
     max-width: 400px;
-    line-height: 1.5;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
 }
 
 .addressInfo {
     background: var(--card);
-    padding: var(--spacing-4) var(--spacing-5);
-    border-radius: var(--radius-lg);
+    padding: var(--spacing-4) var(--spacing-6);
+    border-radius: var(--radius-xl);
     margin: var(--spacing-2) 0;
     border: 1px solid var(--border);
     font-size: var(--text-sm);
     text-align: left;
     max-width: 400px;
     width: 100%;
-    box-shadow: var(--shadow-sm);
-    line-height: 1.5;
+    box-shadow: var(--shadow-md);
+    line-height: 1.6;
     color: var(--foreground);
+    position: relative;
+    z-index: 1;
+    transition: all 0.2s ease;
+}
+
+.addressInfo:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
+    transform: translateY(-2px);
 }
 
 .addressInfo strong {
-    color: var(--foreground);
+    color: var(--primary);
     margin-right: var(--spacing-2);
     font-weight: 600;
 }
 
+/* Multiple address info cards */
+.addressInfo+.addressInfo {
+    margin-top: 0;
+}
+
 /* Dark Mode */
 .dark .mapPlaceholder {
-    background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-900) 100%);
-}
-
-.dark .placeholderIcon {
-    background: var(--gray-700);
-}
-
-.dark .addressInfo {
-    background: var(--gray-800);
+    background: linear-gradient(145deg, var(--gray-800) 0%, var(--gray-900) 100%);
     border-color: var(--gray-700);
 }
 
+.dark .placeholderIcon {
+    background: var(--brand-gradient);
+    box-shadow: var(--shadow-lg), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.dark .addressInfo {
+    background: var(--gray-850);
+    border-color: var(--gray-700);
+}
+
+.dark .mapLoading {
+    background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-900) 100%);
+    border-color: var(--gray-700);
+}
+
+.dark .mapLoading p {
+    background: var(--gray-850);
+    border-color: var(--gray-700);
+    color: var(--gray-200);
+}
+
 /* Responsive Design */
+@media (max-width: 992px) {
+    .mapContainer {
+        min-height: 380px;
+    }
+
+    .mapLoading,
+    .mapPlaceholder {
+        height: 380px;
+    }
+}
+
 @media (max-width: 768px) {
+    .mapContainer {
+        min-height: 350px;
+    }
+
+    .mapLoading,
+    .mapPlaceholder {
+        height: 350px;
+        padding: var(--spacing-8) var(--spacing-6);
+    }
+
+    .placeholderIcon {
+        width: 70px;
+        height: 70px;
+    }
+
+    .placeholderIcon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .mapPlaceholder h3 {
+        font-size: var(--text-xl);
+    }
+
     .leafletMap :global(.leaflet-container) {
         border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+    .mapContainer {
+        min-height: 320px;
+    }
+
+    .mapLoading,
     .mapPlaceholder {
-        padding: var(--spacing-8) var(--spacing-6);
+        height: 320px;
+        padding: var(--spacing-6) var(--spacing-5);
+    }
+
+    .placeholderIcon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .placeholderIcon svg {
+        width: 28px;
+        height: 28px;
     }
 
     .mapPlaceholder h3 {
         font-size: var(--text-lg);
+    }
+
+    .addressInfo {
+        padding: var(--spacing-3) var(--spacing-5);
+    }
+}
+
+@media (max-width: 480px) {
+    .mapContainer {
+        min-height: 300px;
+    }
+
+    .mapLoading,
+    .mapPlaceholder {
+        height: 300px;
+        padding: var(--spacing-5) var(--spacing-4);
+        gap: var(--spacing-4);
+    }
+
+    .placeholderIcon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .placeholderIcon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .mapPlaceholder h3 {
+        font-size: var(--text-base);
     }
 
     .mapPlaceholder p {
@@ -155,5 +373,74 @@
     .addressInfo {
         padding: var(--spacing-3) var(--spacing-4);
         font-size: var(--text-xs);
+    }
+
+    .spinner {
+        width: 48px;
+        height: 48px;
+    }
+
+    .mapLoading p {
+        font-size: var(--text-sm);
+        padding: var(--spacing-1) var(--spacing-4);
+    }
+}
+
+@media (max-width: 360px) {
+    .mapContainer {
+        min-height: 280px;
+    }
+
+    .mapLoading,
+    .mapPlaceholder {
+        height: 280px;
+        padding: var(--spacing-4) var(--spacing-3);
+    }
+
+    .placeholderIcon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .placeholderIcon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .mapPlaceholder h3 {
+        font-size: var(--text-sm);
+    }
+
+    .addressInfo {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: 11px;
+    }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .spinner,
+    .spinner::after,
+    .mapLoading::before,
+    .placeholderIcon::before {
+        animation: none;
+    }
+
+    .placeholderIcon:hover {
+        transform: none;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (forced-colors: active) {
+    .placeholderIcon {
+        forced-color-adjust: none;
+        background: CanvasText;
+        color: Canvas;
+    }
+
+    .addressInfo {
+        border: 1px solid CanvasText;
     }
 }
