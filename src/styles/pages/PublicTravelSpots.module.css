@@ -36,13 +36,13 @@
 }
 
 /* Join search input and button */
-.searchBox > div:first-child {
+.searchBox>div:first-child {
     flex: 1;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-.searchBox > div:first-child input {
+.searchBox>div:first-child input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
@@ -228,13 +228,13 @@
         width: 100%;
     }
 
-    .searchBox > div:first-child {
+    .searchBox>div:first-child {
         flex: 1;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
 
-    .searchBox > div:first-child input {
+    .searchBox>div:first-child input {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
@@ -372,4 +372,101 @@
         grid-template-columns: repeat(3, 1fr);
         gap: var(--spacing-6);
     }
+}
+
+/* Shimmer/Skeleton Loading Styles */
+.shimmerCard {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.shimmerImage {
+    width: 100%;
+    padding-top: 56.25%;
+    /* 16:9 aspect ratio */
+    background: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.shimmerContent {
+    padding: var(--spacing-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    flex: 1;
+}
+
+.shimmerTitle {
+    height: 20px;
+    width: 80%;
+    background: var(--muted);
+    border-radius: var(--radius-sm);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+.shimmerText {
+    height: 14px;
+    width: 100%;
+    background: var(--muted);
+    border-radius: var(--radius-sm);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+.shimmerText:last-of-type {
+    width: 60%;
+}
+
+.shimmerButton {
+    height: 36px;
+    width: 100%;
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    margin-top: var(--spacing-2);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Dark mode shimmer adjustments */
+.dark .shimmerImage,
+.dark .shimmerTitle,
+.dark .shimmerText,
+.dark .shimmerButton {
+    background-image: linear-gradient(90deg,
+            var(--gray-800) 25%,
+            var(--gray-700) 50%,
+            var(--gray-800) 75%);
 }

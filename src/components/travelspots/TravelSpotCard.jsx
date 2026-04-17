@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import styles from '@/styles/travelspots/PublicTravelSpotCard.module.css';
 import { ROUTES } from '@/routes/routes.constants';
 import { FiMapPin } from 'react-icons/fi';
+import LazyImage from '@/components/common/LazyImage';
 
 export default function TravelSpotCard({ travelSpot }) {
     const router = useRouter();
@@ -39,11 +40,14 @@ export default function TravelSpotCard({ travelSpot }) {
         >
             {/* Card Image */}
             <div className={styles.cardImageContainer}>
-                <img
+                <LazyImage
                     src={imageSrc}
                     alt={imageAlt}
                     className={styles.cardImage}
-                    loading="lazy"
+                    wrapperClassName={styles.lazyImageWrapper}
+                    placeholderClassName={styles.lazyImagePlaceholder}
+                    fallbackSrc="/images/placeholders/default.png"
+                    rootMargin="100px"
                 />
                 {/* Location Badge - Top Right */}
                 <div className={styles.locationBadge}>

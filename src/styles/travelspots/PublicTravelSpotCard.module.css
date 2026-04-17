@@ -24,7 +24,7 @@
     box-shadow: 0 0 0 3px var(--ring);
 }
 
-/* Image Container */
+/* Card Image Container */
 .cardImageContainer {
     position: relative;
     width: 100%;
@@ -34,18 +34,49 @@
     background: linear-gradient(135deg, var(--muted) 0%, var(--card) 100%);
 }
 
+/* Lazy Image Wrapper - make it absolute to fill container */
+.lazyImageWrapper {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Card Image */
 .cardImage {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
     object-fit: cover;
     transition: transform 0.5s ease;
+    opacity: 1 !important;
+    /* Force visibility */
 }
 
 .card:hover .cardImage {
     transform: scale(1.05);
+}
+
+/* Ensure the lazy image wrapper doesn't break layout */
+.cardImageContainer :global(.lazyImageWrapper) {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.cardImageContainer :global(.lazyImage) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    opacity: 1 !important;
 }
 
 /* Location Badge - Top Right */
@@ -55,13 +86,13 @@
     right: var(--spacing-3);
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
     backdrop-filter: blur(8px);
-    padding: var(--spacing-1) var(--spacing-2);
+    padding: 6px 12px;
     border-radius: 40px;
     display: flex;
     align-items: center;
-    gap: var(--spacing-1);
+    gap: 6px;
     z-index: 2;
-    max-width: calc(100% - var(--spacing-6));
+    max-width: calc(100% - 32px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: var(--shadow-sm);
 }
@@ -74,12 +105,13 @@
 }
 
 .locationText {
-    font-size: var(--text-xs);
+    font-size: 12px;
     font-weight: 500;
     color: white;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: 1.2;
 }
 
 /* Card Content */
@@ -109,7 +141,7 @@
 .categoriesContainer {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-1);
+    gap: 6px;
     margin-top: var(--spacing-1);
 }
 
@@ -117,13 +149,14 @@
 .categoryPill {
     background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
     color: white;
-    font-size: var(--text-xs);
+    font-size: 12px;
     padding: 4px 12px;
     border-radius: 40px;
     font-weight: 500;
     transition: all 0.2s ease;
     display: inline-block;
     letter-spacing: 0.3px;
+    line-height: 1.4;
 }
 
 .categoryPill:hover {
@@ -134,12 +167,13 @@
 .categoryPillMore {
     background: var(--muted);
     color: var(--muted-foreground);
-    font-size: var(--text-xs);
+    font-size: 12px;
     padding: 4px 12px;
     border-radius: 40px;
     font-weight: 500;
     transition: all 0.2s ease;
     display: inline-block;
+    line-height: 1.4;
 }
 
 .categoryPillMore:hover {
@@ -191,7 +225,35 @@
     color: var(--gray-100);
 }
 
-/* Responsive */
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .locationBadge {
+        padding: 5px 10px;
+        gap: 5px;
+        max-width: calc(100% - 24px);
+    }
+
+    .locationIcon {
+        width: 11px;
+        height: 11px;
+    }
+
+    .locationText {
+        font-size: 11px;
+    }
+
+    .categoryPill,
+    .categoryPillMore {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+}
+
+/* Mobile */
 @media (max-width: 640px) {
     .cardContent {
         padding: var(--spacing-3);
@@ -207,9 +269,11 @@
     }
 
     .locationBadge {
-        top: var(--spacing-2);
-        right: var(--spacing-2);
-        padding: var(--spacing-0) var(--spacing-1);
+        top: 8px;
+        right: 8px;
+        padding: 4px 8px;
+        gap: 4px;
+        max-width: calc(100% - 16px);
     }
 
     .locationIcon {
@@ -218,17 +282,86 @@
     }
 
     .locationText {
-        font-size: var(--text-xs);
+        font-size: 10px;
     }
 
     .categoriesContainer {
-        gap: var(--spacing-1);
+        gap: 4px;
     }
 
     .categoryPill,
     .categoryPillMore {
-        font-size: var(--text-xs);
-        padding: 3px 10px;
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .locationBadge {
+        top: 6px;
+        right: 6px;
+        padding: 4px 8px;
+        gap: 4px;
+        max-width: calc(100% - 12px);
+    }
+
+    .locationIcon {
+        width: 10px;
+        height: 10px;
+    }
+
+    .locationText {
+        font-size: 10px;
+    }
+
+    .cardContent {
+        padding: 10px;
+    }
+
+    .categoryPill,
+    .categoryPillMore {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 360px) {
+    .locationBadge {
+        top: 5px;
+        right: 5px;
+        padding: 3px 6px;
+        gap: 3px;
+        max-width: calc(100% - 10px);
+    }
+
+    .locationIcon {
+        width: 9px;
+        height: 9px;
+    }
+
+    .locationText {
+        font-size: 9px;
+    }
+
+    .cardContent {
+        padding: 8px;
+        gap: 4px;
+    }
+
+    .cardTitle {
+        font-size: 12px;
+    }
+
+    .categoryPill,
+    .categoryPillMore {
+        font-size: 9px;
+        padding: 2px 6px;
+    }
+
+    .cardDescription {
+        font-size: 10px;
     }
 }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import TravelSpotCard from '@/components/travelspots/TravelSpotCard';
 import Loader from '@/components/common/Loader';
@@ -20,6 +20,57 @@ import {
     useGetVillagesBySubDistrictQuery,
 } from '@/services/api/locationsApi';
 import { FiFilter, FiSearch } from 'react-icons/fi';
+
+// Shimmer/Skeleton Card Component
+const ShimmerCard = () => (
+    <div className={styles.shimmerCard}>
+        <div className={styles.shimmerImage} />
+        <div className={styles.shimmerContent}>
+            <div className={styles.shimmerTitle} />
+            <div className={styles.shimmerText} />
+            <div className={styles.shimmerText} />
+            <div className={styles.shimmerButton} />
+        </div>
+    </div>
+);
+
+// Custom hook to get shimmer count based on screen size
+const useShimmerCount = () => {
+    const [shimmerCount, setShimmerCount] = useState(6);
+    const [loadMoreShimmerCount, setLoadMoreShimmerCount] = useState(3);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            
+            // Determine number of columns based on screen width
+            let columns = 3; // Default for laptop (>=1024px)
+            
+            if (width < 480) {
+                columns = 1; // Mobile: 1 column
+            } else if (width < 768) {
+                columns = 1; // Small tablet: 1 column
+            } else if (width < 1024) {
+                columns = 2; // Tablet: 2 columns
+            } else {
+                columns = 3; // Desktop/Laptop: 3 columns
+            }
+            
+            // For initial load: show 2 rows
+            setShimmerCount(columns * 2);
+            
+            // For load more: show 1 row
+            setLoadMoreShimmerCount(columns);
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return { shimmerCount, loadMoreShimmerCount };
+};
 
 export default function PublicTravelSpotsPage() {
     // Search state
@@ -51,12 +102,20 @@ export default function PublicTravelSpotsPage() {
     const [travelSpots, setTravelSpots] = useState([]);
     const [totalCount, setTotalCount] = useState(0);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const [hasFetchedOnce, setHasFetchedOnce] = useState(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    
+    // Track previous filter/sort values to detect changes
+    const prevFiltersRef = useRef({ ...filters, sortBy, debouncedSearch });
+
+    // Get responsive shimmer counts
+    const { shimmerCount, loadMoreShimmerCount } = useShimmerCount();
 
     // API hooks
     const [getTravelSpots, { data, error, isLoading, isFetching }] = useLazyGetPublicTravelSpotsQuery();
     const { data: catRes, isLoading: isLoadingCategories } = useGetPublicSpotCategoriesQuery();
 
-    // Location API hooks - uses current filters to load dependent data
+    // Location API hooks
     const { data: statesData, isLoading: isStateLoading } = useGetStatesByCountryQuery(1);
     const { data: districtsData, isLoading: isDistrictLoading } = useGetDistrictsByStateQuery(filters.state, {
         skip: !filters.state
@@ -139,6 +198,34 @@ export default function PublicTravelSpotsPage() {
         fetchTravelSpots();
     }, []);
 
+    // Detect filter/sort/search changes and clear data immediately
+    useEffect(() => {
+        const currentValues = { ...filters, sortBy, debouncedSearch };
+        const prevValues = prevFiltersRef.current;
+        
+        // Check if any filter, sort, or search has changed
+        const hasChanged = 
+            prevValues.state !== currentValues.state ||
+            prevValues.district !== currentValues.district ||
+            prevValues.sub_district !== currentValues.sub_district ||
+            prevValues.village !== currentValues.village ||
+            prevValues.category !== currentValues.category ||
+            prevValues.min_views !== currentValues.min_views ||
+            prevValues.sortBy !== currentValues.sortBy ||
+            prevValues.debouncedSearch !== currentValues.debouncedSearch;
+        
+        if (hasChanged && !isInitialLoad) {
+            // Clear existing data immediately to show shimmer
+            setTravelSpots([]);
+            setTotalCount(0);
+            setHasFetchedOnce(false);
+            setNextCursor(null);
+            setHasMore(true);
+        }
+        
+        prevFiltersRef.current = currentValues;
+    }, [filters, sortBy, debouncedSearch, isInitialLoad]);
+
     // Fetch when filters, search, or sort changes
     useEffect(() => {
         if (!isInitialLoad) {
@@ -149,6 +236,11 @@ export default function PublicTravelSpotsPage() {
 
     const fetchTravelSpots = useCallback(async (cursor = null) => {
         try {
+            // Set loading more state if cursor exists
+            if (cursor) {
+                setIsLoadingMore(true);
+            }
+
             const params = {
                 ...(cursor && { cursor }),
                 ...(debouncedSearch && { search: debouncedSearch }),
@@ -182,6 +274,9 @@ export default function PublicTravelSpotsPage() {
             }
         } catch (error) {
             console.error('Failed to fetch travel spots:', error);
+        } finally {
+            setHasFetchedOnce(true);
+            setIsLoadingMore(false);
         }
     }, [getTravelSpots, debouncedSearch, sortBy, filters]);
 
@@ -247,6 +342,14 @@ export default function PublicTravelSpotsPage() {
         });
     };
 
+    const handleSortChange = (value) => {
+        setSortBy(value);
+    };
+
+    const handleCategoryChange = (value) => {
+        handleFilterChange('category', value);
+    };
+
     const handleOpenFilters = () => {
         setIsFilterOpen(true);
     };
@@ -270,11 +373,10 @@ export default function PublicTravelSpotsPage() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        fetchTravelSpots();
     };
 
     const handleLoadMore = () => {
-        if (nextCursor && hasMore) {
+        if (nextCursor && hasMore && !isLoadingMore) {
             fetchTravelSpots(nextCursor);
         }
     };
@@ -332,20 +434,26 @@ export default function PublicTravelSpotsPage() {
         },
     ];
 
-    if (isLoading && travelSpots.length === 0) {
-        return <Loader text="Loading travel spots..." />;
-    }
-
-    if (error && travelSpots.length === 0) {
+    // Error handling
+    if (error && travelSpots.length === 0 && !isLoading && hasFetchedOnce) {
         return (
             <ErrorState
                 message={error?.data?.message || "Failed to load travel spots. Please try again."}
                 errorType="error"
-                onRetry={() => fetchTravelSpots()}
+                onRetry={() => {
+                    setHasFetchedOnce(false);
+                    fetchTravelSpots();
+                }}
                 retryMsg="Refresh"
             />
         );
     }
+
+    // Determine if we should show shimmer loading
+    const showShimmer = (isLoading && !isLoadingMore) || (!hasFetchedOnce && travelSpots.length === 0) || (isLoading && travelSpots.length === 0);
+
+    // Determine if we should show empty state
+    const showEmptyState = hasFetchedOnce && travelSpots.length === 0 && !isLoading && !isFetching;
 
     return (
         <PageLayout
@@ -353,9 +461,8 @@ export default function PublicTravelSpotsPage() {
             heroDescription="Discover amazing places to visit across India"
             showHero={true}
         >
-            {/* Top Bar - Search, Category Filter, Sort, Filters Button */}
+            {/* Top Bar */}
             <div className={styles.topBar}>
-                {/* Search Container */}
                 <div className={styles.searchContainer}>
                     <form onSubmit={handleSearch} className={styles.searchForm}>
                         <div className={styles.searchBox}>
@@ -368,27 +475,19 @@ export default function PublicTravelSpotsPage() {
                                 icon={FiSearch}
                                 className={styles.searchInput}
                             />
-                            <Button
-                                type="submit"
-                                variant="primary"
-                                size="md"
-                            >
+                            <Button type="submit" variant="primary" size="md">
                                 Search
                             </Button>
                         </div>
                     </form>
                 </div>
 
-                {/* Category Filter */}
-
-
-                {/* Sort and Filters */}
                 <div className={styles.controlsContainer}>
                     <div className={styles.categoryFilter}>
                         <SimpleSelect
                             name="category"
                             value={filters.category}
-                            onChange={handleSimpleSelectChange((value) => handleFilterChange('category', value))}
+                            onChange={handleSimpleSelectChange(handleCategoryChange)}
                             options={categoryOptions}
                             disabled={isLoadingCategories}
                             placeholder="All Categories"
@@ -401,7 +500,7 @@ export default function PublicTravelSpotsPage() {
                         <SimpleSelect
                             name="sort"
                             value={sortBy}
-                            onChange={handleSimpleSelectChange((value) => setSortBy(value))}
+                            onChange={handleSimpleSelectChange(handleSortChange)}
                             options={sortOptions}
                             placeholder="Sort By"
                             size="md"
@@ -410,7 +509,6 @@ export default function PublicTravelSpotsPage() {
                         />
                     </div>
 
-                    {/* Filter Button with Badge */}
                     <div className={styles.filterButtonWrapper}>
                         <Button
                             variant="outline"
@@ -446,14 +544,22 @@ export default function PublicTravelSpotsPage() {
                 <div className={styles.resultsSection}>
                     <div className={styles.resultsInfo}>
                         <p className={styles.resultsCount}>
-                            {totalCount > 0
-                                ? `Showing ${travelSpots.length} travel spots`
-                                : 'No travel spots found'}
+                            {!showShimmer && !showEmptyState && totalCount > 0
+                                ? `Showing ${travelSpots.length} of ${totalCount} travel spots`
+                                : ''}
                         </p>
                     </div>
 
                     <div className={styles.spotsContainer}>
-                        {travelSpots.length === 0 && !isFetching ? (
+                        {showShimmer ? (
+                            // Loading shimmer with responsive count
+                            <div className={styles.spotsGrid}>
+                                {Array.from({ length: shimmerCount }).map((_, index) => (
+                                    <ShimmerCard key={`shimmer-${index}`} />
+                                ))}
+                            </div>
+                        ) : showEmptyState ? (
+                            // Empty state
                             <div className={styles.noResults}>
                                 <div className={styles.noResultsIcon}>🏞️</div>
                                 <p className={styles.noResultsMessage}>
@@ -471,22 +577,27 @@ export default function PublicTravelSpotsPage() {
                             <>
                                 <div className={styles.spotsGrid}>
                                     {travelSpots.map((spot) => (
-                                        <TravelSpotCard
-                                            key={spot.id}
-                                            travelSpot={spot}
-                                        />
+                                        <TravelSpotCard key={spot.id} travelSpot={spot} />
                                     ))}
+                                    
+                                    {/* Load More Shimmer Cards with responsive count */}
+                                    {isLoadingMore && (
+                                        <>
+                                            {Array.from({ length: loadMoreShimmerCount }).map((_, index) => (
+                                                <ShimmerCard key={`load-more-shimmer-${index}`} />
+                                            ))}
+                                        </>
+                                    )}
                                 </div>
 
-                                {hasMore && travelSpots.length > 0 && (
+                                {/* Load More Button */}
+                                {hasMore && travelSpots.length > 0 && !isLoadingMore && (
                                     <div className={styles.paginationControls}>
                                         <Button
                                             variant="outline"
                                             size="md"
                                             onClick={handleLoadMore}
-                                            disabled={!nextCursor || isFetching}
-                                            isLoading={isFetching}
-                                            loadingText="Loading..."
+                                            disabled={isLoadingMore}
                                             fullWidth
                                         >
                                             Load More
@@ -498,12 +609,6 @@ export default function PublicTravelSpotsPage() {
                     </div>
                 </div>
             </div>
-
-            {isFetching && travelSpots.length > 0 && (
-                <div className={styles.loadingOverlay}>
-                    <Loader text="Loading more spots..." />
-                </div>
-            )}
         </PageLayout>
     );
 }
