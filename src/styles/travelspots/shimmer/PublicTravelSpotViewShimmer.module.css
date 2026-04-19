@@ -1,0 +1,1087 @@
+/* PublicTravelSpotViewShimmer.module.css */
+
+/* ============================================
+   CONTAINER
+   ============================================ */
+
+.container {
+    width: 100%;
+    color: var(--foreground);
+    line-height: 1.6;
+    overflow-x: hidden;
+    background-color: var(--background);
+}
+
+/* ============================================
+   CONTENT WRAPPER
+   ============================================ */
+
+.contentWrapper {
+    max-width: 1400px;
+    margin: var(--spacing-4) auto;
+    padding: 0 var(--spacing-5);
+    scroll-margin-top: 80px;
+}
+
+/* ============================================
+   MAIN CONTENT LAYOUT
+   ============================================ */
+
+.mainContent {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: var(--spacing-8);
+    margin-bottom: var(--spacing-10);
+}
+
+@media (max-width: 1200px) {
+    .mainContent {
+        grid-template-columns: 1fr 350px;
+        gap: var(--spacing-6);
+    }
+}
+
+@media (max-width: 992px) {
+    .mainContent {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-8);
+    }
+}
+
+/* ============================================
+   LEFT COLUMN
+   ============================================ */
+
+.leftColumn {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
+}
+
+/* ============================================
+   RIGHT COLUMN
+   ============================================ */
+
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
+}
+
+/* ============================================
+   SHIMMER ANIMATION
+   ============================================ */
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ============================================
+   HERO SHIMMER - LIGHT MODE (DEFAULT)
+   ============================================ */
+
+.shimmerHeroSection {
+    position: relative;
+    height: 90vh;
+    min-height: 600px;
+    max-height: 800px;
+    overflow: hidden;
+    background: #1a1a2e;
+    width: 100%;
+}
+
+.shimmerHeroBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            #2d2d4a 25%,
+            #3d3d5c 50%,
+            #2d2d4a 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Hero Content Overlay */
+.shimmerHeroContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 10;
+    width: 90%;
+    max-width: 1000px;
+    padding: 0 var(--spacing-5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Location Tag - Light Mode */
+.shimmerHeroTag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    padding: var(--spacing-2) var(--spacing-6);
+    border-radius: 40px;
+    margin-bottom: var(--spacing-6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.shimmerTagText {
+    width: 120px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.1) 25%,
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0.1) 75%);
+}
+
+.shimmerIcon {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: var(--text-sm);
+}
+
+/* Title - Light Mode */
+.shimmerHeroTitle {
+    width: min(80%, 600px);
+    height: clamp(48px, 8vw, 80px);
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-4);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.1) 25%,
+            rgba(255, 255, 255, 0.25) 50%,
+            rgba(255, 255, 255, 0.1) 75%);
+}
+
+/* Subtitle - Light Mode */
+.shimmerHeroSubtitle {
+    width: min(60%, 500px);
+    height: 24px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-10);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.08) 25%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0.08) 75%);
+}
+
+/* Action Buttons - Light Mode */
+.shimmerHeroActions {
+    display: flex;
+    gap: var(--spacing-4);
+    justify-content: center;
+    margin-top: var(--spacing-10);
+    flex-wrap: wrap;
+}
+
+.shimmerActionButton {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+    padding: 12px 28px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.1) 25%,
+            rgba(255, 255, 255, 0.25) 50%,
+            rgba(255, 255, 255, 0.1) 75%);
+}
+
+.shimmerButtonText {
+    width: 50px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-sm);
+}
+
+/* Navigation Arrows - Light Mode */
+.shimmerHeroNav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: var(--text-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.1) 25%,
+            rgba(255, 255, 255, 0.25) 50%,
+            rgba(255, 255, 255, 0.1) 75%);
+}
+
+.shimmerPrevNav {
+    left: var(--spacing-8);
+}
+
+.shimmerNextNav {
+    right: var(--spacing-8);
+}
+
+/* Dots - Light Mode */
+.shimmerHeroDots {
+    position: absolute;
+    bottom: var(--spacing-10);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--spacing-3);
+    z-index: 20;
+}
+
+.shimmerHeroDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    padding: 0;
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.2) 25%,
+            rgba(255, 255, 255, 0.5) 50%,
+            rgba(255, 255, 255, 0.2) 75%);
+}
+
+.shimmerActiveDot {
+    width: 28px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Image Counter & Controls - Light Mode */
+.shimmerImageControls {
+    position: absolute;
+    bottom: var(--spacing-10);
+    right: var(--spacing-8);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    z-index: 20;
+}
+
+.shimmerImageCounter {
+    width: 60px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.1) 25%,
+            rgba(255, 255, 255, 0.25) 50%,
+            rgba(255, 255, 255, 0.1) 75%);
+}
+
+.shimmerAutoSlideToggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.7);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.1) 25%,
+            rgba(255, 255, 255, 0.25) 50%,
+            rgba(255, 255, 255, 0.1) 75%);
+}
+
+/* Scroll Indicator - Light Mode */
+.shimmerScrollIndicator {
+    position: absolute;
+    bottom: var(--spacing-5);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 20;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.shimmerScrollText {
+    width: 100px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-2);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.2) 25%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0.2) 75%);
+}
+
+.shimmerScrollIcon {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: var(--text-2xl);
+}
+
+/* ============================================
+   HERO SHIMMER - DARK MODE
+   ============================================ */
+
+.dark .shimmerHeroSection {
+    background: #0f0f1a;
+}
+
+.dark .shimmerHeroBackground {
+    background: linear-gradient(90deg,
+            #1a1a2e 25%,
+            #2d2d4a 50%,
+            #1a1a2e 75%);
+    background-size: 200% 100%;
+}
+
+.dark .shimmerHeroTag {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .shimmerTagText {
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(255, 255, 255, 0.05) 75%);
+}
+
+.dark .shimmerIcon {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.dark .shimmerHeroTitle {
+    background: rgba(0, 0, 0, 0.3);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+}
+
+.dark .shimmerHeroSubtitle {
+    background: rgba(0, 0, 0, 0.25);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.03) 25%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.03) 75%);
+    background-size: 200% 100%;
+}
+
+.dark .shimmerActionButton {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+}
+
+.dark .shimmerButtonText {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.dark .shimmerHeroNav {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+}
+
+.dark .shimmerHeroDot {
+    background: rgba(255, 255, 255, 0.2);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.1) 25%,
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0.1) 75%);
+    background-size: 200% 100%;
+}
+
+.dark .shimmerActiveDot {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.dark .shimmerImageCounter {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+}
+
+.dark .shimmerAutoSlideToggle {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+}
+
+.dark .shimmerScrollText {
+    background: rgba(255, 255, 255, 0.15);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.1) 25%,
+            rgba(255, 255, 255, 0.25) 50%,
+            rgba(255, 255, 255, 0.1) 75%);
+    background-size: 200% 100%;
+}
+
+.dark .shimmerScrollIcon {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* ============================================
+   SECTION SHIMMER
+   ============================================ */
+
+.shimmerSection {
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-8);
+}
+
+.shimmerSectionTitle {
+    width: 200px;
+    height: 28px;
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-6);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+.shimmerGrid {
+    display: grid;
+    gap: var(--spacing-5);
+}
+
+.gridCols4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* ============================================
+   DETAIL CARD SHIMMER
+   ============================================ */
+
+.shimmerDetailCard {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding: var(--spacing-5);
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+}
+
+.shimmerDetailIcon {
+    width: 50px;
+    height: 50px;
+    background: var(--accent);
+    border-radius: var(--radius-md);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--accent) 25%,
+            var(--muted) 50%,
+            var(--accent) 75%);
+    flex-shrink: 0;
+}
+
+.shimmerDetailContent {
+    flex: 1;
+}
+
+.shimmerDetailLabel {
+    width: 60px;
+    height: 12px;
+    background: var(--muted-foreground);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-2);
+    opacity: 0.5;
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted-foreground) 25%,
+            var(--accent) 50%,
+            var(--muted-foreground) 75%);
+}
+
+.shimmerDetailValue {
+    width: 100px;
+    height: 18px;
+    background: var(--foreground);
+    border-radius: var(--radius-sm);
+    opacity: 0.3;
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--foreground) 25%,
+            var(--accent) 50%,
+            var(--foreground) 75%);
+}
+
+/* ============================================
+   DESCRIPTION SHIMMER
+   ============================================ */
+
+.shimmerDescriptionSection {
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-8);
+}
+
+.shimmerDescription {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+}
+
+.shimmerTextLine {
+    width: 100%;
+    height: 16px;
+    background: var(--muted);
+    border-radius: var(--radius-sm);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+/* ============================================
+   LOCATION SHIMMER
+   ============================================ */
+
+.shimmerLocationSection {
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-lg);
+}
+
+.shimmerLocationGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-5);
+}
+
+.shimmerLocationItem {
+    padding: var(--spacing-5);
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+}
+
+.shimmerLocationLabel {
+    width: 80px;
+    height: 12px;
+    background: var(--muted-foreground);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-2);
+    opacity: 0.5;
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted-foreground) 25%,
+            var(--accent) 50%,
+            var(--muted-foreground) 75%);
+}
+
+.shimmerLocationValue {
+    width: 150px;
+    height: 18px;
+    background: var(--foreground);
+    border-radius: var(--radius-sm);
+    opacity: 0.3;
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--foreground) 25%,
+            var(--accent) 50%,
+            var(--foreground) 75%);
+}
+
+/* ============================================
+   MAP SHIMMER
+   ============================================ */
+
+.shimmerMap {
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-8);
+}
+
+.shimmerMapHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-5);
+}
+
+.shimmerMapTitle {
+    width: 120px;
+    height: 24px;
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+.shimmerMapButton {
+    width: 120px;
+    height: 40px;
+    background: var(--primary);
+    border-radius: var(--radius-md);
+    opacity: 0.5;
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--primary) 25%,
+            color-mix(in srgb, var(--primary) 70%, white) 50%,
+            var(--primary) 75%);
+}
+
+.shimmerMapContainer {
+    width: 100%;
+    height: 300px;
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-4);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+.shimmerMapAddress {
+    width: 100%;
+    height: 40px;
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+/* ============================================
+   QUICK INFO SHIMMER
+   ============================================ */
+
+.shimmerQuickInfo {
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-lg);
+}
+
+.shimmerQuickInfoTitle {
+    width: 150px;
+    height: 24px;
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-5);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+.shimmerQuickInfoGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-4);
+}
+
+.shimmerQuickInfoCard {
+    padding: var(--spacing-4);
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.shimmerQuickInfoLabel {
+    width: 60px;
+    height: 12px;
+    background: var(--muted-foreground);
+    border-radius: var(--radius-sm);
+    margin: 0 auto var(--spacing-2);
+    opacity: 0.5;
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted-foreground) 25%,
+            var(--accent) 50%,
+            var(--muted-foreground) 75%);
+}
+
+.shimmerQuickInfoValue {
+    width: 80px;
+    height: 16px;
+    background: var(--foreground);
+    border-radius: var(--radius-sm);
+    margin: 0 auto;
+    opacity: 0.3;
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--foreground) 25%,
+            var(--accent) 50%,
+            var(--foreground) 75%);
+}
+
+/* ============================================
+   TABS SHIMMER
+   ============================================ */
+
+.shimmerTabs {
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    margin-bottom: var(--spacing-10);
+}
+
+.shimmerTabsHeader {
+    display: flex;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4);
+    background: var(--muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.shimmerTab {
+    flex: 1;
+    height: 44px;
+    background: var(--accent);
+    border-radius: var(--radius-lg);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--accent) 25%,
+            var(--muted) 50%,
+            var(--accent) 75%);
+}
+
+.shimmerTabContent {
+    padding: var(--spacing-8);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-4);
+}
+
+.shimmerGalleryItem {
+    aspect-ratio: 1 / 1;
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+    animation: shimmer 1.5s infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg,
+            var(--muted) 25%,
+            var(--accent) 50%,
+            var(--muted) 75%);
+}
+
+/* ============================================
+   DARK MODE - OTHER SECTIONS
+   ============================================ */
+
+.dark .shimmerSection,
+.dark .shimmerDescriptionSection,
+.dark .shimmerLocationSection,
+.dark .shimmerMap,
+.dark .shimmerQuickInfo,
+.dark .shimmerTabs {
+    background: var(--gray-900);
+}
+
+.dark .shimmerSectionTitle,
+.dark .shimmerTextLine,
+.dark .shimmerMapTitle,
+.dark .shimmerMapContainer,
+.dark .shimmerMapAddress,
+.dark .shimmerQuickInfoTitle,
+.dark .shimmerGalleryItem {
+    background-image: linear-gradient(90deg,
+            var(--gray-800) 25%,
+            var(--gray-700) 50%,
+            var(--gray-800) 75%);
+}
+
+.dark .shimmerDetailCard,
+.dark .shimmerLocationItem,
+.dark .shimmerQuickInfoCard {
+    background: var(--gray-800);
+}
+
+.dark .shimmerDetailIcon {
+    background-image: linear-gradient(90deg,
+            var(--gray-700) 25%,
+            var(--gray-600) 50%,
+            var(--gray-700) 75%);
+}
+
+.dark .shimmerDetailLabel,
+.dark .shimmerLocationLabel,
+.dark .shimmerQuickInfoLabel {
+    background-image: linear-gradient(90deg,
+            var(--gray-600) 25%,
+            var(--gray-500) 50%,
+            var(--gray-600) 75%);
+}
+
+.dark .shimmerDetailValue,
+.dark .shimmerLocationValue,
+.dark .shimmerQuickInfoValue {
+    background-image: linear-gradient(90deg,
+            var(--gray-500) 25%,
+            var(--gray-400) 50%,
+            var(--gray-500) 75%);
+}
+
+.dark .shimmerTab {
+    background-image: linear-gradient(90deg,
+            var(--gray-700) 25%,
+            var(--gray-600) 50%,
+            var(--gray-700) 75%);
+}
+
+.dark .shimmerTabsHeader {
+    background: var(--gray-800);
+    border-bottom-color: var(--gray-700);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .shimmerHeroSection {
+        height: 80vh;
+        min-height: 500px;
+        max-height: 700px;
+    }
+
+    .shimmerHeroNav {
+        width: 48px;
+        height: 48px;
+    }
+
+    .shimmerPrevNav {
+        left: var(--spacing-5);
+    }
+
+    .shimmerNextNav {
+        right: var(--spacing-5);
+    }
+}
+
+@media (max-width: 992px) {
+    .shimmerHeroSection {
+        height: 70vh;
+        min-height: 400px;
+        max-height: 600px;
+    }
+
+    .gridCols4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .contentWrapper {
+        padding: 0 var(--spacing-4);
+    }
+
+    .shimmerHeroSection {
+        height: 60vh;
+        min-height: 350px;
+    }
+
+    .shimmerHeroTitle {
+        height: clamp(36px, 6vw, 48px);
+    }
+
+    .shimmerActionButton {
+        padding: 10px 22px;
+    }
+
+    .shimmerButtonText {
+        width: 40px;
+    }
+
+    .shimmerTabContent {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .shimmerQuickInfoGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .gridCols4 {
+        grid-template-columns: 1fr;
+    }
+
+    .shimmerSection,
+    .shimmerDescriptionSection,
+    .shimmerLocationSection,
+    .shimmerMap,
+    .shimmerQuickInfo {
+        padding: var(--spacing-5);
+    }
+}
+
+@media (max-width: 576px) {
+    .shimmerHeroSection {
+        height: 50vh;
+        min-height: 300px;
+    }
+
+    .shimmerHeroTag {
+        padding: var(--spacing-2) var(--spacing-5);
+    }
+
+    .shimmerTagText {
+        width: 80px;
+        height: 12px;
+    }
+
+    .shimmerHeroNav {
+        width: 40px;
+        height: 40px;
+    }
+
+    .shimmerPrevNav {
+        left: var(--spacing-2);
+    }
+
+    .shimmerNextNav {
+        right: var(--spacing-2);
+    }
+
+    .shimmerImageControls {
+        bottom: var(--spacing-5);
+        right: var(--spacing-2);
+    }
+
+    .shimmerImageCounter {
+        width: 50px;
+        height: 28px;
+    }
+
+    .shimmerAutoSlideToggle {
+        width: 32px;
+        height: 32px;
+    }
+
+    .shimmerActionButton {
+        padding: 8px 18px;
+    }
+
+    .shimmerButtonText {
+        width: 35px;
+        height: 12px;
+    }
+
+    .shimmerTabContent {
+        grid-template-columns: 1fr;
+        padding: var(--spacing-4);
+    }
+
+    .shimmerTabsHeader {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .shimmerHeroTitle {
+        height: 32px;
+    }
+
+    .shimmerHeroSubtitle {
+        height: 18px;
+    }
+
+    .shimmerHeroActions {
+        gap: var(--spacing-2);
+    }
+}

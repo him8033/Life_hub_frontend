@@ -2,7 +2,6 @@
 
 import { useParams } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import Loader from '@/components/common/Loader';
 import ErrorState from '@/components/common/ErrorState';
 import NotFoundState from '@/components/common/NotFoundState';
 import TravelSpotMap from '@/components/travelspots/TravelSpotMap';
@@ -11,6 +10,7 @@ import HeroSection from '@/components/travelspots/HeroSection';
 import ReviewSection from '@/components/travelspots/ReviewSection';
 import ImageGallerySection from '@/components/travelspots/ImageGallerySection';
 import Button from '@/components/common/buttons/Button';
+import PublicTravelSpotViewShimmer from '@/components/travelspots/shimmer/PublicTravelSpotViewShimmer';
 import styles from '@/styles/travelspots/PublicTravelSpotView.module.css';
 import { ROUTES } from '@/routes/routes.constants';
 import { useGetTravelSpotBySlugQuery } from '@/services/api/travelspotApi';
@@ -24,12 +24,11 @@ import {
     FaDirections,
     FaMap,
     FaShareAlt,
-    FaHeart,
     FaClock,
     FaRupeeSign,
     FaCalendarAlt,
     FaCamera,
-    FaComment,
+    FaMap as FaMapIcon,
     FaLocationArrow
 } from 'react-icons/fa';
 
@@ -130,24 +129,11 @@ export default function PublicTravelSpotViewPage() {
         return 'Not specified';
     };
 
-    const reviews = [
-        {
-            id: 1,
-            author: "Rajesh Kumar",
-            rating: 4.5,
-            comment: "Absolutely breathtaking views! The mountain air is so refreshing. The walking trails are well-maintained and suitable for all age groups.",
-            date: "15 June 2023"
-        },
-        {
-            id: 2,
-            author: "Priya Sharma",
-            rating: 5,
-            comment: "The best family vacation spot! My kids loved the open spaces and we enjoyed the guided nature walk.",
-            date: "2 May 2023"
-        }
-    ];
+    // Show shimmer while loading
+    if (isLoading) {
+        return <PublicTravelSpotViewShimmer />;
+    }
 
-    if (isLoading) return <Loader text="Loading travel spot details..." />;
     if (error?.status === 404) {
         return (
             <NotFoundState
@@ -159,6 +145,7 @@ export default function PublicTravelSpotViewPage() {
             />
         );
     }
+
     if (error) {
         return (
             <ErrorState
@@ -168,6 +155,7 @@ export default function PublicTravelSpotViewPage() {
             />
         );
     }
+
     if (!travelSpot) {
         return (
             <NotFoundState
@@ -363,26 +351,6 @@ export default function PublicTravelSpotViewPage() {
 
                 {/* Tabs Section */}
                 <section className={styles.tabsSection}>
-                    {/* <div className={styles.tabsHeader}>
-                        <button
-                            className={`${styles.tabBtn} ${activeTab === 'photos' ? styles.activeTab : ''}`}
-                            onClick={() => setActiveTab('photos')}
-                        >
-                            <FaCamera /> Gallery
-                        </button>
-                        <button
-                            className={`${styles.tabBtn} ${activeTab === 'reviews' ? styles.activeTab : ''}`}
-                            onClick={() => setActiveTab('reviews')}
-                        >
-                            <FaComment /> Reviews
-                        </button>
-                        <button
-                            className={`${styles.tabBtn} ${activeTab === 'nearby' ? styles.activeTab : ''}`}
-                            onClick={() => setActiveTab('nearby')}
-                        >
-                            <FaMap /> Nearby Spots
-                        </button>
-                    </div> */}
                     <div className={styles.tabsHeader}>
                         <Button
                             variant={activeTab === 'photos' ? 'primary' : 'ghost'}
@@ -394,21 +362,11 @@ export default function PublicTravelSpotViewPage() {
                         >
                             Gallery
                         </Button>
-                        {/* <Button
-                            variant={activeTab === 'reviews' ? 'primary' : 'ghost'}
-                            size="md"
-                            onClick={() => setActiveTab('reviews')}
-                            icon={<FaComment />}
-                            iconPosition="left"
-                            className={`${styles.tabBtn} ${activeTab === 'reviews' ? styles.activeTab : ''}`}
-                        >
-                            Reviews
-                        </Button> */}
                         <Button
                             variant={activeTab === 'nearby' ? 'primary' : 'ghost'}
                             size="md"
                             onClick={() => setActiveTab('nearby')}
-                            icon={<FaMap />}
+                            icon={<FaMapIcon />}
                             iconPosition="left"
                             className={`${styles.tabBtn} ${activeTab === 'nearby' ? styles.activeTab : ''}`}
                         >
@@ -419,14 +377,6 @@ export default function PublicTravelSpotViewPage() {
                     <div className={styles.tabContent}>
                         {activeTab === 'photos' && (
                             <ImageGallerySection images={images} />
-                        )}
-
-                        {activeTab === 'reviews' && (
-                            <ReviewSection
-                                reviews={reviews}
-                                averageRating={4.8}
-                                totalReviews={1234}
-                            />
                         )}
 
                         {activeTab === 'nearby' && (
