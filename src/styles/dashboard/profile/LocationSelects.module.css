@@ -1,0 +1,149 @@
+/* LocationSelects.module.css */
+
+.locationSection {
+    margin-bottom: var(--spacing-6);
+    padding: var(--spacing-6);
+    background: var(--muted);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border);
+    transition: border-color 0.2s ease;
+}
+
+.locationSection:hover {
+    border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
+}
+
+.locationSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-5);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+}
+
+.locationIcon {
+    color: var(--primary);
+    font-size: var(--text-lg);
+    flex-shrink: 0;
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    padding: var(--spacing-2);
+    border-radius: var(--radius-md);
+}
+
+.locationSectionHeader span {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--foreground);
+    letter-spacing: -0.2px;
+}
+
+/* Form Grid */
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-5);
+    margin-bottom: var(--spacing-5);
+}
+
+/* Divider */
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: var(--spacing-5) 0;
+}
+
+/* Full Address Section */
+.fullAddressSection {
+    margin-top: var(--spacing-2);
+}
+
+/* Character Count */
+.charCount {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--spacing-2);
+}
+
+.charCountText {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    transition: color 0.2s ease;
+}
+
+.charCountError {
+    color: var(--destructive) !important;
+    font-weight: 600;
+}
+
+/* Select styling overrides within location section */
+.locationSection :global(.formItem) {
+    margin-bottom: 0;
+}
+
+.locationSection :global(.selectWrapper) {
+    background: var(--card);
+}
+
+.locationSection :global(.select) {
+    background: var(--card);
+}
+
+/* Dark Mode */
+.dark .locationSection {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+.dark .locationSection:hover {
+    border-color: color-mix(in srgb, var(--primary) 20%, var(--gray-600));
+}
+
+.dark .locationSectionHeader {
+    border-bottom-color: var(--gray-700);
+}
+
+.dark .divider {
+    background: var(--gray-700);
+}
+
+.dark .locationIcon {
+    background: color-mix(in srgb, var(--primary) 15%, var(--gray-800));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-4);
+    }
+
+    .locationSection {
+        padding: var(--spacing-5);
+    }
+
+    .locationSectionHeader {
+        margin-bottom: var(--spacing-4);
+        padding-bottom: var(--spacing-3);
+    }
+
+    .divider {
+        margin: var(--spacing-4) 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .locationSection {
+        padding: var(--spacing-4);
+        border-radius: var(--radius-lg);
+    }
+
+    .locationSectionHeader span {
+        font-size: var(--text-sm);
+    }
+
+    .locationIcon {
+        font-size: var(--text-base);
+        padding: var(--spacing-1);
+    }
+}

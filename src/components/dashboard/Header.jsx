@@ -27,9 +27,9 @@ const Header = ({ toggleSidebar, sidebarOpen }) => {
         const { user } = tokenService.get();
 
         setUserData({
-            name: user?.name || "Guest User",
+            name: `${user?.first_name || ""} ${user?.last_name || ""}`.trim() || "Guest User",
             email: user?.email || "guest@example.com",
-            avatar: "",
+            avatar: user?.profile_image || "",
             role: user?.role || "Guest",
         });
     }, []);
@@ -55,23 +55,21 @@ const Header = ({ toggleSidebar, sidebarOpen }) => {
             </div>
 
             <div className={styles.headerRight}>
-                <div
-                    className={styles.userIcon}
+                <button
+                    className={styles.userButton}
                     onClick={() => setIsPopupOpen(!isPopupOpen)}
                     title={`${userData.name} (${userData.role})`}
                 >
-                    <div className={styles.avatarPreview}>
-                        {userData.avatar ? (
-                            <img
-                                src={userData.avatar}
-                                alt={userData.name}
-                                className={styles.avatarImage}
-                            />
-                        ) : (
-                            <FiUser size={20} />
-                        )}
-                    </div>
-                </div>
+                    {userData.avatar ? (
+                        <img
+                            src={userData.avatar}
+                            alt={userData.name}
+                            className={styles.avatarImage}
+                        />
+                    ) : (
+                        <FiUser size={18} className={styles.avatarFallback} />
+                    )}
+                </button>
 
                 <UserPopup
                     isOpen={isPopupOpen}

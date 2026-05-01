@@ -28,7 +28,8 @@ const RegisterPage = () => {
     const methods = useForm({
         resolver: zodResolver(registerSchema),
         defaultValues: {
-            name: "",
+            first_name: "",
+            last_name: "",
             email: "",
             password: "",
             password2: "",
@@ -37,6 +38,7 @@ const RegisterPage = () => {
     }); //TODO: handle zod errors in form
 
     const handleRegisterSubmit = async (data) => {
+        console.log(data)
         const res = await registerUser(data);
 
         if (res.error) {
@@ -83,13 +85,22 @@ const RegisterPage = () => {
         >
             <AuthForm methods={methods} onSubmit={handleRegisterSubmit}>
                 <AuthInput
-                    name="name"
-                    label="Full Name"
+                    name="first_name"
+                    label="First Name"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="John"
                     icon={<FiUser />}
                     required
-                    autoComplete="name"
+                    autoComplete="first_name"
+                />
+                <AuthInput
+                    name="last_name"
+                    label="Last Name"
+                    type="text"
+                    placeholder="Doe"
+                    icon={<FiUser />}
+                    required
+                    autoComplete="last_name"
                 />
 
                 <AuthInput

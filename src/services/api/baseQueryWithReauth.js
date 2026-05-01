@@ -18,7 +18,7 @@ const baseQuery = fetchBaseQuery({
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
 
-    // 🔴 Access token expired
+    // Access token expired
     if (result?.error?.status === 401) {
         const { refresh } = tokenService.get();
 
@@ -27,10 +27,10 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
             return result;
         }
 
-        // 🔁 Refresh token request
+        // Refresh token request
         const refreshResult = await baseQuery(
             {
-                url: "user/token/refresh/",
+                url: "auth/token/refresh/",
                 method: "POST",
                 body: { refresh },
             },
@@ -43,7 +43,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
         if (newAccess) {
             tokenService.store({ access: newAccess });
 
-            // 🔁 retry original request with NEW token
+            // retry original request with NEW token
             result = await baseQuery(args, api, extraOptions);
         } else {
             tokenService.remove();

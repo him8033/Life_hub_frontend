@@ -31,11 +31,13 @@
     cursor: pointer;
     color: white;
     padding: var(--spacing-1);
-    transition: transform 0.2s ease;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
 }
 
 .mobileMenuButton:hover {
-    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
 }
 
 /* Logo Styles */
@@ -46,12 +48,12 @@
     font-size: var(--text-xl);
     font-weight: bold;
     letter-spacing: 0.5px;
-    color: var(--background);
+    color: white;
 }
 
 .logoIcon {
     font-size: var(--text-2xl);
-    color: var(--background);
+    color: white;
 }
 
 /* Header Right Section */
@@ -62,42 +64,54 @@
     position: relative;
 }
 
-/* User Icon / Avatar Button */
-.userIcon {
-    width: 40px;
-    height: 40px;
-    padding: var(--spacing-2);
+/* User Button - Avatar Container */
+.userButton {
+    width: 38px;
+    height: 38px;
+    padding: 0;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
     cursor: pointer;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-}
-
-.userIcon:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.05);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
-}
-
-/* Avatar Preview */
-.avatarPreview {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+    transition: all 0.25s ease;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    flex-shrink: 0;
 }
 
+.userButton:hover {
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.08);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
+}
+
+.userButton:active {
+    transform: scale(0.96);
+}
+
+/* Avatar Image - Fills entire circle */
 .avatarImage {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+/* Avatar Fallback Icon */
+.avatarFallback {
+    color: rgba(255, 255, 255, 0.9);
+    flex-shrink: 0;
+}
+
+/* Focus visible for accessibility */
+.userButton:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
 }
 
 /* Desktop Styles */
@@ -111,6 +125,7 @@
 @media (max-width: 640px) {
     .header {
         padding: 0 var(--spacing-4);
+        height: 56px;
     }
 
     .logo span {
@@ -119,5 +134,21 @@
 
     .logoIcon {
         font-size: var(--text-xl);
+    }
+
+    .userButton {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0 var(--spacing-3);
+    }
+
+    .userButton {
+        width: 32px;
+        height: 32px;
     }
 }

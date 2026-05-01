@@ -1,0 +1,101 @@
+/* SocialLinksSection.module.css */
+
+/* Section */
+.section {
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 2px solid var(--border);
+}
+
+.sectionTitle {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0;
+}
+
+/* Social Form */
+.socialForm {
+    background: var(--muted);
+    padding: var(--spacing-5);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-5);
+    border: 1px solid var(--border);
+}
+
+.socialFormGrid {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.socialFormActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-2);
+}
+
+/* Social Links List */
+.socialLinksList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+}
+
+/* Empty State */
+.emptySocial {
+    text-align: center;
+    padding: var(--spacing-10);
+    color: var(--muted-foreground);
+}
+
+.emptyIcon {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--spacing-3);
+    opacity: 0.5;
+}
+
+.emptySocial p {
+    margin: 0;
+    font-size: var(--text-sm);
+}
+
+/* Dark Mode */
+.dark .section {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+.dark .socialForm {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .socialFormGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .section {
+        padding: var(--spacing-5);
+    }
+
+    .sectionHeader {
+        flex-direction: column;
+        gap: var(--spacing-3);
+        align-items: flex-start;
+    }
+}
