@@ -34,6 +34,12 @@ export const ROUTES = {
                 VIEW: (travelspot_id) => `/dashboard/travelspots/spotcategory/view/${travelspot_id}`,
             },
         },
+        PORTFOLIO: {
+            LIST: '/dashboard/portfolio',
+            CREATE: '/dashboard/portfolio/create',
+            VIEW: (snapshotId) => `/dashboard/portfolio/${snapshotId}`,
+            EDIT: (snapshotId) => `/dashboard/portfolio/${snapshotId}/edit`,
+        },
     },
 
     LEGAL: {

@@ -18,6 +18,7 @@ import {
 } from 'react-icons/fi';
 import styles from '@/styles/dashboard/Sidebar.module.css';
 import { ROUTES } from '@/routes/routes.constants';
+import { AiFillProfile } from 'react-icons/ai';
 
 const menuItems = [
     {
@@ -55,6 +56,15 @@ const menuItems = [
                     { label: 'All Travel Spots', href: ROUTES.DASHBOARD.TRAVELSPOT.LIST, icon: <FiList /> },
                     { label: 'Add Travel Spot', href: ROUTES.DASHBOARD.TRAVELSPOT.CREATE, icon: <FiPlusCircle /> },
                     { label: 'Spot Categories', href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST, icon: <FiTag /> },
+                ]
+            },
+            {
+                id: 'portfolio',
+                label: 'Portfolio Hub',
+                icon: <AiFillProfile />,
+                href: '#',
+                submenu: [
+                    { label: 'All Snapshots', href: ROUTES.DASHBOARD.PORTFOLIO.LIST, icon: <FiList /> },
                 ]
             },
         ]

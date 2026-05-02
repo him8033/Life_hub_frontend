@@ -5,6 +5,7 @@ import { travelspotApi } from "@/services/api/travelspotApi";
 import { spotcategoryApi } from "@/services/api/spotcategoryApi";
 import { locationsApi } from "@/services/api/locationsApi";
 import { spotImageApi } from "@/services/api/spotImageApi";
+import { portfolioApi } from "@/services/api/portfolioApi";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     [spotcategoryApi.reducerPath]: spotcategoryApi.reducer,
     [locationsApi.reducerPath]: locationsApi.reducer,
     [spotImageApi.reducerPath]: spotImageApi.reducer,
+    [portfolioApi.reducerPath]: portfolioApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat(
@@ -21,6 +23,7 @@ export const store = configureStore({
       spotcategoryApi.middleware,
       locationsApi.middleware,
       spotImageApi.middleware,
+      portfolioApi.middleware,
     ),
   devTools: process.env.NODE_ENV !== "production",
 });
