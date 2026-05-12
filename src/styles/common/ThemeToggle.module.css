@@ -1,0 +1,426 @@
+/* ThemeToggle.module.css - Enhanced Visibility */
+
+/* Root variables for animations */
+:root {
+  --step: 0.5s;
+  --ease: linear(
+    0 0%,
+    0.2342 12.49%,
+    0.4374 24.99%,
+    0.6093 37.49%,
+    0.6835 43.74%,
+    0.7499 49.99%,
+    0.8086 56.25%,
+    0.8593 62.5%,
+    0.9023 68.75%,
+    0.9375 75%,
+    0.9648 81.25%,
+    0.9844 87.5%,
+    0.9961 93.75%,
+    1 100%
+  );
+  --offset: calc(var(--step) * 0.5);
+  --font-size: 28px;
+}
+
+/* Button Container */
+.toggle {
+  background: transparent;
+  font-size: var(--font-size);
+  height: 2.2em;
+  padding: 0;
+  border-radius: 3em;
+  border: 0;
+  aspect-ratio: 1.8 / 1;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+/* Outer Glow Ring for Visibility */
+.outerGlow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 3em;
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.3), 
+    rgba(118, 75, 162, 0.3)
+  );
+  opacity: 0.6;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.toggle:hover .outerGlow {
+  opacity: 1;
+  inset: -6px;
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.5), 
+    rgba(118, 75, 162, 0.5)
+  );
+  filter: blur(4px);
+}
+
+.toggle[aria-pressed='true'] .outerGlow {
+  background: linear-gradient(135deg, 
+    rgba(255, 193, 7, 0.4), 
+    rgba(255, 87, 34, 0.4)
+  );
+}
+
+.toggle :is(.socket, .face) {
+  position: absolute;
+  border-radius: 3em;
+}
+
+/* Socket Styles - Enhanced Contrast */
+.socket {
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3), -0.05em 0.1em 0.2em -0.2em white;
+  background: light-dark(hsl(0 0% 95%), hsl(0 0% 15%));
+  position: relative;
+  inset: 0;
+  transition-property: background-color, box-shadow;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+.toggle:hover .socket {
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.6), -0.05em 0.1em 0.2em -0.2em white;
+}
+
+.socketShadow {
+  position: absolute;
+  inset: 0 0em;
+  opacity: 0;
+  border-radius: inherit;
+  box-shadow: 0em 0.075em 0.1em 0em white;
+  transition-property: opacity;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+/* Face Styles */
+.face {
+  inset: 0.15em;
+  transition-property: scale;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+  scale: 1;
+}
+
+.faceShadow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.faceShadow::before,
+.faceShadow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transition-property: opacity, translate, filter, scale;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+.faceShadow::before {
+  background: black;
+}
+
+.faceShadow::after {
+  background: white;
+  scale: 0.5;
+}
+
+/* Face Plate - Enhanced */
+.facePlate {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: -0.05em 0.1em 0.2em -0.2em white inset,
+              0 0 0 1px rgba(102, 126, 234, 0.2);
+  background: conic-gradient(from 45deg, #0000, hsl(0 0% 100% / 0.1)),
+    light-dark(var(--button-light), var(--button-dark));
+  transition-property: background-color, box-shadow;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+.toggle:hover .facePlate {
+  box-shadow: -0.05em 0.1em 0.2em -0.2em white inset,
+              0 0 0 2px rgba(102, 126, 234, 0.4);
+}
+
+.faceGlowdrop {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  scale: 0;
+  transition-property: scale;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+.faceGlowdrop::after,
+.faceGlowdrop::before {
+  content: '';
+  height: 50%;
+  aspect-ratio: 1;
+  background: #fff;
+  filter: blur(4px);
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.faceGlowdrop::before {
+  left: 4%;
+  width: 56%;
+  translate: 0 -25%;
+}
+
+.faceGlowdrop::after {
+  bottom: 0;
+  right: 12%;
+  width: 34%;
+  translate: 0 20%;
+}
+
+.faceGlows {
+  position: absolute;
+  inset: -0.075em;
+  opacity: 0;
+  border-radius: inherit;
+  mix-blend-mode: plus-lighter;
+  filter: blur(6px);
+  z-index: 20;
+  mask: conic-gradient(from 280deg, #0000, #fff 20deg 45deg, #0000 95deg),
+    conic-gradient(from 110deg, #0000, #fff 20deg, #0000 95deg);
+  transition-property: opacity;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+.faceGlows div {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  filter: blur(3px);
+  border: 0.1em solid white;
+}
+
+.faceShine {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  border-radius: 3em;
+  transition-property: opacity;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+.faceShineShadow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  mask: conic-gradient(
+    from 0deg,
+    #fff 90deg,
+    #0000 110deg 200deg,
+    #fff 215deg 280deg,
+    #0000 315deg
+  );
+  box-shadow: 0.075em 0 0.025em -0.025em hsl(0 0% 0% / 0.5) inset,
+    -0.075em -0.05em 0.025em -0.025em hsl(0 0% 0% / 0.5) inset;
+}
+
+.faceShine::before {
+  content: '';
+  position: absolute;
+  inset: 0.05em;
+  border-radius: 3em;
+  box-shadow: 0 -0.05em 0.025em -0.025em hsl(0 0% 50% / 0.5) inset,
+    -0.025em 0.05em 0.025em -0.025em hsl(0 0% 100% / 0.5) inset;
+}
+
+.faceShine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(from 45deg, #0000, hsl(0 0% 100% / 0.25));
+  border-radius: 3em;
+}
+
+/* SVG Styles */
+.face svg {
+  --glow: hsl(182 90% 92%);
+  width: 28%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -52% -48%;
+  overflow: visible !important;
+}
+
+.glow {
+  z-index: 3;
+  filter: drop-shadow(0 0 0.15em var(--glow));
+  will-change: opacity;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+.glowPath {
+  fill: var(--glow);
+  stroke: var(--glow);
+  opacity: 1;
+  stroke-width: 0;
+}
+
+.trailHolder {
+  z-index: 2;
+  filter: blur(6px);
+}
+
+.trail {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 10 80;
+  stroke-dashoffset: 10;
+  opacity: 0;
+  transition-property: stroke-dashoffset, opacity;
+  transition-duration: calc(var(--step) * 3), calc(var(--step) * 0.5);
+  transition-delay: var(--offset), calc(var(--offset) + (var(--step) * 2.5));
+  transition-timing-function: var(--ease), linear(
+    0 0%,
+    0.0039 6.25%,
+    0.0156 12.5%,
+    0.0352 18.75%,
+    0.0625 25%,
+    0.0977 31.25%,
+    0.1407 37.5%,
+    0.1914 43.74%,
+    0.2499 49.99%,
+    0.3164 56.25%,
+    0.3906 62.5%,
+    0.5625 75%,
+    0.7656 87.5%,
+    1 100%
+  );
+}
+
+.trailHolder .trail {
+  stroke-width: 3;
+}
+
+.outline {
+  transition-property: stroke;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+.innerBg {
+  fill: black;
+  transition-property: fill;
+  transition-duration: var(--step);
+  transition-timing-function: var(--ease);
+}
+
+.innerFace {
+  fill: hsl(230 5% 80%);
+}
+
+/* Pressed/Active State (Light Mode) */
+.toggle[aria-pressed='true'] .face {
+  scale: 1.1;
+}
+
+.toggle[aria-pressed='true'] .outline {
+  stroke: hsl(0 0% 30%);
+}
+
+.toggle[aria-pressed='true'] .innerBg {
+  fill: hsl(0 0% 20%);
+}
+
+.toggle[aria-pressed='true'] .socket {
+  box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.4), -0.025em 0.08em 0.2em -0.1em white;
+}
+
+.toggle[aria-pressed='true'] .glow {
+  opacity: 0;
+}
+
+.toggle[aria-pressed='true'] .faceGlowdrop {
+  scale: 1;
+}
+
+.toggle[aria-pressed='true'] .faceShadow::before {
+  translate: -15% 55%;
+  filter: blur(0.8em);
+  opacity: 0.35;
+}
+
+.toggle[aria-pressed='true'] .faceShadow::after {
+  filter: blur(0.4em);
+  scale: 1;
+}
+
+.toggle[aria-pressed='true'] .socketShadow,
+.toggle[aria-pressed='true'] .faceGlows,
+.toggle[aria-pressed='true'] .faceShine {
+  opacity: 1;
+}
+
+.toggle[aria-pressed='true'] .trail {
+  transition: stroke-dashoffset 0s;
+  opacity: 1;
+  stroke-dashoffset: -70;
+}
+
+/* Hover Effects */
+.toggle:hover {
+  transform: scale(1.05);
+}
+
+.toggle:hover .face {
+  scale: 1.02;
+}
+
+.toggle:active {
+  transform: scale(0.98);
+}
+
+.toggle:active .socket {
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.6), -0.045em 0.1em 0.2em -0.15em white;
+}
+
+.toggle:active .face {
+  scale: 0.99;
+}
+
+/* Focus Styles */
+.toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.5);
+}
+
+/* Responsive Sizes */
+@media (max-width: 768px) {
+  .toggle {
+    --font-size: 24px;
+    height: 2em;
+  }
+}
+
+@media (max-width: 480px) {
+  .toggle {
+    --font-size: 20px;
+    height: 1.8em;
+  }
+}
