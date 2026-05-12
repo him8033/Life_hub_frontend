@@ -1,70 +1,24 @@
 /* Sidebar.module.css */
 
-/* ================================
-   SIDEBAR CONTAINER
-   ================================ */
-
-.sidebar {
-    width: 260px;
-    background: var(--card);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow-y: auto;
-    position: sticky;
-    top: 0;
-    backdrop-filter: blur(10px);
-}
-
-/* Custom Scrollbar */
-.sidebar::-webkit-scrollbar {
-    width: 4px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-    background: var(--muted);
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: var(--radius-full);
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-    background: var(--muted-foreground);
-}
-
-/* ================================
-   SIDEBAR NAVIGATION
-   ================================ */
-
 .sidebarNav {
     flex: 1;
-    padding: var(--spacing-4) var(--spacing-3);
+    padding: var(--spacing-5) var(--spacing-2);
 }
-
-/* ================================
-   MENU SECTION
-   ================================ */
 
 .menuSection {
     margin-bottom: var(--spacing-6);
 }
 
 .menuTitle {
-    padding: 0 var(--spacing-2);
-    margin-bottom: var(--spacing-3);
-    color: var(--muted-foreground);
     font-size: var(--text-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    color: var(--muted-foreground);
+    padding: 0 var(--spacing-2);
+    margin-bottom: var(--spacing-3);
+    white-space: nowrap;
 }
-
-/* ================================
-   MENU LIST
-   ================================ */
 
 .menuList {
     list-style: none;
@@ -74,21 +28,19 @@
 
 .menuItem {
     margin-bottom: var(--spacing-1);
+    position: relative;
 }
-
-/* ================================
-   MAIN MENU LINKS
-   ================================ */
 
 .menuLink {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--spacing-3);
-    padding: var(--spacing-3) var(--spacing-3);
+    padding: var(--spacing-2);
     color: var(--muted-foreground);
     text-decoration: none;
-    transition: all 0.25s ease;
     border-radius: var(--radius-md);
+    transition: all 0.2s;
     cursor: pointer;
     width: 100%;
     background: none;
@@ -98,103 +50,155 @@
     position: relative;
 }
 
-/* Glassmorphic hover effect */
+/* When sidebar is open, align left */
+.sidebarOpen .menuLink {
+    justify-content: flex-start;
+    padding: var(--spacing-2) var(--spacing-3);
+}
+
 .menuLink:hover {
-    background: rgba(102, 126, 234, 0.08);
-    backdrop-filter: blur(8px);
+    background: var(--accent);
     color: var(--primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transform: translateX(2px);
 }
 
-/* Glassmorphic active menu item */
-.menuLinkActive {
-    background: rgba(102, 126, 234, 0.12);
-    backdrop-filter: blur(12px);
+.menuLink.active {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
     color: var(--primary);
-    font-weight: 500;
-    border: 1px solid rgba(102, 126, 234, 0.2);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
-    position: relative;
 }
 
-/* Subtle glow effect for active item */
-.menuLinkActive::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 30% 50%, rgba(102, 126, 234, 0.1), transparent);
-    border-radius: var(--radius-md);
-    pointer-events: none;
+.menuLink.hasSubmenu {
+    justify-content: center;
 }
 
-.menuLinkActive:hover {
-    background: rgba(102, 126, 234, 0.16);
-    transform: translateX(2px);
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+.sidebarOpen .menuLink.hasSubmenu {
+    justify-content: space-between;
 }
 
 .menuIcon {
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
     min-width: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease;
-}
-
-.menuLinkActive .menuIcon {
-    color: var(--primary);
 }
 
 .menuText {
     flex: 1;
+    text-align: left;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .menuChevron {
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease;
 }
 
-.menuLinkActive .menuChevron {
-    color: var(--primary);
-}
-
-/* ================================
-   SUBMENU
-   ================================ */
-
-.submenu {
-    max-height: 0;
+/* Dropdown Menu for Mini Sidebar */
+.dropdownMenu {
+    position: fixed;
+    left: 80px;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border);
+    min-width: 220px;
+    z-index: 1000;
+    animation: slideIn 0.2s ease;
     overflow: hidden;
-    transition: max-height 0.3s ease;
-    margin-left: var(--spacing-7);
+    transform: translateY(-50%);
 }
 
-.submenuOpen {
-    max-height: 500px;
+/* Add a bridge between icon and dropdown */
+.dropdownMenu::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+    background: transparent;
 }
 
-.submenuList {
-    list-style: none;
-    padding: var(--spacing-1) 0;
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
+}
+
+.dropdownHeader {
+    padding: var(--spacing-3) var(--spacing-4);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+}
+
+.dropdownIcon {
+    font-size: var(--text-lg);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+}
+
+.dropdownTitle {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.dropdownDivider {
+    height: 1px;
+    background: var(--border);
     margin: 0;
 }
 
-.submenuItem {
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-4);
+    color: var(--muted-foreground);
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.dropdownItem:hover {
+    background: var(--accent);
+    color: var(--primary);
+}
+
+.dropdownItemActive {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+}
+
+.dropdownItemIcon {
+    font-size: var(--text-sm);
+    min-width: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.dropdownItemText {
+    font-size: var(--text-sm);
+    flex: 1;
+}
+
+/* Submenu for Expanded Sidebar */
+.submenu {
+    margin-left: calc(var(--spacing-3) + 24px);
+    margin-top: var(--spacing-1);
     margin-bottom: var(--spacing-1);
 }
 
-/* Glassmorphic submenu links */
 .submenuLink {
     display: flex;
     align-items: center;
@@ -202,37 +206,19 @@
     padding: var(--spacing-2) var(--spacing-3);
     color: var(--muted-foreground);
     text-decoration: none;
-    transition: all 0.2s ease;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     font-size: var(--text-sm);
-    position: relative;
+    transition: all 0.2s;
 }
 
 .submenuLink:hover {
-    background: rgba(102, 126, 234, 0.08);
-    backdrop-filter: blur(8px);
-    color: var(--primary);
-    transform: translateX(2px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.submenuLinkActive {
-    background: rgba(102, 126, 234, 0.12);
-    backdrop-filter: blur(12px);
-    color: var(--primary);
-    font-weight: 500;
-    border: 1px solid rgba(102, 126, 234, 0.2);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
-}
-
-.submenuLinkActive .submenuIcon {
+    background: var(--accent);
     color: var(--primary);
 }
 
-.submenuLinkActive:hover {
-    background: rgba(102, 126, 234, 0.16);
-    transform: translateX(2px);
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+.submenuLink.active {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
 }
 
 .submenuIcon {
@@ -240,58 +226,44 @@
     min-width: 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
 }
 
 .submenuText {
     flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
-/* ================================
-   RESPONSIVE
-   ================================ */
-
-@media (max-width: 1024px) {
-    .sidebar {
-        width: 280px;
-    }
-}
-
-@media (max-width: 640px) {
-    .sidebar {
-        width: 260px;
-    }
-}
-
-/* ================================
-   COLLAPSED STATE (Optional)
-   ================================ */
-
-.sidebarCollapsed {
-    width: 70px;
-}
-
-.sidebarCollapsed .menuText,
-.sidebarCollapsed .menuChevron,
-.sidebarCollapsed .submenu,
-.sidebarCollapsed .menuTitle {
+/* Hide section titles and submenus when sidebar is closed */
+.sidebarClosed .menuTitle,
+.sidebarClosed .submenu,
+.sidebarClosed .menuText,
+.sidebarClosed .menuChevron {
     display: none;
 }
 
-.sidebarCollapsed .menuLink {
+.sidebarClosed .menuLink {
     justify-content: center;
     padding: var(--spacing-3);
 }
 
-.sidebarCollapsed .menuIcon {
+.sidebarClosed .menuIcon {
     margin: 0;
     font-size: var(--text-xl);
 }
 
-.sidebarCollapsed .sidebarNav {
-    padding: var(--spacing-3);
+.sidebarClosed .sidebarNav {
+    padding: var(--spacing-5) var(--spacing-2);
 }
 
+/* Mobile styles - hide dropdown on mobile */
+@media (max-width: 1023px) {
+    .dropdownMenu {
+        display: none;
+    }
+}
+
+/* Tablet and Desktop adjustments */
+@media (min-width: 1024px) {
+    .dropdownMenu {
+        left: 85px;
+    }
+}

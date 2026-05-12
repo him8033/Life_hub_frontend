@@ -1,31 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { FiUser, FiMenu, FiX } from 'react-icons/fi';
+import { useEffect, useState, useRef } from 'react';
+import { FiUser } from 'react-icons/fi';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import UserPopup from '@/components/dashboard/UserPopup';
 import styles from '@/styles/dashboard/Header.module.css';
 import { tokenService } from '@/services/auth/token.service';
 
-const Header = ({ toggleSidebar, sidebarOpen }) => {
+const Header = ({ toggleSidebar, sidebarOpen, isMobile }) => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [userData, setUserData] = useState(null);
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => {
-            setIsMobile(window.innerWidth < 1024);
-        };
-
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
+    const buttonRef = useRef(null);
 
     useEffect(() => {
         const { user } = tokenService.get();
-
         setUserData({
             name: `${user?.first_name || ""} ${user?.last_name || ""}`.trim() || "Guest User",
             email: user?.email || "guest@example.com",
@@ -34,20 +22,26 @@ const Header = ({ toggleSidebar, sidebarOpen }) => {
         });
     }, []);
 
+    const togglePopup = () => {
+        setIsPopupOpen(!isPopupOpen);
+    };
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
+    };
+
     if (!userData) return null;
 
     return (
         <header className={styles.header}>
             <div className={styles.headerLeft}>
-                {isMobile && (
-                    <button
-                        className={styles.mobileMenuButton}
-                        onClick={toggleSidebar}
-                        aria-label={sidebarOpen ? "Close menu" : "Open menu"}
-                    >
-                        {sidebarOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-                    </button>
-                )}
+                <button
+                    className={styles.menuButton}
+                    onClick={toggleSidebar}
+                    aria-label="Toggle menu"
+                >
+                    ☰
+                </button>
                 <div className={styles.logo}>
                     <AiOutlineDashboard className={styles.logoIcon} />
                     <span>LifeHub</span>
@@ -56,25 +50,23 @@ const Header = ({ toggleSidebar, sidebarOpen }) => {
 
             <div className={styles.headerRight}>
                 <button
+                    ref={buttonRef}
                     className={styles.userButton}
-                    onClick={() => setIsPopupOpen(!isPopupOpen)}
-                    title={`${userData.name} (${userData.role})`}
+                    onClick={togglePopup}
+                    aria-label="User menu"
                 >
                     {userData.avatar ? (
-                        <img
-                            src={userData.avatar}
-                            alt={userData.name}
-                            className={styles.avatarImage}
-                        />
+                        <img src={userData.avatar} alt={userData.name} />
                     ) : (
-                        <FiUser size={18} className={styles.avatarFallback} />
+                        <FiUser size={18} />
                     )}
                 </button>
 
                 <UserPopup
                     isOpen={isPopupOpen}
-                    onClose={() => setIsPopupOpen(false)}
+                    onClose={closePopup}
                     userData={userData}
+                    anchorEl={buttonRef.current}
                 />
             </div>
         </header>

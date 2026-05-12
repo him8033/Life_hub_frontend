@@ -1,40 +1,60 @@
 /* UserPopup.module.css */
 
-/* User Info Section */
-.userInfoSection {
-    padding: var(--spacing-6);
+.userPopup {
+    animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.userPopupContent {
+    width: 280px;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+/* User Header - Centered */
+.userHeader {
+    padding: var(--spacing-6) var(--spacing-5);
     text-align: center;
-    background: var(--background)
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
 }
 
 .userAvatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin: 0 auto var(--spacing-2);
-    overflow: hidden;
-    background: var(--brand-gradient);
     display: flex;
-    align-items: center;
     justify-content: center;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-3);
 }
 
-.userAvatarImage {
-    width: 100%;
-    height: 100%;
+.avatarImage,
+.avatarInitials {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
     object-fit: cover;
 }
 
-.userAvatarPlaceholder {
+.avatarInitials {
+    background: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
-    background: var(--brand-gradient);
+    font-weight: 600;
+    font-size: var(--text-2xl);
 }
 
 .userDetails {
@@ -42,74 +62,86 @@
 }
 
 .userName {
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
     font-weight: 600;
     color: var(--foreground);
     margin: 0 0 var(--spacing-1);
 }
 
 .userEmail {
-    font-size: var(--text-sm);
-    color: var(--foreground);
-    margin: var(--spacing-1) 0;
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin: 0 0 var(--spacing-2);
+    word-break: break-all;
 }
 
 .userRole {
     display: inline-block;
     padding: var(--spacing-1) var(--spacing-3);
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-full);
     font-size: var(--text-xs);
-    font-weight: 500;
-    background: var(--primary-100);
-    color: var(--primary);
-    text-transform: uppercase;
-    backdrop-filter: blur(4px);
+    font-weight: 600;
+    background: var(--primary);
+    color: white;
 }
 
-/* Popup Menu List */
-.popupList {
-    list-style: none;
+/* Simple Menu List */
+.menuList {
     padding: var(--spacing-2) 0;
-    margin: 0;
 }
 
-.popupItem {
-    padding: 0;
-}
-
-.popupLink {
+.menuButton {
     display: flex;
     align-items: center;
     gap: var(--spacing-3);
-    padding: var(--spacing-3) var(--spacing-6);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--foreground);
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-5);
     background: none;
     border: none;
     cursor: pointer;
-    width: 100%;
-    transition: all 0.2s ease;
-}
-
-.popupLink:hover {
-    background: var(--accent);
+    font-size: var(--text-sm);
     color: var(--foreground);
-    padding-left: var(--spacing-7);
+    transition: all 0.2s;
+    text-align: left;
 }
 
-.popupIcon {
-    font-size: var(--text-base);
-    color: var(--muted-foreground);
-}
-
-.popupLink:hover .popupIcon {
+.menuButton:hover {
+    background: var(--accent);
     color: var(--primary);
 }
 
-/* Divider */
-.popupDivider {
+.menuButton svg {
+    color: var(--muted-foreground);
+}
+
+.menuButton:hover svg {
+    color: var(--primary);
+}
+
+.divider {
     height: 1px;
-    margin: var(--spacing-2) var(--spacing-6);
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: var(--spacing-2) var(--spacing-5);
+    background: var(--border);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .userPopupContent {
+        width: 260px;
+    }
+
+    .userHeader {
+        padding: var(--spacing-5);
+    }
+
+    .avatarImage,
+    .avatarInitials {
+        width: 60px;
+        height: 60px;
+        font-size: var(--text-xl);
+    }
+
+    .menuButton {
+        padding: var(--spacing-2) var(--spacing-4);
+    }
 }

@@ -1,152 +1,121 @@
 /* Header.module.css */
 
-/* Header Container */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 var(--spacing-5);
+    padding: 0 var(--spacing-6);
     height: 60px;
     background: var(--brand-gradient);
-    color: white;
+    color: var(--text-inverse);
     box-shadow: var(--shadow-sm);
-    z-index: 50;
+    z-index: 200; /* Higher than sidebar */
     position: relative;
 }
 
-/* Header Left Section */
 .headerLeft {
     display: flex;
     align-items: center;
     gap: var(--spacing-4);
 }
 
-/* Mobile Menu Button */
-.mobileMenuButton {
+.menuButton {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: none;
+    background: rgba(255, 255, 255, 0.1);
     border: none;
     cursor: pointer;
     color: white;
-    padding: var(--spacing-1);
+    font-size: var(--text-xl);
+    width: 40px;
+    height: 40px;
     border-radius: var(--radius-md);
-    transition: all 0.2s ease;
+    transition: all 0.2s;
 }
 
-.mobileMenuButton:hover {
-    background: rgba(255, 255, 255, 0.1);
+.menuButton:hover {
+    background: rgba(255, 255, 255, 0.2);
     transform: scale(1.05);
 }
 
-/* Logo Styles */
 .logo {
     display: flex;
     align-items: center;
-    gap: var(--spacing-3);
-    font-size: var(--text-xl);
+    gap: var(--spacing-2);
+    font-size: var(--text-lg);
     font-weight: bold;
-    letter-spacing: 0.5px;
-    color: white;
 }
 
 .logoIcon {
-    font-size: var(--text-2xl);
-    color: white;
+    font-size: var(--text-xl);
 }
 
-/* Header Right Section */
 .headerRight {
     display: flex;
     align-items: center;
-    gap: var(--spacing-5);
-    position: relative;
 }
 
-/* User Button - Avatar Container */
 .userButton {
-    width: 38px;
-    height: 38px;
-    padding: 0;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
     cursor: pointer;
-    transition: all 0.25s ease;
-    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    flex-shrink: 0;
+    transition: all 0.2s;
+    color: white;
 }
 
 .userButton:hover {
-    border-color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.25);
-    transform: scale(1.08);
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
 }
 
-.userButton:active {
-    transform: scale(0.96);
-}
-
-/* Avatar Image - Fills entire circle */
-.avatarImage {
+.userButton img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
     border-radius: 50%;
-    display: block;
-}
-
-/* Avatar Fallback Icon */
-.avatarFallback {
-    color: rgba(255, 255, 255, 0.9);
-    flex-shrink: 0;
-}
-
-/* Focus visible for accessibility */
-.userButton:focus-visible {
-    outline: 2px solid white;
-    outline-offset: 2px;
-}
-
-/* Desktop Styles */
-@media (min-width: 1024px) {
-    .mobileMenuButton {
-        display: none;
-    }
+    object-fit: cover;
 }
 
 /* Mobile Styles */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .header {
         padding: 0 var(--spacing-4);
         height: 56px;
     }
-
+    
     .logo span {
         display: none;
     }
-
-    .logoIcon {
-        font-size: var(--text-xl);
+    
+    .menuButton {
+        width: 36px;
+        height: 36px;
+        font-size: var(--text-lg);
     }
-
+    
     .userButton {
-        width: 34px;
-        height: 34px;
+        width: 36px;
+        height: 36px;
     }
 }
 
 @media (max-width: 480px) {
     .header {
         padding: 0 var(--spacing-3);
+        height: 52px;
     }
-
+    
+    .menuButton {
+        width: 32px;
+        height: 32px;
+    }
+    
     .userButton {
         width: 32px;
         height: 32px;
