@@ -102,11 +102,28 @@
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
     border: 1px solid var(--border);
-    min-width: 220px;
+    min-width: 260px;
+    max-width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
     z-index: 1000;
     animation: slideIn 0.2s ease;
-    overflow: hidden;
     transform: translateY(-50%);
+}
+
+/* Custom scrollbar for dropdown */
+.dropdownMenu::-webkit-scrollbar {
+    width: 4px;
+}
+
+.dropdownMenu::-webkit-scrollbar-track {
+    background: var(--muted);
+    border-radius: var(--radius-full);
+}
+
+.dropdownMenu::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--radius-full);
 }
 
 /* Add a bridge between icon and dropdown */
@@ -125,6 +142,7 @@
         opacity: 0;
         transform: translateY(-50%) translateX(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(-50%) translateX(0);
@@ -138,6 +156,9 @@
     gap: var(--spacing-3);
     background: var(--background);
     border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .dropdownIcon {
@@ -181,10 +202,20 @@
 }
 
 .dropdownItemIcon {
-    font-size: var(--text-sm);
-    min-width: 20px;
+    font-size: var(--text-base);
+    min-width: 24px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+}
+
+.dropdownItem:hover .dropdownItemIcon {
+    color: var(--primary);
+}
+
+.dropdownItemActive .dropdownItemIcon {
+    color: var(--primary);
 }
 
 .dropdownItemText {
@@ -195,14 +226,14 @@
 /* Submenu for Expanded Sidebar */
 .submenu {
     margin-left: calc(var(--spacing-3) + 24px);
-    margin-top: var(--spacing-1);
-    margin-bottom: var(--spacing-1);
+    margin-top: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
 }
 
 .submenuLink {
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
+    gap: var(--spacing-3);
     padding: var(--spacing-2) var(--spacing-3);
     color: var(--muted-foreground);
     text-decoration: none;
@@ -222,10 +253,21 @@
 }
 
 .submenuIcon {
-    font-size: var(--text-sm);
-    min-width: 20px;
+    font-size: var(--text-base);
+    min-width: 24px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+    transition: color 0.2s ease;
+}
+
+.submenuLink:hover .submenuIcon {
+    color: var(--primary);
+}
+
+.submenuLink.active .submenuIcon {
+    color: var(--primary);
 }
 
 .submenuText {
@@ -265,5 +307,18 @@
 @media (min-width: 1024px) {
     .dropdownMenu {
         left: 85px;
+    }
+}
+
+/* When sidebar is collapsed, adjust dropdown position for right-to-left */
+@media (min-width: 1024px) {
+    [dir="rtl"] .dropdownMenu {
+        left: auto;
+        right: 85px;
+    }
+
+    [dir="rtl"] .dropdownMenu::before {
+        left: auto;
+        right: -12px;
     }
 }

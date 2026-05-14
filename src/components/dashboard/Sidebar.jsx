@@ -6,18 +6,25 @@ import { usePathname } from 'next/navigation';
 import {
     FiHome,
     FiUsers,
-    FiMap,
-    FiTag,
-    FiPlusCircle,
-    FiList,
     FiUser,
+    FiUserPlus,
+    FiShield,
+    FiMap,
+    FiMapPin,
+    FiGrid,
+    FiBriefcase,
+    FiLayers,
+    FiCode,
+    FiGlobe,
+    FiFileText,
     FiSettings,
     FiChevronDown,
-    FiChevronRight
+    FiChevronRight,
+    FiMonitor
 } from 'react-icons/fi';
-import { AiFillProfile } from 'react-icons/ai';
 import styles from '@/styles/dashboard/Sidebar.module.css';
 import { ROUTES } from '@/routes/routes.constants';
+import { FaPalette } from 'react-icons/fa';
 
 const menuItems = [
     {
@@ -31,6 +38,7 @@ const menuItems = [
             },
         ]
     },
+
     {
         title: 'MANAGEMENT',
         items: [
@@ -39,30 +47,92 @@ const menuItems = [
                 label: 'Users',
                 icon: <FiUsers />,
                 submenu: [
-                    { label: 'All Users', href: '/dashboard/users' },
-                    { label: 'Add User', href: '/dashboard/users/add' },
-                    { label: 'Roles', href: '/dashboard/users/roles' }
+                    {
+                        label: 'All Users',
+                        icon: <FiUsers />,
+                        href: '/dashboard/users'
+                    },
+                    {
+                        label: 'Add User',
+                        icon: <FiUserPlus />,
+                        href: '/dashboard/users/add'
+                    },
+                    {
+                        label: 'Roles',
+                        icon: <FiShield />,
+                        href: '/dashboard/users/roles'
+                    }
                 ]
             },
+
             {
                 id: 'travelhub',
                 label: 'Travel Hub',
                 icon: <FiMap />,
                 submenu: [
-                    { label: 'All Travel Spots', href: ROUTES.DASHBOARD.TRAVELSPOT.LIST },
-                    { label: 'Spot Categories', href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST },
+                    {
+                        label: 'All Travel Spots',
+                        icon: <FiMapPin />,
+                        href: ROUTES.DASHBOARD.TRAVELSPOT.LIST
+                    },
+                    {
+                        label: 'Spot Categories',
+                        icon: <FiGrid />,
+                        href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST
+                    },
                 ]
             },
+
             {
                 id: 'portfolio',
                 label: 'Portfolio Hub',
-                icon: <AiFillProfile />,
+                icon: <FiBriefcase />,
                 submenu: [
-                    { label: 'All Snapshots', href: ROUTES.DASHBOARD.PORTFOLIO.LIST },
+                    {
+                        label: 'All Snapshots',
+                        icon: <FiLayers />,
+                        href: ROUTES.DASHBOARD.PORTFOLIO.LIST
+                    },
+                    {
+                        label: 'All Resumes',
+                        icon: <FiFileText />,
+                        href: ROUTES.DASHBOARD.PORTFOLIO.LIST
+                    },
+                    {
+                        label: 'All Portfolios',
+                        icon: <FiMonitor />,
+                        href: ROUTES.DASHBOARD.PORTFOLIO.LIST
+                    },
+                    {
+                        label: 'Skill Categories',
+                        icon: <FiGrid />,
+                        href: '/dashboard/portfolio/admin/skill-categories',
+                    },
+                    {
+                        label: 'Master Skills',
+                        icon: <FiCode />,
+                        href: '/dashboard/portfolio/admin/master-skills',
+                    },
+                    {
+                        label: 'Languages',
+                        icon: <FiGlobe />,
+                        href: '/dashboard/portfolio/admin/master-languages',
+                    },
+                    {
+                        label: 'Resume Templates',
+                        icon: <FiFileText />,
+                        href: '/dashboard/portfolio/admin/resume-templates',
+                    },
+                    {
+                        label: 'Portfolio Themes',
+                        icon: <FaPalette />,
+                        href: '/dashboard/portfolio/admin/portfolio-themes',
+                    },
                 ]
             },
         ]
     },
+
     {
         title: 'ACCOUNT',
         items: [
@@ -74,6 +144,7 @@ const menuItems = [
             }
         ]
     },
+
     {
         title: 'SETTINGS',
         items: [
@@ -103,7 +174,7 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
             section.items.forEach(item => {
                 if (item.submenu) {
                     // Check if any submenu item matches current path
-                    const isActive = item.submenu.some(subItem => 
+                    const isActive = item.submenu.some(subItem =>
                         isPathActive(subItem.href)
                     );
                     if (isActive) {
@@ -118,18 +189,18 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
     // Improved path matching function
     const isPathActive = (href) => {
         if (!href) return false;
-        
+
         // Exact match for dashboard home
         if (href === ROUTES.DASHBOARD.HOME) {
             return pathname === href;
         }
-        
+
         // For other routes, check if pathname starts with href
         // But make sure we're not matching dashboard home accidentally
         if (href !== ROUTES.DASHBOARD.HOME) {
             return pathname === href || pathname.startsWith(href + '/');
         }
-        
+
         return false;
     };
 
@@ -140,7 +211,7 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
 
     const isParentActive = (item) => {
         if (item.submenu) {
-            return item.submenu.some(subItem => 
+            return item.submenu.some(subItem =>
                 isPathActive(subItem.href)
             );
         }
@@ -166,23 +237,23 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
             if (hoverTimeoutRef.current) {
                 clearTimeout(hoverTimeoutRef.current);
             }
-            
+
             setHoveredItem(itemId);
             // Calculate position based on the menu item's position
             const rect = event.currentTarget.getBoundingClientRect();
             let topPosition = rect.top + (rect.height / 2);
-            
+
             // Adjust if dropdown would go off screen
-            const dropdownHeight = 300; // Approximate dropdown height
+            const dropdownHeight = 400; // Increased for more items
             const viewportHeight = window.innerHeight;
-            
+
             if (topPosition + dropdownHeight / 2 > viewportHeight) {
                 topPosition = viewportHeight - dropdownHeight / 2 - 20;
             }
             if (topPosition - dropdownHeight / 2 < 0) {
                 topPosition = dropdownHeight / 2 + 20;
             }
-            
+
             setDropdownPosition({ top: topPosition });
         }
     };
@@ -225,14 +296,14 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                     <ul className={styles.menuList}>
                         {section.items.map((item) => {
                             // For dashboard, use exact matching
-                            const isItemActive = item.href === ROUTES.DASHBOARD.HOME 
+                            const isItemActive = item.href === ROUTES.DASHBOARD.HOME
                                 ? isDashboardActive()
                                 : isActive(item.href);
                             const isParentItemActive = isParentActive(item);
-                            
+
                             return (
-                                <li 
-                                    key={item.id} 
+                                <li
+                                    key={item.id}
                                     className={styles.menuItem}
                                     onMouseEnter={(e) => handleMouseEnter(item.id, e)}
                                     onMouseLeave={handleMouseLeave}
@@ -265,10 +336,10 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                                                     </>
                                                 )}
                                             </button>
-                                            
-                                            {/* Dropdown for mini sidebar hover */}
+
+                                            {/* Dropdown for mini sidebar hover - WITH ICONS */}
                                             {!isOpen && hoveredItem === item.id && item.submenu && (
-                                                <div 
+                                                <div
                                                     ref={dropdownRef}
                                                     className={styles.dropdownMenu}
                                                     style={{ top: `${dropdownPosition.top}px` }}
@@ -287,13 +358,21 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                                                             className={`${styles.dropdownItem} ${isActive(subItem.href) ? styles.dropdownItemActive : ''}`}
                                                             onClick={closeSidebar}
                                                         >
-                                                            <span className={styles.dropdownItemText}>{subItem.label}</span>
+                                                            {/* Submenu icon */}
+                                                            {subItem.icon && (
+                                                                <span className={styles.dropdownItemIcon}>
+                                                                    {subItem.icon}
+                                                                </span>
+                                                            )}
+                                                            <span className={styles.dropdownItemText}>
+                                                                {subItem.label}
+                                                            </span>
                                                         </Link>
                                                     ))}
                                                 </div>
                                             )}
-                                            
-                                            {/* Normal submenu for expanded sidebar */}
+
+                                            {/* Normal submenu for expanded sidebar - WITH ICONS */}
                                             {isOpen && openSubmenus[item.id] && (
                                                 <div className={styles.submenu}>
                                                     {item.submenu.map((subItem, idx) => (
@@ -303,7 +382,15 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                                                             className={`${styles.submenuLink} ${isActive(subItem.href) ? styles.active : ''}`}
                                                             onClick={closeSidebar}
                                                         >
-                                                            <span className={styles.submenuText}>{subItem.label}</span>
+                                                            {/* Submenu icon */}
+                                                            {subItem.icon && (
+                                                                <span className={styles.submenuIcon}>
+                                                                    {subItem.icon}
+                                                                </span>
+                                                            )}
+                                                            <span className={styles.submenuText}>
+                                                                {subItem.label}
+                                                            </span>
                                                         </Link>
                                                     ))}
                                                 </div>
