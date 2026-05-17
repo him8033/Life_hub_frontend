@@ -19,7 +19,7 @@ export default function CreateSnapshotPage() {
         try {
             const res = await createSnapshot(formData).unwrap();
             showSnackbar(res.message || 'Snapshot created successfully!', 'success', 5000);
-            router.push(ROUTES.DASHBOARD.PORTFOLIO.LIST);
+            router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST);
         } catch (error) {
             const backendErrors = error?.data?.errors;
 

@@ -91,17 +91,17 @@ const menuItems = [
                     {
                         label: 'All Snapshots',
                         icon: <FiLayers />,
-                        href: ROUTES.DASHBOARD.PORTFOLIO.LIST
+                        href: ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST
                     },
                     {
                         label: 'All Resumes',
                         icon: <FiFileText />,
-                        href: ROUTES.DASHBOARD.PORTFOLIO.LIST
+                        href: ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST
                     },
                     {
                         label: 'All Portfolios',
                         icon: <FiMonitor />,
-                        href: ROUTES.DASHBOARD.PORTFOLIO.LIST
+                        href: ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST
                     },
                     {
                         label: 'Skill Categories',

@@ -226,7 +226,7 @@ export default function PortfolioPage() {
                     <h1 className={styles.pageTitle}>My Portfolios & Resumes</h1>
                 </div>
                 <Link
-                    href={ROUTES.DASHBOARD.PORTFOLIO.CREATE}
+                    href={ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.CREATE}
                     className={styles.addButton}
                 >
                     <FiPlus className={styles.addIcon} />
@@ -260,8 +260,8 @@ export default function PortfolioPage() {
                     snapshots={snapshots}
                     onDelete={handleDelete}
                     onDuplicate={handleDuplicate}
-                    onEdit={(snapshotId) => router.push(ROUTES.DASHBOARD.PORTFOLIO.EDIT(snapshotId))}
-                    onView={(snapshotId) => router.push(ROUTES.DASHBOARD.PORTFOLIO.VIEW(snapshotId))}
+                    onEdit={(snapshotId) => router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.EDIT(snapshotId))}
+                    onView={(snapshotId) => router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.VIEW(snapshotId))}
                     isLoading={isDeleting || isDuplicating || isFetching}
                 />
             </TableLayout>

@@ -34,11 +34,72 @@ export const ROUTES = {
                 VIEW: (travelspot_id) => `/dashboard/travelspots/spotcategory/view/${travelspot_id}`,
             },
         },
+        // PORTFOLIO: {
+        //     LIST: '/dashboard/portfolio',
+        //     CREATE: '/dashboard/portfolio/create',
+        //     VIEW: (snapshotId) => `/dashboard/portfolio/${snapshotId}`,
+        //     EDIT: (snapshotId) => `/dashboard/portfolio/${snapshotId}/edit`,
+        // },
+
         PORTFOLIO: {
-            LIST: '/dashboard/portfolio',
-            CREATE: '/dashboard/portfolio/create',
-            VIEW: (snapshotId) => `/dashboard/portfolio/${snapshotId}`,
-            EDIT: (snapshotId) => `/dashboard/portfolio/${snapshotId}/edit`,
+            // Snapshots
+            SNAPSHOT: {
+                LIST: '/dashboard/portfolio/snapshots',
+                CREATE: '/dashboard/portfolio/snapshots/create',
+                EDIT: (snapshotId) => `/dashboard/portfolio/snapshots/edit/${snapshotId}`,
+                VIEW: (snapshotId) => `/dashboard/portfolio/snapshots/view/${snapshotId}`,
+            },
+
+            // Resumes
+            RESUME: {
+                LIST: '/dashboard/portfolio/resumes',
+                CREATE: '/dashboard/portfolio/resumes/create',
+                EDIT: (resumeId) => `/dashboard/portfolio/resumes/edit/${resumeId}`,
+                VIEW: (resumeId) => `/dashboard/portfolio/resumes/view/${resumeId}`,
+            },
+
+            // Portfolios
+            PORTFOLIO: {
+                LIST: '/dashboard/portfolio/portfolios',
+                CREATE: '/dashboard/portfolio/portfolios/create',
+                EDIT: (portfolioId) => `/dashboard/portfolio/portfolios/edit/${portfolioId}`,
+                VIEW: (portfolioId) => `/dashboard/portfolio/portfolios/view/${portfolioId}`,
+            },
+
+            // Admin - Skill Categories
+            SKILLCATEGORY: {
+                LIST: '/dashboard/portfolio/admin/skill-categories',
+                CREATE: '/dashboard/portfolio/admin/skill-categories/create',
+                EDIT: (categoryId) => `/dashboard/portfolio/admin/skill-categories/edit/${categoryId}`,
+            },
+
+            // Admin - Master Skills
+            MASTERSKILL: {
+                LIST: '/dashboard/portfolio/admin/master-skills',
+                CREATE: '/dashboard/portfolio/admin/master-skills/create',
+                EDIT: (skillId) => `/dashboard/portfolio/admin/master-skills/edit/${skillId}`,
+            },
+
+            // Admin - Master Languages
+            MASTERLANGUAGE: {
+                LIST: '/dashboard/portfolio/admin/master-languages',
+                CREATE: '/dashboard/portfolio/admin/master-languages/create',
+                EDIT: (languageId) => `/dashboard/portfolio/admin/master-languages/edit/${languageId}`,
+            },
+
+            // Admin - Resume Templates
+            RESUMETEMPLATE: {
+                LIST: '/dashboard/portfolio/admin/resume-templates',
+                CREATE: '/dashboard/portfolio/admin/resume-templates/create',
+                EDIT: (templateId) => `/dashboard/portfolio/admin/resume-templates/edit/${templateId}`,
+            },
+
+            // Admin - Portfolio Themes
+            PORTFOLIOTHEME: {
+                LIST: '/dashboard/portfolio/admin/portfolio-themes',
+                CREATE: '/dashboard/portfolio/admin/portfolio-themes/create',
+                EDIT: (themeId) => `/dashboard/portfolio/admin/portfolio-themes/edit/${themeId}`,
+            },
         },
     },
 

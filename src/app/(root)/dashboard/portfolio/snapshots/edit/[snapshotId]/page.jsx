@@ -31,7 +31,7 @@ export default function EditSnapshotPage() {
                 data: formData,
             }).unwrap();
             showSnackbar(res.message || 'Snapshot updated successfully!', 'success', 5000);
-            router.push(ROUTES.DASHBOARD.PORTFOLIO.LIST);
+            router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST);
         } catch (error) {
             const backendErrors = error?.data?.errors;
 
@@ -63,7 +63,7 @@ export default function EditSnapshotPage() {
                 title="Snapshot Not Found"
                 message="The snapshot you're looking for doesn't exist or is no longer available."
                 backLabel="Back to Snapshots"
-                backTo={ROUTES.DASHBOARD.PORTFOLIO.LIST}
+                backTo={ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST}
                 fullPage={true}
             />
         );
@@ -85,7 +85,7 @@ export default function EditSnapshotPage() {
                 title="Snapshot Not Found"
                 message="The snapshot you're looking for doesn't exist."
                 backLabel="Back to Snapshots"
-                backTo={ROUTES.DASHBOARD.PORTFOLIO.LIST}
+                backTo={ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST}
                 fullPage={true}
             />
         );

@@ -43,7 +43,7 @@ export default function SnapshotViewPage() {
         try {
             await deleteSnapshot(snapshotId).unwrap();
             showSnackbar('Snapshot deleted successfully', 'success', 5000);
-            router.push(ROUTES.DASHBOARD.PORTFOLIO.LIST);
+            router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST);
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to delete snapshot'), 'error', 5000);
         }
@@ -53,7 +53,7 @@ export default function SnapshotViewPage() {
         try {
             await duplicateSnapshot(snapshotId).unwrap();
             showSnackbar('Snapshot duplicated successfully', 'success', 5000);
-            router.push(ROUTES.DASHBOARD.PORTFOLIO.LIST);
+            router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST);
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to duplicate snapshot'), 'error', 5000);
         }
@@ -67,7 +67,7 @@ export default function SnapshotViewPage() {
                 title="Snapshot Not Found"
                 message="The snapshot you're looking for doesn't exist or is no longer available."
                 backLabel="Back to Snapshots"
-                backTo={ROUTES.DASHBOARD.PORTFOLIO.LIST}
+                backTo={ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST}
                 fullPage={true}
             />
         );
@@ -89,7 +89,7 @@ export default function SnapshotViewPage() {
                 title="Snapshot Not Found"
                 message="The snapshot you're looking for doesn't exist."
                 backLabel="Back to Snapshots"
-                backTo={ROUTES.DASHBOARD.PORTFOLIO.LIST}
+                backTo={ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST}
                 fullPage={true}
             />
         );
@@ -99,7 +99,7 @@ export default function SnapshotViewPage() {
         <div className={styles.pageContainer}>
             {/* Back Button */}
             <button
-                onClick={() => router.push(ROUTES.DASHBOARD.PORTFOLIO.LIST)}
+                onClick={() => router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST)}
                 className={styles.backButton}
             >
                 <FiArrowLeft /> Back to Snapshots
@@ -134,7 +134,7 @@ export default function SnapshotViewPage() {
                         variant="outline"
                         size="sm"
                         icon={<FiEdit2 />}
-                        onClick={() => router.push(ROUTES.DASHBOARD.PORTFOLIO.EDIT(snapshotId))}
+                        onClick={() => router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.EDIT(snapshotId))}
                     >
                         Edit
                     </Button>
@@ -269,7 +269,7 @@ export default function SnapshotViewPage() {
                         <div className={styles.actionGrid}>
                             <button
                                 className={styles.actionCard}
-                                onClick={() => router.push(ROUTES.DASHBOARD.PORTFOLIO.EDIT(snapshotId))}
+                                onClick={() => router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.EDIT(snapshotId))}
                             >
                                 <FiEdit2 className={styles.actionIcon} />
                                 <span className={styles.actionLabel}>Edit Snapshot</span>
