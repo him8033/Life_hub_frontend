@@ -29,7 +29,6 @@ const SkillCategoryForm = ({
             slug: initialData?.slug || '',
             icon: initialData?.icon || '',
             position: initialData?.position || 0,
-            is_active: String(initialData?.is_active ?? true),
         },
     });
 
@@ -49,7 +48,6 @@ const SkillCategoryForm = ({
                 slug: initialData.slug || '',
                 icon: initialData.icon || '',
                 position: initialData.position || 0,
-                is_active: String(initialData?.is_active ?? true),
             });
         }
     }, [mode, initialData, reset, resetSlug]);
@@ -110,18 +108,6 @@ const SkillCategoryForm = ({
                         placeholder="0"
                         disabled={isSubmitting}
                         description="Lower numbers appear first. Default is 0"
-                        className={styles.formItem}
-                    />
-
-                    <FormSelect
-                        name="is_active"
-                        label="Status"
-                        options={[
-                            { value: 'true', label: 'Active' },
-                            { value: 'false', label: 'Inactive' },
-                        ]}
-                        disabled={isSubmitting}
-                        description="Inactive categories won't appear in dropdowns"
                         className={styles.formItem}
                     />
 

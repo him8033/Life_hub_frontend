@@ -73,7 +73,49 @@
     font-size: var(--text-base);
 }
 
-/* Common Cell Styles */
+/* ============================================
+   IMAGE CELL
+   ============================================ */
+
+.imageCell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+}
+
+.thumbnailImage {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease;
+}
+
+.tableRow:hover .thumbnailImage {
+    transform: scale(1.1);
+    border-color: var(--primary);
+}
+
+.imagePlaceholder {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--muted);
+    border: 2px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+}
+
+/* ============================================
+   COMMON CELL STYLES
+   ============================================ */
+
 .idCell {
     font-family: monospace;
     font-size: var(--text-sm);
@@ -110,11 +152,22 @@
 .subName {
     font-size: var(--text-xs);
     color: var(--muted-foreground);
-    font-family: monospace;
     max-width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+/* Slug Text */
+.slugText {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    font-family: monospace;
+}
+
+/* Icon Display */
+.iconDisplay {
+    font-size: var(--text-lg);
 }
 
 /* Badge for counts */
@@ -128,6 +181,18 @@
     font-weight: 600;
     min-width: 30px;
     text-align: center;
+}
+
+/* Category Badge */
+.categoryBadge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    white-space: nowrap;
 }
 
 /* Role Badge */
@@ -152,6 +217,25 @@
     font-size: var(--text-xs);
     font-weight: 600;
     font-family: monospace;
+}
+
+/* Status Badges */
+.statusBadge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
+}
+
+.statusActive {
+    background: color-mix(in srgb, var(--success) 10%, transparent);
+    color: var(--success);
+}
+
+.statusInactive {
+    background: color-mix(in srgb, var(--destructive) 10%, transparent);
+    color: var(--destructive);
 }
 
 /* Visibility Badges */
@@ -257,7 +341,10 @@
     min-height: auto;
 }
 
-/* Dark Mode */
+/* ============================================
+   DARK MODE
+   ============================================ */
+
 .dark .tableContainer {
     background: var(--gray-900);
     border-color: var(--gray-800);
@@ -276,6 +363,15 @@
     background: var(--gray-800);
 }
 
+.dark .thumbnailImage {
+    border-color: var(--gray-700);
+}
+
+.dark .imagePlaceholder {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
 .dark .idBadge,
 .dark .versionBadge {
     background: var(--gray-800);
@@ -286,6 +382,7 @@
     background: var(--gray-700);
 }
 
+.dark .categoryBadge,
 .dark .roleBadge {
     background: color-mix(in srgb, var(--primary) 15%, transparent);
 }
@@ -298,12 +395,23 @@
     background: var(--gray-800);
 }
 
+.dark .statusActive {
+    background: color-mix(in srgb, var(--success) 15%, transparent);
+}
+
+.dark .statusInactive {
+    background: color-mix(in srgb, var(--destructive) 15%, transparent);
+}
+
 .dark .emptyTable {
     background: var(--gray-900);
     border-color: var(--gray-800);
 }
 
-/* Responsive */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
 @media (max-width: 968px) {
     .tableContainer {
         overflow-x: auto;
@@ -351,6 +459,12 @@
     .nameContainer .subName {
         max-width: 150px;
     }
+
+    .thumbnailImage,
+    .imagePlaceholder {
+        width: 32px;
+        height: 32px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -371,5 +485,11 @@
 
     .iconButton svg {
         font-size: 12px !important;
+    }
+
+    .thumbnailImage,
+    .imagePlaceholder {
+        width: 28px;
+        height: 28px;
     }
 }

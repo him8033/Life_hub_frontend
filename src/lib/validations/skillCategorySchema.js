@@ -28,8 +28,4 @@ export const skillCategorySchema = z.object({
         .int()
         .min(0, 'Position must be 0 or greater')
         .optional(),
-
-    is_active: z
-        .enum(['true', 'false'])
-        .transform((val) => val === 'true'),
 });
