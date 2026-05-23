@@ -4,7 +4,7 @@ import { baseQueryWithReauth } from "./baseQueryWithReauth";
 export const portfolioApi = createApi({
     reducerPath: "portfolioApi",
     baseQuery: baseQueryWithReauth,
-    tagTypes: ["Snapshot", "SkillCategory", "MasterSkill", "MasterLanguage", "ResumeTemplate", "PortfolioTheme"],
+    tagTypes: ["Snapshot", "SkillCategory", "MasterSkill", "MasterLanguage", "ResumeTemplate", "PortfolioTheme", "BasicInfo"],
 
     endpoints: (builder) => ({
         // Create Snapshot
@@ -442,6 +442,33 @@ export const portfolioApi = createApi({
             }),
             invalidatesTags: ["PortfolioTheme"],
         }),
+
+        // ============================================
+        // PROFILE BASIC INFO
+        // ============================================
+
+        // Get basic info for a snapshot
+        getBasicInfo: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/basic-info/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "BasicInfo", id: snapshotId },
+            ],
+        }),
+
+        // Create/Update basic info (UPSERT)
+        saveBasicInfo: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/basic-info/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "BasicInfo", id: snapshotId },
+            ],
+        }),
     }),
 });
 
@@ -488,4 +515,7 @@ export const {
     useGetPortfolioThemeQuery,
     useUpdatePortfolioThemeMutation,
     useDeletePortfolioThemeMutation,
+    // Basic Info
+    useGetBasicInfoQuery,
+    useSaveBasicInfoMutation,
 } = portfolioApi;

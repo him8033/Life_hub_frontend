@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
@@ -11,11 +12,14 @@ import NotFoundState from '@/components/common/NotFoundState';
 import Button from '@/components/common/buttons/Button';
 import { useGetSnapshotQuery, useDeleteSnapshotMutation, useDuplicateSnapshotMutation } from '@/services/api/portfolioApi';
 import { formatDateTime } from '@/utils/date.utils';
-import styles from '@/styles/portfolio/SnapshotView.module.css';
+import BasicInfoSection from '@/components/portfolio/sections/BasicInfoSection';
+import { PROFILE_SECTIONS, SECTION_ICONS, getEnabledSections, getNextSection, getPreviousSection } from '@/config/portfolioSections';
+import styles from '@/styles/portfolio/SnapshotDetail.module.css';
 import {
-    FiEdit2, FiTrash2, FiCopy, FiArrowLeft, FiFolder,
-    FiTarget, FiFileText, FiGlobe, FiLock, FiCalendar,
-    FiHash, FiLayers, FiLink
+    FiArrowLeft, FiEdit2, FiTrash2, FiCopy, FiFolder,
+    FiTarget, FiGlobe, FiLock, FiCalendar, FiLayers,
+    FiFileText, FiPlus, FiChevronLeft, FiChevronRight,
+    FiExternalLink
 } from 'react-icons/fi';
 
 export default function SnapshotViewPage() {
@@ -25,16 +29,26 @@ export default function SnapshotViewPage() {
     const confirm = useConfirm();
     const snapshotId = params.snapshotId;
 
+    const [activeTab, setActiveTab] = useState('basic-info');
+
     const { data, isLoading, error, refetch } = useGetSnapshotQuery(snapshotId, { skip: !snapshotId });
     const [deleteSnapshot] = useDeleteSnapshotMutation();
     const [duplicateSnapshot] = useDuplicateSnapshotMutation();
 
     const snapshot = data?.data;
+    const enabledSections = getEnabledSections();
+    const currentSection = PROFILE_SECTIONS.find(s => s.id === activeTab);
+    const nextSection = getNextSection(activeTab);
+    const prevSection = getPreviousSection(activeTab);
+
+    // TODO: Replace with actual API calls when Resume/Portfolio modules are built
+    const connectedResumes = []; // Will come from API later
+    const connectedPortfolios = []; // Will come from API later
 
     const handleDelete = async () => {
         const ok = await confirm({
             title: 'Delete Snapshot',
-            message: `Are you sure you want to delete "${snapshot?.title}"? This action cannot be undone. All associated data will be permanently removed.`,
+            message: `Are you sure you want to delete "${snapshot?.title}"? All data will be permanently removed.`,
             confirmText: 'Delete',
             cancelText: 'Cancel',
             type: 'danger',
@@ -59,13 +73,45 @@ export default function SnapshotViewPage() {
         }
     };
 
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'basic-info':
+                return <BasicInfoSection snapshotId={snapshotId} />;
+            case 'social-links':
+            case 'skills':
+            case 'experience':
+            case 'education':
+            case 'projects':
+            case 'certificates':
+            case 'achievements':
+            case 'languages':
+            case 'hobbies':
+            case 'strengths':
+            case 'custom-sections':
+                return (
+                    <div className={styles.comingSoon}>
+                        <div className={styles.comingSoonIcon}>🚧</div>
+                        <h3>{currentSection?.title} - Coming Soon</h3>
+                        <p>{currentSection?.description}</p>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
+    const getSectionIcon = (iconName) => {
+        const IconComponent = SECTION_ICONS[iconName];
+        return IconComponent ? <IconComponent size={16} /> : <FiFolder size={16} />;
+    };
+
     if (isLoading) return <Loader text="Loading snapshot..." />;
 
     if (error?.status === 404) {
         return (
             <NotFoundState
                 title="Snapshot Not Found"
-                message="The snapshot you're looking for doesn't exist or is no longer available."
+                message="The snapshot you're looking for doesn't exist."
                 backLabel="Back to Snapshots"
                 backTo={ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST}
                 fullPage={true}
@@ -76,7 +122,7 @@ export default function SnapshotViewPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load snapshot details"}
+                message={error?.data?.message || "Failed to load snapshot"}
                 onRetry={refetch}
                 retryMsg="Retry"
             />
@@ -105,7 +151,7 @@ export default function SnapshotViewPage() {
                 <FiArrowLeft /> Back to Snapshots
             </button>
 
-            {/* Header Card */}
+            {/* Snapshot Header */}
             <div className={styles.headerCard}>
                 <div className={styles.headerLeft}>
                     <div className={styles.headerIcon}>
@@ -113,11 +159,28 @@ export default function SnapshotViewPage() {
                     </div>
                     <div className={styles.headerInfo}>
                         <h1 className={styles.headerTitle}>{snapshot.title}</h1>
-                        {snapshot.target_role && (
-                            <span className={styles.headerRole}>
-                                <FiTarget size={12} />
-                                {snapshot.target_role}
+                        <div className={styles.headerMeta}>
+                            {snapshot.target_role && (
+                                <span className={styles.roleBadge}>
+                                    <FiTarget size={12} />
+                                    {snapshot.target_role}
+                                </span>
+                            )}
+                            <span className={`${styles.visibilityBadge} ${snapshot.visibility === 'public' ? styles.publicBadge : styles.privateBadge
+                                }`}>
+                                {snapshot.visibility === 'public' ? <FiGlobe size={12} /> : <FiLock size={12} />}
+                                {snapshot.visibility}
                             </span>
+                            <span className={styles.versionBadge}>
+                                <FiLayers size={12} /> v{snapshot.version}
+                            </span>
+                            <span className={styles.dateText}>
+                                <FiCalendar size={12} />
+                                {formatDateTime(snapshot.updated_at)}
+                            </span>
+                        </div>
+                        {snapshot.description && (
+                            <p className={styles.headerDescription}>{snapshot.description}</p>
                         )}
                     </div>
                 </div>
@@ -149,142 +212,156 @@ export default function SnapshotViewPage() {
                 </div>
             </div>
 
-            {/* Details Grid */}
-            <div className={styles.detailsGrid}>
-                {/* Main Info Card */}
-                <div className={styles.detailCard}>
-                    <h3 className={styles.cardTitle}>Snapshot Information</h3>
-                    <div className={styles.cardContent}>
-                        {snapshot.description && (
-                            <div className={styles.infoRow}>
-                                <div className={styles.infoIcon}>
-                                    <FiFileText />
-                                </div>
-                                <div className={styles.infoContent}>
-                                    <span className={styles.infoLabel}>Description</span>
-                                    <p className={styles.infoValue}>{snapshot.description}</p>
-                                </div>
-                            </div>
-                        )}
-
-                        <div className={styles.infoRow}>
-                            <div className={styles.infoIcon}>
-                                <FiTarget />
-                            </div>
-                            <div className={styles.infoContent}>
-                                <span className={styles.infoLabel}>Target Role</span>
-                                <span className={styles.infoValue}>
-                                    {snapshot.target_role || 'Not specified'}
-                                </span>
-                            </div>
+            {/* Connected Items Section - Placeholder for future */}
+            <div className={styles.connectedSection}>
+                <div className={styles.connectedHeader}>
+                    <h3 className={styles.connectedTitle}>Linked Projects</h3>
+                    <span className={styles.connectedCount}>
+                        {connectedResumes.length + connectedPortfolios.length} total
+                    </span>
+                </div>
+                <div className={styles.connectedGrid}>
+                    {/* Create Resume */}
+                    <button
+                        className={styles.createCard}
+                        onClick={() => router.push(`${ROUTES.DASHBOARD.PORTFOLIO.RESUME.CREATE}?snapshot=${snapshotId}`)}
+                    >
+                        <FiFileText className={styles.createIcon} />
+                        <div className={styles.createInfo}>
+                            <h3>Create Resume</h3>
+                            <p>Build a professional resume from this snapshot</p>
                         </div>
+                        <FiPlus className={styles.createArrow} />
+                    </button>
 
-                        <div className={styles.infoRow}>
-                            <div className={styles.infoIcon}>
-                                {snapshot.visibility === 'public' ? <FiGlobe /> : <FiLock />}
-                            </div>
-                            <div className={styles.infoContent}>
-                                <span className={styles.infoLabel}>Visibility</span>
-                                <span className={`${styles.visibilityBadge} ${snapshot.visibility === 'public' ? styles.publicBadge : styles.privateBadge
-                                    }`}>
-                                    {snapshot.visibility === 'public' ? 'Public' : 'Private'}
-                                </span>
-                            </div>
+                    {/* Create Portfolio */}
+                    <button
+                        className={styles.createCard}
+                        onClick={() => router.push(`${ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIO_PROJECT.CREATE}?snapshot=${snapshotId}`)}
+                    >
+                        <FiGlobe className={styles.createIcon} />
+                        <div className={styles.createInfo}>
+                            <h3>Create Portfolio</h3>
+                            <p>Build a portfolio website from this snapshot</p>
                         </div>
+                        <FiPlus className={styles.createArrow} />
+                    </button>
+
+                    {/* TODO: Connected resumes will be listed here */}
+                    {connectedResumes.map(resume => (
+                        <div key={resume.resume_id} className={styles.connectedCard}>
+                            {/* Resume preview card - implement later */}
+                        </div>
+                    ))}
+
+                    {/* TODO: Connected portfolios will be listed here */}
+                    {connectedPortfolios.map(portfolio => (
+                        <div key={portfolio.portfolio_id} className={styles.connectedCard}>
+                            {/* Portfolio preview card - implement later */}
+                        </div>
+                    ))}
+                </div>
+
+                {/* Empty state when nothing connected */}
+                {connectedResumes.length === 0 && connectedPortfolios.length === 0 && (
+                    <div className={styles.connectedEmpty}>
+                        <p>No resumes or portfolios linked yet. Create one to get started!</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Profile Sections Container */}
+            <div className={styles.sectionsContainer}>
+                {/* Tabs Header */}
+                <div className={styles.tabsWrapper}>
+                    <div className={styles.tabsHeader}>
+                        {enabledSections.map((section) => (
+                            <button
+                                key={section.id}
+                                className={`${styles.tab} ${activeTab === section.id ? styles.activeTab : ''}`}
+                                onClick={() => setActiveTab(section.id)}
+                                title={section.description}
+                            >
+                                <span className={styles.tabIcon}>
+                                    {getSectionIcon(section.icon)}
+                                </span>
+                                <span className={styles.tabLabel}>
+                                    {section.required && <span className={styles.required}>*</span>}
+                                    {section.title}
+                                </span>
+                            </button>
+                        ))}
                     </div>
                 </div>
 
-                {/* Meta Info Card */}
-                <div className={styles.detailCard}>
-                    <h3 className={styles.cardTitle}>Metadata</h3>
-                    <div className={styles.cardContent}>
-                        <div className={styles.infoRow}>
-                            <div className={styles.infoIcon}>
-                                <FiHash />
-                            </div>
-                            <div className={styles.infoContent}>
-                                <span className={styles.infoLabel}>Snapshot ID</span>
-                                <span className={styles.infoValueMono}>
-                                    {snapshot.profile_snapshot_id}
+                {/* Tab Content */}
+                <div className={styles.tabContentWrapper}>
+                    {/* Section Header */}
+                    {currentSection && (
+                        <div className={styles.sectionHeader}>
+                            <div className={styles.sectionHeaderLeft}>
+                                <span className={styles.sectionIcon}>
+                                    {getSectionIcon(currentSection.icon)}
                                 </span>
-                            </div>
-                        </div>
-
-                        <div className={styles.infoRow}>
-                            <div className={styles.infoIcon}>
-                                <FiLayers />
-                            </div>
-                            <div className={styles.infoContent}>
-                                <span className={styles.infoLabel}>Version</span>
-                                <span className={styles.versionBadge}>
-                                    v{snapshot.version || 1}
-                                </span>
-                            </div>
-                        </div>
-
-                        {snapshot.source_profile && (
-                            <div className={styles.infoRow}>
-                                <div className={styles.infoIcon}>
-                                    <FiLink />
-                                </div>
-                                <div className={styles.infoContent}>
-                                    <span className={styles.infoLabel}>Source Profile</span>
-                                    <span className={styles.infoValueMono}>
-                                        {snapshot.source_profile}
-                                    </span>
+                                <div>
+                                    <h3 className={styles.sectionTitle}>{currentSection.title}</h3>
+                                    <p className={styles.sectionDescription}>{currentSection.description}</p>
                                 </div>
                             </div>
-                        )}
-
-                        <div className={styles.infoRow}>
-                            <div className={styles.infoIcon}>
-                                <FiCalendar />
-                            </div>
-                            <div className={styles.infoContent}>
-                                <span className={styles.infoLabel}>Created</span>
-                                <span className={styles.infoValue}>
-                                    {snapshot.created_at ? formatDateTime(snapshot.created_at) : '—'}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className={styles.infoRow}>
-                            <div className={styles.infoIcon}>
-                                <FiCalendar />
-                            </div>
-                            <div className={styles.infoContent}>
-                                <span className={styles.infoLabel}>Last Updated</span>
-                                <span className={styles.infoValue}>
-                                    {snapshot.updated_at ? formatDateTime(snapshot.updated_at) : '—'}
-                                </span>
+                            <div className={styles.sectionNav}>
+                                {prevSection && (
+                                    <button
+                                        className={styles.navButton}
+                                        onClick={() => setActiveTab(prevSection.id)}
+                                        title={`Previous: ${prevSection.title}`}
+                                    >
+                                        <FiChevronLeft /> {prevSection.title}
+                                    </button>
+                                )}
+                                {nextSection && (
+                                    <button
+                                        className={styles.navButton}
+                                        onClick={() => setActiveTab(nextSection.id)}
+                                        title={`Next: ${nextSection.title}`}
+                                    >
+                                        {nextSection.title} <FiChevronRight />
+                                    </button>
+                                )}
                             </div>
                         </div>
+                    )}
+
+                    {/* Content */}
+                    <div className={styles.tabContent}>
+                        {renderTabContent()}
                     </div>
-                </div>
 
-                {/* Quick Actions Card */}
-                <div className={styles.detailCard}>
-                    <h3 className={styles.cardTitle}>Quick Actions</h3>
-                    <div className={styles.cardContent}>
-                        <div className={styles.actionGrid}>
-                            <button
-                                className={styles.actionCard}
-                                onClick={() => router.push(ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.EDIT(snapshotId))}
-                            >
-                                <FiEdit2 className={styles.actionIcon} />
-                                <span className={styles.actionLabel}>Edit Snapshot</span>
-                                <span className={styles.actionDesc}>Update details</span>
-                            </button>
-                            <button
-                                className={styles.actionCard}
-                                onClick={handleDuplicate}
-                            >
-                                <FiCopy className={styles.actionIcon} />
-                                <span className={styles.actionLabel}>Duplicate</span>
-                                <span className={styles.actionDesc}>Create a copy</span>
-                            </button>
+                    {/* Bottom Navigation */}
+                    {currentSection && (prevSection || nextSection) && (
+                        <div className={styles.sectionFooter}>
+                            {prevSection && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setActiveTab(prevSection.id)}
+                                    icon={<FiChevronLeft />}
+                                >
+                                    {prevSection.title}
+                                </Button>
+                            )}
+                            {nextSection && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setActiveTab(nextSection.id)}
+                                    icon={<FiChevronRight />}
+                                    iconPosition="right"
+                                >
+                                    {nextSection.title}
+                                </Button>
+                            )}
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

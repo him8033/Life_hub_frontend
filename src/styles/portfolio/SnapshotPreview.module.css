@@ -1,0 +1,144 @@
+/* SnapshotPreview.module.css */
+
+.preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
+/* Empty State */
+.emptyPreview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    text-align: center;
+    color: var(--muted-foreground);
+    gap: var(--spacing-2);
+}
+
+.emptyPreview p {
+    font-weight: 600;
+    margin: 0;
+}
+
+.emptyPreview span {
+    font-size: var(--text-xs);
+}
+
+/* Profile Image */
+.previewImageSection {
+    display: flex;
+    justify-content: center;
+}
+
+.previewImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary);
+}
+
+.previewImagePlaceholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--muted);
+    border: 3px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+}
+
+/* Header */
+.previewHeader {
+    text-align: center;
+}
+
+.previewName {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.previewRole {
+    font-size: var(--text-sm);
+    color: var(--primary);
+    margin: 4px 0 0 0;
+}
+
+/* Contact */
+.previewContact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.previewContactItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+}
+
+.previewContactItem svg {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+/* Sections */
+.previewSection {
+    padding-bottom: var(--spacing-3);
+    border-bottom: 1px solid var(--border);
+}
+
+.previewSection:last-child {
+    border-bottom: none;
+}
+
+.previewSectionTitle {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 var(--spacing-2) 0;
+}
+
+.previewSummary {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Placeholder Tags */
+.previewPlaceholder {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-1);
+}
+
+.previewTag {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+}
+
+.previewPlaceholderText {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    font-style: italic;
+    margin: 0;
+}

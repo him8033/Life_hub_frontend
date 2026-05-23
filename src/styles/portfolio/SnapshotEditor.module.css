@@ -1,0 +1,472 @@
+/* SnapshotEditor.module.css */
+
+/* ============================================
+   EDITOR CONTAINER - Full Screen
+   ============================================ */
+
+.editorContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--background);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+/* ============================================
+   TOP BAR
+   ============================================ */
+
+.topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-5);
+    height: 56px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    gap: var(--spacing-4);
+}
+
+.topBarLeft {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    min-width: 0;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.backButton:hover {
+    color: var(--primary);
+    background: var(--muted);
+}
+
+.snapshotTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    min-width: 0;
+}
+
+.snapshotIcon {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.roleBadge {
+    font-size: var(--text-xs);
+    padding: 2px 8px;
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.topBarCenter {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    flex: 1;
+    max-width: 300px;
+}
+
+.progressBar {
+    flex: 1;
+    height: 6px;
+    background: var(--muted);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--brand-gradient);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.progressText {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.topBarRight {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.previewToggleBtn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--foreground);
+    font-size: var(--text-xs);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.previewToggleBtn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.actionButtons {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+/* ============================================
+   EDITOR LAYOUT
+   ============================================ */
+
+.editorLayout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.editorLayout.noPreview .editorLeft {
+    max-width: 100%;
+}
+
+/* ============================================
+   LEFT SIDE - TABS + FORM
+   ============================================ */
+
+.editorLeft {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    max-width: calc(100% - 380px);
+}
+
+/* Tabs Sidebar */
+.tabsSidebar {
+    width: 200px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.tabsList {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-2);
+    gap: 2px;
+}
+
+.tabItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-3);
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    text-align: left;
+    width: 100%;
+}
+
+.tabItem:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.tabItemActive {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.tabItemIcon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.tabItemLabel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tabItemCheck {
+    font-size: var(--text-xs);
+    color: var(--success);
+    font-weight: 700;
+}
+
+.required {
+    color: var(--destructive);
+    font-size: 10px;
+}
+
+/* Form Area */
+.formArea {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--background);
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-4) var(--spacing-6);
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+}
+
+.sectionHeaderInfo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.sectionHeaderIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+    border-radius: var(--radius-md);
+}
+
+.sectionHeaderTitle {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.sectionHeaderDesc {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin: 2px 0 0 0;
+}
+
+.sectionNavButtons {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.navBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.navBtn:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.formContent {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-6);
+}
+
+/* ============================================
+   RIGHT SIDE - PREVIEW
+   ============================================ */
+
+.editorRight {
+    width: 380px;
+    border-left: 1px solid var(--border);
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.previewPanel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.previewPanelHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4) var(--spacing-5);
+    background: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.previewPanelContent {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-5);
+}
+
+/* ============================================
+   COMING SOON
+   ============================================ */
+
+.comingSoon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    text-align: center;
+    gap: var(--spacing-3);
+    color: var(--muted-foreground);
+}
+
+.comingSoonIcon {
+    font-size: var(--text-4xl);
+}
+
+.comingSoon h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.comingSoon p {
+    font-size: var(--text-sm);
+    margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .editorRight {
+        width: 320px;
+    }
+    
+    .editorLeft {
+        max-width: calc(100% - 320px);
+    }
+    
+    .tabsSidebar {
+        width: 180px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .editorRight {
+        display: none;
+    }
+    
+    .editorLeft {
+        max-width: 100%;
+    }
+
+    .topBarCenter {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .tabsSidebar {
+        display: none;
+    }
+
+    .topBar {
+        padding: 0 var(--spacing-3);
+        gap: var(--spacing-2);
+    }
+
+    .topBarRight {
+        gap: var(--spacing-2);
+    }
+
+    .actionButtons {
+        display: none;
+    }
+
+    .previewToggleBtn span {
+        display: none;
+    }
+
+    .sectionHeader {
+        padding: var(--spacing-3) var(--spacing-4);
+    }
+
+    .formContent {
+        padding: var(--spacing-4);
+    }
+}
+
+@media (max-width: 480px) {
+    .snapshotTitle .roleBadge {
+        display: none;
+    }
+
+    .title {
+        font-size: var(--text-sm);
+    }
+
+    .sectionHeaderTitle {
+        font-size: var(--text-base);
+    }
+}

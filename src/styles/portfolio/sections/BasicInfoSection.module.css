@@ -1,0 +1,138 @@
+/* BasicInfoSection.module.css */
+
+.container {
+    padding: var(--spacing-4) 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+}
+
+.title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.subtitle {
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    margin: var(--spacing-1) 0 0 0;
+}
+
+.headerActions {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.formGrid {
+    display: flex;
+    gap: var(--spacing-8);
+}
+
+.imageSection {
+    flex-shrink: 0;
+    width: 180px;
+}
+
+.imageLabel {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: var(--spacing-3);
+}
+
+.imageDisplay {
+    width: 160px;
+    height: 160px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 3px solid var(--border);
+}
+
+.profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imagePlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--muted);
+    color: var(--muted-foreground);
+}
+
+.existingImageContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.existingImage {
+    width: 160px;
+    height: 160px;
+    border-radius: var(--radius-xl);
+    object-fit: cover;
+    border: 3px solid var(--border);
+}
+
+.removeImageButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: var(--spacing-1) var(--spacing-2);
+    background: transparent;
+    color: var(--destructive);
+    border: 1px solid var(--destructive);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    cursor: pointer;
+    width: fit-content;
+}
+
+.fieldsSection {
+    flex: 1;
+    min-width: 0;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.formItem {
+    margin-bottom: var(--spacing-4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formGrid {
+        flex-direction: column;
+    }
+
+    .imageSection {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .row {
+        grid-template-columns: 1fr;
+    }
+}
