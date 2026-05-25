@@ -12,7 +12,6 @@ import NotFoundState from '@/components/common/NotFoundState';
 import Button from '@/components/common/buttons/Button';
 import { useGetSnapshotQuery, useDeleteSnapshotMutation, useDuplicateSnapshotMutation } from '@/services/api/portfolioApi';
 import { formatDateTime } from '@/utils/date.utils';
-import BasicInfoSection from '@/components/portfolio/sections/BasicInfoSection';
 import { PROFILE_SECTIONS, SECTION_ICONS, getEnabledSections, getNextSection, getPreviousSection } from '@/config/portfolioSections';
 import styles from '@/styles/portfolio/SnapshotDetail.module.css';
 import {
@@ -21,6 +20,8 @@ import {
     FiFileText, FiPlus, FiChevronLeft, FiChevronRight,
     FiExternalLink
 } from 'react-icons/fi';
+import BasicInfoSection from '@/components/portfolio/sections/BasicInfoSection';
+import SocialLinksSection from '@/components/profile/SocialLinksSection';
 
 export default function SnapshotViewPage() {
     const params = useParams();
@@ -78,6 +79,7 @@ export default function SnapshotViewPage() {
             case 'basic-info':
                 return <BasicInfoSection snapshotId={snapshotId} />;
             case 'social-links':
+                return <SocialLinksSection snapshotId={snapshotId} />;
             case 'skills':
             case 'experience':
             case 'education':

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -23,7 +23,7 @@ import {
     useDeleteProfileSocialLinkMutation,
     useReorderProfileSocialLinksMutation,
 } from '@/services/api/portfolioApi';
-import { socialLinkSchema } from '@/lib/validations/socialLinkSchema';
+import { socialLinkSchema } from '@/lib/validations/portfolio/socialLinkSchema';
 import styles from '@/styles/portfolio/sections/SocialLinksSection.module.css';
 
 const platformOptions = [
@@ -51,12 +51,12 @@ const SocialLinksSection = ({ snapshotId }) => {
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState(null);
 
-    // API
+    // API - Using portfolio-specific hooks
     const { data, isLoading, refetch } = useGetProfileSocialLinksQuery(snapshotId, { skip: !snapshotId });
-    const [createSocialLink, { isLoading: isCreating }] = useCreateProfileSocialLinkMutation();
-    const [updateSocialLink, { isLoading: isUpdating }] = useUpdateProfileSocialLinkMutation();
-    const [deleteSocialLink, { isLoading: isDeleting }] = useDeleteProfileSocialLinkMutation();
-    const [reorderSocialLinks] = useReorderProfileSocialLinksMutation();
+    const [createProfileLink, { isLoading: isCreating }] = useCreateProfileSocialLinkMutation();
+    const [updateProfileLink, { isLoading: isUpdating }] = useUpdateProfileSocialLinkMutation();
+    const [deleteProfileLink, { isLoading: isDeleting }] = useDeleteProfileSocialLinkMutation();
+    const [reorderProfileLinks] = useReorderProfileSocialLinksMutation();
 
     const socialLinks = data?.data || [];
     const isSubmitting = isCreating || isUpdating;
@@ -69,15 +69,30 @@ const SocialLinksSection = ({ snapshotId }) => {
         },
     });
 
-    const { reset, handleSubmit, setValue, watch } = methods;
+    const { reset, handleSubmit, setValue } = methods;
 
     const handleFormSubmit = async (formData) => {
+        console.log('Submitting social link:', { editingId, formData, snapshotId });
         try {
             if (editingId) {
-                await updateSocialLink({ linkId: editingId, data: formData }).unwrap();
+                // Update existing link
+                await updateProfileLink({
+                    linkId: editingId,
+                    data: {
+                        platform_name: formData.platform_name,
+                        url: formData.url,
+                    }
+                }).unwrap();
                 showSnackbar('Social link updated', 'success', 3000);
             } else {
-                await createSocialLink({ snapshotId, data: formData }).unwrap();
+                // Create new link - portfolio endpoint expects snapshot_id in payload
+                await createProfileLink({
+                    snapshotId,
+                    data: {
+                        platform_name: formData.platform_name,
+                        url: formData.url,
+                    }
+                }).unwrap();
                 showSnackbar('Social link added', 'success', 3000);
             }
             reset();
@@ -85,6 +100,7 @@ const SocialLinksSection = ({ snapshotId }) => {
             setShowForm(false);
             refetch();
         } catch (error) {
+            console.error('Error saving social link:', error);
             showSnackbar(extractErrorMessage(error, 'Failed to save social link'), 'error', 5000);
         }
     };
@@ -106,7 +122,7 @@ const SocialLinksSection = ({ snapshotId }) => {
         });
         if (!ok) return;
         try {
-            await deleteSocialLink(linkId).unwrap();
+            await deleteProfileLink(linkId).unwrap();
             showSnackbar('Social link deleted', 'success', 3000);
             refetch();
         } catch (error) {
@@ -116,7 +132,10 @@ const SocialLinksSection = ({ snapshotId }) => {
 
     const handleSetPrimary = async (linkId) => {
         try {
-            await updateSocialLink({ linkId, data: { is_primary: true } }).unwrap();
+            await updateProfileLink({
+                linkId,
+                data: { is_primary: true }
+            }).unwrap();
             showSnackbar('Primary link updated', 'success', 3000);
             refetch();
         } catch (error) {
@@ -132,7 +151,7 @@ const SocialLinksSection = ({ snapshotId }) => {
         [newLinks[index], newLinks[targetIndex]] = [newLinks[targetIndex], newLinks[index]];
 
         try {
-            await reorderSocialLinks({
+            await reorderProfileLinks({
                 snapshotId,
                 data: { order: newLinks.map(l => l.profilesociallink_id) },
             }).unwrap();
