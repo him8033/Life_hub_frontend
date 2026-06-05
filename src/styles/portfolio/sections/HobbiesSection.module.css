@@ -1,0 +1,233 @@
+/* HobbiesSection.module.css */
+
+.container {
+    padding: var(--spacing-4) 0;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-5);
+}
+
+.title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.subtitle {
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    margin: var(--spacing-1) 0 0 0;
+}
+
+/* Form Card */
+.formCard {
+    padding: var(--spacing-4);
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    margin-bottom: var(--spacing-5);
+}
+
+.formRow {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--spacing-4);
+}
+
+.formInput {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.formActions {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-shrink: 0;
+}
+
+/* Hobbies Grid - Tag style */
+.hobbiesGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+}
+
+.hobbyItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+    min-width: 180px;
+}
+
+.hobbyItem:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Order Controls */
+.orderControls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.orderButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.orderButton:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--primary);
+}
+
+.orderButton:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.orderNumber {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    min-width: 16px;
+    text-align: center;
+}
+
+/* Hobby Content */
+.hobbyContent {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex: 1;
+    min-width: 0;
+}
+
+.hobbyIcon {
+    display: flex;
+    align-items: center;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.hobbyName {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Hobby Actions */
+.hobbyActions {
+    display: flex;
+    gap: var(--spacing-1);
+    flex-shrink: 0;
+}
+
+.actionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+    background: var(--accent);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.deleteButton:hover {
+    background: color-mix(in srgb, var(--destructive) 10%, transparent);
+    color: var(--destructive);
+    border-color: var(--destructive);
+}
+
+/* Empty State */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-8);
+    color: var(--muted-foreground);
+    text-align: center;
+}
+
+.emptyState p {
+    margin: 0;
+    font-size: var(--text-sm);
+}
+
+/* Dark Mode */
+.dark .formCard {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+.dark .hobbyItem {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+.dark .hobbyItem:hover {
+    border-color: var(--primary);
+}
+
+.dark .actionButton {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .formActions {
+        justify-content: flex-end;
+    }
+
+    .hobbiesGrid {
+        gap: var(--spacing-2);
+    }
+
+    .hobbyItem {
+        min-width: 100%;
+    }
+}

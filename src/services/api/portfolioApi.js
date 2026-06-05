@@ -4,7 +4,28 @@ import { baseQueryWithReauth } from "./baseQueryWithReauth";
 export const portfolioApi = createApi({
     reducerPath: "portfolioApi",
     baseQuery: baseQueryWithReauth,
-    tagTypes: ["Snapshot", "SkillCategory", "MasterSkill", "MasterLanguage", "ResumeTemplate", "PortfolioTheme", "BasicInfo", "ProfileSocialLink"],
+    tagTypes: [
+        "Snapshot",
+        "SkillCategory",
+        "MasterSkill",
+        "MasterLanguage",
+        "ResumeTemplate",
+        "PortfolioTheme",
+        "BasicInfo",
+        "ProfileSocialLink",
+        "Achievement",
+        "Hobby",
+        "Strength",
+        "ProfileLanguage",
+        "ProfileEducation",
+        "ProfileExperience",
+        "ProfileCertificate",
+        "ProfileSkill",
+        "ProfileProject",
+        "ProjectSkill",
+        "ProjectImage",
+        "ProfileCustomSection",
+    ],
 
     endpoints: (builder) => ({
         // Create Snapshot
@@ -528,6 +549,642 @@ export const portfolioApi = createApi({
                 { type: "ProfileSocialLink", id: snapshotId },
             ],
         }),
+
+        // ============================================
+        // PROFILE ACHIEVEMENTS
+        // ============================================
+
+        getAchievements: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/achievements/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "Achievement", id: snapshotId },
+            ],
+        }),
+
+        createAchievement: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/achievements/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "Achievement", id: snapshotId },
+            ],
+        }),
+
+        updateAchievement: builder.mutation({
+            query: ({ achievementId, data }) => ({
+                url: `portfoliohub/achievements/${achievementId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["Achievement"],
+        }),
+
+        deleteAchievement: builder.mutation({
+            query: (achievementId) => ({
+                url: `portfoliohub/achievements/${achievementId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Achievement"],
+        }),
+
+        reorderAchievements: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/achievements/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "Achievement", id: snapshotId },
+            ],
+        }),
+
+        // ============================================
+        // PROFILE HOBBIES
+        // ============================================
+
+        getHobbies: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/hobbies/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "Hobby", id: snapshotId },
+            ],
+        }),
+
+        createHobby: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/hobbies/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "Hobby", id: snapshotId },
+            ],
+        }),
+
+        updateHobby: builder.mutation({
+            query: ({ hobbyId, data }) => ({
+                url: `portfoliohub/hobbies/${hobbyId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["Hobby"],
+        }),
+
+        deleteHobby: builder.mutation({
+            query: (hobbyId) => ({
+                url: `portfoliohub/hobbies/${hobbyId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Hobby"],
+        }),
+
+        reorderHobbies: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/hobbies/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "Hobby", id: snapshotId },
+            ],
+        }),
+
+        // ============================================
+        // PROFILE STRENGTHS
+        // ============================================
+
+        getStrengths: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/strengths/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "Strength", id: snapshotId },
+            ],
+        }),
+
+        createStrength: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/strengths/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "Strength", id: snapshotId },
+            ],
+        }),
+
+        updateStrength: builder.mutation({
+            query: ({ strengthId, data }) => ({
+                url: `portfoliohub/strengths/${strengthId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["Strength"],
+        }),
+
+        deleteStrength: builder.mutation({
+            query: (strengthId) => ({
+                url: `portfoliohub/strengths/${strengthId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Strength"],
+        }),
+
+        reorderStrengths: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/strengths/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "Strength", id: snapshotId },
+            ],
+        }),
+
+        // ============================================
+        // PROFILE LANGUAGES
+        // ============================================
+
+        getProfileLanguages: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/languages/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "ProfileLanguage", id: snapshotId },
+            ],
+        }),
+
+        createProfileLanguage: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/languages/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileLanguage", id: snapshotId },
+            ],
+        }),
+
+        updateProfileLanguage: builder.mutation({
+            query: ({ mappingId, data }) => ({
+                url: `portfoliohub/languages/${mappingId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["ProfileLanguage"],
+        }),
+
+        deleteProfileLanguage: builder.mutation({
+            query: (mappingId) => ({
+                url: `portfoliohub/languages/${mappingId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ProfileLanguage"],
+        }),
+
+        reorderProfileLanguages: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/languages/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileLanguage", id: snapshotId },
+            ],
+        }),
+
+        // ============================================
+        // PROFILE EDUCATION
+        // ============================================
+
+        // List education for a snapshot
+        getProfileEducation: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/educations/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "ProfileEducation", id: snapshotId },
+            ],
+        }),
+
+        // Create education
+        createProfileEducation: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/educations/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileEducation", id: snapshotId },
+            ],
+        }),
+
+        // Update education
+        updateProfileEducation: builder.mutation({
+            query: ({ eduId, data }) => ({
+                url: `portfoliohub/educations/${eduId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["ProfileEducation"],
+        }),
+
+        // Delete education
+        deleteProfileEducation: builder.mutation({
+            query: (eduId) => ({
+                url: `portfoliohub/educations/${eduId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ProfileEducation"],
+        }),
+
+        // Reorder education
+        reorderProfileEducation: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/educations/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileEducation", id: snapshotId },
+            ],
+        }),
+
+        // ============================================
+        // PROFILE EXPERIENCE
+        // ============================================
+
+        getProfileExperience: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/experiences/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "ProfileExperience", id: snapshotId },
+            ],
+        }),
+
+        createProfileExperience: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/experiences/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileExperience", id: snapshotId },
+            ],
+        }),
+
+        updateProfileExperience: builder.mutation({
+            query: ({ expId, data }) => ({
+                url: `portfoliohub/experiences/${expId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["ProfileExperience"],
+        }),
+
+        deleteProfileExperience: builder.mutation({
+            query: (expId) => ({
+                url: `portfoliohub/experiences/${expId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ProfileExperience"],
+        }),
+
+        reorderProfileExperience: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/experiences/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileExperience", id: snapshotId },
+            ],
+        }),
+
+        // ============================================
+        // PROFILE CERTIFICATES
+        // ============================================
+
+        getProfileCertificates: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/certificates/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "ProfileCertificate", id: snapshotId },
+            ],
+        }),
+
+        createProfileCertificate: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/certificates/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileCertificate", id: snapshotId },
+            ],
+        }),
+
+        updateProfileCertificate: builder.mutation({
+            query: ({ certId, data }) => ({
+                url: `portfoliohub/certificates/${certId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["ProfileCertificate"],
+        }),
+
+        deleteProfileCertificate: builder.mutation({
+            query: (certId) => ({
+                url: `portfoliohub/certificates/${certId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ProfileCertificate"],
+        }),
+
+        reorderProfileCertificates: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/certificates/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileCertificate", id: snapshotId },
+            ],
+        }),
+
+        // ============================================
+        // PROFILE SKILLS
+        // ============================================
+
+        getProfileSkills: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/skills/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "ProfileSkill", id: snapshotId },
+            ],
+        }),
+
+        createProfileSkill: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/skills/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileSkill", id: snapshotId },
+            ],
+        }),
+
+        updateProfileSkill: builder.mutation({
+            query: ({ skillId, data }) => ({
+                url: `portfoliohub/skills/${skillId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["ProfileSkill"],
+        }),
+
+        deleteProfileSkill: builder.mutation({
+            query: (skillId) => ({
+                url: `portfoliohub/skills/${skillId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ProfileSkill"],
+        }),
+
+        reorderProfileSkills: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/skills/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileSkill", id: snapshotId },
+            ],
+        }),
+
+        // ============================================
+        // PROFILE PROJECT
+        // ============================================
+
+        getProfileProjects: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/projects/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "ProfileProject", id: snapshotId },
+            ],
+        }),
+
+        createProfileProject: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/projects/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileProject", id: snapshotId },
+            ],
+        }),
+
+        getProfileProject: builder.query({
+            query: (projectId) => ({
+                url: `portfoliohub/projects/${projectId}/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, projectId) => [
+                { type: "ProfileProject", id: projectId },
+            ],
+        }),
+
+        updateProfileProject: builder.mutation({
+            query: ({ projectId, data }) => ({
+                url: `portfoliohub/projects/${projectId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { projectId }) => [
+                { type: "ProfileProject", id: projectId },
+                "ProfileProject",
+            ],
+        }),
+
+        deleteProfileProject: builder.mutation({
+            query: (projectId) => ({
+                url: `portfoliohub/projects/${projectId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ProfileProject"],
+        }),
+
+        reorderProfileProjects: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/projects/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileProject", id: snapshotId },
+            ],
+        }),
+
+        // ============================================
+        // PROJECT SKILLS
+        // ============================================
+
+        getProjectSkills: builder.query({
+            query: (projectId) => ({
+                url: `portfoliohub/projects/${projectId}/skills/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, projectId) => [
+                { type: "ProjectSkill", id: projectId },
+            ],
+        }),
+
+        addProjectSkill: builder.mutation({
+            query: ({ projectId, data }) => ({
+                url: `portfoliohub/projects/${projectId}/skills/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { projectId }) => [
+                { type: "ProjectSkill", id: projectId },
+            ],
+        }),
+
+        removeProjectSkill: builder.mutation({
+            query: ({ projectId, skillId }) => ({
+                url: `portfoliohub/projects/${projectId}/skills/${skillId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, { projectId }) => [
+                { type: "ProjectSkill", id: projectId },
+            ],
+        }),
+
+        // ============================================
+        // PROJECT IMAGES
+        // ============================================
+
+        getProjectImages: builder.query({
+            query: (projectId) => ({
+                url: `portfoliohub/projects/${projectId}/images/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, projectId) => [
+                { type: "ProjectImage", id: projectId },
+            ],
+        }),
+
+        uploadProjectImage: builder.mutation({
+            query: ({ projectId, data }) => ({
+                url: `portfoliohub/projects/${projectId}/images/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { projectId }) => [
+                { type: "ProjectImage", id: projectId },
+            ],
+        }),
+
+        updateProjectImage: builder.mutation({
+            query: ({ imageId, data }) => ({
+                url: `portfoliohub/projects/images/${imageId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["ProjectImage"],
+        }),
+
+        deleteProjectImage: builder.mutation({
+            query: (imageId) => ({
+                url: `portfoliohub/projects/images/${imageId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ProjectImage"],
+        }),
+
+        reorderProjectImages: builder.mutation({
+            query: ({ projectId, data }) => ({
+                url: `portfoliohub/projects/${projectId}/images/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { projectId }) => [
+                { type: "ProjectImage", id: projectId },
+            ],
+        }),
+
+        // ============================================
+        // PROJECT CUSTOM SECTIONS
+        // ============================================
+
+        getProfileCustomSections: builder.query({
+            query: (snapshotId) => ({
+                url: `portfoliohub/${snapshotId}/custom-sections/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, snapshotId) => [
+                { type: "ProfileCustomSection", id: snapshotId },
+            ],
+        }),
+
+        createProfileCustomSection: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/custom-sections/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileCustomSection", id: snapshotId },
+            ],
+        }),
+
+        updateProfileCustomSection: builder.mutation({
+            query: ({ sectionId, data }) => ({
+                url: `portfoliohub/custom-sections/${sectionId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["ProfileCustomSection"],
+        }),
+
+        deleteProfileCustomSection: builder.mutation({
+            query: (sectionId) => ({
+                url: `portfoliohub/custom-sections/${sectionId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ProfileCustomSection"],
+        }),
+
+        reorderProfileCustomSections: builder.mutation({
+            query: ({ snapshotId, data }) => ({
+                url: `portfoliohub/${snapshotId}/custom-sections/reorder/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { snapshotId }) => [
+                { type: "ProfileCustomSection", id: snapshotId },
+            ],
+        }),
     }),
 });
 
@@ -583,4 +1240,75 @@ export const {
     useUpdateProfileSocialLinkMutation,
     useDeleteProfileSocialLinkMutation,
     useReorderProfileSocialLinksMutation,
+    // Achievements
+    useGetAchievementsQuery,
+    useCreateAchievementMutation,
+    useUpdateAchievementMutation,
+    useDeleteAchievementMutation,
+    useReorderAchievementsMutation,
+    // Hobbies
+    useGetHobbiesQuery,
+    useCreateHobbyMutation,
+    useUpdateHobbyMutation,
+    useDeleteHobbyMutation,
+    useReorderHobbiesMutation,
+    // Strengths
+    useGetStrengthsQuery,
+    useCreateStrengthMutation,
+    useUpdateStrengthMutation,
+    useDeleteStrengthMutation,
+    useReorderStrengthsMutation,
+    // Profile Languages
+    useGetProfileLanguagesQuery,
+    useCreateProfileLanguageMutation,
+    useUpdateProfileLanguageMutation,
+    useDeleteProfileLanguageMutation,
+    useReorderProfileLanguagesMutation,
+    // Profile Education
+    useGetProfileEducationQuery,
+    useCreateProfileEducationMutation,
+    useUpdateProfileEducationMutation,
+    useDeleteProfileEducationMutation,
+    useReorderProfileEducationMutation,
+    // Profile Experiance
+    useGetProfileExperienceQuery,
+    useCreateProfileExperienceMutation,
+    useUpdateProfileExperienceMutation,
+    useDeleteProfileExperienceMutation,
+    useReorderProfileExperienceMutation,
+    // Profile Certificate
+    useGetProfileCertificatesQuery,
+    useCreateProfileCertificateMutation,
+    useUpdateProfileCertificateMutation,
+    useDeleteProfileCertificateMutation,
+    useReorderProfileCertificatesMutation,
+    // Profile Skill
+    useGetProfileSkillsQuery,
+    useCreateProfileSkillMutation,
+    useUpdateProfileSkillMutation,
+    useDeleteProfileSkillMutation,
+    useReorderProfileSkillsMutation,
+    // Profile Project
+    useGetProfileProjectsQuery,
+    useCreateProfileProjectMutation,
+    useGetProfileProjectQuery,
+    useUpdateProfileProjectMutation,
+    useDeleteProfileProjectMutation,
+    useReorderProfileProjectsMutation,
+    // Project Skills
+    useGetProjectSkillsQuery,
+    useAddProjectSkillMutation,
+    useRemoveProjectSkillMutation,
+    // Project Images
+    useGetProjectImagesQuery,
+    useUploadProjectImageMutation,
+    useUpdateProjectImageMutation,
+    useDeleteProjectImageMutation,
+    useReorderProjectImagesMutation,
+    // Profile Custom Sections
+    useGetProfileCustomSectionsQuery,
+    useCreateProfileCustomSectionMutation,
+    useUpdateProfileCustomSectionMutation,
+    useDeleteProfileCustomSectionMutation,
+    useReorderProfileCustomSectionsMutation,
 } = portfolioApi;

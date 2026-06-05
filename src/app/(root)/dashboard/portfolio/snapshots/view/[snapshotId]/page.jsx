@@ -22,6 +22,16 @@ import {
 } from 'react-icons/fi';
 import BasicInfoSection from '@/components/portfolio/sections/BasicInfoSection';
 import SocialLinksSection from '@/components/profile/SocialLinksSection';
+import AchievementsSection from '@/components/portfolio/sections/AchievementsSection';
+import HobbiesSection from '@/components/portfolio/sections/HobbiesSection';
+import StrengthsSection from '@/components/portfolio/sections/StrengthsSection';
+import LanguagesSection from '@/components/portfolio/sections/LanguagesSection';
+import EducationSection from '@/components/portfolio/sections/EducationSection';
+import ExperienceSection from '@/components/portfolio/sections/ExperienceSection';
+import CertificateSection from '@/components/portfolio/sections/CertificateSection';
+import SkillsSection from '@/components/portfolio/sections/SkillsSection';
+import ProjectsSection from '@/components/portfolio/sections/ProjectsSection';
+import CustomSectionsSection from '@/components/portfolio/sections/CustomSectionsSection';
 
 export default function SnapshotViewPage() {
     const params = useParams();
@@ -81,22 +91,25 @@ export default function SnapshotViewPage() {
             case 'social-links':
                 return <SocialLinksSection snapshotId={snapshotId} />;
             case 'skills':
+                return <SkillsSection snapshotId={snapshotId} />;
             case 'experience':
+                return <ExperienceSection snapshotId={snapshotId} />;
             case 'education':
+                return <EducationSection snapshotId={snapshotId} />;
             case 'projects':
+                return <ProjectsSection snapshotId={snapshotId} />;
             case 'certificates':
+                return <CertificateSection snapshotId={snapshotId} />;
             case 'achievements':
+                return <AchievementsSection snapshotId={snapshotId} />;
             case 'languages':
+                return <LanguagesSection snapshotId={snapshotId} />;
             case 'hobbies':
+                return <HobbiesSection snapshotId={snapshotId} />;
             case 'strengths':
+                return <StrengthsSection snapshotId={snapshotId} />;
             case 'custom-sections':
-                return (
-                    <div className={styles.comingSoon}>
-                        <div className={styles.comingSoonIcon}>🚧</div>
-                        <h3>{currentSection?.title} - Coming Soon</h3>
-                        <p>{currentSection?.description}</p>
-                    </div>
-                );
+                return <CustomSectionsSection snapshotId={snapshotId} />;
             default:
                 return null;
         }
