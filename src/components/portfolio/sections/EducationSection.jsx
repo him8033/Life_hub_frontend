@@ -23,7 +23,7 @@ import {
     useDeleteProfileEducationMutation,
     useReorderProfileEducationMutation,
 } from '@/services/api/portfolioApi';
-import { educationSchema } from '@/lib/validations/portfolio/educationSchema';
+import { educationSchema } from '@/lib/validations/portfolio/sections/educationSchema';
 import styles from '@/styles/portfolio/sections/EducationSection.module.css';
 
 const EducationSection = ({ snapshotId }) => {

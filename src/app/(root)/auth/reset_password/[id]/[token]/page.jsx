@@ -12,7 +12,7 @@ import AuthButton from "@/components/auth/AuthButton";
 import AuthDivider from "@/components/auth/AuthDivider";
 import AuthLinks from "@/components/auth/AuthLinks";
 import { ROUTES } from "@/routes/routes.constants";
-import { resetPasswordSchema } from "@/lib/zodSchema";
+import { resetPasswordSchema } from "@/lib/validations/auth/zodSchema";
 import { useResetPasswordMutation } from "@/services/api/authApi";
 import { useSnackbar } from "@/context/SnackbarContext";
 

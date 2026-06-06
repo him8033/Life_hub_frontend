@@ -12,7 +12,7 @@ import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
 import ButtonGroup from '@/components/common/buttons/ButtonGroup';
 import useSlugGenerator from '@/hooks/useSlugGenerator';
-import { masterSkillSchema } from '@/lib/validations/masterSkillSchema';
+import { masterSkillSchema } from '@/lib/validations/portfolio/admin/masterSkillSchema';
 import { useGetPublicSkillCategoriesQuery } from '@/services/api/portfolioApi';
 import styles from '@/styles/portfolio/admin/MasterSkillForm.module.css';
 

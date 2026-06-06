@@ -13,7 +13,7 @@ import AuthButton from "@/components/auth/AuthButton";
 import AuthDivider from "@/components/auth/AuthDivider";
 import AuthLinks from "@/components/auth/AuthLinks";
 import { ROUTES } from "@/routes/routes.constants";
-import { loginSchema } from "@/lib/zodSchema";
+import { loginSchema } from "@/lib/validations/auth/zodSchema";
 import { useLoginUserMutation } from "@/services/api/authApi";
 import { tokenService } from "@/services/auth/token.service";
 import { useSnackbar } from "@/context/SnackbarContext";

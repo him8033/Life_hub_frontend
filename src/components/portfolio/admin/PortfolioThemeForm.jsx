@@ -11,7 +11,7 @@ import FormSelect from '@/components/common/forms/FormSelect';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
 import ButtonGroup from '@/components/common/buttons/ButtonGroup';
-import { portfolioThemeSchema } from '@/lib/validations/portfolioThemeSchema';
+import { portfolioThemeSchema } from '@/lib/validations/portfolio/admin/portfolioThemeSchema';
 import styles from '@/styles/portfolio/admin/MasterSkillForm.module.css';
 
 const PortfolioThemeForm = ({

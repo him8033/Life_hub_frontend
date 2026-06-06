@@ -10,7 +10,7 @@ import FormSelect from '@/components/common/forms/FormSelect';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
 import ButtonGroup from '@/components/common/buttons/ButtonGroup';
-import { resumeTemplateSchema } from '@/lib/validations/resumeTemplateSchema';
+import { resumeTemplateSchema } from '@/lib/validations/portfolio/admin/resumeTemplateSchema';
 import styles from '@/styles/portfolio/admin/MasterSkillForm.module.css';
 
 const ResumeTemplateForm = ({

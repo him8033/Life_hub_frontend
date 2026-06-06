@@ -13,7 +13,7 @@ import ButtonGroup from '@/components/common/buttons/ButtonGroup';
 
 // Hooks & Schema
 import useSlugGenerator from '@/hooks/useSlugGenerator';
-import { spotCategorySchema } from '@/lib/validations/spotCategorySchema';
+import { spotCategorySchema } from '@/lib/validations/travelspot/spotCategorySchema';
 import { useCheckSpotCategoryNameQuery } from '@/services/api/spotcategoryApi';
 
 // Styles

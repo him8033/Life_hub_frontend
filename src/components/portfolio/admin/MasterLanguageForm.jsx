@@ -9,7 +9,7 @@ import FormInput from '@/components/common/forms/FormInput';
 import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
 import ButtonGroup from '@/components/common/buttons/ButtonGroup';
-import { masterLanguageSchema } from '@/lib/validations/masterLanguageSchema';
+import { masterLanguageSchema } from '@/lib/validations/portfolio/admin/masterLanguageSchema';
 import styles from '@/styles/portfolio/admin/MasterSkillForm.module.css';
 
 const MasterLanguageForm = ({

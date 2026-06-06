@@ -16,7 +16,7 @@ import Loader from '@/components/common/Loader';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
 import { useGetBasicInfoQuery, useSaveBasicInfoMutation } from '@/services/api/portfolioApi';
-import { basicInfoSchema } from '@/lib/validations/basicInfoSchema';
+import { basicInfoSchema } from '@/lib/validations/portfolio/sections/basicInfoSchema';
 import styles from '@/styles/portfolio/sections/BasicInfoSection.module.css';
 
 const BasicInfoSection = ({ snapshotId }) => {

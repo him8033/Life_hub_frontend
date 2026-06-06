@@ -32,7 +32,7 @@ import {
 } from '@/services/api/locationsApi';
 
 // Validation Schema
-import { locationSchema } from '@/lib/validations/travelspotSchema';
+import { locationSchema } from '@/lib/validations/travelspot/travelspotSchema';
 
 // Styles
 import styles from '@/styles/travelspots/steps/CommonStepStyles.module.css';

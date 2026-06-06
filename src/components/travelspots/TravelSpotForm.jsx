@@ -27,7 +27,7 @@ import ButtonLoading from '@/components/Application/ButtonLoading';
 
 import styles from '@/styles/travelspots/TravelSpotForm.module.css';
 import useSlugGenerator from '@/hooks/useSlugGenerator';
-import { travelspotSchema } from '@/lib/validations/travelspotSchema';
+import { travelspotSchema } from '@/lib/validations/travelspot/travelspotSchema';
 import { FiCheck, FiClock, FiDollarSign, FiCalendar } from 'react-icons/fi';
 import { useGetPublicSpotCategoriesQuery } from '@/services/api/spotcategoryApi';
 import ReactMultiSelect from '@/components/ui/ReactMultiSelect';

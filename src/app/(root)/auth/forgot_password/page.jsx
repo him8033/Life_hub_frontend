@@ -12,7 +12,7 @@ import AuthButton from "@/components/auth/AuthButton";
 import AuthDivider from "@/components/auth/AuthDivider";
 import AuthLinks from "@/components/auth/AuthLinks";
 import { ROUTES } from "@/routes/routes.constants";
-import { resetPasswordRequestSchema } from "@/lib/zodSchema";
+import { resetPasswordRequestSchema } from "@/lib/validations/auth/zodSchema";
 import { useSendPasswordResetEmailMutation } from "@/services/api/authApi";
 import { useSnackbar } from "@/context/SnackbarContext";
 import styles from "@/styles/auth/Shared.module.css";

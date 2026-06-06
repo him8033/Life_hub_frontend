@@ -21,7 +21,7 @@ import {
     useDeleteStrengthMutation,
     useReorderStrengthsMutation,
 } from '@/services/api/portfolioApi';
-import { strengthSchema } from '@/lib/validations/portfolio/strengthSchema';
+import { strengthSchema } from '@/lib/validations/portfolio/sections/strengthSchema';
 import styles from '@/styles/portfolio/sections/StrengthsSection.module.css';
 
 const StrengthsSection = ({ snapshotId }) => {

@@ -15,7 +15,7 @@ import {
     useUpdateProfileSkillMutation, useDeleteProfileSkillMutation,
 } from '@/services/api/portfolioApi';
 import { useGetPublicMasterSkillsQuery } from '@/services/api/portfolioApi';
-import { profileSkillSchema } from '@/lib/validations/portfolio/profileSkillSchema';
+import { profileSkillSchema } from '@/lib/validations/portfolio/sections/profileSkillSchema';
 import styles from '@/styles/portfolio/sections/SkillsSection.module.css';
 
 const SkillsSection = ({ snapshotId }) => {

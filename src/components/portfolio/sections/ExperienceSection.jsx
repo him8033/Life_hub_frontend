@@ -21,7 +21,7 @@ import {
     useDeleteProfileExperienceMutation,
     useReorderProfileExperienceMutation,
 } from '@/services/api/portfolioApi';
-import { experienceSchema } from '@/lib/validations/portfolio/experienceSchema';
+import { experienceSchema } from '@/lib/validations/portfolio/sections/experienceSchema';
 import styles from '@/styles/portfolio/sections/ExperienceSection.module.css';
 
 const employmentTypes = [

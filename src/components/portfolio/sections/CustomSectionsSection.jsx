@@ -16,7 +16,7 @@ import {
     useUpdateProfileCustomSectionMutation, useDeleteProfileCustomSectionMutation,
     useReorderProfileCustomSectionsMutation,
 } from '@/services/api/portfolioApi';
-import { customSectionSchema } from '@/lib/validations/portfolio/customSectionSchema';
+import { customSectionSchema } from '@/lib/validations/portfolio/sections/customSectionSchema';
 import styles from '@/styles/portfolio/sections/CustomSectionsSection.module.css';
 
 const CustomSectionsSection = ({ snapshotId }) => {

@@ -19,7 +19,7 @@ import {
     useDeleteProfileCertificateMutation,
     useReorderProfileCertificatesMutation,
 } from '@/services/api/portfolioApi';
-import { certificateSchema } from '@/lib/validations/portfolio/certificateSchema';
+import { certificateSchema } from '@/lib/validations/portfolio/sections/certificateSchema';
 import styles from '@/styles/portfolio/sections/EducationSection.module.css';
 
 const CertificateSection = ({ snapshotId }) => {

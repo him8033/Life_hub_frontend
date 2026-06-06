@@ -22,7 +22,7 @@ import {
     useDeleteHobbyMutation,
     useReorderHobbiesMutation,
 } from '@/services/api/portfolioApi';
-import { hobbySchema } from '@/lib/validations/portfolio/hobbySchema';
+import { hobbySchema } from '@/lib/validations/portfolio/sections/hobbySchema';
 import styles from '@/styles/portfolio/sections/HobbiesSection.module.css';
 
 // Random icons for visual variety

@@ -14,7 +14,7 @@ import ButtonGroup from '@/components/common/buttons/ButtonGroup';
 
 // Hooks & API
 import useSlugGenerator from '@/hooks/useSlugGenerator';
-import { basicInfoSchema } from '@/lib/validations/travelspotSchema';
+import { basicInfoSchema } from '@/lib/validations/travelspot/travelspotSchema';
 import { useGetPublicSpotCategoriesQuery } from '@/services/api/spotcategoryApi';
 import { useCheckTravelSpotNameQuery } from '@/services/api/travelspotApi';
 

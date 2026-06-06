@@ -14,7 +14,7 @@ import Button from '@/components/common/buttons/Button';
 import ButtonGroup from '@/components/common/buttons/ButtonGroup';
 
 // Schema
-import { snapshotSchema } from '@/lib/validations/snapshotSchema';
+import { snapshotSchema } from '@/lib/validations/portfolio/snapshotSchema';
 
 // Styles
 import styles from '@/styles/portfolio/SnapshotForm.module.css';

@@ -10,7 +10,7 @@ import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
 import ButtonGroup from '@/components/common/buttons/ButtonGroup';
 import useSlugGenerator from '@/hooks/useSlugGenerator';
-import { skillCategorySchema } from '@/lib/validations/skillCategorySchema';
+import { skillCategorySchema } from '@/lib/validations/portfolio/admin/skillCategorySchema';
 import styles from '@/styles/portfolio/admin/SkillCategoryForm.module.css';
 
 const SkillCategoryForm = ({

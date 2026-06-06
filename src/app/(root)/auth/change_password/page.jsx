@@ -19,7 +19,7 @@ import ButtonLoading from "@/components/Application/ButtonLoading";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { FiLock, FiArrowLeft } from "react-icons/fi";
-import { changePasswordSchema } from "@/lib/zodSchema";
+import { changePasswordSchema } from "@/lib/validations/auth/zodSchema";
 import { useChangeUserPasswordMutation } from "@/services/api/authApi";
 import { useSnackbar } from "@/context/SnackbarContext";
 import styles from "@/styles/auth/ChangePassword.module.css";

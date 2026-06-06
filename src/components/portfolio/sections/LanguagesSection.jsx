@@ -22,7 +22,7 @@ import {
     useReorderProfileLanguagesMutation,
 } from '@/services/api/portfolioApi';
 import { useGetPublicMasterLanguagesQuery } from '@/services/api/portfolioApi';
-import { profileLanguageSchema } from '@/lib/validations/portfolio/profileLanguageSchema';
+import { profileLanguageSchema } from '@/lib/validations/portfolio/sections/profileLanguageSchema';
 import styles from '@/styles/portfolio/sections/LanguagesSection.module.css';
 
 const proficiencyOptions = [

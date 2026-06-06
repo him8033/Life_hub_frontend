@@ -24,7 +24,7 @@ import {
     useReorderProjectImagesMutation,
 } from '@/services/api/portfolioApi';
 import { useGetPublicMasterSkillsQuery } from '@/services/api/portfolioApi';
-import { projectSchema } from '@/lib/validations/portfolio/projectSchema';
+import { projectSchema } from '@/lib/validations/portfolio/sections/projectSchema';
 import styles from '@/styles/portfolio/sections/ProjectsSection.module.css';
 
 const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {

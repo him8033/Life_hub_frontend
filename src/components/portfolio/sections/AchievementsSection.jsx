@@ -22,7 +22,7 @@ import {
     useDeleteAchievementMutation,
     useReorderAchievementsMutation,
 } from '@/services/api/portfolioApi';
-import { achievementSchema } from '@/lib/validations/portfolio/achievementSchema';
+import { achievementSchema } from '@/lib/validations/portfolio/sections/achievementSchema';
 import styles from '@/styles/portfolio/sections/AchievementsSection.module.css';
 
 const AchievementsSection = ({ snapshotId }) => {

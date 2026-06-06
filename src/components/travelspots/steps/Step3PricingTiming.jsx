@@ -21,7 +21,7 @@ import Button from '@/components/common/buttons/Button';
 import ButtonGroup from '@/components/common/buttons/ButtonGroup';
 
 // Validation Schema
-import { practicalInfoSchema } from '@/lib/validations/travelspotSchema';
+import { practicalInfoSchema } from '@/lib/validations/travelspot/travelspotSchema';
 
 // Styles
 import styles from '@/styles/travelspots/steps/CommonStepStyles.module.css';

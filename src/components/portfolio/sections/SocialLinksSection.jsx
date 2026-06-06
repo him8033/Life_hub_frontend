@@ -23,7 +23,7 @@ import {
     useDeleteProfileSocialLinkMutation,
     useReorderProfileSocialLinksMutation,
 } from '@/services/api/portfolioApi';
-import { socialLinkSchema } from '@/lib/validations/portfolio/socialLinkSchema';
+import { socialLinkSchema } from '@/lib/validations/portfolio/sections/socialLinkSchema';
 import styles from '@/styles/portfolio/sections/SocialLinksSection.module.css';
 
 const platformOptions = [

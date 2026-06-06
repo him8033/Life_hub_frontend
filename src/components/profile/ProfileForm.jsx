@@ -10,7 +10,7 @@ import { useSnackbar } from '@/context/SnackbarContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
 import { useUpdateProfileMutation } from '@/services/api/authApi';
 import LocationSelects from './LocationSelects';
-import { profileSchema } from '@/lib/validations/profileSchema';
+import { profileSchema } from '@/lib/validations/auth/profileSchema';
 import styles from '@/styles/dashboard/profile/ProfileForm.module.css';
 import { FiEdit3, FiSave, FiX, FiMail, FiCalendar } from 'react-icons/fi';
 
