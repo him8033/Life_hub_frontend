@@ -1,0 +1,79 @@
+.formContainer {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-5);
+    margin-bottom: var(--spacing-5);
+}
+
+.sectionTitle {
+    font-size: var(--text-base);
+    font-weight: 600;
+    margin: 0 0 var(--spacing-1) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.sectionDesc {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin: 0 0 var(--spacing-4) 0;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.colorField {
+    display: flex;
+    flex-direction: column;
+}
+
+.colorLabel {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin-bottom: var(--spacing-2);
+}
+
+.colorSelect {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+}
+
+.colorBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.colorBtn:hover {
+    transform: scale(1.15);
+}
+
+.colorBtn.selected {
+    border-color: var(--foreground);
+    box-shadow: 0 0 0 2px var(--border);
+}
+
+.formActions {
+    margin-top: var(--spacing-6);
+}
+
+@media (max-width: 768px) {
+    .formRow {
+        grid-template-columns: 1fr;
+    }
+}

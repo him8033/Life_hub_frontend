@@ -1,0 +1,156 @@
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-5);
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.cardHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
+}
+
+.iconWrapper {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--brand-gradient);
+    color: white;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-xl);
+    flex-shrink: 0;
+}
+
+.headerInfo {
+    flex: 1;
+}
+
+.title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    margin: 0;
+}
+
+.snapshotName {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin: 2px 0 0 0;
+}
+
+.downloadBtn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--muted);
+    color: var(--primary);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.downloadBtn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.cardBody {
+    margin-bottom: var(--spacing-4);
+}
+
+.configGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-3);
+}
+
+.configItem {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.configLabel {
+    font-size: 10px;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+}
+
+.configValue {
+    font-size: var(--text-sm);
+    font-weight: 500;
+}
+
+.configColor {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+}
+
+.colorDot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    flex-wrap: wrap;
+}
+
+.status {
+    font-size: var(--text-xs);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+}
+
+.public {
+    background: color-mix(in srgb, var(--success) 10%, transparent);
+    color: var(--success);
+}
+
+.private {
+    background: var(--muted);
+    color: var(--muted-foreground);
+}
+
+.date {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pdfBadge {
+    font-size: 10px;
+    padding: 2px 8px;
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+}
+
+.cardFooter {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+    padding-top: var(--spacing-3);
+    border-top: 1px solid var(--border);
+}

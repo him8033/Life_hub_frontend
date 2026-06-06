@@ -25,6 +25,10 @@ export const portfolioApi = createApi({
         "ProjectSkill",
         "ProjectImage",
         "ProfileCustomSection",
+        "ResumeProject",
+        "ResumeExport",
+        "PortfolioProject",
+        "PortfolioView",
     ],
 
     endpoints: (builder) => ({
@@ -1185,6 +1189,172 @@ export const portfolioApi = createApi({
                 { type: "ProfileCustomSection", id: snapshotId },
             ],
         }),
+
+        // ============================================
+        // RESUME PROJECTS
+        // ============================================
+
+        getResumeProjects: builder.query({
+            query: () => ({
+                url: "portfoliohub/resume-projects/",
+                method: "GET",
+            }),
+            providesTags: ["ResumeProject"],
+        }),
+
+        createResumeProject: builder.mutation({
+            query: (payload) => ({
+                url: "portfoliohub/resume-projects/",
+                method: "POST",
+                body: payload,  // Contains: title, snapshot_id, template_key, font_family, etc.
+            }),
+            invalidatesTags: ["ResumeProject"],
+        }),
+
+        getResumeProject: builder.query({
+            query: (resumeId) => ({
+                url: `portfoliohub/resume-projects/${resumeId}/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, resumeId) => [
+                { type: "ResumeProject", id: resumeId },
+            ],
+        }),
+
+        updateResumeProject: builder.mutation({
+            query: ({ resumeId, data }) => ({
+                url: `portfoliohub/resume-projects/${resumeId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { resumeId }) => [
+                { type: "ResumeProject", id: resumeId },
+                "ResumeProject",
+            ],
+        }),
+
+        deleteResumeProject: builder.mutation({
+            query: (resumeId) => ({
+                url: `portfoliohub/resume-projects/${resumeId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ResumeProject"],
+        }),
+
+        duplicateResumeProject: builder.mutation({
+            query: (resumeId) => ({
+                url: `portfoliohub/resume-projects/${resumeId}/duplicate/`,
+                method: "POST",
+                body: {},
+            }),
+            invalidatesTags: ["ResumeProject"],
+        }),
+
+        generateResumePDF: builder.mutation({
+            query: (resumeId) => ({
+                url: `portfoliohub/resume-projects/${resumeId}/generate-pdf/`,
+                method: "POST",
+            }),
+            invalidatesTags: (result, error, resumeId) => [
+                { type: "ResumeProject", id: resumeId },
+            ],
+        }),
+
+        // ============================================
+        // RESUME EXPORTS
+        // ============================================
+
+        getResumeExports: builder.query({
+            query: (resumeId) => ({
+                url: `portfoliohub/resume-projects/${resumeId}/exports/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, resumeId) => [
+                { type: "ResumeExport", id: resumeId },
+            ],
+        }),
+
+        deleteResumeExport: builder.mutation({
+            query: (exportId) => ({
+                url: `portfoliohub/resume-exports/${exportId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["ResumeExport"],
+        }),
+
+        // ============================================
+        // PORTFOLIO PROJECTS
+        // ============================================
+
+        getPortfolioProjects: builder.query({
+            query: () => ({
+                url: "portfoliohub/portfolio-projects/",
+                method: "GET",
+            }),
+            providesTags: ["PortfolioProject"],
+        }),
+
+        createPortfolioProject: builder.mutation({
+            query: (payload) => ({
+                url: "portfoliohub/portfolio-projects/",
+                method: "POST",
+                body: payload,
+            }),
+            invalidatesTags: ["PortfolioProject"],
+        }),
+
+        getPortfolioProject: builder.query({
+            query: (portfolioId) => ({
+                url: `portfoliohub/portfolio-projects/${portfolioId}/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, portfolioId) => [
+                { type: "PortfolioProject", id: portfolioId },
+            ],
+        }),
+
+        updatePortfolioProject: builder.mutation({
+            query: ({ portfolioId, data }) => ({
+                url: `portfoliohub/portfolio-projects/${portfolioId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: (result, error, { portfolioId }) => [
+                { type: "PortfolioProject", id: portfolioId },
+                "PortfolioProject",
+            ],
+        }),
+
+        deletePortfolioProject: builder.mutation({
+            query: (portfolioId) => ({
+                url: `portfoliohub/portfolio-projects/${portfolioId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["PortfolioProject"],
+        }),
+
+        duplicatePortfolioProject: builder.mutation({
+            query: (portfolioId) => ({
+                url: `portfoliohub/portfolio-projects/${portfolioId}/duplicate/`,
+                method: "POST",
+                body: {},
+            }),
+            invalidatesTags: ["PortfolioProject"],
+        }),
+
+        // ============================================
+        // PORTFOLIO VIEWS / ANALYTICS
+        // ============================================
+
+        getPortfolioAnalytics: builder.query({
+            query: (portfolioId) => ({
+                url: `portfoliohub/portfolio-projects/${portfolioId}/analytics/`,
+                method: "GET",
+            }),
+            providesTags: (result, error, portfolioId) => [
+                { type: "PortfolioView", id: portfolioId },
+            ],
+        }),
     }),
 });
 
@@ -1311,4 +1481,24 @@ export const {
     useUpdateProfileCustomSectionMutation,
     useDeleteProfileCustomSectionMutation,
     useReorderProfileCustomSectionsMutation,
+    // Resume Projects
+    useGetResumeProjectsQuery,
+    useCreateResumeProjectMutation,
+    useGetResumeProjectQuery,
+    useUpdateResumeProjectMutation,
+    useDeleteResumeProjectMutation,
+    useDuplicateResumeProjectMutation,
+    // Export Resume
+    useGenerateResumePDFMutation,
+    useGetResumeExportsQuery,
+    useDeleteResumeExportMutation,
+    // Portfolio Projects
+    useGetPortfolioProjectsQuery, 
+    useCreatePortfolioProjectMutation, 
+    useGetPortfolioProjectQuery,
+    useUpdatePortfolioProjectMutation, 
+    useDeletePortfolioProjectMutation,
+    useDuplicatePortfolioProjectMutation,
+    // Portfolio Views / Analytics
+    useGetPortfolioAnalyticsQuery,
 } = portfolioApi;
