@@ -1,16 +1,9 @@
 'use client';
 
-import { FiGlobe, FiEdit2, FiTrash2, FiCopy, FiExternalLink, FiCalendar, FiBarChart2, FiImage } from 'react-icons/fi';
+import { FiGlobe, FiEdit2, FiTrash2, FiCopy, FiExternalLink, FiCalendar, FiBarChart2, FiLayout } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import { formatDateTime } from '@/utils/date.utils';
 import styles from '@/styles/portfolio/portfolio/PortfolioCard.module.css';
-
-const themeOptions = {
-    developer_dark: 'Developer Dark',
-    designer_creative: 'Designer Creative',
-    minimal_light: 'Minimal Light',
-    agency_bold: 'Agency Bold',
-};
 
 export default function PortfolioCard({ portfolio, onEdit, onDelete, onDuplicate, isLoading }) {
     return (
@@ -36,7 +29,9 @@ export default function PortfolioCard({ portfolio, onEdit, onDelete, onDuplicate
                 <div className={styles.configGrid}>
                     <div className={styles.configItem}>
                         <span className={styles.configLabel}>Theme</span>
-                        <span className={styles.configValue}>{themeOptions[portfolio.theme_key] || portfolio.theme_key}</span>
+                        <span className={styles.configValue}>
+                            <FiLayout size={12} /> {portfolio.portfolio_theme_name || 'Default'}
+                        </span>
                     </div>
                     <div className={styles.configItem}>
                         <span className={styles.configLabel}>Views</span>
@@ -60,7 +55,7 @@ export default function PortfolioCard({ portfolio, onEdit, onDelete, onDuplicate
 
                 {portfolio.seo_title && (
                     <div className={styles.seoInfo}>
-                        <span className={styles.seoLabel}>SEO Title:</span> {portfolio.seo_title}
+                        <span className={styles.seoLabel}>SEO:</span> {portfolio.seo_title}
                     </div>
                 )}
 

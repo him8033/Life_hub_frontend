@@ -1,28 +1,17 @@
 'use client';
 
-import { FiFileText, FiEdit2, FiTrash2, FiCopy, FiDownload, FiCalendar } from 'react-icons/fi';
+import { FiFileText, FiEdit2, FiTrash2, FiCopy, FiDownload, FiCalendar, FiLayout } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import { formatDateTime } from '@/utils/date.utils';
 import styles from '@/styles/portfolio/resume/ResumeCard.module.css';
 
 const fontOptions = {
-    Poppins: 'Poppins',
-    Inter: 'Inter',
-    Roboto: 'Roboto',
-    Montserrat: 'Montserrat',
+    Poppins: 'Poppins', Inter: 'Inter', Roboto: 'Roboto', Montserrat: 'Montserrat',
+    'Open Sans': 'Open Sans', Lato: 'Lato',
 };
 
 const layoutOptions = {
-    single_column: 'Single Column',
-    two_column: 'Two Column',
-    sidebar: 'Sidebar',
-};
-
-const templateOptions = {
-    modern_ats: 'Modern ATS',
-    minimal: 'Minimal',
-    creative: 'Creative',
-    corporate: 'Corporate',
+    single_column: 'Single Column', two_column: 'Two Column', sidebar: 'Sidebar',
 };
 
 export default function ResumeCard({ resume, onEdit, onDelete, onDuplicate, onGeneratePDF, isLoading }) {
@@ -34,7 +23,6 @@ export default function ResumeCard({ resume, onEdit, onDelete, onDuplicate, onGe
                 </div>
                 <div className={styles.headerInfo}>
                     <h3 className={styles.title}>{resume.title}</h3>
-                    {/* Updated: use profile_snapshot_title from serializer */}
                     <p className={styles.snapshotName}>
                         📸 {resume.profile_snapshot_title || 'Unknown Snapshot'}
                     </p>
@@ -50,7 +38,9 @@ export default function ResumeCard({ resume, onEdit, onDelete, onDuplicate, onGe
                 <div className={styles.configGrid}>
                     <div className={styles.configItem}>
                         <span className={styles.configLabel}>Template</span>
-                        <span className={styles.configValue}>{templateOptions[resume.template_key] || resume.template_key}</span>
+                        <span className={styles.configValue}>
+                            <FiLayout size={12} /> {resume.resume_template_name || 'Default'}
+                        </span>
                     </div>
                     <div className={styles.configItem}>
                         <span className={styles.configLabel}>Font</span>

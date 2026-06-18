@@ -9,27 +9,23 @@ import FormSelect from '@/components/common/forms/FormSelect';
 import FormTextarea from '@/components/common/forms/FormTextarea';
 import Button from '@/components/common/buttons/Button';
 import ButtonGroup from '@/components/common/buttons/ButtonGroup';
-import { useGetSnapshotsQuery } from '@/services/api/portfolioApi';
+import { useGetSnapshotsQuery, useGetPublicPortfolioThemesQuery } from '@/services/api/portfolioApi';
 import { portfolioProjectSchema } from '@/lib/validations/portfolio/portfolioProjectSchema';
 import styles from '@/styles/portfolio/resume/ResumeForm.module.css';
 
-const themeOptions = [
-    { value: 'developer_dark', label: 'Developer Dark' },
-    { value: 'designer_creative', label: 'Designer Creative' },
-    { value: 'minimal_light', label: 'Minimal Light' },
-    { value: 'agency_bold', label: 'Agency Bold' },
-];
-
 export default function PortfolioForm({ initialData, onSubmit, isSubmitting, mode = 'create' }) {
     const { data: snapshotsData } = useGetSnapshotsQuery({ page_size: 100 });
+    const { data: themesData } = useGetPublicPortfolioThemesQuery();
+
     const snapshots = snapshotsData?.data?.results || snapshotsData?.data || [];
+    const themes = themesData?.data || [];
 
     const methods = useForm({
         resolver: zodResolver(portfolioProjectSchema),
         defaultValues: {
             title: initialData?.title || '',
-            snapshot_id: initialData?.profile_snapshot_id || initialData?.profile_snapshot || '',
-            theme_key: initialData?.theme_key || 'developer_dark',
+            snapshot_id: initialData?.profile_snapshot_id || '',
+            theme_id: initialData?.portfolio_theme_id || '',
             custom_domain: initialData?.custom_domain || '',
             seo_title: initialData?.seo_title || '',
             seo_description: initialData?.seo_description || '',
@@ -45,8 +41,8 @@ export default function PortfolioForm({ initialData, onSubmit, isSubmitting, mod
         if (mode === 'edit' && initialData) {
             reset({
                 title: initialData.title || '',
-                snapshot_id: initialData.profile_snapshot_id || initialData.profile_snapshot || '',
-                theme_key: initialData.theme_key || 'developer_dark',
+                snapshot_id: initialData.profile_snapshot_id || '',
+                theme_id: initialData.portfolio_theme_id || '',
                 custom_domain: initialData.custom_domain || '',
                 seo_title: initialData.seo_title || '',
                 seo_description: initialData.seo_description || '',
@@ -57,7 +53,6 @@ export default function PortfolioForm({ initialData, onSubmit, isSubmitting, mod
         }
     }, [mode, initialData, reset]);
 
-    // Pre-fill snapshot if passed via URL
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const snapshotParam = urlParams.get('snapshot');
@@ -68,8 +63,6 @@ export default function PortfolioForm({ initialData, onSubmit, isSubmitting, mod
 
     const handleFormSubmit = (formData) => {
         const payload = { ...formData, is_public: formData.is_public === 'true' };
-        // Remove any old field name
-        delete payload.profile_snapshot_id;
         onSubmit(payload);
     };
 
@@ -97,35 +90,92 @@ export default function PortfolioForm({ initialData, onSubmit, isSubmitting, mod
                     {/* Portfolio Details */}
                     <div className={styles.section}>
                         <h3 className={styles.sectionTitle}><FiGlobe /> Portfolio Details</h3>
-                        <FormInput name="title" label="Portfolio Title *" placeholder="e.g., Rahul Dev Portfolio" icon={<FiGlobe />} required disabled={isSubmitting} />
-                        <FormSelect name="theme_key" label="Theme" options={themeOptions} disabled={isSubmitting} />
+                        <FormInput
+                            name="title"
+                            label="Portfolio Title *"
+                            placeholder="e.g., Rahul Dev Portfolio"
+                            icon={<FiGlobe />}
+                            required
+                            disabled={isSubmitting}
+                        />
+                        <FormSelect
+                            name="theme_id"
+                            label="Theme *"
+                            options={themes.map(t => ({
+                                value: t.theme_id,
+                                label: `${t.name}${t.is_premium ? ' ⭐' : ''}`
+                            }))}
+                            placeholder="Select a theme..."
+                            required
+                            disabled={isSubmitting}
+                        />
                     </div>
 
                     {/* Hero Section */}
                     <div className={styles.section}>
                         <h3 className={styles.sectionTitle}><FiHome /> Hero Section</h3>
                         <p className={styles.sectionDesc}>Customize the hero section of your portfolio</p>
-                        <FormInput name="hero_title" label="Hero Title" placeholder="e.g., Hi, I'm Rahul Sharma" icon={<FiHome />} disabled={isSubmitting} />
-                        <FormTextarea name="hero_subtitle" label="Hero Subtitle" placeholder="A passionate backend developer..." rows={2} disabled={isSubmitting} />
+                        <FormInput
+                            name="hero_title"
+                            label="Hero Title"
+                            placeholder="e.g., Hi, I'm Rahul Sharma"
+                            icon={<FiHome />}
+                            disabled={isSubmitting}
+                        />
+                        <FormTextarea
+                            name="hero_subtitle"
+                            label="Hero Subtitle"
+                            placeholder="A passionate backend developer..."
+                            rows={2}
+                            disabled={isSubmitting}
+                        />
                     </div>
 
                     {/* SEO Settings */}
                     <div className={styles.section}>
                         <h3 className={styles.sectionTitle}><FiSearch /> SEO Settings</h3>
                         <p className={styles.sectionDesc}>Optimize your portfolio for search engines</p>
-                        <FormInput name="seo_title" label="SEO Title" placeholder="e.g., Rahul Sharma - Backend Developer Portfolio" icon={<FiSearch />} disabled={isSubmitting} />
-                        <FormTextarea name="seo_description" label="SEO Description" placeholder="Meta description for search engines..." rows={2} disabled={isSubmitting} />
+                        <FormInput
+                            name="seo_title"
+                            label="SEO Title"
+                            placeholder="e.g., Rahul Sharma - Backend Developer Portfolio"
+                            icon={<FiSearch />}
+                            disabled={isSubmitting}
+                        />
+                        <FormTextarea
+                            name="seo_description"
+                            label="SEO Description"
+                            placeholder="Meta description for search engines..."
+                            rows={2}
+                            disabled={isSubmitting}
+                        />
                     </div>
 
                     {/* Advanced */}
                     <div className={styles.section}>
                         <h3 className={styles.sectionTitle}><FiLink /> Advanced</h3>
-                        <FormInput name="custom_domain" label="Custom Domain" placeholder="e.g., rahulsharma.dev" icon={<FiLink />} disabled={isSubmitting} />
-                        <FormSelect name="is_public" label="Visibility" options={[{ value: 'false', label: 'Private' }, { value: 'true', label: 'Public' }]} disabled={isSubmitting} />
+                        <FormInput
+                            name="custom_domain"
+                            label="Custom Domain"
+                            placeholder="e.g., rahulsharma.dev"
+                            icon={<FiLink />}
+                            disabled={isSubmitting}
+                        />
+                        <FormSelect
+                            name="is_public"
+                            label="Visibility"
+                            options={[
+                                { value: 'false', label: 'Private' },
+                                { value: 'true', label: 'Public' }
+                            ]}
+                            disabled={isSubmitting}
+                        />
                     </div>
 
                     <ButtonGroup align="end" className={styles.formActions}>
-                        <Button type="button" variant="secondary" onClick={() => reset()} disabled={isSubmitting}>Reset</Button>
+                        <Button type="button" variant="secondary" onClick={() => reset()} disabled={isSubmitting}>
+                            Reset
+                        </Button>
                         <Button type="submit" variant="primary" isLoading={isSubmitting} loadingText="Saving...">
                             {mode === 'create' ? 'Create Portfolio' : 'Update Portfolio'}
                         </Button>

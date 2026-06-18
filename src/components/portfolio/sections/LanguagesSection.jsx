@@ -59,9 +59,9 @@ const LanguagesSection = ({ snapshotId }) => {
     const isSubmitting = isCreating || isUpdating;
 
     // Filter out already added languages
-    const addedLanguageIds = languages.map(l => l.language_id);
+    const addedLanguageIds = languages.map(l => l.language_value);
     const availableLanguages = masterLanguages
-        .filter(lang => !addedLanguageIds.includes(lang.masterlanguage_id) || editingId === languages.find(l => l.language_id === lang.masterlanguage_id)?.profilelanguage_id)
+        .filter(lang => !addedLanguageIds.includes(lang.masterlanguage_id) || editingId === languages.find(l => l.language_value === lang.masterlanguage_id)?.profilelanguage_id)
         .map(lang => ({
             value: lang.masterlanguage_id,
             label: `${lang.name} ${lang.icon || ''}`,
@@ -97,7 +97,7 @@ const LanguagesSection = ({ snapshotId }) => {
     };
 
     const handleEdit = (language) => {
-        setValue('language_id', language.language_id);
+        setValue('language_id', language.language_value);
         setValue('proficiency', language.proficiency);
         setEditingId(language.profilelanguage_id);
         setShowForm(true);
