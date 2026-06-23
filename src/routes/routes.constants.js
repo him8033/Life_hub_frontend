@@ -50,20 +50,24 @@ export const ROUTES = {
                 VIEW: (snapshotId) => `/dashboard/portfolio/snapshots/view/${snapshotId}`,
             },
 
-            // Resumes
+            // Resumes (User-facing)
             RESUME: {
                 LIST: '/dashboard/portfolio/resumes',
                 CREATE: '/dashboard/portfolio/resumes/create',
                 EDIT: (resumeId) => `/dashboard/portfolio/resumes/edit/${resumeId}`,
-                VIEW: (resumeId) => `/dashboard/portfolio/resumes/view/${resumeId}`,
+                VIEW: (resumeId) => `/resume-builder/${resumeId}`,
+                PREVIEW: (slug) => `/resume-preview/${slug}`,
+                PREVIEW_EMBED: (slug) => `/resume-preview/${slug}?embed=true`,
+                PUBLIC: (slug) => `/resume/${slug}`, // Future public page
             },
 
-            // Portfolios
+            // Portfolios (User-facing)
             PORTFOLIO: {
                 LIST: '/dashboard/portfolio/portfolios',
                 CREATE: '/dashboard/portfolio/portfolios/create',
                 EDIT: (portfolioId) => `/dashboard/portfolio/portfolios/edit/${portfolioId}`,
-                VIEW: (portfolioId) => `/dashboard/portfolio/portfolios/view/${portfolioId}`,
+                VIEW: (portfolioId) => `/dashboard/portfolio/portfolios/${portfolioId}`,
+                PREVIEW: (slug) => `/portfolio/${slug}`,
             },
 
             // Admin - Skill Categories
@@ -92,6 +96,7 @@ export const ROUTES = {
                 LIST: '/dashboard/portfolio/admin/resume-templates',
                 CREATE: '/dashboard/portfolio/admin/resume-templates/create',
                 EDIT: (templateId) => `/dashboard/portfolio/admin/resume-templates/edit/${templateId}`,
+                SECTIONS: (templateId) => `/dashboard/portfolio/admin/resume-templates/edit/${templateId}/sections`,
             },
 
             // Admin - Portfolio Themes
@@ -99,6 +104,7 @@ export const ROUTES = {
                 LIST: '/dashboard/portfolio/admin/portfolio-themes',
                 CREATE: '/dashboard/portfolio/admin/portfolio-themes/create',
                 EDIT: (themeId) => `/dashboard/portfolio/admin/portfolio-themes/edit/${themeId}`,
+                SECTIONS: (themeId) => `/dashboard/portfolio/admin/portfolio-themes/edit/${themeId}/sections`,
             },
         },
     },

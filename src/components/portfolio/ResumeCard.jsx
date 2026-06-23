@@ -1,6 +1,6 @@
 'use client';
 
-import { FiFileText, FiEdit2, FiTrash2, FiCopy, FiDownload, FiCalendar, FiLayout } from 'react-icons/fi';
+import { FiFileText, FiEdit2, FiTrash2, FiCopy, FiDownload, FiCalendar, FiLayout, FiEye, FiSettings } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import { formatDateTime } from '@/utils/date.utils';
 import styles from '@/styles/portfolio/resume/ResumeCard.module.css';
@@ -14,9 +14,22 @@ const layoutOptions = {
     single_column: 'Single Column', two_column: 'Two Column', sidebar: 'Sidebar',
 };
 
-export default function ResumeCard({ resume, onEdit, onDelete, onDuplicate, onGeneratePDF, isLoading }) {
+export default function ResumeCard({
+    resume,
+    onEdit,
+    onEditSettings,
+    onDelete,
+    onDuplicate,
+    onGeneratePDF,
+    onPreview,
+    isLoading
+}) {
+    const handleCardClick = () => {
+        onEdit(resume.resume_id);
+    };
+
     return (
-        <div className={styles.card}>
+        <div className={styles.card} onClick={handleCardClick}>
             <div className={styles.cardHeader}>
                 <div className={styles.iconWrapper}>
                     <FiFileText />
@@ -27,11 +40,40 @@ export default function ResumeCard({ resume, onEdit, onDelete, onDuplicate, onGe
                         📸 {resume.profile_snapshot_title || 'Unknown Snapshot'}
                     </p>
                 </div>
-                {resume.pdf_url && (
-                    <a href={resume.pdf_url} target="_blank" rel="noopener" className={styles.downloadBtn} title="Download PDF">
-                        <FiDownload />
-                    </a>
-                )}
+                {/* Top Right Actions */}
+                <div className={styles.headerActions} onClick={e => e.stopPropagation()}>
+                    {resume.is_public && onPreview && (
+                        <button
+                            className={styles.iconBtn}
+                            onClick={() => onPreview(resume.slug)}
+                            title="Preview Resume"
+                        >
+                            <FiEye size={16} />
+                        </button>
+                    )}
+                    {resume.pdf_url && (
+                        <a
+                            href={resume.pdf_url}
+                            target="_blank"
+                            rel="noopener"
+                            className={styles.iconBtn}
+                            title="Download PDF"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <FiDownload size={16} />
+                        </a>
+                    )}
+                    <button
+                        className={styles.iconBtn}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onEditSettings(resume.resume_id);
+                        }}
+                        title="Settings"
+                    >
+                        <FiSettings size={16} />
+                    </button>
+                </div>
             </div>
 
             <div className={styles.cardBody}>
@@ -70,13 +112,19 @@ export default function ResumeCard({ resume, onEdit, onDelete, onDuplicate, onGe
                 </div>
             </div>
 
-            <div className={styles.cardFooter}>
-                <Button variant="outline" size="sm" icon={<FiEdit2 />} onClick={() => onEdit(resume.resume_id)} disabled={isLoading}>Edit</Button>
-                <Button variant="outline" size="sm" icon={<FiCopy />} onClick={() => onDuplicate(resume.resume_id, resume.title)} disabled={isLoading}>Duplicate</Button>
-                <Button variant="outline" size="sm" icon={<FiDownload />} onClick={() => onGeneratePDF(resume.resume_id)} disabled={isLoading}>
-                    {resume.is_pdf_generated ? 'Regenerate PDF' : 'Generate PDF'}
+            <div className={styles.cardFooter} onClick={e => e.stopPropagation()}>
+                <Button variant="outline" size="sm" icon={<FiEdit2 />} onClick={() => onEdit(resume.resume_id)} disabled={isLoading}>
+                    Edit Content
                 </Button>
-                <Button variant="outline" size="sm" icon={<FiTrash2 />} onClick={() => onDelete(resume.resume_id, resume.title)} disabled={isLoading}>Delete</Button>
+                <Button variant="outline" size="sm" icon={<FiCopy />} onClick={() => onDuplicate(resume.resume_id, resume.title)} disabled={isLoading}>
+                    Duplicate
+                </Button>
+                <Button variant="outline" size="sm" icon={<FiDownload />} onClick={() => onGeneratePDF(resume.resume_id)} disabled={isLoading}>
+                    {resume.is_pdf_generated ? 'Regen PDF' : 'Export PDF'}
+                </Button>
+                <Button variant="outline" size="sm" icon={<FiTrash2 />} onClick={() => onDelete(resume.resume_id, resume.title)} disabled={isLoading}>
+                    Delete
+                </Button>
             </div>
         </div>
     );

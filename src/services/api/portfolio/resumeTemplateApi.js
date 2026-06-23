@@ -70,4 +70,26 @@ export const resumeTemplateEndpoints = (builder) => ({
         }),
         invalidatesTags: ["ResumeTemplate"],
     }),
+
+    // Template Sections
+    getTemplateSections: builder.query({
+        query: (templateId) => ({
+            url: `portfoliohub/resume-templates/${templateId}/sections/`,
+            method: "GET",
+        }),
+        providesTags: (result, error, templateId) => [
+            { type: "TemplateSection", id: templateId },
+        ],
+    }),
+
+    updateTemplateSection: builder.mutation({
+        query: ({ templateId, sectionId, data }) => ({
+            url: `portfoliohub/resume-templates/${templateId}/sections/${sectionId}/`,
+            method: "PUT",
+            body: data,
+        }),
+        invalidatesTags: (result, error, { templateId }) => [
+            { type: "TemplateSection", id: templateId },
+        ],
+    }),
 });

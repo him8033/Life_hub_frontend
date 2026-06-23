@@ -1,0 +1,249 @@
+/* ResumeForm.module.css */
+
+.formContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ======================
+   Sections
+====================== */
+
+.section {
+    margin-bottom: 2rem;
+}
+
+.section:last-child {
+    margin-bottom: 0;
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    margin: 0 0 1rem;
+    padding-bottom: 0.75rem;
+
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--foreground);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.sectionTitle svg {
+    color: var(--primary);
+}
+
+.sectionDesc {
+    margin-bottom: 1.25rem;
+
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* ======================
+   Form Layout
+====================== */
+
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ======================
+   Template Preview
+====================== */
+
+.templatePreview {
+    margin-top: 1rem;
+    max-width: 320px;
+
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+
+    background: var(--background);
+}
+
+.previewImg {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* ======================
+   Color Section
+====================== */
+
+.colorField {
+    margin-top: 1rem;
+}
+
+.colorLabel {
+    display: block;
+
+    margin-bottom: 0.75rem;
+
+    color: var(--foreground);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.colorSelect {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.colorBtn {
+    width: 38px;
+    height: 38px;
+
+    border: 2px solid transparent;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.colorBtn:hover {
+    transform: scale(1.1);
+}
+
+.colorBtn.selected {
+    border-color: #fff;
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, .35);
+}
+
+.fieldDescription {
+    margin-top: 0.75rem;
+
+    color: var(--muted-foreground);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+/* ======================
+   Visibility
+====================== */
+
+.visibilityField {
+    margin-top: 2rem;
+}
+
+/* ======================
+   Actions
+====================== */
+
+.formActions {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+
+    border-top: 1px solid var(--border);
+}
+
+/* ======================
+   Dark Theme
+====================== */
+
+.dark .formContainer {
+    background: var(--gray-900);
+}
+
+.dark .templatePreview {
+    border-color: var(--gray-700);
+}
+
+.dark .formActions {
+    border-color: var(--gray-700);
+}
+
+/* ======================
+   Tablet
+====================== */
+
+@media (max-width: 768px) {
+
+    .formContainer {
+        padding: 1.25rem;
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .section {
+        margin-bottom: 1.75rem;
+    }
+
+    .sectionTitle {
+        font-size: 1rem;
+    }
+
+    .templatePreview {
+        max-width: 100%;
+    }
+
+    .colorBtn {
+        width: 34px;
+        height: 34px;
+    }
+
+    .formActions {
+        margin-top: 1.5rem;
+    }
+}
+
+/* ======================
+   Mobile
+====================== */
+
+@media (max-width: 480px) {
+
+    .formContainer {
+        padding: 1rem;
+    }
+
+    .section {
+        margin-bottom: 1.5rem;
+    }
+
+    .sectionTitle {
+        font-size: 0.95rem;
+    }
+
+    .colorSelect {
+        gap: 0.5rem;
+    }
+
+    .colorBtn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .fieldDescription,
+    .sectionDesc {
+        font-size: 0.8rem;
+    }
+
+    .formActions {
+        padding-top: 1rem;
+    }
+}

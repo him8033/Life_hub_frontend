@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/common/buttons/Button';
-import { FiEdit2, FiTrash2, FiCheck, FiStar, FiImage } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiCheck, FiStar, FiImage, FiSettings } from 'react-icons/fi';
 import styles from '@/styles/portfolio/admin/ResumeTemplateCard.module.css';
 
 export default function ResumeTemplateCard({
@@ -9,6 +9,7 @@ export default function ResumeTemplateCard({
     onEdit,
     onDelete,
     onToggleStatus,
+    onSections,
     isLoading = false
 }) {
     return (
@@ -47,6 +48,14 @@ export default function ResumeTemplateCard({
             <div className={styles.content}>
                 <h3 className={styles.name}>{template.name}</h3>
 
+                {template.key && (
+                    <p className={styles.templateKey}>{template.key}</p>
+                )}
+
+                {template.description && (
+                    <p className={styles.templateDesc}>{template.description}</p>
+                )}
+
                 <div className={styles.meta}>
                     <span className={`${styles.statusBadge} ${template.is_active ? styles.active : styles.inactiveBadge}`}>
                         {template.is_active ? 'Active' : 'Inactive'}
@@ -66,11 +75,20 @@ export default function ResumeTemplateCard({
                     <Button
                         variant="outline"
                         size="sm"
+                        icon={<FiSettings />}
+                        onClick={() => !isLoading && onSections(template.template_id)}
+                        disabled={isLoading}
+                        className={styles.iconButton}
+                        title="Section Settings"
+                    />
+                    <Button
+                        variant="outline"
+                        size="sm"
                         icon={<FiEdit2 />}
                         onClick={() => !isLoading && onEdit(template.template_id)}
                         disabled={isLoading}
                         className={styles.iconButton}
-                        title="Edit"
+                        title="Edit Template"
                     />
                     <Button
                         variant="outline"

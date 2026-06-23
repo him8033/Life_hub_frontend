@@ -11,7 +11,7 @@ import { useGetProfileProjectsQuery, useDeleteProfileProjectMutation } from '@/s
 import ProjectFormModal from '@/components/portfolio/sections/ProjectFormModal';
 import styles from '@/styles/portfolio/sections/ProjectsSection.module.css';
 
-const ProjectsSection = ({ snapshotId }) => {
+const ProjectsSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
     const [showForm, setShowForm] = useState(false);
@@ -25,8 +25,19 @@ const ProjectsSection = ({ snapshotId }) => {
     const handleDelete = async (projectId, name) => {
         const ok = await confirm({ title: 'Delete Project', message: `Delete "${name}"?`, confirmText: 'Delete', cancelText: 'Cancel', type: 'danger' });
         if (!ok) return;
-        try { await deleteProject(projectId).unwrap(); showSnackbar('Project deleted', 'success', 3000); refetch(); }
-        catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
+        try {
+            await deleteProject(projectId).unwrap();
+            showSnackbar('Project deleted', 'success', 3000);
+            refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
+        }
+        catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
+        }
     };
 
     const handleEdit = (project) => {
@@ -38,6 +49,11 @@ const ProjectsSection = ({ snapshotId }) => {
         setShowForm(false);
         setEditingProject(null);
         refetch();
+
+        // NEW: Notify parent to refresh preview
+        if (onDataChange) {
+            onDataChange();
+        }
     };
 
     if (isLoading) return <Loader text="Loading projects..." />;

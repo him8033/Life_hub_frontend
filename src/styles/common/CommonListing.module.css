@@ -392,3 +392,73 @@
         color: var(--foreground);
     }
 }
+
+/* Search Bar */
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-5);
+}
+
+.searchIcon {
+    color: var(--muted-foreground);
+    flex-shrink: 0;
+}
+
+.searchInput {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: var(--text-sm);
+    font-family: inherit;
+    color: var(--foreground);
+    outline: none;
+}
+
+.searchInput::placeholder {
+    color: var(--muted-foreground);
+}
+
+.clearSearch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.clearSearch:hover {
+    background: var(--accent);
+    color: var(--foreground);
+}
+
+/* Card Grid */
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: var(--spacing-5);
+}
+
+/* Dark Mode */
+.dark .searchWrapper {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cardGrid {
+        grid-template-columns: 1fr;
+    }
+}

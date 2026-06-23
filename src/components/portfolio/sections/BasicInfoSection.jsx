@@ -19,7 +19,7 @@ import { useGetBasicInfoQuery, useSaveBasicInfoMutation } from '@/services/api/p
 import { basicInfoSchema } from '@/lib/validations/portfolio/sections/basicInfoSchema';
 import styles from '@/styles/portfolio/sections/BasicInfoSection.module.css';
 
-const BasicInfoSection = ({ snapshotId }) => {
+const BasicInfoSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const [isEditing, setIsEditing] = useState(false);
 
@@ -103,9 +103,14 @@ const BasicInfoSection = ({ snapshotId }) => {
             }
 
             await saveBasicInfo({ snapshotId, data: formData }).unwrap();
-            showSnackbar('Basic info saved successfully', 'success', 5000);
+            showSnackbar('Basic info saved successfully', 'success', 3000);
             setIsEditing(false);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to save basic info'), 'error', 5000);
         }

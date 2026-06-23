@@ -1,0 +1,68 @@
+/* CreateResume.module.css */
+
+.pageContainer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--spacing-6);
+}
+
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    padding: var(--spacing-2) 0;
+    margin-bottom: var(--spacing-4);
+    transition: color 0.2s ease;
+    font-family: inherit;
+}
+
+.backButton:hover {
+    color: var(--primary);
+}
+
+.pageHeader {
+    margin-bottom: var(--spacing-6);
+}
+
+.pageTitleWrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+}
+
+.pageIcon {
+    font-size: var(--text-3xl);
+    color: var(--primary);
+    flex-shrink: 0;
+    margin-top: var(--spacing-1);
+}
+
+.pageTitle {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.pageSubtitle {
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    margin: var(--spacing-1) 0 0 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pageContainer {
+        padding: var(--spacing-4);
+    }
+
+    .pageTitle {
+        font-size: var(--text-xl);
+    }
+}

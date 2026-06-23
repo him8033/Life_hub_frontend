@@ -119,6 +119,10 @@ export default function ResumeTemplatesPage() {
         }
     };
 
+    const handleSections = (templateId) => {
+        router.push(ROUTES.DASHBOARD.PORTFOLIO.RESUMETEMPLATE.SECTIONS(templateId));
+    };
+
     const templates = data?.data?.results || data?.data || [];
     const totalCount = data?.data?.count || templates.length;
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -244,6 +248,7 @@ export default function ResumeTemplatesPage() {
                                 onEdit={(templateId) => router.push(ROUTES.DASHBOARD.PORTFOLIO.RESUMETEMPLATE.EDIT(templateId))}
                                 onDelete={handleDelete}
                                 onToggleStatus={handleToggleStatus}
+                                onSections={handleSections}
                                 isLoading={isDeleting || isToggling || isFetching}
                             />
                         ))}

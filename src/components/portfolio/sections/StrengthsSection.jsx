@@ -24,7 +24,7 @@ import {
 import { strengthSchema } from '@/lib/validations/portfolio/sections/strengthSchema';
 import styles from '@/styles/portfolio/sections/StrengthsSection.module.css';
 
-const StrengthsSection = ({ snapshotId }) => {
+const StrengthsSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -63,6 +63,11 @@ const StrengthsSection = ({ snapshotId }) => {
             setEditingId(null);
             setShowForm(false);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to save strength'), 'error', 5000);
         }
@@ -87,6 +92,11 @@ const StrengthsSection = ({ snapshotId }) => {
             await deleteStrength(strengthId).unwrap();
             showSnackbar('Strength deleted', 'success', 3000);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to delete'), 'error', 5000);
         }
@@ -105,6 +115,11 @@ const StrengthsSection = ({ snapshotId }) => {
                 data: { order: newItems.map(item => item.profilestrength_id) },
             }).unwrap();
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 5000);
         }

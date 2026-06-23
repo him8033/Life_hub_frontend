@@ -1,0 +1,207 @@
+/* Minimal.module.css */
+
+.page {
+    --primary: #2563EB;
+    background: white;
+    color: #334155;
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 60px 32px;
+}
+
+/* Header */
+.header {
+    margin-bottom: 32px;
+}
+
+.name {
+    font-size: 36px;
+    font-weight: 300;
+    margin: 0 0 4px;
+    letter-spacing: -1px;
+}
+
+.title {
+    font-size: 14px;
+    color: var(--primary);
+    margin: 0 0 16px;
+}
+
+.contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.contact span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Sections */
+.section {
+    margin-bottom: 36px;
+}
+
+.sectionTitle {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--primary);
+    margin: 0 0 20px;
+}
+
+.summary {
+    font-size: 15px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.8;
+}
+
+/* Timeline */
+.timeline {
+    position: relative;
+    padding-left: 20px;
+}
+
+.timelineItem {
+    position: relative;
+    padding-bottom: 24px;
+}
+
+.timelineDot {
+    position: absolute;
+    left: -25px;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+}
+
+.timelineItem::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 14px;
+    bottom: 0;
+    width: 1px;
+    background: #e2e8f0;
+}
+
+.timelineItem:last-child::before {
+    display: none;
+}
+
+.timelineContent h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.at {
+    color: #94a3b8;
+    font-weight: 300;
+}
+
+.date {
+    font-size: 11px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 4px 0;
+}
+
+.timelineContent p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 6px 0 0;
+}
+
+.eduItem {
+    margin-bottom: 16px;
+}
+
+.eduItem h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.eduItem p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 2px 0 0;
+}
+
+/* Skills */
+.skillTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.skillTag {
+    font-size: 12px;
+    padding: 4px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    color: #64748b;
+}
+
+/* Projects */
+.projectItem {
+    margin-bottom: 20px;
+}
+
+.projectItem h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.projectItem p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 4px 0;
+}
+
+.projectItem a {
+    font-size: 12px;
+    color: var(--primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+@media print {
+    .page {
+        background: white;
+    }
+
+    .container {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 32px 16px;
+    }
+
+    .name {
+        font-size: 28px;
+    }
+}

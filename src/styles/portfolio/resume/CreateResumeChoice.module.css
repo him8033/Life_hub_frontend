@@ -1,0 +1,189 @@
+/* CreateResumeChoice.module.css */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    padding: var(--spacing-4);
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    width: 100%;
+    max-width: 560px;
+    box-shadow: var(--shadow-2xl);
+    animation: slideUp 0.3s ease;
+    border: 1px solid var(--border);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modalHeader {
+    padding: var(--spacing-6) var(--spacing-6) 0;
+    text-align: center;
+}
+
+.modalTitle {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0 0 var(--spacing-2);
+}
+
+.modalSubtitle {
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    margin: 0;
+}
+
+.options {
+    padding: var(--spacing-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
+.optionCard {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding: var(--spacing-5);
+    background: var(--muted);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-xl);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    font-family: inherit;
+    width: 100%;
+}
+
+.optionCard:hover {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 5%, var(--muted));
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.optionIcon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--brand-gradient);
+    color: white;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-2xl);
+    flex-shrink: 0;
+}
+
+.optionContent {
+    flex: 1;
+}
+
+.optionTitle {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0 0 4px;
+}
+
+.optionDesc {
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.optionArrow {
+    font-size: var(--text-xl);
+    color: var(--muted-foreground);
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.optionCard:hover .optionArrow {
+    color: var(--primary);
+    transform: translateX(4px);
+}
+
+.modalFooter {
+    padding: 0 var(--spacing-6) var(--spacing-6);
+    text-align: center;
+}
+
+.cancelBtn {
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    padding: var(--spacing-2) var(--spacing-4);
+    font-family: inherit;
+}
+
+.cancelBtn:hover {
+    color: var(--foreground);
+}
+
+/* Dark Mode */
+.dark .modal {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+.dark .optionCard {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+.dark .optionCard:hover {
+    background: color-mix(in srgb, var(--primary) 8%, var(--gray-800));
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .modal {
+        max-width: 100%;
+        margin: var(--spacing-2);
+    }
+
+    .optionCard {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-3);
+        padding: var(--spacing-4);
+    }
+
+    .optionArrow {
+        display: none;
+    }
+}

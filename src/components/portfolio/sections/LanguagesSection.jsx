@@ -39,7 +39,7 @@ const proficiencyColors = {
     native: '#f59e0b',
 };
 
-const LanguagesSection = ({ snapshotId }) => {
+const LanguagesSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -90,6 +90,11 @@ const LanguagesSection = ({ snapshotId }) => {
             setEditingId(null);
             setShowForm(false);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             const errorMsg = extractErrorMessage(error, 'Failed to save language');
             showSnackbar(errorMsg, 'error', 5000);
@@ -116,6 +121,11 @@ const LanguagesSection = ({ snapshotId }) => {
             await deleteLanguage(mappingId).unwrap();
             showSnackbar('Language removed', 'success', 3000);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to remove'), 'error', 5000);
         }
@@ -134,6 +144,11 @@ const LanguagesSection = ({ snapshotId }) => {
                 data: { order: newItems.map(item => item.profilelanguage_id) },
             }).unwrap();
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 5000);
         }

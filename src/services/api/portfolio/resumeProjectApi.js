@@ -67,6 +67,14 @@ export const resumeProjectEndpoints = (builder) => ({
         ],
     }),
 
+    // Public Resume Preview
+    getPublicResume: builder.query({
+        query: (slug) => ({
+            url: `portfoliohub/public/resume/${slug}/`,
+            method: "GET",
+        }),
+    }),
+
     // ============================================
     // RESUME EXPORTS
     // ============================================

@@ -33,7 +33,7 @@ const employmentTypes = [
     { value: 'Self-employed', label: 'Self-employed' },
 ];
 
-const ExperienceSection = ({ snapshotId }) => {
+const ExperienceSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -89,8 +89,18 @@ const ExperienceSection = ({ snapshotId }) => {
                 await createExperience({ snapshotId, data: payload }).unwrap();
                 showSnackbar('Experience added', 'success', 3000);
             }
-            reset(); setEditingId(null); setShowForm(false); setLogoFile(null); setLogoPreview(''); setRemoveLogo(false);
+            reset();
+            setEditingId(null);
+            setShowForm(false);
+            setLogoFile(null);
+            setLogoPreview('');
+            setRemoveLogo(false);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to save experience'), 'error', 5000);
         }
@@ -111,10 +121,27 @@ const ExperienceSection = ({ snapshotId }) => {
     };
 
     const handleDelete = async (expId, role) => {
-        const ok = await confirm({ title: 'Delete Experience', message: `Delete "${role}"?`, confirmText: 'Delete', cancelText: 'Cancel', type: 'danger' });
+        const ok = await confirm({
+            title: 'Delete Experience',
+            message: `Delete "${role}"?`,
+            confirmText: 'Delete',
+            cancelText: 'Cancel',
+            type: 'danger'
+        });
         if (!ok) return;
-        try { await deleteExperience(expId).unwrap(); showSnackbar('Experience deleted', 'success', 3000); refetch(); }
-        catch (error) { showSnackbar(extractErrorMessage(error, 'Failed to delete'), 'error', 5000); }
+        try {
+            await deleteExperience(expId).unwrap();
+            showSnackbar('Experience deleted', 'success', 3000);
+            refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
+        }
+        catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed to delete'), 'error', 5000);
+        }
     };
 
     const handleMove = async (index, direction) => {
@@ -122,11 +149,33 @@ const ExperienceSection = ({ snapshotId }) => {
         const targetIndex = index + direction;
         if (targetIndex < 0 || targetIndex >= newList.length) return;
         [newList[index], newList[targetIndex]] = [newList[targetIndex], newList[index]];
-        try { await reorderExperience({ snapshotId, data: { order: newList.map(e => e.profileexperience_id) } }).unwrap(); refetch(); }
-        catch (error) { showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 5000); }
+        try {
+            await reorderExperience({
+                snapshotId, data: {
+                    order: newList.map(e => e.profileexperience_id)
+                }
+            }).unwrap();
+            refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
+        }
+        catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 5000);
+        }
     };
 
-    const handleCancel = () => { reset(); setEditingId(null); setShowForm(false); setLogoFile(null); setLogoPreview(''); setRemoveLogo(false); };
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+        setLogoFile(null);
+        setLogoPreview('');
+        setRemoveLogo(false);
+    };
+    
     const formatDate = (d) => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : '';
 
     if (isLoading) return <Loader text="Loading experience..." />;

@@ -18,7 +18,7 @@ import { useGetPublicMasterSkillsQuery } from '@/services/api/portfolioApi';
 import { profileSkillSchema } from '@/lib/validations/portfolio/sections/profileSkillSchema';
 import styles from '@/styles/portfolio/sections/SkillsSection.module.css';
 
-const SkillsSection = ({ snapshotId }) => {
+const SkillsSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const [showForm, setShowForm] = useState(false);
 
@@ -68,6 +68,11 @@ const SkillsSection = ({ snapshotId }) => {
             reset();
             setShowForm(false);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             console.error('Error adding skill:', error);
             showSnackbar(extractErrorMessage(error, 'Failed to add skill'), 'error', 5000);
@@ -79,6 +84,11 @@ const SkillsSection = ({ snapshotId }) => {
             await deleteSkill(skillId).unwrap();
             showSnackbar(`"${skillName}" removed`, 'success', 3000);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to remove skill'), 'error', 5000);
         }
@@ -88,6 +98,11 @@ const SkillsSection = ({ snapshotId }) => {
         try {
             await updateSkill({ skillId, data: { is_featured: !current } }).unwrap();
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to update skill'), 'error', 5000);
         }

@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FiFileText, FiCheck, FiStar, FiImage, FiTrash2 } from 'react-icons/fi';
+import { FiFileText, FiCheck, FiStar, FiImage, FiTrash2, FiKey, FiFileText as FiDesc } from 'react-icons/fi';
 
 import FormInput from '@/components/common/forms/FormInput';
+import FormTextarea from '@/components/common/forms/FormTextarea';
 import FormSelect from '@/components/common/forms/FormSelect';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
@@ -28,6 +29,8 @@ const ResumeTemplateForm = ({
         resolver: zodResolver(resumeTemplateSchema),
         defaultValues: {
             name: initialData?.name || '',
+            key: initialData?.key || '',
+            description: initialData?.description || '',
             is_ats_friendly: String(initialData?.is_ats_friendly ?? false),
             is_premium: String(initialData?.is_premium ?? false),
             is_active: String(initialData?.is_active ?? true),
@@ -40,6 +43,8 @@ const ResumeTemplateForm = ({
         if (mode === 'edit' && initialData) {
             reset({
                 name: initialData.name || '',
+                key: initialData.key || '',
+                description: initialData.description || '',
                 is_ats_friendly: String(initialData.is_ats_friendly ?? false),
                 is_premium: String(initialData.is_premium ?? false),
                 is_active: String(initialData.is_active ?? true),
@@ -78,6 +83,8 @@ const ResumeTemplateForm = ({
     const handleFormSubmit = (data) => {
         const formData = new FormData();
         formData.append('name', data.name);
+        if (data.key) formData.append('key', data.key);
+        if (data.description) formData.append('description', data.description);
         formData.append('is_ats_friendly', data.is_ats_friendly === 'true');
         formData.append('is_premium', data.is_premium === 'true');
         formData.append('is_active', data.is_active === 'true');
@@ -104,6 +111,26 @@ const ResumeTemplateForm = ({
                         autoFocus={mode === 'create'}
                         disabled={isSubmitting}
                         description="Enter a descriptive name for the template"
+                        className={styles.formItem}
+                    />
+
+                    <FormInput
+                        name="key"
+                        label="Template Key"
+                        placeholder="e.g., modern_ats, creative, minimal"
+                        icon={<FiKey />}
+                        disabled={isSubmitting}
+                        description="Unique key identifier for this template (e.g., modern_ats)"
+                        className={styles.formItem}
+                    />
+
+                    <FormTextarea
+                        name="description"
+                        label="Description"
+                        placeholder="Brief description of this template's design and features..."
+                        rows={3}
+                        disabled={isSubmitting}
+                        description="Optional: Describe what makes this template unique"
                         className={styles.formItem}
                     />
 

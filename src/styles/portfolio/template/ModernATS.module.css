@@ -1,0 +1,313 @@
+/* ModernATS.module.css */
+
+.page {
+    --primary: #2563EB;
+    background: white;
+    color: #1e293b;
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 40px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 3px solid var(--primary);
+}
+
+.name {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
+.title {
+    font-size: 16px;
+    color: var(--primary);
+    font-weight: 500;
+    margin: 0 0 16px;
+}
+
+.contact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    font-size: 13px;
+    color: #475569;
+}
+
+.contact span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Sections */
+.section {
+    margin-bottom: 28px;
+}
+
+.sectionTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 16px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.summary {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Experience & Education Items */
+.expItem,
+.eduItem,
+.projectItem {
+    margin-bottom: 20px;
+}
+
+.expItem:last-child,
+.eduItem:last-child {
+    margin-bottom: 0;
+}
+
+.expHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.expRole,
+.eduDegree {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+}
+
+.expDate {
+    font-size: 12px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.expCompany,
+.eduSchool {
+    font-size: 14px;
+    color: #64748b;
+    margin: 2px 0;
+}
+
+.expDesc {
+    font-size: 14px;
+    color: #475569;
+    margin: 8px 0 0;
+    line-height: 1.6;
+}
+
+.eduScore {
+    font-size: 13px;
+    color: var(--primary);
+    font-weight: 500;
+    margin: 4px 0 0;
+}
+
+/* Projects */
+.projectName {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 4px;
+}
+
+.projectDesc {
+    font-size: 14px;
+    color: #475569;
+    margin: 0 0 8px;
+}
+
+.techTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.techTag {
+    font-size: 11px;
+    padding: 2px 10px;
+    background: #f1f5f9;
+    color: #475569;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.projectLinks {
+    display: flex;
+    gap: 16px;
+}
+
+.projectLinks a {
+    font-size: 12px;
+    color: var(--primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.projectLinks a:hover {
+    text-decoration: underline;
+}
+
+/* Skills */
+.skillsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.skillItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.skillIcon {
+    width: 22px;
+    height: 22px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.skillName {
+    font-size: 14px;
+    font-weight: 500;
+    flex: 1;
+}
+
+.skillDots {
+    display: flex;
+    gap: 3px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #e2e8f0;
+}
+
+.dot.active {
+    background: var(--primary);
+}
+
+/* Certificates */
+.certGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.certItem h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 2px;
+}
+
+.certItem p {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0 0 4px;
+}
+
+.certItem a {
+    font-size: 11px;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.certItem a:hover {
+    text-decoration: underline;
+}
+
+/* Languages */
+.langList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.langItem {
+    font-size: 13px;
+    padding: 3px 14px;
+    background: #f1f5f9;
+    border-radius: 14px;
+    font-weight: 500;
+}
+
+/* Achievements */
+.achieveList {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.achieveList li {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.achieveList li p {
+    font-size: 12px;
+    color: #64748b;
+    margin: 2px 0 0;
+}
+
+/* Print */
+@media print {
+    .page {
+        background: white;
+    }
+
+    .container {
+        padding: 20px;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 24px 16px;
+    }
+
+    .skillsGrid,
+    .certGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .name {
+        font-size: 24px;
+    }
+}

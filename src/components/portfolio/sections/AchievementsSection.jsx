@@ -25,7 +25,7 @@ import {
 import { achievementSchema } from '@/lib/validations/portfolio/sections/achievementSchema';
 import styles from '@/styles/portfolio/sections/AchievementsSection.module.css';
 
-const AchievementsSection = ({ snapshotId }) => {
+const AchievementsSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -65,6 +65,12 @@ const AchievementsSection = ({ snapshotId }) => {
             setEditingId(null);
             setShowForm(false);
             refetch();
+
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to save achievement'), 'error', 5000);
         }
@@ -90,6 +96,11 @@ const AchievementsSection = ({ snapshotId }) => {
             await deleteAchievement(achievementId).unwrap();
             showSnackbar('Achievement deleted', 'success', 3000);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to delete'), 'error', 5000);
         }
@@ -108,6 +119,11 @@ const AchievementsSection = ({ snapshotId }) => {
                 data: { order: newItems.map(item => item.profileachievement_id) },
             }).unwrap();
             refetch();
+            
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 5000);
         }

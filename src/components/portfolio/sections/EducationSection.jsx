@@ -26,7 +26,7 @@ import {
 import { educationSchema } from '@/lib/validations/portfolio/sections/educationSchema';
 import styles from '@/styles/portfolio/sections/EducationSection.module.css';
 
-const EducationSection = ({ snapshotId }) => {
+const EducationSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -78,6 +78,11 @@ const EducationSection = ({ snapshotId }) => {
             setEditingId(null);
             setShowForm(false);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to save education'), 'error', 5000);
         }
@@ -109,6 +114,11 @@ const EducationSection = ({ snapshotId }) => {
             await deleteEducation(eduId).unwrap();
             showSnackbar('Education deleted', 'success', 3000);
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to delete'), 'error', 5000);
         }
@@ -126,6 +136,11 @@ const EducationSection = ({ snapshotId }) => {
                 data: { order: newList.map(e => e.profileeducation_id) },
             }).unwrap();
             refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 5000);
         }

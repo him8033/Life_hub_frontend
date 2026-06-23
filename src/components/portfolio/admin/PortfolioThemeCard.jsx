@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/common/buttons/Button';
-import { FiEdit2, FiTrash2, FiStar, FiImage } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiStar, FiImage, FiSettings } from 'react-icons/fi';
 import styles from '@/styles/portfolio/admin/ResumeTemplateCard.module.css';
 
 export default function PortfolioThemeCard({
@@ -9,11 +9,11 @@ export default function PortfolioThemeCard({
     onEdit,
     onDelete,
     onToggleStatus,
+    onSections,
     isLoading = false
 }) {
     return (
         <div className={`${styles.card} ${!theme.is_active ? styles.inactive : ''}`}>
-            {/* Preview Image */}
             <div className={styles.imageWrapper}>
                 {theme.preview_image_url ? (
                     <img
@@ -28,7 +28,6 @@ export default function PortfolioThemeCard({
                     </div>
                 )}
 
-                {/* Badges */}
                 <div className={styles.badges}>
                     {theme.is_premium && (
                         <span className={styles.premiumBadge} title="Premium">
@@ -38,9 +37,16 @@ export default function PortfolioThemeCard({
                 </div>
             </div>
 
-            {/* Content */}
             <div className={styles.content}>
                 <h3 className={styles.name}>{theme.name}</h3>
+
+                {theme.key && (
+                    <p className={styles.templateKey}>{theme.key}</p>
+                )}
+
+                {theme.description && (
+                    <p className={styles.templateDesc}>{theme.description}</p>
+                )}
 
                 <div className={styles.meta}>
                     <span className={`${styles.statusBadge} ${theme.is_active ? styles.active : styles.inactiveBadge}`}>
@@ -61,11 +67,20 @@ export default function PortfolioThemeCard({
                     <Button
                         variant="outline"
                         size="sm"
+                        icon={<FiSettings />}
+                        onClick={() => !isLoading && onSections(theme.theme_id)}
+                        disabled={isLoading}
+                        className={styles.iconButton}
+                        title="Section Settings"
+                    />
+                    <Button
+                        variant="outline"
+                        size="sm"
                         icon={<FiEdit2 />}
                         onClick={() => !isLoading && onEdit(theme.theme_id)}
                         disabled={isLoading}
                         className={styles.iconButton}
-                        title="Edit"
+                        title="Edit Theme"
                     />
                     <Button
                         variant="outline"

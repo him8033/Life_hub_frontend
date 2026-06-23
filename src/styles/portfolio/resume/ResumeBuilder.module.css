@@ -1,0 +1,514 @@
+/* ResumeBuilder.module.css */
+
+.builder {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: var(--background);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+/* ============================================
+   TOP BAR
+   ============================================ */
+
+.topBar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: 0 var(--spacing-4);
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    height: 48px;
+}
+
+.backBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.backBtn:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.resumeTitle {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.topActions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.iconBtn {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    font-size: var(--text-base);
+}
+
+.iconBtn:hover {
+    background: var(--muted);
+    color: var(--primary);
+}
+
+/* ============================================
+   BODY LAYOUT
+   ============================================ */
+
+.builderBody {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ============================================
+   LEFT PANEL
+   ============================================ */
+
+.leftPanel {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+    background: var(--background);
+}
+
+/* ============================================
+   DESKTOP NAVIGATION
+   ============================================ */
+
+.desktopNav {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    border-bottom: 2px solid var(--border);
+    background: var(--card);
+    flex-shrink: 0;
+    scrollbar-width: none;
+    padding: 0 var(--spacing-2);
+}
+
+.desktopNav::-webkit-scrollbar {
+    display: none;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-2) var(--spacing-4);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    font-family: inherit;
+    flex-shrink: 0;
+}
+
+.navItem:hover {
+    color: var(--foreground);
+    background: var(--muted);
+}
+
+.navItem.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    font-weight: 600;
+}
+
+.navLabel {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.required {
+    color: var(--destructive);
+    font-size: 10px;
+}
+
+/* ============================================
+   MOBILE NAVIGATION
+   ============================================ */
+
+.mobileNav {
+    display: none;
+    padding: var(--spacing-2) var(--spacing-3);
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+    position: relative;
+    z-index: 10;
+}
+
+.mobileNavBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--foreground);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.mobileNavBtn:hover {
+    border-color: var(--primary);
+}
+
+.mobileDropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: var(--spacing-3);
+    right: var(--spacing-3);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    z-index: 100;
+    max-height: 300px;
+    overflow-y: auto;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobileDropdownItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: var(--text-sm);
+    color: var(--foreground);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+}
+
+.mobileDropdownItem:first-child {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.mobileDropdownItem:last-child {
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.mobileDropdownItem:hover {
+    background: var(--muted);
+}
+
+.mobileDropdownItem.active {
+    color: var(--primary);
+    font-weight: 600;
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+
+/* ============================================
+   SECTION CONTENT
+   ============================================ */
+
+.sectionContent {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-4) var(--spacing-5);
+}
+
+.sectionContent::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sectionContent::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sectionContent::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+.sectionContent::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+}
+
+.comingSoon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    color: var(--muted-foreground);
+    text-align: center;
+    gap: var(--spacing-3);
+}
+
+.comingSoon p {
+    font-size: var(--text-lg);
+    margin: 0;
+}
+
+/* ============================================
+   RIGHT PANEL - PREVIEW
+   ============================================ */
+
+.rightPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #e2e8f0;
+}
+
+.previewLabel {
+    padding: 6px var(--spacing-4);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted-foreground);
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.previewLabel::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--success);
+    border-radius: 50%;
+}
+
+.previewFrame {
+    flex: 1;
+    overflow: hidden;
+    background: white;
+}
+
+.previewIframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.previewPlaceholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    padding: var(--spacing-8);
+    text-align: center;
+    gap: var(--spacing-3);
+}
+
+.previewPlaceholder p {
+    max-width: 250px;
+    line-height: 1.5;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+.dark .topBar,
+.dark .desktopNav,
+.dark .mobileNav {
+    background: var(--gray-900);
+}
+
+.dark .rightPanel {
+    background: var(--gray-950);
+}
+
+.dark .previewFrame {
+    background: var(--gray-900);
+}
+
+.dark .previewLabel {
+    background: var(--gray-900);
+}
+
+.dark .mobileDropdown {
+    background: var(--gray-900);
+    border-color: var(--gray-700);
+}
+
+.dark .mobileDropdownItem:hover {
+    background: var(--gray-800);
+}
+
+/* Refresh Preview Button in Label */
+.refreshPreviewBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s;
+    margin-left: auto;
+}
+
+.refreshPreviewBtn:hover {
+    background: var(--muted);
+    color: var(--primary);
+}
+
+.previewLabel {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.noSections {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    padding: var(--spacing-2) var(--spacing-4);
+    font-style: italic;
+}
+
+.hint {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin-top: var(--spacing-1);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .leftPanel {
+        width: 50%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .leftPanel {
+        width: 55%;
+    }
+}
+
+@media (max-width: 768px) {
+    .topBar {
+        height: 44px;
+        padding: 0 var(--spacing-3);
+    }
+
+    .builderBody {
+        flex-direction: column;
+    }
+
+    .leftPanel {
+        width: 100%;
+        flex: 1;
+    }
+
+    .rightPanel {
+        display: none;
+    }
+
+    .desktopNav {
+        display: none;
+    }
+
+    .mobileNav {
+        display: block;
+    }
+
+    .sectionContent {
+        padding: var(--spacing-3) var(--spacing-4);
+    }
+}
+
+@media (max-width: 480px) {
+    .topBar {
+        height: 40px;
+    }
+
+    .backBtn,
+    .iconBtn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .resumeTitle {
+        font-size: var(--text-xs);
+    }
+
+    .sectionContent {
+        padding: var(--spacing-2) var(--spacing-3);
+    }
+
+    .mobileNavBtn {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: var(--text-xs);
+    }
+}

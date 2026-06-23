@@ -19,7 +19,7 @@ import {
 import { customSectionSchema } from '@/lib/validations/portfolio/sections/customSectionSchema';
 import styles from '@/styles/portfolio/sections/CustomSectionsSection.module.css';
 
-const CustomSectionsSection = ({ snapshotId }) => {
+const CustomSectionsSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
     const [showForm, setShowForm] = useState(false);
@@ -60,9 +60,18 @@ const CustomSectionsSection = ({ snapshotId }) => {
                 await createSection({ snapshotId, data: payload }).unwrap();
                 showSnackbar('Section added', 'success', 3000);
             }
-            reset(); setEditingId(null); setShowForm(false);
+            reset();
+            setEditingId(null);
+            setShowForm(false);
             refetch();
-        } catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
+        } catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
+        }
     };
 
     const handleEdit = (section) => {
@@ -73,18 +82,54 @@ const CustomSectionsSection = ({ snapshotId }) => {
     };
 
     const handleDelete = async (sectionId, title) => {
-        const ok = await confirm({ title: 'Delete Section', message: `Delete "${title}"?`, confirmText: 'Delete', cancelText: 'Cancel', type: 'danger' });
+        const ok = await confirm({
+            title: 'Delete Section',
+            message: `Delete "${title}"?`,
+            confirmText: 'Delete',
+            cancelText: 'Cancel',
+            type: 'danger'
+        });
+
         if (!ok) return;
-        try { await deleteSection(sectionId).unwrap(); showSnackbar('Deleted', 'success', 3000); refetch(); }
-        catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
+
+        try {
+            await deleteSection(sectionId).unwrap();
+            showSnackbar('Deleted', 'success', 3000);
+            refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
+        }
+        catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
+        }
     };
 
     const handleMove = async (index, direction) => {
         const list = [...sections]; const ti = index + direction;
-        if (ti < 0 || ti >= list.length) return;
+        if (ti < 0 || ti >= list.length)
+            return;
+
         [list[index], list[ti]] = [list[ti], list[index]];
-        try { await reorderSections({ snapshotId, data: { order: list.map(s => s.profilecustomsection_id) } }).unwrap(); refetch(); }
-        catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
+        try {
+            await reorderSections({
+                snapshotId,
+                data: {
+                    order: list.map(s => s.profilecustomsection_id)
+                }
+            }).unwrap();
+            refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
+        }
+        catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
+        }
     };
 
     const toggleExpand = (id) => {

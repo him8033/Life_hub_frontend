@@ -85,6 +85,9 @@ export const {
     useGetResumeTemplateQuery,
     useUpdateResumeTemplateMutation,
     useDeleteResumeTemplateMutation,
+    // Resume Template Sections
+    useGetTemplateSectionsQuery,
+    useUpdateTemplateSectionMutation,
     // Portfolio Themes
     useGetPublicPortfolioThemesQuery,
     useGetAdminPortfolioThemesQuery,
@@ -92,6 +95,9 @@ export const {
     useGetPortfolioThemeQuery,
     useUpdatePortfolioThemeMutation,
     useDeletePortfolioThemeMutation,
+    // Portfolio Template Sections
+    useGetThemeSectionsQuery,
+    useUpdateThemeSectionMutation,
     // Basic Info
     useGetBasicInfoQuery,
     useSaveBasicInfoMutation,
@@ -180,6 +186,7 @@ export const {
     useDeleteResumeProjectMutation,
     useDuplicateResumeProjectMutation,
     useGenerateResumePDFMutation,
+    useGetPublicResumeQuery,
     // Resume Exports
     useGetResumeExportsQuery,
     useDeleteResumeExportMutation,

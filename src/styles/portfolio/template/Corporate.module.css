@@ -1,0 +1,184 @@
+/* Corporate.module.css */
+
+.page {
+    --primary: #1e3a5f;
+    background: #f4f6f9;
+    color: #333;
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Top Bar */
+.topBar {
+    background: var(--primary);
+    color: white;
+    padding: 40px;
+    text-align: center;
+}
+
+.topBarInner h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.topBarInner p {
+    font-size: 16px;
+    opacity: 0.9;
+    margin: 8px 0 0;
+}
+
+/* Columns */
+.columns {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+}
+
+/* Left */
+.left {
+    background: white;
+    padding: 32px 24px;
+    border-right: 1px solid #e2e8f0;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 16px;
+}
+
+.contactInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+}
+
+.contactInfo span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sideSection {
+    margin-top: 28px;
+}
+
+.sideSection h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary);
+    margin: 0 0 12px;
+}
+
+.skillList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skillChip {
+    font-size: 11px;
+    padding: 3px 10px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    color: #555;
+}
+
+/* Right */
+.right {
+    background: white;
+    padding: 32px;
+}
+
+.section {
+    margin-bottom: 28px;
+}
+
+.section h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 16px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.section p {
+    font-size: 14px;
+    color: #555;
+}
+
+.expItem,
+.eduItem {
+    margin-bottom: 18px;
+}
+
+.expItem h3,
+.eduItem h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 2px;
+}
+
+.meta {
+    font-size: 12px;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.expItem p {
+    font-size: 13px;
+    color: #666;
+    margin: 6px 0 0;
+}
+
+.certItem {
+    margin-bottom: 12px;
+}
+
+.certItem h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 2px;
+}
+
+.section ul {
+    margin: 0;
+    padding-left: 16px;
+}
+
+.section li {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+@media (max-width: 768px) {
+    .columns {
+        grid-template-columns: 1fr;
+    }
+
+    .left {
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+    }
+}
+
+@media print {
+    .page {
+        background: white;
+    }
+}

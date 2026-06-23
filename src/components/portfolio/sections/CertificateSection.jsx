@@ -22,7 +22,7 @@ import {
 import { certificateSchema } from '@/lib/validations/portfolio/sections/certificateSchema';
 import styles from '@/styles/portfolio/sections/EducationSection.module.css';
 
-const CertificateSection = ({ snapshotId }) => {
+const CertificateSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
     const [showForm, setShowForm] = useState(false);
@@ -56,37 +56,91 @@ const CertificateSection = ({ snapshotId }) => {
             if (removeImage) fd.append('remove_image', 'true');
             else if (certFile) fd.append('image', certFile, certFile.name);
 
-            if (editingId) { await updateCert({ certId: editingId, data: fd }).unwrap(); showSnackbar('Certificate updated', 'success', 3000); }
-            else { await createCert({ snapshotId, data: fd }).unwrap(); showSnackbar('Certificate added', 'success', 3000); }
-            reset(); setEditingId(null); setShowForm(false); setCertFile(null); setCertPreview(''); setRemoveImage(false);
+            if (editingId) {
+                await updateCert({ certId: editingId, data: fd }).unwrap();
+                showSnackbar('Certificate updated', 'success', 3000);
+            } else {
+                await createCert({ snapshotId, data: fd }).unwrap();
+                showSnackbar('Certificate added', 'success', 3000);
+            }
+
+            reset();
+            setEditingId(null);
+            setShowForm(false);
+            setCertFile(null);
+            setCertPreview('');
+            setRemoveImage(false);
             refetch();
-        } catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
+        } catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
+        }
     };
 
     const handleEdit = (cert) => {
-        setValue('title', cert.title); setValue('issued_by', cert.issued_by || ''); setValue('issued_date', cert.issued_date || '');
-        setValue('expiry_date', cert.expiry_date || ''); setValue('credential_id', cert.credential_id || '');
-        setValue('certificate_url', cert.certificate_url || ''); setValue('description', cert.description || '');
-        if (cert.image_url) setCertPreview(cert.image_url);
-        setEditingId(cert.profilecertificate_id); setShowForm(true);
+        setValue('title', cert.title);
+        setValue('issued_by', cert.issued_by || '');
+        setValue('issued_date', cert.issued_date || '');
+        setValue('expiry_date', cert.expiry_date || '');
+        setValue('credential_id', cert.credential_id || '');
+        setValue('certificate_url', cert.certificate_url || '');
+        setValue('description', cert.description || '');
+        if (cert.image_url)
+            setCertPreview(cert.image_url);
+        setEditingId(cert.profilecertificate_id);
+        setShowForm(true);
     };
 
     const handleDelete = async (certId, title) => {
         const ok = await confirm({ title: 'Delete Certificate', message: `Delete "${title}"?`, confirmText: 'Delete', cancelText: 'Cancel', type: 'danger' });
         if (!ok) return;
-        try { await deleteCert(certId).unwrap(); showSnackbar('Deleted', 'success', 3000); refetch(); }
+        try {
+            await deleteCert(certId).unwrap();
+            showSnackbar('Deleted', 'success', 3000);
+            refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
+        }
         catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
     };
 
     const handleMove = async (index, dir) => {
         const list = [...certificates]; const ti = index + dir;
-        if (ti < 0 || ti >= list.length) return;
+        if (ti < 0 || ti >= list.length)
+            return;
+
         [list[index], list[ti]] = [list[ti], list[index]];
-        try { await reorderCert({ snapshotId, data: { order: list.map(c => c.profilecertificate_id) } }).unwrap(); refetch(); }
-        catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
+        try {
+            await reorderCert({
+                snapshotId, data: { order: list.map(c => c.profilecertificate_id) }
+            }).unwrap();
+            refetch();
+
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
+        }
+        catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
+        }
     };
 
-    const handleCancel = () => { reset(); setEditingId(null); setShowForm(false); setCertFile(null); setCertPreview(''); setRemoveImage(false); };
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+        setCertFile(null);
+        setCertPreview('');
+        setRemoveImage(false);
+    };
     const formatDate = (d) => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : '';
 
     if (isLoading) return <Loader text="Loading..." />;

@@ -69,4 +69,26 @@ export const portfolioThemeEndpoints = (builder) => ({
         }),
         invalidatesTags: ["PortfolioTheme"],
     }),
+
+    // Portfolio Theme Sections
+    getThemeSections: builder.query({
+        query: (themeId) => ({
+            url: `portfoliohub/portfolio-themes/${themeId}/sections/`,
+            method: "GET",
+        }),
+        providesTags: (result, error, themeId) => [
+            { type: "ThemeSection", id: themeId },
+        ],
+    }),
+
+    updateThemeSection: builder.mutation({
+        query: ({ themeId, sectionId, data }) => ({
+            url: `portfoliohub/portfolio-themes/${themeId}/sections/${sectionId}/`,
+            method: "PUT",
+            body: data,
+        }),
+        invalidatesTags: (result, error, { themeId }) => [
+            { type: "ThemeSection", id: themeId },
+        ],
+    }),
 });

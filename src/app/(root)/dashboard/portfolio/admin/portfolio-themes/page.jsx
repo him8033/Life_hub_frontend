@@ -118,6 +118,10 @@ export default function PortfolioThemesPage() {
         }
     };
 
+    const handleSections = (themeId) => {
+        router.push(ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIOTHEME.SECTIONS(themeId));
+    };
+
     const themes = data?.data?.results || data?.data || [];
     const totalCount = data?.data?.count || themes.length;
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -233,6 +237,7 @@ export default function PortfolioThemesPage() {
                                 onEdit={(themeId) => router.push(ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIOTHEME.EDIT(themeId))}
                                 onDelete={handleDelete}
                                 onToggleStatus={handleToggleStatus}
+                                onSections={handleSections}
                                 isLoading={isDeleting || isToggling || isFetching}
                             />
                         ))}

@@ -33,7 +33,7 @@ const getHobbyIcon = (index) => {
     return <IconComponent size={16} />;
 };
 
-const HobbiesSection = ({ snapshotId }) => {
+const HobbiesSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -72,6 +72,11 @@ const HobbiesSection = ({ snapshotId }) => {
             setEditingId(null);
             setShowForm(false);
             refetch();
+            
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to save hobby'), 'error', 5000);
         }
@@ -96,6 +101,11 @@ const HobbiesSection = ({ snapshotId }) => {
             await deleteHobby(hobbyId).unwrap();
             showSnackbar('Hobby deleted', 'success', 3000);
             refetch();
+            
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to delete'), 'error', 5000);
         }
@@ -114,6 +124,11 @@ const HobbiesSection = ({ snapshotId }) => {
                 data: { order: newItems.map(item => item.profilehobby_id) },
             }).unwrap();
             refetch();
+            
+            // NEW: Notify parent to refresh preview
+            if (onDataChange) {
+                onDataChange();
+            }
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 5000);
         }

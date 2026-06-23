@@ -41,7 +41,6 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
     const [galleryFile, setGalleryFile] = useState(null);
     const [galleryPreview, setGalleryPreview] = useState('');
     const [galleryCaption, setGalleryCaption] = useState('');
-    const [editingImage, setEditingImage] = useState(null);
 
     const [createProject, { isLoading: isCreating }] = useCreateProfileProjectMutation();
     const [updateProject, { isLoading: isUpdating }] = useUpdateProfileProjectMutation();
@@ -110,18 +109,27 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
                 showSnackbar('Project created', 'success', 3000);
             }
             onSuccess();
-        } catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
+        } catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
+        }
     };
 
     // Skills
     const handleAddSkill = async () => {
         if (!selectedSkillId || !projectId) return;
-        try { await addProjectSkill({ projectId, data: { skill_id: selectedSkillId } }).unwrap(); showSnackbar('Skill added', 'success', 3000); setSelectedSkillId(''); }
+        try {
+            await addProjectSkill({ projectId, data: { skill_id: selectedSkillId } }).unwrap();
+            showSnackbar('Skill added', 'success', 3000);
+            setSelectedSkillId('');
+        }
         catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
     };
 
     const handleRemoveSkill = async (skillId, skillName) => {
-        try { await removeProjectSkill({ projectId, skillId }).unwrap(); showSnackbar(`"${skillName}" removed`, 'success', 3000); }
+        try {
+            await removeProjectSkill({ projectId, skillId }).unwrap();
+            showSnackbar(`"${skillName}" removed`, 'success', 3000);
+        }
         catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
     };
 
@@ -148,7 +156,6 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
         catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
     };
 
-    // UPDATE Image - Set as primary or update caption
     const handleSetPrimary = async (imageId) => {
         try {
             await updateProjectImage({ imageId, data: { is_primary: true } }).unwrap();
@@ -159,7 +166,7 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
 
     const handleUpdateCaption = async (imageId, currentCaption) => {
         const newCaption = prompt('Enter new caption:', currentCaption || '');
-        if (newCaption === null) return; // Cancelled
+        if (newCaption === null) return;
         try {
             await updateProjectImage({ imageId, data: { caption: newCaption } }).unwrap();
             showSnackbar('Caption updated', 'success', 3000);
@@ -167,7 +174,6 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
         } catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
     };
 
-    // REORDER Images
     const handleMoveImage = async (index, direction) => {
         const list = [...projectImages];
         const targetIndex = index + direction;
@@ -225,13 +231,10 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
                                 <div className={styles.gallerySection}>
                                     <div className={styles.skillsSectionHeader}><FiCamera /> Project Gallery ({projectImages.length})</div>
 
-                                    {/* Existing Images with Full Controls */}
                                     <div className={styles.galleryGrid}>
                                         {projectImages.map((img, index) => (
                                             <div key={img.projectimage_id} className={styles.galleryItem}>
                                                 <img src={img.image_url} alt={img.caption || ''} className={styles.galleryImg} />
-
-                                                {/* Caption overlay */}
                                                 <div className={styles.galleryOverlay}>
                                                     {img.caption && <span className={styles.galleryCaption}>{img.caption}</span>}
                                                     <div className={styles.galleryActions}>
@@ -245,8 +248,6 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
                                                         <span className={styles.primaryBadge}><FiStar size={8} /> Primary</span>
                                                     )}
                                                 </div>
-
-                                                {/* Reorder Arrows */}
                                                 <div className={styles.reorderControls}>
                                                     <button type="button" onClick={() => handleMoveImage(index, -1)} disabled={index === 0} className={styles.reorderBtn} title="Move up"><FiArrowUp size={8} /></button>
                                                     <button type="button" onClick={() => handleMoveImage(index, 1)} disabled={index === projectImages.length - 1} className={styles.reorderBtn} title="Move down"><FiArrowDown size={8} /></button>
@@ -255,7 +256,6 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
                                         ))}
                                     </div>
 
-                                    {/* Upload New Image */}
                                     <div className={styles.uploadGalleryRow}>
                                         <div className={styles.uploadGalleryLeft}>
                                             <SquareImageUpload onImageSelect={(f, url) => { setGalleryFile(f); setGalleryPreview(url); }} onRemove={() => { setGalleryFile(null); setGalleryPreview(''); }} previewUrl={galleryPreview} disabled={isUploadingImage} maxSizeMB={5} label="Add Image" size="small" enableCrop aspectRatio={16 / 9} />

@@ -3,16 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FiStar, FiImage, FiTrash2 } from 'react-icons/fi';
-import { FaPalette } from 'react-icons/fa';
+import { FiStar, FiImage, FiTrash2, FiKey, FiFileText } from 'react-icons/fi';
 
 import FormInput from '@/components/common/forms/FormInput';
+import FormTextarea from '@/components/common/forms/FormTextarea';
 import FormSelect from '@/components/common/forms/FormSelect';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
 import ButtonGroup from '@/components/common/buttons/ButtonGroup';
 import { portfolioThemeSchema } from '@/lib/validations/portfolio/admin/portfolioThemeSchema';
 import styles from '@/styles/portfolio/admin/MasterSkillForm.module.css';
+import { FaPalette } from 'react-icons/fa';
 
 const PortfolioThemeForm = ({
     initialData = {},
@@ -29,6 +30,8 @@ const PortfolioThemeForm = ({
         resolver: zodResolver(portfolioThemeSchema),
         defaultValues: {
             name: initialData?.name || '',
+            key: initialData?.key || '',
+            description: initialData?.description || '',
             is_premium: String(initialData?.is_premium ?? false),
             is_active: String(initialData?.is_active ?? true),
         },
@@ -40,6 +43,8 @@ const PortfolioThemeForm = ({
         if (mode === 'edit' && initialData) {
             reset({
                 name: initialData.name || '',
+                key: initialData.key || '',
+                description: initialData.description || '',
                 is_premium: String(initialData.is_premium ?? false),
                 is_active: String(initialData.is_active ?? true),
             });
@@ -77,6 +82,8 @@ const PortfolioThemeForm = ({
     const handleFormSubmit = (data) => {
         const formData = new FormData();
         formData.append('name', data.name);
+        if (data.key) formData.append('key', data.key);
+        if (data.description) formData.append('description', data.description);
         formData.append('is_premium', data.is_premium === 'true');
         formData.append('is_active', data.is_active === 'true');
 
@@ -96,12 +103,32 @@ const PortfolioThemeForm = ({
                     <FormInput
                         name="name"
                         label="Theme Name"
-                        placeholder="e.g., Developer Dark, Designer Creative, Minimal Light"
+                        placeholder="e.g., Developer Dark, Designer Creative"
                         icon={<FaPalette />}
                         required
                         autoFocus={mode === 'create'}
                         disabled={isSubmitting}
                         description="Enter a descriptive name for the theme"
+                        className={styles.formItem}
+                    />
+
+                    <FormInput
+                        name="key"
+                        label="Theme Key"
+                        placeholder="e.g., developer_dark, minimal_light"
+                        icon={<FiKey />}
+                        disabled={isSubmitting}
+                        description="Unique key identifier for this theme"
+                        className={styles.formItem}
+                    />
+
+                    <FormTextarea
+                        name="description"
+                        label="Description"
+                        placeholder="Brief description of this theme's design..."
+                        rows={3}
+                        disabled={isSubmitting}
+                        description="Optional: Describe what makes this theme unique"
                         className={styles.formItem}
                     />
 
@@ -129,7 +156,6 @@ const PortfolioThemeForm = ({
                         className={styles.formItem}
                     />
 
-                    {/* Preview Image Upload */}
                     <div className={styles.formItem}>
                         <label className={styles.imageLabel}>
                             <FiImage /> Theme Preview Image
