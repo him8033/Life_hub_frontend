@@ -1,0 +1,245 @@
+/* ============================================
+   PREVIEW PANEL
+   ============================================ */
+
+.previewPanel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ============================================
+   PREVIEW LABEL
+   ============================================ */
+
+.previewLabel {
+    padding: 6px var(--spacing-4);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted-foreground);
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+    min-height: 44px;
+    /* Explicit height for consistency */
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: var(--success);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.labelText {
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.badge {
+    font-size: 9px;
+    color: var(--muted-foreground);
+    background: var(--muted);
+    padding: 1px 8px;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.zoomControls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
+}
+
+.zoomControls button {
+    min-width: 24px;
+    height: 22px;
+    padding: 0 4px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* ============================================
+   PREVIEW FRAME
+   ============================================ */
+
+.previewFrame {
+    flex: 1;
+    overflow: hidden;
+    background: white;
+}
+
+.scrollArea {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-6);
+    background: #cbd5e1;
+}
+
+.paper {
+    background: white;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+}
+
+/* ============================================
+   PLACEHOLDER
+   ============================================ */
+
+.placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    padding: var(--spacing-8);
+    text-align: center;
+    gap: var(--spacing-3);
+}
+
+.placeholder p {
+    max-width: 250px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.hint {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+.dark .previewLabel {
+    background: var(--gray-900);
+}
+
+.dark .badge {
+    background: var(--gray-800);
+}
+
+.dark .previewFrame {
+    background: var(--gray-900);
+}
+
+.dark .scrollArea {
+    background: var(--gray-950);
+}
+
+.dark .paper {
+    background: var(--gray-900);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .previewLabel {
+        display: none !important;
+    }
+
+    .previewFrame {
+        overflow: visible !important;
+    }
+
+    .scrollArea {
+        padding: 0 !important;
+        background: white !important;
+        overflow: visible !important;
+    }
+
+    .paper {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        transform: none !important;
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .scrollArea {
+        padding: var(--spacing-3);
+    }
+
+    .zoomControls {
+        display: none;
+    }
+
+    .paper {
+        width: 100% !important;
+    }
+}
+
+/* Webpage view (Portfolio) */
+.webpageScroll {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: var(--spacing-4);
+    background: #cbd5e1;
+}
+
+.webpagePaper {
+    background: white;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    border-radius: 4px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    overflow: auto;
+}
+
+.webpageIframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    display: block !important;
+}
+
+/* Dark mode for webpage */
+.dark .webpageScroll {
+    background: var(--gray-950);
+}
+
+.dark .webpagePaper {
+    background: var(--gray-900);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .webpageScroll {
+        padding: var(--spacing-2);
+    }
+}

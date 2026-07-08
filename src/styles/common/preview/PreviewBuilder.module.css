@@ -1,0 +1,191 @@
+/* ============================================
+   PREVIEW BUILDER - MAIN LAYOUT
+   ============================================ */
+
+.builder {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: var(--background);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+/* ============================================
+   TOP BAR
+   ============================================ */
+
+.topBar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: 0 var(--spacing-4);
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    height: 48px;
+}
+
+.title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+/* Action Selects in Top Bar */
+.actionSelect {
+    min-width: 90px;
+    margin-bottom: 0 !important;
+}
+
+.actionSelect select {
+    font-size: 11px;
+    padding: 3px 6px;
+    height: 30px;
+    border-radius: var(--radius-md);
+}
+
+.actionSelect label {
+    display: none;
+}
+
+/* ============================================
+   BODY LAYOUT
+   ============================================ */
+
+.body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--background);
+    min-width: 200px;
+    transition: width 0.3s ease;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+    background: #e2e8f0;
+    min-width: 200px;
+    transition: width 0.3s ease;
+}
+
+/* ============================================
+   RESIZABLE DIVIDER
+   ============================================ */
+
+.divider {
+    width: 6px;
+    cursor: col-resize;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+}
+
+.divider:hover,
+.dividerActive {
+    background: var(--primary);
+}
+
+.dividerHandle {
+    width: 3px;
+    height: 40px;
+    background: var(--muted-foreground);
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.divider:hover .dividerHandle,
+.dividerActive .dividerHandle {
+    opacity: 1;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+.dark .topBar {
+    background: var(--gray-900);
+}
+
+.dark .right {
+    background: var(--gray-950);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .topBar {
+        height: 44px;
+        padding: 0 var(--spacing-3);
+    }
+
+    .body {
+        flex-direction: column;
+    }
+
+    .left {
+        width: 100% !important;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .right {
+        display: none;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .actionSelect {
+        min-width: 70px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topBar {
+        height: 40px;
+    }
+
+    .title {
+        font-size: var(--text-xs);
+    }
+
+    .actionSelect {
+        min-width: 60px;
+    }
+
+    .actionSelect select {
+        font-size: 10px;
+    }
+}

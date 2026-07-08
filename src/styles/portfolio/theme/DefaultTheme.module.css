@@ -1,0 +1,74 @@
+/* DefaultTheme.module.css */
+
+.page {
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+    padding: 2rem;
+    background: var(--card);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 1rem;
+}
+
+.info {
+    text-align: left;
+    margin: 1rem 0;
+}
+
+.contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+.contact span {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.fallback {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    margin-top: 1rem;
+}
+
+/* Dark Mode */
+.dark .container {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+/* Print Styles */
+@media print {
+    .page {
+        padding: 0;
+        background: white !important;
+    }
+
+    .container {
+        box-shadow: none !important;
+        border: none !important;
+        background: white !important;
+    }
+}

@@ -1,0 +1,27 @@
+/* PublicPortfolio.module.css */
+
+.publicPage {
+    min-height: 100vh;
+    background: var(--background);
+}
+
+/* Ensure themes render properly */
+.publicPage>* {
+    /* Themes will define their own styles */
+}
+
+.publicPage :global(.theme-container) {
+    /* Any global theme styles */
+}
+
+/* Print styles for public portfolio */
+@media print {
+    .publicPage {
+        background: white !important;
+    }
+}
+
+/* Dark mode support */
+.dark .publicPage {
+    background: var(--gray-950);
+}

@@ -1,0 +1,294 @@
+/* PortfolioPreview.module.css */
+
+.previewWrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--background);
+}
+
+/* Top Bar */
+.topBar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding: 0 var(--spacing-5);
+    height: 52px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    flex-shrink: 0;
+}
+
+.backBtn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.backBtn:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.topBarInfo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    min-width: 0;
+}
+
+.topBarTitle {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Theme Switcher */
+.themeSwitcher {
+    position: relative;
+}
+
+.themeBadge {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: 4px 12px;
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.themeBadge:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.themeBadge.changed {
+    background: color-mix(in srgb, var(--warning) 15%, transparent);
+    border-color: var(--warning);
+    color: var(--warning);
+}
+
+.themeDropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 220px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-2);
+    z-index: 100;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdownHeader {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted-foreground);
+}
+
+.dropdownItem {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-3);
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    text-align: left;
+    color: var(--foreground);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+}
+
+.dropdownItem:hover {
+    background: var(--muted);
+}
+
+.dropdownItem.active {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.dropdownDivider {
+    height: 1px;
+    background: var(--border);
+    margin: var(--spacing-1) 0;
+}
+
+.topBarActions {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-shrink: 0;
+}
+
+.previewBadge {
+    font-size: 10px;
+    padding: 3px 10px;
+    background: color-mix(in srgb, var(--warning) 15%, transparent);
+    color: var(--warning);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.topBarBtn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-2) var(--spacing-4);
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.topBarBtn:hover {
+    background: color-mix(in srgb, var(--primary) 85%, black);
+}
+
+/* Preview Content */
+.previewContent {
+    flex: 1;
+}
+
+.previewContent.embedded {
+    /* No extra styling needed - theme handles its own layout */
+}
+
+/* Embedded Badge */
+.embeddedBadge {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 10px;
+    border-radius: var(--radius-full);
+    z-index: 100;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+}
+
+/* Dark Mode */
+.dark .topBar {
+    background: var(--gray-900);
+    border-bottom-color: var(--gray-800);
+}
+
+.dark .themeBadge {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+.dark .themeDropdown {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+.dark .dropdownItem:hover {
+    background: var(--gray-800);
+}
+
+.dark .dropdownDivider {
+    background: var(--gray-800);
+}
+
+/* Print Styles */
+@media print {
+    .topBar {
+        display: none !important;
+    }
+
+    .embeddedBadge {
+        display: none !important;
+    }
+
+    .previewWrapper {
+        background: white !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .topBar {
+        padding: 0 var(--spacing-3);
+        height: 48px;
+        gap: var(--spacing-2);
+    }
+
+    .topBarTitle {
+        font-size: var(--text-xs);
+        max-width: 100px;
+    }
+
+    .themeBadge {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+
+    .topBarBtn {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topBarBtn span {
+        display: none;
+    }
+
+    .themeDropdown {
+        right: -10px;
+        min-width: 180px;
+    }
+}

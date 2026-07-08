@@ -3,14 +3,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/routes/routes.constants';
-import { useGetResumeProjectQuery, useGetTemplateSectionsQuery } from '@/services/api/portfolioApi';
-import { PROFILE_SECTIONS, SECTION_ICONS } from '@/config/portfolioSections'; // Same config
+import { useGetPortfolioProjectQuery, useGetThemeSectionsQuery } from '@/services/api/portfolioApi';
+import { PROFILE_SECTIONS, SECTION_ICONS } from '@/config/portfolioSections';
 import { useResizablePanel } from '@/hooks/useResizablePanel';
 import { usePreviewSettings } from '@/hooks/usePreviewSettings';
 import PreviewBuilder from '@/components/common/preview/PreviewBuilder';
 import Loader from '@/components/common/Loader';
 
-// Section components (same as portfolio)
+// Section components (same as resume)
 import BasicInfoSection from '@/components/portfolio/sections/BasicInfoSection';
 import SocialLinksSection from '@/components/portfolio/sections/SocialLinksSection';
 import EducationSection from '@/components/portfolio/sections/EducationSection';
@@ -54,35 +54,35 @@ const API_KEY_TO_SECTION_ID = {
     'custom_section': 'custom-sections',
 };
 
-export default function ResumeBuilder({ resumeId, onBack, onPreview, onGeneratePDF }) {
+export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
     const router = useRouter();
     const [activeSection, setActiveSection] = useState('basic-info');
     const [initialized, setInitialized] = useState(false);
 
-    // Fetch resume data
-    const { data, isLoading, refetch } = useGetResumeProjectQuery(resumeId, { skip: !resumeId });
-    const resume = data?.data;
+    // Fetch portfolio data
+    const { data, isLoading, refetch } = useGetPortfolioProjectQuery(portfolioId, { skip: !portfolioId });
+    const portfolio = data?.data;
 
-    // Fetch template sections
-    const templateId = resume?.resume_template_id || resume?.template_id;
-    const { data: templateSectionsData, isLoading: sectionsLoading } = useGetTemplateSectionsQuery(templateId, { skip: !templateId });
-    const templateSections = templateSectionsData?.data || [];
+    // Fetch theme sections
+    const themeId = portfolio?.portfolio_theme_id || portfolio?.theme_id;
+    const { data: themeSectionsData, isLoading: sectionsLoading } = useGetThemeSectionsQuery(themeId, { skip: !themeId });
+    const themeSections = themeSectionsData?.data || [];
 
-    const snapshotId = resume?.profile_snapshot_id || resume?.profile_snapshot;
+    const snapshotId = portfolio?.profile_snapshot_id || portfolio?.profile_snapshot;
 
-    // Build visible sections based on template config (same logic as portfolio)
+    // Build visible sections based on theme config
     const visibleSections = PROFILE_SECTIONS.filter(section => {
-        const templateSection = templateSections.find(ts => {
+        const themeSection = themeSections.find(ts => {
             const mappedKey = API_KEY_TO_SECTION_ID[ts.section?.key];
             return mappedKey === section.id || ts.section?.key === section.id || ts.section?.name === section.title;
         });
-        return templateSection ? templateSection.is_visible : true;
+        return themeSection ? themeSection.is_visible : true;
     }).sort((a, b) => {
-        const aSection = templateSections.find(ts => {
+        const aSection = themeSections.find(ts => {
             const mappedKey = API_KEY_TO_SECTION_ID[ts.section?.key];
             return mappedKey === a.id || ts.section?.key === a.id;
         });
-        const bSection = templateSections.find(ts => {
+        const bSection = themeSections.find(ts => {
             const mappedKey = API_KEY_TO_SECTION_ID[ts.section?.key];
             return mappedKey === b.id || ts.section?.key === b.id;
         });
@@ -93,11 +93,11 @@ export default function ResumeBuilder({ resumeId, onBack, onPreview, onGenerateP
 
     // Set initial active section
     useEffect(() => {
-        if (templateSectionsData && !initialized && visibleSections.length > 0) {
+        if (themeSectionsData && !initialized && visibleSections.length > 0) {
             setActiveSection(visibleSections[0].id);
             setInitialized(true);
         }
-    }, [templateSectionsData, visibleSections, initialized]);
+    }, [themeSectionsData, visibleSections, initialized]);
 
     // Refresh preview when data changes
     const refreshPreview = useCallback(() => {
@@ -117,7 +117,7 @@ export default function ResumeBuilder({ resumeId, onBack, onPreview, onGenerateP
 
     // Check if section is required
     const getRequired = (sectionId) => {
-        const ts = templateSections.find(t => {
+        const ts = themeSections.find(t => {
             const mappedKey = API_KEY_TO_SECTION_ID[t.section?.key];
             return mappedKey === sectionId;
         });
@@ -132,14 +132,14 @@ export default function ResumeBuilder({ resumeId, onBack, onPreview, onGenerateP
     };
 
     // Check if preview is available
-    const canPreview = resume?.is_public && !!resume?.slug;
-    const previewUrl = canPreview ? `/resume-preview/${resume.slug}?embed=true` : null;
+    const canPreview = portfolio?.is_public && !!portfolio?.slug;
+    const previewUrl = canPreview ? `/portfolio-preview/${portfolio.slug}?embed=true` : null;
 
-    if (isLoading) return <Loader text="Loading resume builder..." />;
+    if (isLoading) return <Loader text="Loading portfolio builder..." />;
 
     return (
         <PreviewBuilder
-            title={resume?.title}
+            title={portfolio?.title}
             previewUrl={previewUrl}
             canPreview={canPreview}
             canPrint={canPreview}
@@ -150,13 +150,13 @@ export default function ResumeBuilder({ resumeId, onBack, onPreview, onGenerateP
             getSectionIcon={getSectionIcon}
             getRequired={getRequired}
             onBack={onBack}
-            onSettings={() => router.push(ROUTES.DASHBOARD.PORTFOLIO.RESUME.EDIT(resumeId))}
-            onPreview={canPreview ? () => onPreview(resume.slug) : null}
-            onExport={() => onGeneratePDF(resumeId)}
+            onSettings={() => router.push(ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIO.EDIT(portfolioId))}
+            onPreview={canPreview ? () => onPreview(portfolio.slug) : null}
+            onExport={null}
             defaultLayout={50}
-            defaultSize="a4" // Default to A4 for resume
+            defaultSize="desktop" // Default to desktop viewport
             defaultZoom={100}
-            viewMode="document" // Document mode for resume
+            viewMode="webpage" // Webpage mode for portfolio
         />
     );
 }

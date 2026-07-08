@@ -1,13 +1,25 @@
 'use client';
 
-import { FiGlobe, FiEdit2, FiTrash2, FiCopy, FiExternalLink, FiCalendar, FiBarChart2, FiLayout } from 'react-icons/fi';
+import { FiGlobe, FiEdit2, FiTrash2, FiCopy, FiExternalLink, FiCalendar, FiBarChart2, FiLayout, FiEye, FiSettings } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import { formatDateTime } from '@/utils/date.utils';
 import styles from '@/styles/portfolio/portfolio/PortfolioCard.module.css';
 
-export default function PortfolioCard({ portfolio, onEdit, onDelete, onDuplicate, isLoading }) {
+export default function PortfolioCard({
+    portfolio,
+    onEdit,
+    onEditSettings,
+    onDelete,
+    onDuplicate,
+    onPreview,
+    isLoading
+}) {
+    const handleCardClick = () => {
+        onEdit(portfolio.portfolio_id);
+    };
+
     return (
-        <div className={styles.card}>
+        <div className={styles.card} onClick={handleCardClick}>
             <div className={styles.cardHeader}>
                 <div className={styles.iconWrapper}>
                     <FiGlobe />
@@ -18,11 +30,40 @@ export default function PortfolioCard({ portfolio, onEdit, onDelete, onDuplicate
                         📸 {portfolio.profile_snapshot_title || 'Unknown Snapshot'}
                     </p>
                 </div>
-                {portfolio.is_public && portfolio.slug && (
-                    <a href={`/portfolio/${portfolio.slug}`} target="_blank" rel="noopener" className={styles.viewBtn} title="View Public Page">
-                        <FiExternalLink />
-                    </a>
-                )}
+                {/* Top Right Actions */}
+                <div className={styles.headerActions} onClick={e => e.stopPropagation()}>
+                    {portfolio.is_public && onPreview && (
+                        <button
+                            className={styles.iconBtn}
+                            onClick={() => onPreview(portfolio.slug)}
+                            title="Preview Portfolio"
+                        >
+                            <FiEye size={16} />
+                        </button>
+                    )}
+                    {portfolio.custom_domain && (
+                        <a
+                            href={portfolio.custom_domain}
+                            target="_blank"
+                            rel="noopener"
+                            className={styles.iconBtn}
+                            title="Visit Portfolio"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <FiExternalLink size={16} />
+                        </a>
+                    )}
+                    <button
+                        className={styles.iconBtn}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onEditSettings(portfolio.portfolio_id);
+                        }}
+                        title="Settings"
+                    >
+                        <FiSettings size={16} />
+                    </button>
+                </div>
             </div>
 
             <div className={styles.cardBody}>
@@ -69,10 +110,19 @@ export default function PortfolioCard({ portfolio, onEdit, onDelete, onDuplicate
                 </div>
             </div>
 
-            <div className={styles.cardFooter}>
-                <Button variant="outline" size="sm" icon={<FiEdit2 />} onClick={() => onEdit(portfolio.portfolio_id)} disabled={isLoading}>Edit</Button>
-                <Button variant="outline" size="sm" icon={<FiCopy />} onClick={() => onDuplicate(portfolio.portfolio_id, portfolio.title)} disabled={isLoading}>Duplicate</Button>
-                <Button variant="outline" size="sm" icon={<FiTrash2 />} onClick={() => onDelete(portfolio.portfolio_id, portfolio.title)} disabled={isLoading}>Delete</Button>
+            <div className={styles.cardFooter} onClick={e => e.stopPropagation()}>
+                <Button variant="outline" size="sm" icon={<FiEdit2 />} onClick={() => onEdit(portfolio.portfolio_id)} disabled={isLoading}>
+                    Edit Content
+                </Button>
+                <Button variant="outline" size="sm" icon={<FiCopy />} onClick={() => onDuplicate(portfolio.portfolio_id, portfolio.title)} disabled={isLoading}>
+                    Duplicate
+                </Button>
+                <Button variant="outline" size="sm" icon={<FiExternalLink />} onClick={() => window.open(`/portfolio/${portfolio.slug}`, '_blank')} disabled={isLoading || !portfolio.is_public}>
+                    View Live
+                </Button>
+                <Button variant="outline" size="sm" icon={<FiTrash2 />} onClick={() => onDelete(portfolio.portfolio_id, portfolio.title)} disabled={isLoading}>
+                    Delete
+                </Button>
             </div>
         </div>
     );

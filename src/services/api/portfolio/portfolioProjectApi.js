@@ -58,6 +58,14 @@ export const portfolioProjectEndpoints = (builder) => ({
         invalidatesTags: ["PortfolioProject"],
     }),
 
+    // Public Portfolio Preview
+    getPublicPortfolio: builder.query({
+        query: (slug) => ({
+            url: `portfoliohub/public/portfolio/${slug}/`,
+            method: "GET",
+        }),
+    }),
+
     // ============================================
     // PORTFOLIO VIEWS / ANALYTICS
     // ============================================

@@ -197,6 +197,7 @@ export const {
     useUpdatePortfolioProjectMutation,
     useDeletePortfolioProjectMutation,
     useDuplicatePortfolioProjectMutation,
+    useGetPublicPortfolioQuery,
     // Portfolio Analytics
     useGetPortfolioAnalyticsQuery,
 } = injectedApi;

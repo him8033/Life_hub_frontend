@@ -1,14 +1,13 @@
 import styles from '@/styles/portfolio/template/ModernATS.module.css';
-import { FiMail, FiPhone, FiMapPin, FiGlobe, FiGithub, FiTwitter, FiLinkedin, FiCalendar, FiExternalLink } from 'react-icons/fi';
+import { FiMail, FiPhone, FiMapPin, FiGlobe, FiGithub, FiLinkedin, FiCalendar, FiExternalLink } from 'react-icons/fi';
 
 export default function ModernATS({ data }) {
-    const { resume, basic_info, social_links, skills, experiences, educations, projects, certificates, achievements, languages } = data;
+    const { resume, basic_info, social_links, skills, experiences, educations, projects, certificates, achievements, languages, strengths } = data;
 
     const getSocial = (platform) => social_links?.find(l => l.platform_name?.toLowerCase() === platform);
     const website = getSocial('website');
     const github = getSocial('github');
     const linkedin = getSocial('linkedin');
-    const twitter = getSocial('twitter');
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -21,7 +20,7 @@ export default function ModernATS({ data }) {
                 {/* Header */}
                 <header className={styles.header}>
                     <h1 className={styles.name}>{basic_info?.first_name} {basic_info?.last_name}</h1>
-                    <p className={styles.title}>{resume.title}</p>
+                    <p className={styles.title}>{resume?.target_role || 'Software Engineer'}</p>
                     <div className={styles.contact}>
                         {basic_info?.email && <span><FiMail size={14} /> {basic_info.email}</span>}
                         {basic_info?.phone && <span><FiPhone size={14} /> {basic_info.phone}</span>}
@@ -88,14 +87,14 @@ export default function ModernATS({ data }) {
                                 <p className={styles.projectDesc}>{project.short_description}</p>
                                 {project.skills?.length > 0 && (
                                     <div className={styles.techTags}>
-                                        {project.skills.map(skill => (
-                                            <span key={skill.slug} className={styles.techTag}>{skill.name}</span>
+                                        {project.skills.map((skill, idx) => (
+                                            <span key={idx} className={styles.techTag}>{skill.name}</span>
                                         ))}
                                     </div>
                                 )}
                                 <div className={styles.projectLinks}>
-                                    {project.code_url && <a href={project.code_url} target="_blank" rel="noopener"><FiGithub size={12} /> Code</a>}
-                                    {project.live_url && <a href={project.live_url} target="_blank" rel="noopener"><FiExternalLink size={12} /> Live Demo</a>}
+                                    {project.code_url && <a href={project.code_url} target="_blank" rel="noopener noreferrer"><FiGithub size={12} /> Code</a>}
+                                    {project.live_url && <a href={project.live_url} target="_blank" rel="noopener noreferrer"><FiExternalLink size={12} /> Live Demo</a>}
                                 </div>
                             </div>
                         ))}
@@ -109,7 +108,6 @@ export default function ModernATS({ data }) {
                         <div className={styles.skillsGrid}>
                             {skills.map((skill) => (
                                 <div key={skill.profileskill_id} className={styles.skillItem}>
-                                    {skill.image && <img src={skill.image} alt="" className={styles.skillIcon} />}
                                     <span className={styles.skillName}>{skill.name}</span>
                                     <div className={styles.skillDots}>
                                         {[1, 2, 3, 4, 5].map(lvl => (
@@ -132,7 +130,7 @@ export default function ModernATS({ data }) {
                                     <h4>{cert.title}</h4>
                                     <p>{cert.issued_by} · {formatDate(cert.issued_date)}</p>
                                     {cert.certificate_url && (
-                                        <a href={cert.certificate_url} target="_blank" rel="noopener">Verify ↗</a>
+                                        <a href={cert.certificate_url} target="_blank" rel="noopener noreferrer">Verify ↗</a>
                                     )}
                                 </div>
                             ))}
@@ -163,6 +161,20 @@ export default function ModernATS({ data }) {
                                 <li key={ach.profileachievement_id}>
                                     <strong>{ach.title}</strong>
                                     {ach.description && <p>{ach.description}</p>}
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+                )}
+
+                {/* Strengths */}
+                {strengths?.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>Strengths</h2>
+                        <ul className={styles.achieveList}>
+                            {strengths.map((strength) => (
+                                <li key={strength.profilestrength_id}>
+                                    <strong>{strength.title}</strong>
                                 </li>
                             ))}
                         </ul>

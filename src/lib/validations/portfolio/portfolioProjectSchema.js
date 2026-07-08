@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const portfolioProjectSchema = z.object({
     title: z.string().min(1, 'Title is required').max(255).trim(),
-    snapshot_id: z.string().min(1, 'Snapshot is required'),
+    snapshot_id: z.string().optional().or(z.literal('')),
     theme_id: z.string().min(1, 'Theme is required'),
     custom_domain: z.string().optional().or(z.literal('')),
     seo_title: z.string().max(255).optional().or(z.literal('')),

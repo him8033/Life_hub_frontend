@@ -124,10 +124,10 @@ const ResumeSettingsForm = ({
                 label: `${t.name}${t.is_ats_friendly ? ' (ATS Friendly)' : ''}${t.is_premium ? ' ⭐ Premium' : ''}`,
             }));
         }
-        return [
-            { value: 'rtm_default_1', label: 'Modern ATS' },
-            { value: 'rtm_default_2', label: 'Minimal' },
-        ];
+        // return [
+        //     { value: 'rtm_default_1', label: 'Modern ATS' },
+        //     { value: 'rtm_default_2', label: 'Minimal' },
+        // ];
     };
 
     const selectedTemplateData = templates.find(t => t.template_id === selectedTemplate);

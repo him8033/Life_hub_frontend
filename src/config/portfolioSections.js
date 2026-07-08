@@ -1,9 +1,12 @@
+// src/config/portfolioSections.js
+
 import {
     FiUser, FiLink, FiCode, FiBriefcase, FiBook,
     FiFolder, FiAward, FiStar, FiFlag, FiHeart,
     FiShield, FiGrid
 } from 'react-icons/fi';
 
+// This is the SAME config used by both Resume and Portfolio
 export const PROFILE_SECTIONS = [
     {
         id: 'basic-info',
@@ -134,7 +137,7 @@ export const SECTION_ICONS = {
     FiShield, FiGrid
 };
 
-// Helper functions
+// Helper functions (shared between resume and portfolio)
 export const getEnabledSections = () =>
     PROFILE_SECTIONS
         .filter(s => s.enabled)

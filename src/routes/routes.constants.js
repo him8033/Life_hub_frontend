@@ -66,8 +66,10 @@ export const ROUTES = {
                 LIST: '/dashboard/portfolio/portfolios',
                 CREATE: '/dashboard/portfolio/portfolios/create',
                 EDIT: (portfolioId) => `/dashboard/portfolio/portfolios/edit/${portfolioId}`,
-                VIEW: (portfolioId) => `/dashboard/portfolio/portfolios/${portfolioId}`,
-                PREVIEW: (slug) => `/portfolio/${slug}`,
+                VIEW: (portfolioId) => `/portfolio-builder/${portfolioId}`,
+                PREVIEW: (slug) => `/portfolio-preview/${slug}`,
+                PREVIEW_EMBED: (slug) => `/portfolio-preview/${slug}?embed=true`,
+                PUBLIC: (slug) => `/portfolio/${slug}`,
             },
 
             // Admin - Skill Categories
