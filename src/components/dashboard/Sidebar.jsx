@@ -1,3 +1,5 @@
+// src/components/dashboard/Sidebar.jsx
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -25,7 +27,9 @@ import {
 import styles from '@/styles/dashboard/Sidebar.module.css';
 import { ROUTES } from '@/routes/routes.constants';
 import { FaPalette } from 'react-icons/fa';
+import { tokenService } from '@/services/auth/token.service';
 
+// Menu items with simple visibility config
 const menuItems = [
     {
         title: 'MAIN',
@@ -35,6 +39,7 @@ const menuItems = [
                 label: 'Dashboard',
                 icon: <FiHome />,
                 href: ROUTES.DASHBOARD.HOME,
+                show: true,
             },
         ]
     },
@@ -46,21 +51,25 @@ const menuItems = [
                 id: 'users',
                 label: 'Users',
                 icon: <FiUsers />,
+                show: true,
                 submenu: [
                     {
                         label: 'All Users',
                         icon: <FiUsers />,
-                        href: '/dashboard/users'
+                        href: '/dashboard/users',
+                        show: true,
                     },
                     {
                         label: 'Add User',
                         icon: <FiUserPlus />,
-                        href: '/dashboard/users/add'
+                        href: '/dashboard/users/add',
+                        show: 'admin',
                     },
                     {
                         label: 'Roles',
                         icon: <FiShield />,
-                        href: '/dashboard/users/roles'
+                        href: '/dashboard/users/roles',
+                        show: 'admin',
                     }
                 ]
             },
@@ -69,16 +78,19 @@ const menuItems = [
                 id: 'travelhub',
                 label: 'Travel Hub',
                 icon: <FiMap />,
+                show: true,
                 submenu: [
                     {
                         label: 'All Travel Spots',
                         icon: <FiMapPin />,
-                        href: ROUTES.DASHBOARD.TRAVELSPOT.LIST
+                        href: ROUTES.DASHBOARD.TRAVELSPOT.LIST,
+                        show: true,
                     },
                     {
                         label: 'Spot Categories',
                         icon: <FiGrid />,
-                        href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST
+                        href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST,
+                        show: 'admin',
                     },
                 ]
             },
@@ -87,46 +99,64 @@ const menuItems = [
                 id: 'portfolio',
                 label: 'Portfolio Hub',
                 icon: <FiBriefcase />,
+                show: true,
                 submenu: [
                     {
                         label: 'All Snapshots',
                         icon: <FiLayers />,
-                        href: ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST
+                        href: ROUTES.DASHBOARD.PORTFOLIO.SNAPSHOT.LIST,
+                        show: true,
                     },
                     {
                         label: 'All Resumes',
                         icon: <FiFileText />,
-                        href: ROUTES.DASHBOARD.PORTFOLIO.RESUME.LIST
+                        href: ROUTES.DASHBOARD.PORTFOLIO.RESUME.LIST,
+                        show: true,
                     },
                     {
                         label: 'All Portfolios',
                         icon: <FiMonitor />,
-                        href: ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIO.LIST
+                        href: ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIO.LIST,
+                        show: true,
                     },
+                ]
+            },
+
+            {
+                id: 'portfolio_settings',
+                label: 'Portfolio Hub Settings',
+                icon: <FiBriefcase />,
+                show: 'admin',
+                submenu: [
                     {
                         label: 'Skill Categories',
                         icon: <FiGrid />,
                         href: '/dashboard/portfolio/admin/skill-categories',
+                        show: 'admin',
                     },
                     {
                         label: 'Master Skills',
                         icon: <FiCode />,
                         href: '/dashboard/portfolio/admin/master-skills',
+                        show: 'admin',
                     },
                     {
                         label: 'Languages',
                         icon: <FiGlobe />,
                         href: '/dashboard/portfolio/admin/master-languages',
+                        show: 'admin',
                     },
                     {
                         label: 'Resume Templates',
                         icon: <FiFileText />,
                         href: '/dashboard/portfolio/admin/resume-templates',
+                        show: 'admin',
                     },
                     {
                         label: 'Portfolio Themes',
                         icon: <FaPalette />,
                         href: '/dashboard/portfolio/admin/portfolio-themes',
+                        show: 'admin',
                     },
                 ]
             },
@@ -141,6 +171,7 @@ const menuItems = [
                 label: 'My Profile',
                 icon: <FiUser />,
                 href: ROUTES.DASHBOARD.PROFILE,
+                show: true,
             }
         ]
     },
@@ -153,29 +184,48 @@ const menuItems = [
                 label: 'Settings',
                 icon: <FiSettings />,
                 href: '/dashboard/settings',
+                show: true,
             }
         ]
     }
 ];
 
+// Check if item should be shown
+const shouldShow = (item, isAdmin) => {
+    if (item.show === 'admin') return isAdmin;
+    if (item.show === 'user') return !isAdmin;
+    return item.show !== false;
+};
+
 const Sidebar = ({ closeSidebar, isOpen }) => {
     const pathname = usePathname();
+    const [mounted, setMounted] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+
     const [openSubmenus, setOpenSubmenus] = useState({});
     const [hoveredItem, setHoveredItem] = useState(null);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0 });
     const hoverTimeoutRef = useRef(null);
     const dropdownRef = useRef(null);
-    const itemRefs = useRef({});
 
-    // Initialize open submenus based on current path
+    // Get user role after mounting (client-side only)
     useEffect(() => {
+        setMounted(true);
+        const { user } = tokenService.get();
+        setIsAdmin(user?.role === 'admin');
+    }, []);
+
+    // Initialize open submenus
+    useEffect(() => {
+        if (!mounted) return;
+
         const initialOpenState = {};
         menuItems.forEach(section => {
             section.items.forEach(item => {
+                if (!shouldShow(item, isAdmin)) return;
                 if (item.submenu) {
-                    // Check if any submenu item matches current path
                     const isActive = item.submenu.some(subItem =>
-                        isPathActive(subItem.href)
+                        shouldShow(subItem, isAdmin) && pathname.startsWith(subItem.href)
                     );
                     if (isActive) {
                         initialOpenState[item.id] = true;
@@ -184,43 +234,12 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
             });
         });
         setOpenSubmenus(initialOpenState);
-    }, [pathname]);
-
-    // Improved path matching function
-    const isPathActive = (href) => {
-        if (!href) return false;
-
-        // Exact match for dashboard home
-        if (href === ROUTES.DASHBOARD.HOME) {
-            return pathname === href;
-        }
-
-        // For other routes, check if pathname starts with href
-        // But make sure we're not matching dashboard home accidentally
-        if (href !== ROUTES.DASHBOARD.HOME) {
-            return pathname === href || pathname.startsWith(href + '/');
-        }
-
-        return false;
-    };
+    }, [pathname, isAdmin, mounted]);
 
     const isActive = (href) => {
         if (!href) return false;
-        return isPathActive(href);
-    };
-
-    const isParentActive = (item) => {
-        if (item.submenu) {
-            return item.submenu.some(subItem =>
-                isPathActive(subItem.href)
-            );
-        }
-        return false;
-    };
-
-    // Check if current route is dashboard home
-    const isDashboardActive = () => {
-        return pathname === ROUTES.DASHBOARD.HOME;
+        if (href === ROUTES.DASHBOARD.HOME) return pathname === href;
+        return pathname === href || pathname.startsWith(href + '/');
     };
 
     const toggleSubmenu = (menuId) => {
@@ -231,88 +250,86 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
         }));
     };
 
-    const handleMouseEnter = (itemId, event) => {
-        if (!isOpen) {
-            // Clear any pending hide timeout
-            if (hoverTimeoutRef.current) {
-                clearTimeout(hoverTimeoutRef.current);
-            }
+    // Filter menu items based on role
+    const filteredMenuItems = menuItems
+        .map(section => {
+            const filteredItems = section.items
+                .filter(item => shouldShow(item, isAdmin))
+                .map(item => {
+                    if (item.submenu) {
+                        return {
+                            ...item,
+                            submenu: item.submenu.filter(sub => shouldShow(sub, isAdmin))
+                        };
+                    }
+                    return item;
+                })
+                .filter(item => {
+                    if (item.submenu) return item.submenu.length > 0;
+                    return true;
+                });
 
-            setHoveredItem(itemId);
-            // Calculate position based on the menu item's position
-            const rect = event.currentTarget.getBoundingClientRect();
-            let topPosition = rect.top + (rect.height / 2);
+            if (filteredItems.length === 0) return null;
+            return { ...section, items: filteredItems };
+        })
+        .filter(section => section !== null);
 
-            // Adjust if dropdown would go off screen
-            const dropdownHeight = 400; // Increased for more items
-            const viewportHeight = window.innerHeight;
-
-            if (topPosition + dropdownHeight / 2 > viewportHeight) {
-                topPosition = viewportHeight - dropdownHeight / 2 - 20;
-            }
-            if (topPosition - dropdownHeight / 2 < 0) {
-                topPosition = dropdownHeight / 2 + 20;
-            }
-
-            setDropdownPosition({ top: topPosition });
-        }
-    };
-
-    const handleMouseLeave = () => {
-        if (!isOpen) {
-            // Delay hiding to allow moving to dropdown
-            hoverTimeoutRef.current = setTimeout(() => {
-                setHoveredItem(null);
-            }, 200);
-        }
-    };
-
-    const handleDropdownMouseEnter = () => {
-        // Cancel hide timeout when entering dropdown
-        if (hoverTimeoutRef.current) {
-            clearTimeout(hoverTimeoutRef.current);
-        }
-    };
-
-    const handleDropdownMouseLeave = () => {
-        // Hide dropdown when leaving
-        setHoveredItem(null);
-    };
-
-    // Cleanup timeout on unmount
-    useEffect(() => {
-        return () => {
-            if (hoverTimeoutRef.current) {
-                clearTimeout(hoverTimeoutRef.current);
-            }
-        };
-    }, []);
+    // Prevent hydration mismatch by rendering only after mount
+    if (!mounted) {
+        // Return a minimal version that matches server render
+        return (
+            <nav className={styles.sidebarNav}>
+                {menuItems.map((section, idx) => (
+                    <div key={idx} className={styles.menuSection}>
+                        {isOpen && <div className={styles.menuTitle}>{section.title}</div>}
+                        <ul className={styles.menuList}>
+                            {section.items.map((item) => (
+                                <li key={item.id} className={styles.menuItem}>
+                                    <div className={styles.menuLink}>
+                                        <span className={styles.menuIcon}>{item.icon}</span>
+                                        {isOpen && <span className={styles.menuText}>{item.label}</span>}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))}
+            </nav>
+        );
+    }
 
     return (
         <nav className={styles.sidebarNav}>
-            {menuItems.map((section, idx) => (
+            {filteredMenuItems.map((section, idx) => (
                 <div key={idx} className={styles.menuSection}>
                     {isOpen && <div className={styles.menuTitle}>{section.title}</div>}
                     <ul className={styles.menuList}>
                         {section.items.map((item) => {
-                            // For dashboard, use exact matching
-                            const isItemActive = item.href === ROUTES.DASHBOARD.HOME
-                                ? isDashboardActive()
-                                : isActive(item.href);
-                            const isParentItemActive = isParentActive(item);
+                            const isItemActive = isActive(item.href);
+                            const isParentActive = item.submenu?.some(sub => isActive(sub.href));
 
                             return (
                                 <li
                                     key={item.id}
                                     className={styles.menuItem}
-                                    onMouseEnter={(e) => handleMouseEnter(item.id, e)}
-                                    onMouseLeave={handleMouseLeave}
-                                    ref={el => itemRefs.current[item.id] = el}
+                                    onMouseEnter={(e) => {
+                                        if (!isOpen) {
+                                            if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+                                            setHoveredItem(item.id);
+                                            const rect = e.currentTarget.getBoundingClientRect();
+                                            setDropdownPosition({ top: rect.top + rect.height / 2 });
+                                        }
+                                    }}
+                                    onMouseLeave={() => {
+                                        if (!isOpen) {
+                                            hoverTimeoutRef.current = setTimeout(() => setHoveredItem(null), 200);
+                                        }
+                                    }}
                                 >
                                     {item.href ? (
                                         <Link
                                             href={item.href}
-                                            className={`${styles.menuLink} ${(isItemActive || isParentItemActive) ? styles.active : ''}`}
+                                            className={`${styles.menuLink} ${(isItemActive || isParentActive) ? styles.active : ''}`}
                                             onClick={closeSidebar}
                                             title={!isOpen ? item.label : ''}
                                         >
@@ -323,7 +340,7 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                                         <>
                                             <button
                                                 onClick={() => toggleSubmenu(item.id)}
-                                                className={`${styles.menuLink} ${styles.hasSubmenu} ${isParentItemActive ? styles.active : ''}`}
+                                                className={`${styles.menuLink} ${styles.hasSubmenu} ${isParentActive ? styles.active : ''}`}
                                                 title={!isOpen ? item.label : ''}
                                             >
                                                 <span className={styles.menuIcon}>{item.icon}</span>
@@ -337,14 +354,16 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                                                 )}
                                             </button>
 
-                                            {/* Dropdown for mini sidebar hover - WITH ICONS */}
+                                            {/* Mini sidebar hover dropdown */}
                                             {!isOpen && hoveredItem === item.id && item.submenu && (
                                                 <div
                                                     ref={dropdownRef}
                                                     className={styles.dropdownMenu}
                                                     style={{ top: `${dropdownPosition.top}px` }}
-                                                    onMouseEnter={handleDropdownMouseEnter}
-                                                    onMouseLeave={handleDropdownMouseLeave}
+                                                    onMouseEnter={() => {
+                                                        if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+                                                    }}
+                                                    onMouseLeave={() => setHoveredItem(null)}
                                                 >
                                                     <div className={styles.dropdownHeader}>
                                                         <span className={styles.dropdownIcon}>{item.icon}</span>
@@ -358,7 +377,6 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                                                             className={`${styles.dropdownItem} ${isActive(subItem.href) ? styles.dropdownItemActive : ''}`}
                                                             onClick={closeSidebar}
                                                         >
-                                                            {/* Submenu icon */}
                                                             {subItem.icon && (
                                                                 <span className={styles.dropdownItemIcon}>
                                                                     {subItem.icon}
@@ -372,7 +390,7 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                                                 </div>
                                             )}
 
-                                            {/* Normal submenu for expanded sidebar - WITH ICONS */}
+                                            {/* Expanded sidebar submenu */}
                                             {isOpen && openSubmenus[item.id] && (
                                                 <div className={styles.submenu}>
                                                     {item.submenu.map((subItem, idx) => (
@@ -382,7 +400,6 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                                                             className={`${styles.submenuLink} ${isActive(subItem.href) ? styles.active : ''}`}
                                                             onClick={closeSidebar}
                                                         >
-                                                            {/* Submenu icon */}
                                                             {subItem.icon && (
                                                                 <span className={styles.submenuIcon}>
                                                                     {subItem.icon}
