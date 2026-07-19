@@ -1,3 +1,5 @@
+// src/components/portfolio/sections/EducationSection.jsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -12,7 +14,7 @@ import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
 import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -36,7 +38,7 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
     const { data, isLoading, refetch } = useGetProfileEducationQuery(snapshotId, { skip: !snapshotId });
     const [createEducation, { isLoading: isCreating }] = useCreateProfileEducationMutation();
     const [updateEducation, { isLoading: isUpdating }] = useUpdateProfileEducationMutation();
-    const [deleteEducation, { isLoading: isDeleting }] = useDeleteProfileEducationMutation();
+    const [deleteEducation] = useDeleteProfileEducationMutation();
     const [reorderEducation] = useReorderProfileEducationMutation();
 
     const educations = data?.data || [];
@@ -59,6 +61,27 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
     const { reset, handleSubmit, setValue, watch } = methods;
     const isCurrent = watch('is_current');
 
+    const handleAdd = () => {
+        setEditingId(null);
+        reset({
+            degree_name: '',
+            institution_name: '',
+            start_date: '',
+            end_date: '',
+            is_current: 'false',
+            score: '',
+            description: '',
+            full_address: '',
+        });
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+    };
+
     const handleFormSubmit = async (formData) => {
         try {
             const payload = {
@@ -74,12 +97,9 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
                 await createEducation({ snapshotId, data: payload }).unwrap();
                 showSnackbar('Education added', 'success', 3000);
             }
-            reset();
-            setEditingId(null);
-            setShowForm(false);
+            handleCancel();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -115,7 +135,6 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
             showSnackbar('Education deleted', 'success', 3000);
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -137,7 +156,6 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
             }).unwrap();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -146,62 +164,118 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
         }
     };
 
-    const handleCancel = () => {
-        reset();
-        setEditingId(null);
-        setShowForm(false);
-    };
-
     const formatDate = (dateStr) => {
         if (!dateStr) return '';
         const date = new Date(dateStr + 'T00:00:00');
         return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
     };
 
-    if (isLoading) return <Loader text="Loading education..." />;
+    if (isLoading) return null;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <div>
-                    <h3 className={styles.title}>Education</h3>
-                    <p className={styles.subtitle}>Add your academic qualifications</p>
-                </div>
-                {!showForm && (
-                    <Button variant="primary" size="sm" onClick={() => setShowForm(true)} icon={<FiPlus />}>
-                        Add Education
-                    </Button>
-                )}
-            </div>
-
-            {/* Add/Edit Form */}
+        <SectionLayout
+            title="Education"
+            subtitle="Add your academic qualifications"
+            icon={FiBook}
+            isLoading={isLoading}
+            isSaving={isSubmitting}
+            hasData={educations.length > 0}
+            onSave={handleAdd}
+            saveButtonText="Add Education"
+        >
+            {/* Form */}
             {showForm && (
                 <div className={styles.formCard}>
                     <FormProvider {...methods}>
                         <form onSubmit={handleSubmit(handleFormSubmit)}>
                             <div className={styles.formRow}>
-                                <FormInput name="degree_name" label="Degree *" placeholder="e.g., Bachelor of Technology" icon={<FiBook />} required disabled={isSubmitting} />
-                                <FormInput name="institution_name" label="Institution *" placeholder="e.g., IIT Delhi" icon={<FiAward />} required disabled={isSubmitting} />
+                                <FormInput
+                                    name="degree_name"
+                                    label="Degree *"
+                                    placeholder="e.g., Bachelor of Technology"
+                                    icon={<FiBook />}
+                                    required
+                                    disabled={isSubmitting}
+                                />
+                                <FormInput
+                                    name="institution_name"
+                                    label="Institution *"
+                                    placeholder="e.g., IIT Delhi"
+                                    icon={<FiAward />}
+                                    required
+                                    disabled={isSubmitting}
+                                />
                             </div>
                             <div className={styles.formRow}>
-                                <FormInput name="start_date" label="Start Date *" type="date" icon={<FiCalendar />} required disabled={isSubmitting} />
+                                <FormInput
+                                    name="start_date"
+                                    label="Start Date *"
+                                    type="date"
+                                    icon={<FiCalendar />}
+                                    required
+                                    disabled={isSubmitting}
+                                />
                                 {isCurrent !== 'true' && (
-                                    <FormInput name="end_date" label="End Date" type="date" icon={<FiCalendar />} disabled={isSubmitting} />
+                                    <FormInput
+                                        name="end_date"
+                                        label="End Date"
+                                        type="date"
+                                        icon={<FiCalendar />}
+                                        disabled={isSubmitting}
+                                    />
                                 )}
                             </div>
                             <div className={styles.formRow}>
-                                <FormSelect name="is_current" label="Currently Studying?" options={[
-                                    { value: 'false', label: 'No' },
-                                    { value: 'true', label: 'Yes' },
-                                ]} disabled={isSubmitting} />
-                                <FormInput name="score" label="Score / Grade" placeholder="e.g., 8.5 CGPA, 85%" disabled={isSubmitting} />
+                                <FormSelect
+                                    name="is_current"
+                                    label="Currently Studying?"
+                                    options={[
+                                        { value: 'false', label: 'No' },
+                                        { value: 'true', label: 'Yes' },
+                                    ]}
+                                    disabled={isSubmitting}
+                                />
+                                <FormInput
+                                    name="score"
+                                    label="Score / Grade"
+                                    placeholder="e.g., 8.5 CGPA, 85%"
+                                    disabled={isSubmitting}
+                                />
                             </div>
-                            <FormTextarea name="description" label="Description" placeholder="Additional details..." rows={2} disabled={isSubmitting} />
-                            <FormInput name="full_address" label="Address" placeholder="City, State, Country" icon={<FiMapPin />} disabled={isSubmitting} />
+                            <FormTextarea
+                                name="description"
+                                label="Description"
+                                placeholder="Additional details..."
+                                rows={2}
+                                disabled={isSubmitting}
+                            />
+                            <FormInput
+                                name="full_address"
+                                label="Address"
+                                placeholder="City, State, Country"
+                                icon={<FiMapPin />}
+                                disabled={isSubmitting}
+                            />
 
                             <div className={styles.formActions}>
-                                <Button type="button" variant="outline" size="sm" onClick={handleCancel} disabled={isSubmitting} icon={<FiX />}>Cancel</Button>
-                                <Button type="submit" variant="primary" size="sm" isLoading={isSubmitting} loadingText="Saving..." icon={<FiCheck />}>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleCancel}
+                                    disabled={isSubmitting}
+                                    icon={<FiX />}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    size="sm"
+                                    isLoading={isSubmitting}
+                                    loadingText="Saving..."
+                                    icon={<FiCheck />}
+                                >
                                     {editingId ? 'Update' : 'Add'}
                                 </Button>
                             </div>
@@ -216,9 +290,21 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
                     {educations.map((edu, index) => (
                         <div key={edu.profileeducation_id} className={styles.item}>
                             <div className={styles.orderControls}>
-                                <button className={styles.orderButton} onClick={() => handleMove(index, -1)} disabled={index === 0}><FiArrowUp size={10} /></button>
+                                <button
+                                    className={styles.orderButton}
+                                    onClick={() => handleMove(index, -1)}
+                                    disabled={index === 0 || isSubmitting}
+                                >
+                                    <FiArrowUp size={10} />
+                                </button>
                                 <span className={styles.orderNumber}>{index + 1}</span>
-                                <button className={styles.orderButton} onClick={() => handleMove(index, 1)} disabled={index === educations.length - 1}><FiArrowDown size={10} /></button>
+                                <button
+                                    className={styles.orderButton}
+                                    onClick={() => handleMove(index, 1)}
+                                    disabled={index === educations.length - 1 || isSubmitting}
+                                >
+                                    <FiArrowDown size={10} />
+                                </button>
                             </div>
 
                             <div className={styles.icon}>
@@ -240,22 +326,38 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
                             </div>
 
                             <div className={styles.actions}>
-                                <button className={styles.actionButton} onClick={() => handleEdit(edu)} title="Edit"><FiEdit2 size={14} /></button>
-                                <button className={`${styles.actionButton} ${styles.deleteButton}`} onClick={() => handleDelete(edu.profileeducation_id, edu.degree_name)} title="Delete"><FiTrash2 size={14} /></button>
+                                <button
+                                    className={styles.actionButton}
+                                    onClick={() => handleEdit(edu)}
+                                    disabled={isSubmitting}
+                                    title="Edit"
+                                >
+                                    <FiEdit2 size={14} />
+                                </button>
+                                <button
+                                    className={`${styles.actionButton} ${styles.deleteButton}`}
+                                    onClick={() => handleDelete(edu.profileeducation_id, edu.degree_name)}
+                                    disabled={isSubmitting}
+                                    title="Delete"
+                                >
+                                    <FiTrash2 size={14} />
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <div className={styles.emptyState}>
-                    <FiBook size={32} />
-                    <p>No education added yet</p>
-                    {!showForm && (
-                        <Button variant="outline" size="sm" onClick={() => setShowForm(true)} icon={<FiPlus />}>Add Education</Button>
-                    )}
-                </div>
+                !showForm && (
+                    <div className={styles.emptyState}>
+                        <FiBook size={32} />
+                        <p>No education added yet</p>
+                        <Button variant="outline" size="sm" onClick={handleAdd} icon={<FiPlus />}>
+                            Add your first education
+                        </Button>
+                    </div>
+                )
             )}
-        </div>
+        </SectionLayout>
     );
 };
 

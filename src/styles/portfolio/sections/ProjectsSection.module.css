@@ -1,25 +1,8 @@
-.container {
-    padding: var(--spacing-4) 0;
-}
+/* src/styles/portfolio/sections/ProjectsSection.module.css */
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--spacing-5);
-}
-
-.title {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    margin: 0;
-}
-
-.subtitle {
-    font-size: var(--text-sm);
-    color: var(--muted-foreground);
-    margin: var(--spacing-1) 0 0 0;
-}
+/* ============================================
+   PROJECTS GRID & CARDS
+   ============================================ */
 
 .grid {
     display: grid;
@@ -44,6 +27,10 @@
 .card.featured {
     border-color: #f59e0b;
 }
+
+/* ============================================
+   THUMBNAIL
+   ============================================ */
 
 .thumbnail {
     position: relative;
@@ -89,6 +76,10 @@
     font-weight: 600;
 }
 
+/* ============================================
+   CARD BODY
+   ============================================ */
+
 .cardBody {
     padding: var(--spacing-4);
 }
@@ -97,6 +88,7 @@
     font-size: var(--text-base);
     font-weight: 600;
     margin: 0 0 var(--spacing-1) 0;
+    color: var(--foreground);
 }
 
 .projectDesc {
@@ -109,6 +101,10 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/* ============================================
+   LINKS
+   ============================================ */
 
 .links {
     display: flex;
@@ -129,10 +125,18 @@
     text-decoration: underline;
 }
 
+/* ============================================
+   CARD ACTIONS
+   ============================================ */
+
 .cardActions {
     display: flex;
     gap: var(--spacing-2);
 }
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
 
 .emptyState {
     display: flex;
@@ -141,82 +145,35 @@
     gap: var(--spacing-3);
     padding: var(--spacing-8);
     color: var(--muted-foreground);
-}
-
-/* Modal */
-.modalOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    backdrop-filter: blur(4px);
-    padding: var(--spacing-4);
-}
-
-.modal {
-    background: var(--card);
-    border-radius: var(--radius-2xl);
-    width: 100%;
-    max-width: 640px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-2xl);
-}
-
-.modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-5) var(--spacing-6);
-    border-bottom: 1px solid var(--border);
-}
-
-.modalHeader h3 {
-    margin: 0;
-    font-size: var(--text-lg);
-    font-weight: 600;
-}
-
-.closeBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: none;
+    text-align: center;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
     background: var(--muted);
-    border-radius: var(--radius-md);
-    cursor: pointer;
+}
+
+.emptyState svg {
     color: var(--muted-foreground);
 }
 
-.closeBtn:hover {
-    background: var(--accent);
+.emptyState p {
+    margin: 0;
+    font-size: var(--text-sm);
 }
 
-.modalBody {
-    padding: var(--spacing-6);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-4);
-}
-
-.modalFooter {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--spacing-2);
-    padding: var(--spacing-4) var(--spacing-6);
-    border-top: 1px solid var(--border);
-}
+/* ============================================
+   FORM ROW (for modal)
+   ============================================ */
 
 .formRow {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-4);
+    margin-bottom: var(--spacing-2);
 }
+
+/* ============================================
+   THUMBNAIL UPLOAD (in modal)
+   ============================================ */
 
 .thumbLabel {
     display: flex;
@@ -224,6 +181,7 @@
     gap: var(--spacing-2);
     font-size: var(--text-sm);
     font-weight: 600;
+    color: var(--foreground);
     margin-bottom: var(--spacing-2);
 }
 
@@ -231,6 +189,9 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-3);
+    padding: var(--spacing-2);
+    background: var(--muted);
+    border-radius: var(--radius-md);
     margin-bottom: var(--spacing-2);
 }
 
@@ -243,46 +204,31 @@
 }
 
 .removeThumbBtn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: var(--spacing-1) var(--spacing-2);
-    background: none;
+    padding: var(--spacing-1) var(--spacing-3);
+    background: transparent;
     border: 1px solid var(--destructive);
     color: var(--destructive);
     border-radius: var(--radius-sm);
     font-size: var(--text-xs);
     cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
 }
 
-.dark .card {
-    background: var(--gray-900);
-    border-color: var(--gray-800);
+.removeThumbBtn:hover:not(:disabled) {
+    background: var(--destructive);
+    color: white;
 }
 
-.dark .modal {
-    background: var(--gray-900);
-    border: 1px solid var(--gray-700);
-}
+/* ============================================
+   GALLERY SECTION (in modal)
+   ============================================ */
 
-@media (max-width: 768px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
-
-    .formRow {
-        grid-template-columns: 1fr;
-    }
-
-    .modal {
-        max-width: 100%;
-        margin: var(--spacing-2);
-    }
-}
-
-/* Project Skills Section */
-.skillsSection {
-    margin-top: var(--spacing-2);
+.gallerySection {
+    margin-top: var(--spacing-4);
     padding-top: var(--spacing-4);
     border-top: 1px solid var(--border);
 }
@@ -295,6 +241,181 @@
     font-weight: 600;
     margin-bottom: var(--spacing-3);
     color: var(--foreground);
+}
+
+.galleryGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-3);
+}
+
+.galleryItem {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    aspect-ratio: 16/9;
+    background: var(--muted);
+}
+
+.galleryImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Gallery Overlay */
+.galleryOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    padding: var(--spacing-2);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.galleryCaption {
+    font-size: 10px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.galleryActions {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+}
+
+.galleryActionBtn {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.galleryActionBtn:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.galleryActionBtn.deleteAction:hover {
+    background: var(--destructive);
+}
+
+.primaryBadge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    padding: 2px 6px;
+    background: #f59e0b;
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Reorder Controls */
+.reorderControls {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.galleryItem:hover .reorderControls {
+    opacity: 1;
+}
+
+.reorderBtn {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.reorderBtn:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.reorderBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Upload Gallery Row */
+.uploadGalleryRow {
+    display: flex;
+    gap: var(--spacing-3);
+    align-items: flex-start;
+}
+
+.uploadGalleryLeft {
+    flex-shrink: 0;
+}
+
+.uploadGalleryRight {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.captionInput {
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--card);
+    font-size: var(--text-sm);
+    font-family: inherit;
+    color: var(--foreground);
+}
+
+.captionInput:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.captionInput:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   SKILLS SECTION (in modal)
+   ============================================ */
+
+.skillsSection {
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--border);
 }
 
 .projectSkillTags {
@@ -329,7 +450,7 @@
     color: var(--muted-foreground);
     cursor: pointer;
     border-radius: 50%;
-    margin-left: 2px;
+    transition: all 0.2s ease;
 }
 
 .removeSkillBtn:hover {
@@ -358,6 +479,7 @@
     font-size: var(--text-sm);
     font-family: inherit;
     color: var(--foreground);
+    cursor: pointer;
 }
 
 .skillSelect:focus {
@@ -366,112 +488,50 @@
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
+.skillSelect:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+.dark .card {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+.dark .card:hover {
+    border-color: var(--primary);
+}
+
+.dark .emptyState {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+.dark .existingThumb {
+    background: var(--gray-800);
+}
+
+.dark .captionInput {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+    color: var(--gray-200);
+}
+
 .dark .skillSelect {
     background: var(--gray-800);
     border-color: var(--gray-700);
-}
-
-.dark .skillsSection {
-    border-top-color: var(--gray-700);
-}
-
-/* Gallery Section */
-.gallerySection {
-    margin-top: var(--spacing-2);
-    padding-top: var(--spacing-4);
-    border-top: 1px solid var(--border);
-}
-
-.galleryGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: var(--spacing-2);
-    margin-bottom: var(--spacing-3);
-}
-
-.galleryItem {
-    position: relative;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    border: 1px solid var(--border);
-    aspect-ratio: 16/9;
-    background: var(--muted);
-}
-
-.galleryImg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.galleryCaption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 2px 6px;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    font-size: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.primaryBadge {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    padding: 2px 6px;
-    background: #f59e0b;
-    color: white;
-    border-radius: var(--radius-full);
-    font-size: 8px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 2px;
-}
-
-.deleteGalleryBtn {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 10px;
-}
-
-.deleteGalleryBtn:hover {
-    background: var(--destructive);
-}
-
-.uploadGalleryRow {
-    display: flex;
-    gap: var(--spacing-3);
-    align-items: flex-end;
-}
-
-.uploadGalleryLeft {
-    flex-shrink: 0;
-}
-
-.uploadGalleryRight {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-2);
+    color: var(--gray-200);
 }
 
 .dark .gallerySection {
+    border-top-color: var(--gray-700);
+}
+
+.dark .skillsSection {
     border-top-color: var(--gray-700);
 }
 
@@ -480,112 +540,79 @@
     border-color: var(--gray-700);
 }
 
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
 @media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        max-width: 100%;
+    }
+
+    .cardActions {
+        flex-direction: column;
+    }
+
+    .cardActions button {
+        width: 100%;
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-3);
+    }
+
+    .galleryGrid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
     .uploadGalleryRow {
         flex-direction: column;
     }
 
-    .galleryGrid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    .uploadGalleryLeft {
+        width: 100%;
+    }
+
+    .uploadGalleryRight {
+        width: 100%;
+    }
+
+    .addSkillRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .skillSelect {
+        width: 100%;
+    }
+
+    .addSkillRow button {
+        width: 100%;
     }
 }
 
-/* Gallery Overlay with Actions */
-.galleryOverlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-    padding: var(--spacing-1);
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
+@media (max-width: 480px) {
+    .galleryGrid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
 
-.galleryActions {
-    display: flex;
-    gap: 2px;
-    justify-content: flex-end;
-}
+    .existingThumb {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-.galleryActionBtn {
-    width: 22px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 10px;
-}
+    .thumbPreview {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+    }
 
-.galleryActionBtn:hover {
-    background: rgba(255, 255, 255, 0.4);
-}
-
-.galleryActionBtn.deleteAction:hover {
-    background: var(--destructive);
-}
-
-/* Reorder Controls */
-.reorderControls {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.galleryItem:hover .reorderControls {
-    opacity: 1;
-}
-
-.reorderBtn {
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.reorderBtn:hover:not(:disabled) {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-.reorderBtn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-/* Caption Input */
-.captionInput {
-    width: 100%;
-    padding: var(--spacing-2) var(--spacing-3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: var(--card);
-    font-size: var(--text-sm);
-    font-family: inherit;
-}
-
-.captionInput:focus {
-    outline: none;
-    border-color: var(--primary);
-}
-
-.dark .captionInput {
-    background: var(--gray-800);
-    border-color: var(--gray-700);
+    .projectSkillTags {
+        gap: var(--spacing-1);
+    }
 }

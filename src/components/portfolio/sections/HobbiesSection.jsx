@@ -1,3 +1,5 @@
+// src/components/portfolio/sections/HobbiesSection.jsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -11,7 +13,7 @@ import {
 
 import FormInput from '@/components/common/forms/FormInput';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -40,11 +42,10 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState(null);
 
-    // API
     const { data, isLoading, refetch } = useGetHobbiesQuery(snapshotId, { skip: !snapshotId });
     const [createHobby, { isLoading: isCreating }] = useCreateHobbyMutation();
     const [updateHobby, { isLoading: isUpdating }] = useUpdateHobbyMutation();
-    const [deleteHobby, { isLoading: isDeleting }] = useDeleteHobbyMutation();
+    const [deleteHobby] = useDeleteHobbyMutation();
     const [reorderHobbies] = useReorderHobbiesMutation();
 
     const hobbies = data?.data || [];
@@ -59,6 +60,20 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
 
     const { reset, handleSubmit, setValue } = methods;
 
+    const handleAdd = () => {
+        setEditingId(null);
+        reset({
+            hobby_name: '',
+        });
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+    };
+
     const handleFormSubmit = async (formData) => {
         try {
             if (editingId) {
@@ -68,12 +83,9 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
                 await createHobby({ snapshotId, data: formData }).unwrap();
                 showSnackbar('Hobby added', 'success', 3000);
             }
-            reset();
-            setEditingId(null);
-            setShowForm(false);
+            handleCancel();
             refetch();
-            
-            // NEW: Notify parent to refresh preview
+
             if (onDataChange) {
                 onDataChange();
             }
@@ -101,8 +113,7 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
             await deleteHobby(hobbyId).unwrap();
             showSnackbar('Hobby deleted', 'success', 3000);
             refetch();
-            
-            // NEW: Notify parent to refresh preview
+
             if (onDataChange) {
                 onDataChange();
             }
@@ -124,8 +135,7 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
                 data: { order: newItems.map(item => item.profilehobby_id) },
             }).unwrap();
             refetch();
-            
-            // NEW: Notify parent to refresh preview
+
             if (onDataChange) {
                 onDataChange();
             }
@@ -134,37 +144,20 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
         }
     };
 
-    const handleCancel = () => {
-        reset();
-        setEditingId(null);
-        setShowForm(false);
-    };
-
-    if (isLoading) return <Loader text="Loading hobbies..." />;
+    if (isLoading) return null;
 
     return (
-        <div className={styles.container}>
-            {/* Header */}
-            <div className={styles.header}>
-                <div>
-                    <h3 className={styles.title}>Hobbies & Interests</h3>
-                    <p className={styles.subtitle}>
-                        Add your personal interests and activities
-                    </p>
-                </div>
-                {!showForm && (
-                    <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => setShowForm(true)}
-                        icon={<FiPlus />}
-                    >
-                        Add Hobby
-                    </Button>
-                )}
-            </div>
-
-            {/* Add/Edit Form */}
+        <SectionLayout
+            title="Hobbies & Interests"
+            subtitle="Add your personal interests and activities"
+            icon={FiHeart}
+            isLoading={isLoading}
+            isSaving={isSubmitting}
+            hasData={hobbies.length > 0}
+            onSave={handleAdd}
+            saveButtonText="Add Hobby"
+        >
+            {/* Form */}
             {showForm && (
                 <div className={styles.formCard}>
                     <FormProvider {...methods}>
@@ -213,12 +206,11 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
                 <div className={styles.hobbiesGrid}>
                     {hobbies.map((hobby, index) => (
                         <div key={hobby.profilehobby_id} className={styles.hobbyItem}>
-                            {/* Order Controls */}
                             <div className={styles.orderControls}>
                                 <button
                                     className={styles.orderButton}
                                     onClick={() => handleMove(index, -1)}
-                                    disabled={index === 0}
+                                    disabled={index === 0 || isSubmitting}
                                     title="Move up"
                                 >
                                     <FiArrowUp size={10} />
@@ -227,14 +219,13 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
                                 <button
                                     className={styles.orderButton}
                                     onClick={() => handleMove(index, 1)}
-                                    disabled={index === hobbies.length - 1}
+                                    disabled={index === hobbies.length - 1 || isSubmitting}
                                     title="Move down"
                                 >
                                     <FiArrowDown size={10} />
                                 </button>
                             </div>
 
-                            {/* Hobby Content */}
                             <div className={styles.hobbyContent}>
                                 <span className={styles.hobbyIcon}>
                                     {getHobbyIcon(index)}
@@ -242,11 +233,11 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
                                 <span className={styles.hobbyName}>{hobby.hobby_name}</span>
                             </div>
 
-                            {/* Actions */}
                             <div className={styles.hobbyActions}>
                                 <button
                                     className={styles.actionButton}
                                     onClick={() => handleEdit(hobby)}
+                                    disabled={isSubmitting}
                                     title="Edit"
                                 >
                                     <FiEdit2 size={14} />
@@ -254,6 +245,7 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
                                 <button
                                     className={`${styles.actionButton} ${styles.deleteButton}`}
                                     onClick={() => handleDelete(hobby.profilehobby_id, hobby.hobby_name)}
+                                    disabled={isSubmitting}
                                     title="Delete"
                                 >
                                     <FiTrash2 size={14} />
@@ -263,22 +255,22 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
                     ))}
                 </div>
             ) : (
-                <div className={styles.emptyState}>
-                    <FiHeart size={32} />
-                    <p>No hobbies added yet</p>
-                    {!showForm && (
+                !showForm && (
+                    <div className={styles.emptyState}>
+                        <FiHeart size={32} />
+                        <p>No hobbies added yet</p>
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => setShowForm(true)}
+                            onClick={handleAdd}
                             icon={<FiPlus />}
                         >
                             Add your first hobby
                         </Button>
-                    )}
-                </div>
+                    </div>
+                )
             )}
-        </div>
+        </SectionLayout>
     );
 };
 

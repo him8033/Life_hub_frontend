@@ -1,3 +1,5 @@
+// src/components/portfolio/sections/SocialLinksSection.jsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -12,7 +14,8 @@ import {
 import FormInput from '@/components/common/forms/FormInput';
 import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
+import { SectionItemList } from './common/SectionItem';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -58,7 +61,7 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
     const [reorderProfileLinks] = useReorderProfileSocialLinksMutation();
 
     const socialLinks = data?.data || [];
-    const isSubmitting = isCreating || isUpdating;
+    const isSubmitting = isCreating || isUpdating || isDeleting;
 
     const methods = useForm({
         resolver: zodResolver(socialLinkSchema),
@@ -66,22 +69,43 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
             platform_name: '',
             url: '',
             icon: '',
-            is_primary: 'false',  // Always false by default
-            is_active: 'true',    // Always true by default
         },
     });
 
     const { reset, handleSubmit, setValue } = methods;
 
+    const handleAdd = () => {
+        setEditingId(null);
+        reset({
+            platform_name: '',
+            url: '',
+            icon: '',
+        });
+        setShowForm(true);
+    };
+
+    const handleEdit = (link) => {
+        setValue('platform_name', link.platform_name);
+        setValue('url', link.url);
+        setValue('icon', link.icon || '');
+        setEditingId(link.profilesociallink_id);
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+    };
+
     const handleFormSubmit = async (formData) => {
         try {
-            // Build payload with all fields
             const payload = {
                 platform_name: formData.platform_name,
                 url: formData.url,
                 icon: formData.icon || '',
-                is_primary: false,  // Always false for new/updated links
-                is_active: true,    // Always true for new/updated links
+                is_primary: false,
+                is_active: true,
             };
 
             if (editingId) {
@@ -91,9 +115,7 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                 await createProfileLink({ snapshotId, data: payload }).unwrap();
                 showSnackbar('Social link added', 'success', 3000);
             }
-            reset();
-            setEditingId(null);
-            setShowForm(false);
+            handleCancel();
             refetch();
 
             if (onDataChange) {
@@ -102,14 +124,6 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to save social link'), 'error', 5000);
         }
-    };
-
-    const handleEdit = (link) => {
-        setValue('platform_name', link.platform_name);
-        setValue('url', link.url);
-        setValue('icon', link.icon || '');
-        setEditingId(link.profilesociallink_id);
-        setShowForm(true);
     };
 
     const handleDelete = async (linkId, platformName) => {
@@ -169,60 +183,101 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
         }
     };
 
-    const handleCancel = () => {
-        reset();
-        setEditingId(null);
-        setShowForm(false);
-    };
-
     const getPlatformIcon = (platformName) => {
         const IconComponent = platformIcons[platformName] || FiLink;
         return <IconComponent size={18} />;
     };
 
-    if (isLoading) return <Loader text="Loading social links..." />;
+    if (isLoading) return null;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <div>
-                    <h3 className={styles.title}>Social Links</h3>
-                    <p className={styles.subtitle}>Add your professional profiles and social media links</p>
-                </div>
-                {!showForm && (
-                    <Button variant="primary" size="sm" onClick={() => setShowForm(true)} icon={<FiPlus />}>Add Link</Button>
-                )}
-            </div>
-
+        <SectionLayout
+            title="Social Links"
+            subtitle="Add your professional profiles and social media links"
+            icon={FiLink}
+            isLoading={isLoading}
+            isSaving={isSubmitting}
+            hasData={socialLinks.length > 0}
+            onSave={handleAdd}
+            saveButtonText="Add Link"
+        >
+            {/* Form */}
             {showForm && (
                 <div className={styles.formCard}>
                     <FormProvider {...methods}>
                         <form onSubmit={handleSubmit(handleFormSubmit)}>
                             <div className={styles.formRow}>
-                                <FormSelect name="platform_name" label="Platform" options={platformOptions} placeholder="Select platform" required disabled={isSubmitting} />
-                                <FormInput name="url" label="URL" placeholder="https://..." icon={<FiLink />} required disabled={isSubmitting} />
+                                <FormSelect
+                                    name="platform_name"
+                                    label="Platform"
+                                    options={platformOptions}
+                                    placeholder="Select platform"
+                                    required
+                                    disabled={isSubmitting}
+                                />
+                                <FormInput
+                                    name="url"
+                                    label="URL"
+                                    placeholder="https://..."
+                                    icon={<FiLink />}
+                                    required
+                                    disabled={isSubmitting}
+                                />
                             </div>
-                            {/* Hidden fields for schema validation */}
-                            <input type="hidden" {...methods.register('icon')} />
-                            <input type="hidden" {...methods.register('is_primary')} />
-                            <input type="hidden" {...methods.register('is_active')} />
+                            <FormInput
+                                name="icon"
+                                label="Icon (optional)"
+                                placeholder="e.g., fa-github"
+                                disabled={isSubmitting}
+                            />
                             <div className={styles.formActions}>
-                                <Button type="button" variant="outline" size="sm" onClick={handleCancel} disabled={isSubmitting} icon={<FiX />}>Cancel</Button>
-                                <Button type="submit" variant="primary" size="sm" isLoading={isSubmitting} loadingText="Saving..." icon={<FiCheck />}>{editingId ? 'Update' : 'Add'}</Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleCancel}
+                                    disabled={isSubmitting}
+                                    icon={<FiX />}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    size="sm"
+                                    isLoading={isSubmitting}
+                                    loadingText="Saving..."
+                                    icon={<FiCheck />}
+                                >
+                                    {editingId ? 'Update' : 'Add'}
+                                </Button>
                             </div>
                         </form>
                     </FormProvider>
                 </div>
             )}
 
+            {/* List */}
             {socialLinks.length > 0 ? (
                 <div className={styles.linksList}>
                     {socialLinks.map((link, index) => (
                         <div key={link.profilesociallink_id} className={styles.linkItem}>
                             <div className={styles.orderControls}>
-                                <button className={styles.orderButton} onClick={() => handleMove(index, -1)} disabled={index === 0}><FiArrowUp size={10} /></button>
+                                <button
+                                    className={styles.orderButton}
+                                    onClick={() => handleMove(index, -1)}
+                                    disabled={index === 0 || isSubmitting}
+                                >
+                                    <FiArrowUp size={10} />
+                                </button>
                                 <span className={styles.orderNumber}>{index + 1}</span>
-                                <button className={styles.orderButton} onClick={() => handleMove(index, 1)} disabled={index === socialLinks.length - 1}><FiArrowDown size={10} /></button>
+                                <button
+                                    className={styles.orderButton}
+                                    onClick={() => handleMove(index, 1)}
+                                    disabled={index === socialLinks.length - 1 || isSubmitting}
+                                >
+                                    <FiArrowDown size={10} />
+                                </button>
                             </div>
                             <div className={styles.platformIcon}>{getPlatformIcon(link.platform_name)}</div>
                             <div className={styles.linkInfo}>
@@ -234,22 +289,47 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                             </div>
                             <div className={styles.linkActions}>
                                 {!link.is_primary && (
-                                    <button className={styles.actionButton} onClick={() => handleSetPrimary(link.profilesociallink_id)}><FiStar size={14} /></button>
+                                    <button
+                                        className={styles.actionButton}
+                                        onClick={() => handleSetPrimary(link.profilesociallink_id)}
+                                        disabled={isSubmitting}
+                                        title="Set as primary"
+                                    >
+                                        <FiStar size={14} />
+                                    </button>
                                 )}
-                                <button className={styles.actionButton} onClick={() => handleEdit(link)}><FiEdit2 size={14} /></button>
-                                <button className={`${styles.actionButton} ${styles.deleteButton}`} onClick={() => handleDelete(link.profilesociallink_id, link.platform_name)}><FiTrash2 size={14} /></button>
+                                <button
+                                    className={styles.actionButton}
+                                    onClick={() => handleEdit(link)}
+                                    disabled={isSubmitting}
+                                    title="Edit"
+                                >
+                                    <FiEdit2 size={14} />
+                                </button>
+                                <button
+                                    className={`${styles.actionButton} ${styles.deleteButton}`}
+                                    onClick={() => handleDelete(link.profilesociallink_id, link.platform_name)}
+                                    disabled={isSubmitting}
+                                    title="Delete"
+                                >
+                                    <FiTrash2 size={14} />
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <div className={styles.emptyState}>
-                    <FiLink size={32} />
-                    <p>No social links added yet</p>
-                    {!showForm && <Button variant="outline" size="sm" onClick={() => setShowForm(true)} icon={<FiPlus />}>Add your first link</Button>}
-                </div>
+                !showForm && (
+                    <div className={styles.emptyState}>
+                        <FiLink size={32} />
+                        <p>No social links added yet</p>
+                        <Button variant="outline" size="sm" onClick={handleAdd} icon={<FiPlus />}>
+                            Add your first link
+                        </Button>
+                    </div>
+                )
             )}
-        </div>
+        </SectionLayout>
     );
 };
 

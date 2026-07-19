@@ -1,10 +1,12 @@
+// src/components/portfolio/sections/BasicInfoSection.jsx
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-    FiUser, FiMail, FiPhone, FiFileText,
+    FiUser, FiMail, FiPhone,
     FiMapPin, FiGlobe, FiCamera, FiSave, FiTrash2
 } from 'react-icons/fi';
 
@@ -12,7 +14,7 @@ import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
 import { useGetBasicInfoQuery, useSaveBasicInfoMutation } from '@/services/api/portfolioApi';
@@ -21,7 +23,6 @@ import styles from '@/styles/portfolio/sections/BasicInfoSection.module.css';
 
 const BasicInfoSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
-    const [isEditing, setIsEditing] = useState(false);
 
     // Image states
     const [imageFile, setImageFile] = useState(null);
@@ -104,10 +105,9 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
 
             await saveBasicInfo({ snapshotId, data: formData }).unwrap();
             showSnackbar('Basic info saved successfully', 'success', 3000);
-            setIsEditing(false);
             refetch();
 
-            // NEW: Notify parent to refresh preview
+            // Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -116,72 +116,30 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
         }
     };
 
-    const handleCancel = () => {
-        if (basicInfo) {
-            reset({
-                first_name: basicInfo.first_name || '',
-                last_name: basicInfo.last_name || '',
-                email: basicInfo.email || '',
-                phone: basicInfo.phone || '',
-                summary: basicInfo.summary || '',
-                full_address: basicInfo.full_address || '',
-                website: basicInfo.website || '',
-            });
-            setImagePreview(basicInfo.image_url || '');
-            setImageFile(null);
-            setRemoveImage(false);
-        }
-        setIsEditing(false);
-    };
-
-    if (isLoading) return <Loader text="Loading basic info..." />;
+    const hasData = basicInfo && (
+        basicInfo.first_name ||
+        basicInfo.last_name ||
+        basicInfo.email ||
+        basicInfo.phone ||
+        basicInfo.summary ||
+        basicInfo.full_address ||
+        basicInfo.website ||
+        basicInfo.image_url
+    );
 
     return (
-        <div className={styles.container}>
+        <SectionLayout
+            title="Basic Information"
+            subtitle="Your personal details for resumes and portfolios"
+            icon={FiUser}
+            isLoading={isLoading}
+            isSaving={isSaving}
+            hasData={hasData}
+            onSave={handleSubmit(handleFormSubmit)}
+            saveButtonText={hasData ? 'Update Info' : 'Save Info'}
+        >
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(handleFormSubmit)}>
-                    {/* Header */}
-                    <div className={styles.header}>
-                        <div>
-                            <h3 className={styles.title}>Basic Information</h3>
-                            <p className={styles.subtitle}>
-                                Your personal details for resumes and portfolios
-                            </p>
-                        </div>
-                        {!isEditing ? (
-                            <Button
-                                variant="primary"
-                                size="sm"
-                                onClick={() => setIsEditing(true)}
-                                icon={<FiUser />}
-                            >
-                                {basicInfo ? 'Edit Info' : 'Add Info'}
-                            </Button>
-                        ) : (
-                            <div className={styles.headerActions}>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={handleCancel}
-                                    disabled={isSaving}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    size="sm"
-                                    isLoading={isSaving}
-                                    loadingText="Saving..."
-                                    icon={<FiSave />}
-                                >
-                                    Save
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Form Fields */}
                     <div className={styles.formGrid}>
                         {/* Profile Image */}
                         <div className={styles.imageSection}>
@@ -189,59 +147,41 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                                 <FiCamera /> Profile Photo
                             </label>
 
-                            {isEditing ? (
-                                <>
-                                    {basicInfo?.image_url && !imageFile && !removeImage && (
-                                        <div className={styles.existingImageContainer}>
-                                            <img
-                                                src={basicInfo.image_url}
-                                                alt="Profile"
-                                                className={styles.existingImage}
-                                            />
-                                            <button
-                                                type="button"
-                                                className={styles.removeImageButton}
-                                                onClick={handleRemoveExistingImage}
-                                                disabled={isSaving}
-                                            >
-                                                <FiTrash2 /> Remove
-                                            </button>
-                                        </div>
-                                    )}
-
-                                    {(!basicInfo?.image_url || imageFile || removeImage) && (
-                                        <SquareImageUpload
-                                            onImageSelect={handleImageSelect}
-                                            onRemove={handleImageRemove}
-                                            previewUrl={imagePreview}
-                                            disabled={isSaving}
-                                            maxSizeMB={5}
-                                            label="Upload Photo"
-                                            size="small"
-                                            enableCrop={true}
-                                            aspectRatio={1}
-                                            showCropControls={true}
-                                        />
-                                    )}
-                                </>
-                            ) : (
-                                <div className={styles.imageDisplay}>
-                                    {basicInfo?.image_url ? (
-                                        <img
-                                            src={basicInfo.image_url}
-                                            alt="Profile"
-                                            className={styles.profileImage}
-                                        />
-                                    ) : (
-                                        <div className={styles.imagePlaceholder}>
-                                            <FiUser size={32} />
-                                        </div>
-                                    )}
+                            {basicInfo?.image_url && !imageFile && !removeImage && (
+                                <div className={styles.existingImageContainer}>
+                                    <img
+                                        src={basicInfo.image_url}
+                                        alt="Profile"
+                                        className={styles.existingImage}
+                                    />
+                                    <button
+                                        type="button"
+                                        className={styles.removeImageButton}
+                                        onClick={handleRemoveExistingImage}
+                                        disabled={isSaving}
+                                    >
+                                        <FiTrash2 /> Remove
+                                    </button>
                                 </div>
+                            )}
+
+                            {(!basicInfo?.image_url || imageFile || removeImage) && (
+                                <SquareImageUpload
+                                    onImageSelect={handleImageSelect}
+                                    onRemove={handleImageRemove}
+                                    previewUrl={imagePreview}
+                                    disabled={isSaving}
+                                    maxSizeMB={5}
+                                    label="Upload Photo"
+                                    size="small"
+                                    enableCrop={true}
+                                    aspectRatio={1}
+                                    showCropControls={true}
+                                />
                             )}
                         </div>
 
-                        {/* Name Fields */}
+                        {/* Fields */}
                         <div className={styles.fieldsSection}>
                             <div className={styles.row}>
                                 <FormInput
@@ -249,7 +189,7 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                                     label="First Name *"
                                     placeholder="Enter first name"
                                     icon={<FiUser />}
-                                    disabled={!isEditing || isSaving}
+                                    disabled={isSaving}
                                     className={styles.formItem}
                                 />
                                 <FormInput
@@ -257,7 +197,7 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                                     label="Last Name"
                                     placeholder="Enter last name"
                                     icon={<FiUser />}
-                                    disabled={!isEditing || isSaving}
+                                    disabled={isSaving}
                                     className={styles.formItem}
                                 />
                             </div>
@@ -269,7 +209,7 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                                     type="email"
                                     placeholder="your@email.com"
                                     icon={<FiMail />}
-                                    disabled={!isEditing || isSaving}
+                                    disabled={isSaving}
                                     className={styles.formItem}
                                 />
                                 <FormInput
@@ -277,7 +217,7 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                                     label="Phone"
                                     placeholder="+91 9876543210"
                                     icon={<FiPhone />}
-                                    disabled={!isEditing || isSaving}
+                                    disabled={isSaving}
                                     className={styles.formItem}
                                 />
                             </div>
@@ -287,7 +227,7 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                                 label="Website"
                                 placeholder="https://yourwebsite.com"
                                 icon={<FiGlobe />}
-                                disabled={!isEditing || isSaving}
+                                disabled={isSaving}
                                 className={styles.formItem}
                             />
 
@@ -296,7 +236,7 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                                 label="Professional Summary"
                                 placeholder="Write a brief professional summary..."
                                 rows={4}
-                                disabled={!isEditing || isSaving}
+                                disabled={isSaving}
                                 className={styles.formItem}
                             />
 
@@ -305,14 +245,14 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                                 label="Full Address"
                                 placeholder="Enter your complete address"
                                 icon={<FiMapPin />}
-                                disabled={!isEditing || isSaving}
+                                disabled={isSaving}
                                 className={styles.formItem}
                             />
                         </div>
                     </div>
                 </form>
             </FormProvider>
-        </div>
+        </SectionLayout>
     );
 };
 

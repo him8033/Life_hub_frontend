@@ -1,32 +1,21 @@
-.container {
-    padding: var(--spacing-4) 0;
-}
+/* src/styles/portfolio/sections/SkillsSection.module.css */
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--spacing-5);
-}
-
-.title {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    margin: 0;
-}
-
-.subtitle {
-    font-size: var(--text-sm);
-    color: var(--muted-foreground);
-    margin: var(--spacing-1) 0 0 0;
-}
+/* ============================================
+   FORM CARD
+   ============================================ */
 
 .formCard {
     padding: var(--spacing-4);
-    background: var(--muted);
+    background: var(--card);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border);
     margin-bottom: var(--spacing-5);
+    box-shadow: var(--shadow-sm);
+}
+
+.formCard:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
 }
 
 .formRow {
@@ -41,11 +30,47 @@
     justify-content: flex-end;
     gap: var(--spacing-2);
     padding-top: var(--spacing-3);
+    margin-top: var(--spacing-4);
     border-top: 1px solid var(--border);
 }
 
+/* ============================================
+   LEVEL PREVIEW
+   ============================================ */
+
+.levelPreview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+    padding: var(--spacing-2);
+    background: var(--muted);
+    border-radius: var(--radius-md);
+}
+
+.previewLabel {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+
+.levelText {
+    font-size: var(--text-xs);
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* ============================================
+   SKILLS LIST
+   ============================================ */
+
+.skillsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
 .categoryGroup {
-    margin-bottom: var(--spacing-5);
+    margin-bottom: var(--spacing-2);
 }
 
 .categoryTitle {
@@ -62,6 +87,10 @@
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: var(--spacing-2);
 }
+
+/* ============================================
+   SKILL CARD
+   ============================================ */
 
 .skillCard {
     background: var(--card);
@@ -92,10 +121,12 @@
     height: 32px;
     border-radius: var(--radius-sm);
     object-fit: cover;
+    flex-shrink: 0;
 }
 
 .skillIcon {
     font-size: var(--text-xl);
+    flex-shrink: 0;
 }
 
 .skillInfo {
@@ -107,6 +138,7 @@
     font-size: var(--text-sm);
     font-weight: 600;
     display: block;
+    color: var(--foreground);
 }
 
 .skillLevel {
@@ -114,9 +146,14 @@
     color: var(--muted-foreground);
 }
 
+/* ============================================
+   SKILL ACTIONS
+   ============================================ */
+
 .skillActions {
     display: flex;
     gap: 2px;
+    flex-shrink: 0;
 }
 
 .actionButton {
@@ -133,15 +170,24 @@
     transition: all 0.2s ease;
 }
 
-.actionButton:hover {
+.actionButton:hover:not(:disabled) {
     background: var(--accent);
     color: var(--primary);
+}
+
+.actionButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .featuredStar {
     color: #f59e0b;
     fill: #f59e0b;
 }
+
+/* ============================================
+   LEVEL BAR
+   ============================================ */
 
 .levelBar {
     display: flex;
@@ -154,6 +200,7 @@
     height: 4px;
     background: var(--border);
     border-radius: 2px;
+    transition: all 0.2s ease;
 }
 
 .levelDot.active {
@@ -164,6 +211,10 @@
     background: #f59e0b;
 }
 
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
 .emptyState {
     display: flex;
     flex-direction: column;
@@ -171,11 +222,32 @@
     gap: var(--spacing-3);
     padding: var(--spacing-8);
     color: var(--muted-foreground);
+    text-align: center;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--muted);
 }
 
+.emptyState svg {
+    color: var(--muted-foreground);
+}
+
+.emptyState p {
+    margin: 0;
+    font-size: var(--text-sm);
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
 .dark .formCard {
-    background: var(--gray-800);
-    border-color: var(--gray-700);
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+.dark .formCard:hover {
+    border-color: var(--primary);
 }
 
 .dark .skillCard {
@@ -183,30 +255,65 @@
     border-color: var(--gray-800);
 }
 
+.dark .skillCard:hover {
+    border-color: var(--primary);
+}
+
+.dark .actionButton {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+.dark .emptyState {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+.dark .levelPreview {
+    background: var(--gray-800);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
 @media (max-width: 768px) {
     .formRow {
         grid-template-columns: 1fr;
+        gap: var(--spacing-3);
     }
 
     .skillsGrid {
         grid-template-columns: 1fr;
     }
+
+    .skillCard {
+        padding: var(--spacing-3);
+    }
+
+    .formActions {
+        flex-direction: column;
+    }
+
+    .formActions button {
+        width: 100%;
+    }
 }
 
-.levelPreview {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-1);
-}
+@media (max-width: 480px) {
+    .skillHeader {
+        flex-wrap: wrap;
+    }
 
-.previewLabel {
-    font-size: var(--text-xs);
-    color: var(--muted-foreground);
-    font-weight: 500;
-}
+    .skillInfo {
+        flex: 1;
+        min-width: 120px;
+    }
 
-.levelText {
-    font-size: var(--text-xs);
-    color: var(--primary);
-    font-weight: 500;
+    .skillActions {
+        width: 100%;
+        justify-content: flex-end;
+        padding-top: var(--spacing-1);
+        border-top: 1px solid var(--border);
+    }
 }

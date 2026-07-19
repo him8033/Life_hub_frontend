@@ -1,19 +1,27 @@
+// src/components/portfolio/sections/CustomSectionsSection.jsx
+
 'use client';
 
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FiGrid, FiPlus, FiEdit2, FiTrash2, FiX, FiCheck, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import {
+    FiGrid, FiPlus, FiEdit2, FiTrash2, FiX, FiCheck,
+    FiChevronDown, FiChevronUp, FiArrowUp, FiArrowDown
+} from 'react-icons/fi';
+
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
 import {
-    useGetProfileCustomSectionsQuery, useCreateProfileCustomSectionMutation,
-    useUpdateProfileCustomSectionMutation, useDeleteProfileCustomSectionMutation,
+    useGetProfileCustomSectionsQuery,
+    useCreateProfileCustomSectionMutation,
+    useUpdateProfileCustomSectionMutation,
+    useDeleteProfileCustomSectionMutation,
     useReorderProfileCustomSectionsMutation,
 } from '@/services/api/portfolioApi';
 import { customSectionSchema } from '@/lib/validations/portfolio/sections/customSectionSchema';
@@ -37,9 +45,27 @@ const CustomSectionsSection = ({ snapshotId, onDataChange }) => {
 
     const methods = useForm({
         resolver: zodResolver(customSectionSchema),
-        defaultValues: { title: '', content: '' },
+        defaultValues: {
+            title: '',
+            content: ''
+        },
     });
     const { reset, handleSubmit, setValue } = methods;
+
+    const handleAdd = () => {
+        setEditingId(null);
+        reset({
+            title: '',
+            content: '',
+        });
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+    };
 
     const handleFormSubmit = async (formData) => {
         try {
@@ -60,12 +86,9 @@ const CustomSectionsSection = ({ snapshotId, onDataChange }) => {
                 await createSection({ snapshotId, data: payload }).unwrap();
                 showSnackbar('Section added', 'success', 3000);
             }
-            reset();
-            setEditingId(null);
-            setShowForm(false);
+            handleCancel();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -97,37 +120,31 @@ const CustomSectionsSection = ({ snapshotId, onDataChange }) => {
             showSnackbar('Deleted', 'success', 3000);
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
-        }
-        catch (error) {
+        } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
         }
     };
 
     const handleMove = async (index, direction) => {
-        const list = [...sections]; const ti = index + direction;
-        if (ti < 0 || ti >= list.length)
-            return;
+        const list = [...sections];
+        const ti = index + direction;
+        if (ti < 0 || ti >= list.length) return;
 
         [list[index], list[ti]] = [list[ti], list[index]];
         try {
             await reorderSections({
                 snapshotId,
-                data: {
-                    order: list.map(s => s.profilecustomsection_id)
-                }
+                data: { order: list.map(s => s.profilecustomsection_id) }
             }).unwrap();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
-        }
-        catch (error) {
+        } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
         }
     };
@@ -140,32 +157,69 @@ const CustomSectionsSection = ({ snapshotId, onDataChange }) => {
         });
     };
 
-    const handleCancel = () => { reset(); setEditingId(null); setShowForm(false); };
-
-    if (isLoading) return <Loader text="Loading..." />;
+    if (isLoading) return null;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <div><h3 className={styles.title}>Custom Sections</h3><p className={styles.subtitle}>{sections.length} sections</p></div>
-                {!showForm && <Button variant="primary" size="sm" onClick={() => setShowForm(true)} icon={<FiPlus />}>Add Section</Button>}
-            </div>
-
+        <SectionLayout
+            title="Custom Sections"
+            subtitle={`${sections.length} section${sections.length !== 1 ? 's' : ''}`}
+            icon={FiGrid}
+            isLoading={isLoading}
+            isSaving={isSubmitting}
+            hasData={sections.length > 0}
+            onSave={handleAdd}
+            saveButtonText="Add Section"
+        >
+            {/* Form */}
             {showForm && (
                 <div className={styles.formCard}>
                     <FormProvider {...methods}>
                         <form onSubmit={handleSubmit(handleFormSubmit)}>
-                            <FormInput name="title" label="Section Title *" placeholder="e.g., Publications, Research" icon={<FiGrid />} required disabled={isSubmitting} />
-                            <FormTextarea name="content" label="Content (JSON or Text) *" placeholder='Enter content as JSON: {"key": "value"} or plain text' rows={6} required disabled={isSubmitting} description="You can enter JSON data or plain text. JSON will be stored as structured data." />
+                            <FormInput
+                                name="title"
+                                label="Section Title *"
+                                placeholder="e.g., Publications, Research"
+                                icon={<FiGrid />}
+                                required
+                                disabled={isSubmitting}
+                            />
+                            <FormTextarea
+                                name="content"
+                                label="Content (JSON or Text) *"
+                                placeholder='Enter content as JSON: {"key": "value"} or plain text'
+                                rows={6}
+                                required
+                                disabled={isSubmitting}
+                                description="You can enter JSON data or plain text. JSON will be stored as structured data."
+                            />
                             <div className={styles.formActions}>
-                                <Button type="button" variant="outline" size="sm" onClick={handleCancel} disabled={isSubmitting} icon={<FiX />}>Cancel</Button>
-                                <Button type="submit" variant="primary" size="sm" isLoading={isSubmitting} loadingText="Saving..." icon={<FiCheck />}>{editingId ? 'Update' : 'Add'}</Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleCancel}
+                                    disabled={isSubmitting}
+                                    icon={<FiX />}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    size="sm"
+                                    isLoading={isSubmitting}
+                                    loadingText="Saving..."
+                                    icon={<FiCheck />}
+                                >
+                                    {editingId ? 'Update' : 'Add'}
+                                </Button>
                             </div>
                         </form>
                     </FormProvider>
                 </div>
             )}
 
+            {/* Sections List */}
             {sections.length > 0 ? (
                 <div className={styles.list}>
                     {sections.map((section, index) => (
@@ -177,25 +231,67 @@ const CustomSectionsSection = ({ snapshotId, onDataChange }) => {
                                     <span>{section.title}</span>
                                 </div>
                                 <div className={styles.itemActions}>
-                                    <button className={styles.moveBtn} onClick={(e) => { e.stopPropagation(); handleMove(index, -1); }} disabled={index === 0}><FiChevronUp size={14} /></button>
-                                    <button className={styles.moveBtn} onClick={(e) => { e.stopPropagation(); handleMove(index, 1); }} disabled={index === sections.length - 1}><FiChevronDown size={14} /></button>
-                                    <button className={styles.actionBtn} onClick={(e) => { e.stopPropagation(); handleEdit(section); }}><FiEdit2 size={14} /></button>
-                                    <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={(e) => { e.stopPropagation(); handleDelete(section.profilecustomsection_id, section.title); }}><FiTrash2 size={14} /></button>
-                                    {expandedSections.has(section.profilecustomsection_id) ? <FiChevronUp size={14} /> : <FiChevronDown size={14} />}
+                                    <button
+                                        className={styles.moveBtn}
+                                        onClick={(e) => { e.stopPropagation(); handleMove(index, -1); }}
+                                        disabled={index === 0 || isSubmitting}
+                                    >
+                                        <FiArrowUp size={14} />
+                                    </button>
+                                    <button
+                                        className={styles.moveBtn}
+                                        onClick={(e) => { e.stopPropagation(); handleMove(index, 1); }}
+                                        disabled={index === sections.length - 1 || isSubmitting}
+                                    >
+                                        <FiArrowDown size={14} />
+                                    </button>
+                                    <button
+                                        className={styles.actionBtn}
+                                        onClick={(e) => { e.stopPropagation(); handleEdit(section); }}
+                                        disabled={isSubmitting}
+                                    >
+                                        <FiEdit2 size={14} />
+                                    </button>
+                                    <button
+                                        className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                                        onClick={(e) => { e.stopPropagation(); handleDelete(section.profilecustomsection_id, section.title); }}
+                                        disabled={isSubmitting}
+                                    >
+                                        <FiTrash2 size={14} />
+                                    </button>
+                                    {expandedSections.has(section.profilecustomsection_id) ?
+                                        <FiChevronUp size={14} /> :
+                                        <FiChevronDown size={14} />
+                                    }
                                 </div>
                             </div>
                             {expandedSections.has(section.profilecustomsection_id) && (
                                 <div className={styles.itemContent}>
-                                    <pre className={styles.contentJson}>{JSON.stringify(section.content, null, 2)}</pre>
+                                    <pre className={styles.contentJson}>
+                                        {JSON.stringify(section.content, null, 2)}
+                                    </pre>
                                 </div>
                             )}
                         </div>
                     ))}
                 </div>
             ) : (
-                <div className={styles.emptyState}><FiGrid size={32} /><p>No custom sections added</p></div>
+                !showForm && (
+                    <div className={styles.emptyState}>
+                        <FiGrid size={32} />
+                        <p>No custom sections added</p>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleAdd}
+                            icon={<FiPlus />}
+                        >
+                            Add your first section
+                        </Button>
+                    </div>
+                )
             )}
-        </div>
+        </SectionLayout>
     );
 };
 

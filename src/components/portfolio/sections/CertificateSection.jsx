@@ -1,14 +1,20 @@
+// src/components/portfolio/sections/CertificateSection.jsx
+
 'use client';
 
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FiAward, FiPlus, FiEdit2, FiTrash2, FiArrowUp, FiArrowDown, FiX, FiCheck, FiCalendar, FiImage, FiLink, FiHash, FiTrash2 as FiTrash } from 'react-icons/fi';
+import {
+    FiAward, FiPlus, FiEdit2, FiTrash2, FiArrowUp, FiArrowDown,
+    FiX, FiCheck, FiCalendar, FiImage, FiLink, FiHash, FiTrash2 as FiTrash
+} from 'react-icons/fi';
+
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -20,7 +26,7 @@ import {
     useReorderProfileCertificatesMutation,
 } from '@/services/api/portfolioApi';
 import { certificateSchema } from '@/lib/validations/portfolio/sections/certificateSchema';
-import styles from '@/styles/portfolio/sections/EducationSection.module.css';
+import styles from '@/styles/portfolio/sections/CertificateSection.module.css';
 
 const CertificateSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
@@ -40,8 +46,46 @@ const CertificateSection = ({ snapshotId, onDataChange }) => {
     const certificates = data?.data || [];
     const isSubmitting = isCreating || isUpdating;
 
-    const methods = useForm({ resolver: zodResolver(certificateSchema), defaultValues: { title: '', issued_by: '', issued_date: '', expiry_date: '', credential_id: '', certificate_url: '', description: '' } });
+    const methods = useForm({
+        resolver: zodResolver(certificateSchema),
+        defaultValues: {
+            title: '',
+            issued_by: '',
+            issued_date: '',
+            expiry_date: '',
+            credential_id: '',
+            certificate_url: '',
+            description: ''
+        }
+    });
+
     const { reset, handleSubmit, setValue } = methods;
+
+    const handleAdd = () => {
+        setEditingId(null);
+        reset({
+            title: '',
+            issued_by: '',
+            issued_date: '',
+            expiry_date: '',
+            credential_id: '',
+            certificate_url: '',
+            description: ''
+        });
+        setCertFile(null);
+        setCertPreview('');
+        setRemoveImage(false);
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+        setCertFile(null);
+        setCertPreview('');
+        setRemoveImage(false);
+    };
 
     const handleFormSubmit = async (formData) => {
         try {
@@ -64,15 +108,9 @@ const CertificateSection = ({ snapshotId, onDataChange }) => {
                 showSnackbar('Certificate added', 'success', 3000);
             }
 
-            reset();
-            setEditingId(null);
-            setShowForm(false);
-            setCertFile(null);
-            setCertPreview('');
-            setRemoveImage(false);
+            handleCancel();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -89,138 +127,286 @@ const CertificateSection = ({ snapshotId, onDataChange }) => {
         setValue('credential_id', cert.credential_id || '');
         setValue('certificate_url', cert.certificate_url || '');
         setValue('description', cert.description || '');
-        if (cert.image_url)
-            setCertPreview(cert.image_url);
+        if (cert.image_url) setCertPreview(cert.image_url);
         setEditingId(cert.profilecertificate_id);
         setShowForm(true);
     };
 
     const handleDelete = async (certId, title) => {
-        const ok = await confirm({ title: 'Delete Certificate', message: `Delete "${title}"?`, confirmText: 'Delete', cancelText: 'Cancel', type: 'danger' });
+        const ok = await confirm({
+            title: 'Delete Certificate',
+            message: `Delete "${title}"?`,
+            confirmText: 'Delete',
+            cancelText: 'Cancel',
+            type: 'danger'
+        });
         if (!ok) return;
         try {
             await deleteCert(certId).unwrap();
             showSnackbar('Deleted', 'success', 3000);
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
-        }
-        catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
-    };
-
-    const handleMove = async (index, dir) => {
-        const list = [...certificates]; const ti = index + dir;
-        if (ti < 0 || ti >= list.length)
-            return;
-
-        [list[index], list[ti]] = [list[ti], list[index]];
-        try {
-            await reorderCert({
-                snapshotId, data: { order: list.map(c => c.profilecertificate_id) }
-            }).unwrap();
-            refetch();
-
-            // NEW: Notify parent to refresh preview
-            if (onDataChange) {
-                onDataChange();
-            }
-        }
-        catch (error) {
+        } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
         }
     };
 
-    const handleCancel = () => {
-        reset();
-        setEditingId(null);
-        setShowForm(false);
-        setCertFile(null);
-        setCertPreview('');
-        setRemoveImage(false);
+    const handleMove = async (index, dir) => {
+        const list = [...certificates];
+        const ti = index + dir;
+        if (ti < 0 || ti >= list.length) return;
+
+        [list[index], list[ti]] = [list[ti], list[index]];
+        try {
+            await reorderCert({
+                snapshotId,
+                data: { order: list.map(c => c.profilecertificate_id) }
+            }).unwrap();
+            refetch();
+
+            if (onDataChange) {
+                onDataChange();
+            }
+        } catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000);
+        }
     };
+
     const formatDate = (d) => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : '';
 
-    if (isLoading) return <Loader text="Loading..." />;
+    if (isLoading) return null;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.header}><div><h3 className={styles.title}>Certificates</h3><p className={styles.subtitle}>Add your certifications</p></div>
-                {!showForm && <Button variant="primary" size="sm" onClick={() => setShowForm(true)} icon={<FiPlus />}>Add Certificate</Button>}
-            </div>
-
+        <SectionLayout
+            title="Certificates"
+            subtitle="Add your certifications"
+            icon={FiAward}
+            isLoading={isLoading}
+            isSaving={isSubmitting}
+            hasData={certificates.length > 0}
+            onSave={handleAdd}
+            saveButtonText="Add Certificate"
+        >
+            {/* Form */}
             {showForm && (
                 <div className={styles.formCard}>
                     <FormProvider {...methods}>
                         <form onSubmit={handleSubmit(handleFormSubmit)}>
                             <div className={styles.formRow}>
-                                <FormInput name="title" label="Title *" placeholder="e.g., AWS Solutions Architect" icon={<FiAward />} required disabled={isSubmitting} />
-                                <FormInput name="issued_by" label="Issued By" placeholder="e.g., Amazon Web Services" disabled={isSubmitting} />
+                                <FormInput
+                                    name="title"
+                                    label="Title *"
+                                    placeholder="e.g., AWS Solutions Architect"
+                                    icon={<FiAward />}
+                                    required
+                                    disabled={isSubmitting}
+                                />
+                                <FormInput
+                                    name="issued_by"
+                                    label="Issued By"
+                                    placeholder="e.g., Amazon Web Services"
+                                    disabled={isSubmitting}
+                                />
                             </div>
                             <div className={styles.formRow}>
-                                <FormInput name="issued_date" label="Issue Date" type="date" icon={<FiCalendar />} disabled={isSubmitting} />
-                                <FormInput name="expiry_date" label="Expiry Date" type="date" icon={<FiCalendar />} disabled={isSubmitting} />
+                                <FormInput
+                                    name="issued_date"
+                                    label="Issue Date"
+                                    type="date"
+                                    icon={<FiCalendar />}
+                                    disabled={isSubmitting}
+                                />
+                                <FormInput
+                                    name="expiry_date"
+                                    label="Expiry Date"
+                                    type="date"
+                                    icon={<FiCalendar />}
+                                    disabled={isSubmitting}
+                                />
                             </div>
                             <div className={styles.formRow}>
-                                <FormInput name="credential_id" label="Credential ID" placeholder="e.g., AWS-12345" icon={<FiHash />} disabled={isSubmitting} />
-                                <FormInput name="certificate_url" label="Verification URL" placeholder="https://..." icon={<FiLink />} disabled={isSubmitting} />
+                                <FormInput
+                                    name="credential_id"
+                                    label="Credential ID"
+                                    placeholder="e.g., AWS-12345"
+                                    icon={<FiHash />}
+                                    disabled={isSubmitting}
+                                />
+                                <FormInput
+                                    name="certificate_url"
+                                    label="Verification URL"
+                                    placeholder="https://..."
+                                    icon={<FiLink />}
+                                    disabled={isSubmitting}
+                                />
                             </div>
-                            <FormTextarea name="description" label="Description" rows={2} disabled={isSubmitting} />
+                            <FormTextarea
+                                name="description"
+                                label="Description"
+                                rows={2}
+                                disabled={isSubmitting}
+                            />
 
-                            <div style={{ marginTop: 'var(--spacing-4)' }}>
-                                <label className={styles.imageLabel}><FiImage /> Certificate Image</label>
+                            {/* Certificate Image */}
+                            <div className={styles.imageSection}>
+                                <label className={styles.imageLabel}>
+                                    <FiImage /> Certificate Image
+                                </label>
                                 {editingId && certPreview && !certFile && !removeImage && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-2)' }}>
-                                        <img src={certPreview} alt="" style={{ width: 80, height: 60, objectFit: 'cover', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
-                                        <button type="button" onClick={() => { setCertFile(null); setCertPreview(''); setRemoveImage(true); }} style={{ color: 'var(--destructive)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, fontSize: 'var(--text-xs)' }}><FiTrash size={12} /> Remove</button>
+                                    <div className={styles.existingImage}>
+                                        <img src={certPreview} alt="" className={styles.imagePreview} />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setCertFile(null);
+                                                setCertPreview('');
+                                                setRemoveImage(true);
+                                            }}
+                                            className={styles.removeImageBtn}
+                                            disabled={isSubmitting}
+                                        >
+                                            <FiTrash size={12} /> Remove
+                                        </button>
                                     </div>
                                 )}
                                 {(!editingId || !certPreview || certFile || removeImage) && (
-                                    <SquareImageUpload onImageSelect={(f, url) => { setCertFile(f); setCertPreview(url); setRemoveImage(false); }} onRemove={() => { setCertFile(null); setCertPreview(''); }} previewUrl={certPreview} disabled={isSubmitting} maxSizeMB={3} label="Upload Certificate" size="small" enableCrop aspectRatio={4 / 3} />
+                                    <SquareImageUpload
+                                        onImageSelect={(f, url) => {
+                                            setCertFile(f);
+                                            setCertPreview(url);
+                                            setRemoveImage(false);
+                                        }}
+                                        onRemove={() => {
+                                            setCertFile(null);
+                                            setCertPreview('');
+                                        }}
+                                        previewUrl={certPreview}
+                                        disabled={isSubmitting}
+                                        maxSizeMB={3}
+                                        label="Upload Certificate"
+                                        size="small"
+                                        enableCrop
+                                        aspectRatio={4 / 3}
+                                    />
                                 )}
                             </div>
 
                             <div className={styles.formActions}>
-                                <Button type="button" variant="outline" size="sm" onClick={handleCancel} disabled={isSubmitting} icon={<FiX />}>Cancel</Button>
-                                <Button type="submit" variant="primary" size="sm" isLoading={isSubmitting} loadingText="Saving..." icon={<FiCheck />}>{editingId ? 'Update' : 'Add'}</Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleCancel}
+                                    disabled={isSubmitting}
+                                    icon={<FiX />}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    size="sm"
+                                    isLoading={isSubmitting}
+                                    loadingText="Saving..."
+                                    icon={<FiCheck />}
+                                >
+                                    {editingId ? 'Update' : 'Add'}
+                                </Button>
                             </div>
                         </form>
                     </FormProvider>
                 </div>
             )}
 
+            {/* Certificate List */}
             {certificates.length > 0 ? (
                 <div className={styles.list}>
                     {certificates.map((cert, i) => (
                         <div key={cert.profilecertificate_id} className={styles.item}>
                             <div className={styles.orderControls}>
-                                <button className={styles.orderButton} onClick={() => handleMove(i, -1)} disabled={i === 0}><FiArrowUp size={10} /></button>
+                                <button
+                                    className={styles.orderButton}
+                                    onClick={() => handleMove(i, -1)}
+                                    disabled={i === 0 || isSubmitting}
+                                >
+                                    <FiArrowUp size={10} />
+                                </button>
                                 <span className={styles.orderNumber}>{i + 1}</span>
-                                <button className={styles.orderButton} onClick={() => handleMove(i, 1)} disabled={i === certificates.length - 1}><FiArrowDown size={10} /></button>
+                                <button
+                                    className={styles.orderButton}
+                                    onClick={() => handleMove(i, 1)}
+                                    disabled={i === certificates.length - 1 || isSubmitting}
+                                >
+                                    <FiArrowDown size={10} />
+                                </button>
                             </div>
-                            <div className={styles.icon}>{cert.image_url ? <img src={cert.image_url} alt="" className={styles.logoImg} /> : <FiAward />}</div>
+
+                            <div className={styles.icon}>
+                                {cert.image_url ? (
+                                    <img src={cert.image_url} alt="" className={styles.logoImg} />
+                                ) : (
+                                    <FiAward />
+                                )}
+                            </div>
+
                             <div className={styles.info}>
                                 <h4 className={styles.degree}>{cert.title}</h4>
                                 <p className={styles.institution}>{cert.issued_by || '—'}</p>
                                 <div className={styles.meta}>
-                                    {(cert.issued_date || cert.expiry_date) && <span className={styles.date}><FiCalendar size={12} />{formatDate(cert.issued_date)} {cert.expiry_date ? `→ ${formatDate(cert.expiry_date)}` : ''}</span>}
-                                    {cert.credential_id && <span className={styles.score}>{cert.credential_id}</span>}
+                                    {(cert.issued_date || cert.expiry_date) && (
+                                        <span className={styles.date}>
+                                            <FiCalendar size={12} />
+                                            {formatDate(cert.issued_date)}
+                                            {cert.expiry_date ? ` → ${formatDate(cert.expiry_date)}` : ''}
+                                        </span>
+                                    )}
+                                    {cert.credential_id && (
+                                        <span className={styles.score}>{cert.credential_id}</span>
+                                    )}
                                 </div>
-                                {cert.certificate_url && <a href={cert.certificate_url} target="_blank" rel="noopener noreferrer" className={styles.linkUrl}>Verify Credential ↗</a>}
+                                {cert.certificate_url && (
+                                    <a href={cert.certificate_url} target="_blank" rel="noopener noreferrer" className={styles.linkUrl}>
+                                        Verify Credential ↗
+                                    </a>
+                                )}
                             </div>
+
                             <div className={styles.actions}>
-                                <button className={styles.actionButton} onClick={() => handleEdit(cert)}><FiEdit2 size={14} /></button>
-                                <button className={`${styles.actionButton} ${styles.deleteButton}`} onClick={() => handleDelete(cert.profilecertificate_id, cert.title)}><FiTrash2 size={14} /></button>
+                                <button
+                                    className={styles.actionButton}
+                                    onClick={() => handleEdit(cert)}
+                                    disabled={isSubmitting}
+                                    title="Edit"
+                                >
+                                    <FiEdit2 size={14} />
+                                </button>
+                                <button
+                                    className={`${styles.actionButton} ${styles.deleteButton}`}
+                                    onClick={() => handleDelete(cert.profilecertificate_id, cert.title)}
+                                    disabled={isSubmitting}
+                                    title="Delete"
+                                >
+                                    <FiTrash2 size={14} />
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <div className={styles.emptyState}><FiAward size={32} /><p>No certificates added</p></div>
+                !showForm && (
+                    <div className={styles.emptyState}>
+                        <FiAward size={32} />
+                        <p>No certificates added</p>
+                        <Button variant="outline" size="sm" onClick={handleAdd} icon={<FiPlus />}>
+                            Add your first certificate
+                        </Button>
+                    </div>
+                )
             )}
-        </div>
+        </SectionLayout>
     );
 };
 

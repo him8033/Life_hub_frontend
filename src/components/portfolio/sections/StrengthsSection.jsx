@@ -1,3 +1,5 @@
+// src/components/portfolio/sections/StrengthsSection.jsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -10,7 +12,7 @@ import {
 
 import FormInput from '@/components/common/forms/FormInput';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -31,11 +33,10 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState(null);
 
-    // API
     const { data, isLoading, refetch } = useGetStrengthsQuery(snapshotId, { skip: !snapshotId });
     const [createStrength, { isLoading: isCreating }] = useCreateStrengthMutation();
     const [updateStrength, { isLoading: isUpdating }] = useUpdateStrengthMutation();
-    const [deleteStrength, { isLoading: isDeleting }] = useDeleteStrengthMutation();
+    const [deleteStrength] = useDeleteStrengthMutation();
     const [reorderStrengths] = useReorderStrengthsMutation();
 
     const strengths = data?.data || [];
@@ -50,6 +51,18 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
 
     const { reset, handleSubmit, setValue } = methods;
 
+    const handleAdd = () => {
+        setEditingId(null);
+        reset({ title: '' });
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+    };
+
     const handleFormSubmit = async (formData) => {
         try {
             if (editingId) {
@@ -59,12 +72,9 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
                 await createStrength({ snapshotId, data: formData }).unwrap();
                 showSnackbar('Strength added', 'success', 3000);
             }
-            reset();
-            setEditingId(null);
-            setShowForm(false);
+            handleCancel();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -93,7 +103,6 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
             showSnackbar('Strength deleted', 'success', 3000);
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -116,7 +125,6 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
             }).unwrap();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -125,36 +133,19 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
         }
     };
 
-    const handleCancel = () => {
-        reset();
-        setEditingId(null);
-        setShowForm(false);
-    };
-
-    if (isLoading) return <Loader text="Loading strengths..." />;
+    if (isLoading) return null;
 
     return (
-        <div className={styles.container}>
-            {/* Header */}
-            <div className={styles.header}>
-                <div>
-                    <h3 className={styles.title}>Strengths</h3>
-                    <p className={styles.subtitle}>
-                        Highlight your key personal strengths and traits
-                    </p>
-                </div>
-                {!showForm && (
-                    <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => setShowForm(true)}
-                        icon={<FiPlus />}
-                    >
-                        Add Strength
-                    </Button>
-                )}
-            </div>
-
+        <SectionLayout
+            title="Strengths"
+            subtitle="Highlight your key personal strengths and traits"
+            icon={FiShield}
+            isLoading={isLoading}
+            isSaving={isSubmitting}
+            hasData={strengths.length > 0}
+            onSave={handleAdd}
+            saveButtonText="Add Strength"
+        >
             {/* Add/Edit Form */}
             {showForm && (
                 <div className={styles.formCard}>
@@ -204,23 +195,19 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
                 <div className={styles.strengthsGrid}>
                     {strengths.map((strength, index) => (
                         <div key={strength.profilestrength_id} className={styles.strengthCard}>
-                            {/* Order Badge */}
                             <span className={styles.orderBadge}>{index + 1}</span>
 
-                            {/* Shield Icon */}
                             <div className={styles.strengthIcon}>
                                 <FiShield size={20} />
                             </div>
 
-                            {/* Content */}
                             <span className={styles.strengthTitle}>{strength.title}</span>
 
-                            {/* Actions */}
                             <div className={styles.strengthActions}>
                                 <button
                                     className={styles.actionButton}
                                     onClick={() => handleMove(index, -1)}
-                                    disabled={index === 0}
+                                    disabled={index === 0 || isSubmitting}
                                     title="Move up"
                                 >
                                     <FiArrowUp size={12} />
@@ -228,7 +215,7 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
                                 <button
                                     className={styles.actionButton}
                                     onClick={() => handleMove(index, 1)}
-                                    disabled={index === strengths.length - 1}
+                                    disabled={index === strengths.length - 1 || isSubmitting}
                                     title="Move down"
                                 >
                                     <FiArrowDown size={12} />
@@ -236,6 +223,7 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
                                 <button
                                     className={styles.actionButton}
                                     onClick={() => handleEdit(strength)}
+                                    disabled={isSubmitting}
                                     title="Edit"
                                 >
                                     <FiEdit2 size={12} />
@@ -243,6 +231,7 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
                                 <button
                                     className={`${styles.actionButton} ${styles.deleteButton}`}
                                     onClick={() => handleDelete(strength.profilestrength_id, strength.title)}
+                                    disabled={isSubmitting}
                                     title="Delete"
                                 >
                                     <FiTrash2 size={12} />
@@ -252,22 +241,22 @@ const StrengthsSection = ({ snapshotId, onDataChange }) => {
                     ))}
                 </div>
             ) : (
-                <div className={styles.emptyState}>
-                    <FiShield size={32} />
-                    <p>No strengths added yet</p>
-                    {!showForm && (
+                !showForm && (
+                    <div className={styles.emptyState}>
+                        <FiShield size={32} />
+                        <p>No strengths added yet</p>
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => setShowForm(true)}
+                            onClick={handleAdd}
                             icon={<FiPlus />}
                         >
                             Add your first strength
                         </Button>
-                    )}
-                </div>
+                    </div>
+                )
             )}
-        </div>
+        </SectionLayout>
     );
 };
 

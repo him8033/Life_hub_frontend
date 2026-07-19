@@ -1,18 +1,23 @@
+// src/components/portfolio/sections/SkillsSection.jsx
+
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FiCode, FiPlus, FiTrash2, FiStar, FiX, FiClock } from 'react-icons/fi';
+
 import FormSelect from '@/components/common/forms/FormSelect';
 import FormInput from '@/components/common/forms/FormInput';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
 import {
-    useGetProfileSkillsQuery, useCreateProfileSkillMutation,
-    useUpdateProfileSkillMutation, useDeleteProfileSkillMutation,
+    useGetProfileSkillsQuery,
+    useCreateProfileSkillMutation,
+    useUpdateProfileSkillMutation,
+    useDeleteProfileSkillMutation,
 } from '@/services/api/portfolioApi';
 import { useGetPublicMasterSkillsQuery } from '@/services/api/portfolioApi';
 import { profileSkillSchema } from '@/lib/validations/portfolio/sections/profileSkillSchema';
@@ -46,14 +51,26 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
         },
     });
 
-    const { reset, handleSubmit, setValue, watch } = methods;
+    const { reset, handleSubmit, watch } = methods;
     const selectedSkillId = watch('skill_id');
     const selectedLevel = watch('level');
 
-    console.log('Form values:', { selectedSkillId, selectedLevel, methods: methods.formState });
+    const handleAdd = () => {
+        reset({
+            skill_id: '',
+            level: 3,
+            years_of_experience: 0,
+            is_featured: 'false',
+        });
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        reset();
+        setShowForm(false);
+    };
 
     const handleAddSkill = async (formData) => {
-        console.log('handleAddSkill called with:', formData);
         try {
             const payload = {
                 skill_id: formData.skill_id,
@@ -61,20 +78,16 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
                 years_of_experience: parseFloat(formData.years_of_experience) || 0,
                 is_featured: formData.is_featured === 'true',
             };
-            console.log('Sending payload:', payload);
 
             await createSkill({ snapshotId, data: payload }).unwrap();
             showSnackbar('Skill added successfully', 'success', 3000);
-            reset();
-            setShowForm(false);
+            handleCancel();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
         } catch (error) {
-            console.error('Error adding skill:', error);
             showSnackbar(extractErrorMessage(error, 'Failed to add skill'), 'error', 5000);
         }
     };
@@ -85,7 +98,6 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
             showSnackbar(`"${skillName}" removed`, 'success', 3000);
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -99,7 +111,6 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
             await updateSkill({ skillId, data: { is_featured: !current } }).unwrap();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -113,22 +124,19 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
         return labels[level] || 'Intermediate';
     };
 
-    if (isLoading) return <Loader text="Loading skills..." />;
+    if (isLoading) return null;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <div>
-                    <h3 className={styles.title}>Skills</h3>
-                    <p className={styles.subtitle}>{profileSkills.length} skills added</p>
-                </div>
-                {!showForm && (
-                    <Button variant="primary" size="sm" onClick={() => setShowForm(true)} icon={<FiPlus />}>
-                        Add Skill
-                    </Button>
-                )}
-            </div>
-
+        <SectionLayout
+            title="Skills"
+            subtitle={`${profileSkills.length} skill${profileSkills.length !== 1 ? 's' : ''} added`}
+            icon={FiCode}
+            isLoading={isLoading}
+            isSaving={isSubmitting}
+            hasData={profileSkills.length > 0}
+            onSave={handleAdd}
+            saveButtonText="Add Skill"
+        >
             {/* Add Skill Form */}
             {showForm && (
                 <div className={styles.formCard}>
@@ -140,7 +148,7 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
                                     label="Select Skill *"
                                     options={availableSkills.map(s => ({
                                         value: s.masterskill_id,
-                                        label: `${s.icon || ''} ${s.name} (${s.category_name})`,
+                                        label: `${s.icon || ''} ${s.name} (${s.category_name || 'Uncategorized'})`,
                                     }))}
                                     placeholder="Search and select a skill..."
                                     required
@@ -185,7 +193,6 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
                                             ]}
                                             disabled={isSubmitting}
                                         />
-                                        {/* Level Preview */}
                                         <div className={styles.levelPreview}>
                                             <label className={styles.previewLabel}>Preview</label>
                                             <div className={styles.levelBar}>
@@ -208,7 +215,7 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => { reset(); setShowForm(false); }}
+                                    onClick={handleCancel}
                                     disabled={isSubmitting}
                                     icon={<FiX />}
                                 >
@@ -265,6 +272,7 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
                                                     className={styles.actionButton}
                                                     onClick={() => handleToggleFeatured(skill.profileskill_id, skill.is_featured)}
                                                     title={skill.is_featured ? 'Unfeature' : 'Feature'}
+                                                    disabled={isSubmitting}
                                                 >
                                                     <FiStar size={12} className={skill.is_featured ? styles.featuredStar : ''} />
                                                 </button>
@@ -272,12 +280,12 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
                                                     className={styles.actionButton}
                                                     onClick={() => handleRemove(skill.profileskill_id, skill.skill_name)}
                                                     title="Remove"
+                                                    disabled={isSubmitting}
                                                 >
                                                     <FiTrash2 size={12} />
                                                 </button>
                                             </div>
                                         </div>
-                                        {/* Level Bar */}
                                         <div className={styles.levelBar}>
                                             {[1, 2, 3, 4, 5].map(lvl => (
                                                 <div
@@ -293,17 +301,17 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
                     ))}
                 </div>
             ) : (
-                <div className={styles.emptyState}>
-                    <FiCode size={32} />
-                    <p>No skills added yet</p>
-                    {!showForm && (
-                        <Button variant="outline" size="sm" onClick={() => setShowForm(true)} icon={<FiPlus />}>
+                !showForm && (
+                    <div className={styles.emptyState}>
+                        <FiCode size={32} />
+                        <p>No skills added yet</p>
+                        <Button variant="outline" size="sm" onClick={handleAdd} icon={<FiPlus />}>
                             Add your first skill
                         </Button>
-                    )}
-                </div>
+                    </div>
+                )
             )}
-        </div>
+        </SectionLayout>
     );
 };
 

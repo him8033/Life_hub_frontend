@@ -1,3 +1,5 @@
+// src/components/portfolio/sections/LanguagesSection.jsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -10,7 +12,7 @@ import {
 
 import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -46,12 +48,11 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState(null);
 
-    // API
     const { data, isLoading, refetch } = useGetProfileLanguagesQuery(snapshotId, { skip: !snapshotId });
     const { data: masterLanguagesData } = useGetPublicMasterLanguagesQuery();
     const [createLanguage, { isLoading: isCreating }] = useCreateProfileLanguageMutation();
     const [updateLanguage, { isLoading: isUpdating }] = useUpdateProfileLanguageMutation();
-    const [deleteLanguage, { isLoading: isDeleting }] = useDeleteProfileLanguageMutation();
+    const [deleteLanguage] = useDeleteProfileLanguageMutation();
     const [reorderLanguages] = useReorderProfileLanguagesMutation();
 
     const languages = data?.data || [];
@@ -77,6 +78,21 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
 
     const { reset, handleSubmit, setValue } = methods;
 
+    const handleAdd = () => {
+        setEditingId(null);
+        reset({
+            language_id: '',
+            proficiency: '',
+        });
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+    };
+
     const handleFormSubmit = async (formData) => {
         try {
             if (editingId) {
@@ -86,12 +102,9 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
                 await createLanguage({ snapshotId, data: formData }).unwrap();
                 showSnackbar('Language added', 'success', 3000);
             }
-            reset();
-            setEditingId(null);
-            setShowForm(false);
+            handleCancel();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -122,7 +135,6 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
             showSnackbar('Language removed', 'success', 3000);
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -145,7 +157,6 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
             }).unwrap();
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -154,42 +165,25 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
         }
     };
 
-    const handleCancel = () => {
-        reset();
-        setEditingId(null);
-        setShowForm(false);
-    };
-
     const getProficiencyColor = (proficiency) => {
         return proficiencyColors[proficiency] || '#94a3b8';
     };
 
-    if (isLoading) return <Loader text="Loading languages..." />;
+    if (isLoading) return null;
 
     return (
-        <div className={styles.container}>
-            {/* Header */}
-            <div className={styles.header}>
-                <div>
-                    <h3 className={styles.title}>Languages</h3>
-                    <p className={styles.subtitle}>
-                        Add languages you know with proficiency levels
-                    </p>
-                </div>
-                {!showForm && (
-                    <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => setShowForm(true)}
-                        icon={<FiPlus />}
-                        disabled={availableLanguages.length === 0}
-                    >
-                        Add Language
-                    </Button>
-                )}
-            </div>
-
-            {/* Add/Edit Form */}
+        <SectionLayout
+            title="Languages"
+            subtitle="Add languages you know with proficiency levels"
+            icon={FiFlag}
+            isLoading={isLoading}
+            isSaving={isSubmitting}
+            hasData={languages.length > 0}
+            onSave={handleAdd}
+            saveButtonText="Add Language"
+            isDisabled={availableLanguages.length === 0 && !editingId}
+        >
+            {/* Form */}
             {showForm && (
                 <div className={styles.formCard}>
                     <FormProvider {...methods}>
@@ -244,12 +238,11 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
                 <div className={styles.languagesList}>
                     {languages.map((language, index) => (
                         <div key={language.profilelanguage_id} className={styles.languageItem}>
-                            {/* Order Controls */}
                             <div className={styles.orderControls}>
                                 <button
                                     className={styles.orderButton}
                                     onClick={() => handleMove(index, -1)}
-                                    disabled={index === 0}
+                                    disabled={index === 0 || isSubmitting}
                                     title="Move up"
                                 >
                                     <FiArrowUp size={10} />
@@ -258,19 +251,17 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
                                 <button
                                     className={styles.orderButton}
                                     onClick={() => handleMove(index, 1)}
-                                    disabled={index === languages.length - 1}
+                                    disabled={index === languages.length - 1 || isSubmitting}
                                     title="Move down"
                                 >
                                     <FiArrowDown size={10} />
                                 </button>
                             </div>
 
-                            {/* Language Flag Icon */}
                             <div className={styles.languageIcon}>
                                 <FiFlag />
                             </div>
 
-                            {/* Language Info */}
                             <div className={styles.languageInfo}>
                                 <div className={styles.languageName}>
                                     {language.language_name}
@@ -292,11 +283,11 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
                                 </div>
                             </div>
 
-                            {/* Actions */}
                             <div className={styles.languageActions}>
                                 <button
                                     className={styles.actionButton}
                                     onClick={() => handleEdit(language)}
+                                    disabled={isSubmitting}
                                     title="Edit"
                                 >
                                     <FiEdit2 size={14} />
@@ -304,6 +295,7 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
                                 <button
                                     className={`${styles.actionButton} ${styles.deleteButton}`}
                                     onClick={() => handleDelete(language.profilelanguage_id, language.language_name)}
+                                    disabled={isSubmitting}
                                     title="Delete"
                                 >
                                     <FiTrash2 size={14} />
@@ -313,22 +305,24 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
                     ))}
                 </div>
             ) : (
-                <div className={styles.emptyState}>
-                    <FiFlag size={32} />
-                    <p>No languages added yet</p>
-                    {!showForm && masterLanguages.length > 0 && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setShowForm(true)}
-                            icon={<FiPlus />}
-                        >
-                            Add your first language
-                        </Button>
-                    )}
-                </div>
+                !showForm && (
+                    <div className={styles.emptyState}>
+                        <FiFlag size={32} />
+                        <p>No languages added yet</p>
+                        {masterLanguages.length > 0 && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleAdd}
+                                icon={<FiPlus />}
+                            >
+                                Add your first language
+                            </Button>
+                        )}
+                    </div>
+                )
             )}
-        </div>
+        </SectionLayout>
     );
 };
 

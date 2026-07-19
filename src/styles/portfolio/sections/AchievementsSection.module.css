@@ -1,37 +1,21 @@
-/* AchievementsSection.module.css */
+/* src/styles/portfolio/sections/AchievementsSection.module.css */
 
-.container {
-    padding: var(--spacing-4) 0;
-}
+/* ============================================
+   FORM CARD
+   ============================================ */
 
-/* Header */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--spacing-5);
-}
-
-.title {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    color: var(--foreground);
-    margin: 0;
-}
-
-.subtitle {
-    font-size: var(--text-sm);
-    color: var(--muted-foreground);
-    margin: var(--spacing-1) 0 0 0;
-}
-
-/* Form Card */
 .formCard {
     padding: var(--spacing-4);
-    background: var(--muted);
+    background: var(--card);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border);
     margin-bottom: var(--spacing-5);
+    box-shadow: var(--shadow-sm);
+}
+
+.formCard:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
 }
 
 .formActions {
@@ -43,12 +27,19 @@
     border-top: 1px solid var(--border);
 }
 
-/* List */
+/* ============================================
+   LIST
+   ============================================ */
+
 .list {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-2);
 }
+
+/* ============================================
+   ITEM
+   ============================================ */
 
 .item {
     display: flex;
@@ -66,7 +57,10 @@
     box-shadow: var(--shadow-sm);
 }
 
-/* Order Controls */
+/* ============================================
+   ORDER CONTROLS
+   ============================================ */
+
 .orderControls {
     display: flex;
     flex-direction: column;
@@ -80,20 +74,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     padding: 0;
     background: none;
-    border: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
     color: var(--muted-foreground);
     cursor: pointer;
-    border-radius: var(--radius-sm);
     transition: all 0.2s ease;
 }
 
 .orderButton:hover:not(:disabled) {
     background: var(--accent);
     color: var(--primary);
+    border-color: var(--primary);
 }
 
 .orderButton:disabled {
@@ -105,11 +100,14 @@
     font-size: 10px;
     font-weight: 600;
     color: var(--muted-foreground);
-    min-width: 16px;
+    min-width: 20px;
     text-align: center;
 }
 
-/* Item Icon */
+/* ============================================
+   ITEM ICON
+   ============================================ */
+
 .itemIcon {
     display: flex;
     align-items: center;
@@ -122,7 +120,10 @@
     flex-shrink: 0;
 }
 
-/* Item Content */
+/* ============================================
+   ITEM CONTENT
+   ============================================ */
+
 .itemContent {
     flex: 1;
     min-width: 0;
@@ -142,19 +143,23 @@
     line-height: 1.5;
 }
 
-/* Item Actions */
+/* ============================================
+   ITEM ACTIONS
+   ============================================ */
+
 .itemActions {
     display: flex;
     gap: var(--spacing-1);
     flex-shrink: 0;
+    padding-top: var(--spacing-1);
 }
 
 .actionButton {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     padding: 0;
     background: var(--muted);
     border: 1px solid var(--border);
@@ -164,19 +169,27 @@
     transition: all 0.2s ease;
 }
 
-.actionButton:hover {
+.actionButton:hover:not(:disabled) {
     background: var(--accent);
     color: var(--primary);
     border-color: var(--primary);
 }
 
-.deleteButton:hover {
+.actionButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.deleteButton:hover:not(:disabled) {
     background: color-mix(in srgb, var(--destructive) 10%, transparent);
     color: var(--destructive);
     border-color: var(--destructive);
 }
 
-/* Empty State */
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
 .emptyState {
     display: flex;
     flex-direction: column;
@@ -185,6 +198,13 @@
     padding: var(--spacing-8);
     color: var(--muted-foreground);
     text-align: center;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--muted);
+}
+
+.emptyState svg {
+    color: var(--muted-foreground);
 }
 
 .emptyState p {
@@ -192,10 +212,17 @@
     font-size: var(--text-sm);
 }
 
-/* Dark Mode */
+/* ============================================
+   DARK MODE
+   ============================================ */
+
 .dark .formCard {
-    background: var(--gray-800);
-    border-color: var(--gray-700);
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+.dark .formCard:hover {
+    border-color: var(--primary);
 }
 
 .dark .item {
@@ -208,7 +235,7 @@
 }
 
 .dark .itemIcon {
-    background: color-mix(in srgb, #f59e0b 15%, transparent);
+    background: color-mix(in srgb, #f59e0b 15%, var(--gray-900));
 }
 
 .dark .actionButton {
@@ -216,7 +243,20 @@
     border-color: var(--gray-700);
 }
 
-/* Responsive */
+.dark .orderButton {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+}
+
+.dark .emptyState {
+    background: var(--gray-900);
+    border-color: var(--gray-800);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
 @media (max-width: 768px) {
     .item {
         flex-wrap: wrap;
@@ -229,5 +269,31 @@
         justify-content: flex-end;
         padding-top: var(--spacing-2);
         border-top: 1px solid var(--border);
+    }
+
+    .formActions {
+        flex-direction: column;
+    }
+
+    .formActions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .itemIcon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .itemActions {
+        justify-content: flex-start;
+        border-top: none;
+        padding-top: 0;
     }
 }

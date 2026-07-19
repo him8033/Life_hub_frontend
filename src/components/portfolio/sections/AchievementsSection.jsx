@@ -1,3 +1,5 @@
+// src/components/portfolio/sections/AchievementsSection.jsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -11,7 +13,7 @@ import {
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
 import Button from '@/components/common/buttons/Button';
-import Loader from '@/components/common/Loader';
+import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -32,11 +34,10 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState(null);
 
-    // API
     const { data, isLoading, refetch } = useGetAchievementsQuery(snapshotId, { skip: !snapshotId });
     const [createAchievement, { isLoading: isCreating }] = useCreateAchievementMutation();
     const [updateAchievement, { isLoading: isUpdating }] = useUpdateAchievementMutation();
-    const [deleteAchievement, { isLoading: isDeleting }] = useDeleteAchievementMutation();
+    const [deleteAchievement] = useDeleteAchievementMutation();
     const [reorderAchievements] = useReorderAchievementsMutation();
 
     const achievements = data?.data || [];
@@ -52,6 +53,21 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
 
     const { reset, handleSubmit, setValue } = methods;
 
+    const handleAdd = () => {
+        setEditingId(null);
+        reset({
+            title: '',
+            description: '',
+        });
+        setShowForm(true);
+    };
+
+    const handleCancel = () => {
+        reset();
+        setEditingId(null);
+        setShowForm(false);
+    };
+
     const handleFormSubmit = async (formData) => {
         try {
             if (editingId) {
@@ -61,13 +77,9 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
                 await createAchievement({ snapshotId, data: formData }).unwrap();
                 showSnackbar('Achievement added', 'success', 3000);
             }
-            reset();
-            setEditingId(null);
-            setShowForm(false);
+            handleCancel();
             refetch();
 
-
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -97,7 +109,6 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
             showSnackbar('Achievement deleted', 'success', 3000);
             refetch();
 
-            // NEW: Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -119,8 +130,7 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
                 data: { order: newItems.map(item => item.profileachievement_id) },
             }).unwrap();
             refetch();
-            
-            // NEW: Notify parent to refresh preview
+
             if (onDataChange) {
                 onDataChange();
             }
@@ -129,37 +139,20 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
         }
     };
 
-    const handleCancel = () => {
-        reset();
-        setEditingId(null);
-        setShowForm(false);
-    };
-
-    if (isLoading) return <Loader text="Loading achievements..." />;
+    if (isLoading) return null;
 
     return (
-        <div className={styles.container}>
-            {/* Header */}
-            <div className={styles.header}>
-                <div>
-                    <h3 className={styles.title}>Achievements</h3>
-                    <p className={styles.subtitle}>
-                        Add awards, honors, and accomplishments
-                    </p>
-                </div>
-                {!showForm && (
-                    <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => setShowForm(true)}
-                        icon={<FiPlus />}
-                    >
-                        Add Achievement
-                    </Button>
-                )}
-            </div>
-
-            {/* Add/Edit Form */}
+        <SectionLayout
+            title="Achievements"
+            subtitle="Add awards, honors, and accomplishments"
+            icon={FiAward}
+            isLoading={isLoading}
+            isSaving={isSubmitting}
+            hasData={achievements.length > 0}
+            onSave={handleAdd}
+            saveButtonText="Add Achievement"
+        >
+            {/* Form */}
             {showForm && (
                 <div className={styles.formCard}>
                     <FormProvider {...methods}>
@@ -212,12 +205,11 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
                 <div className={styles.list}>
                     {achievements.map((achievement, index) => (
                         <div key={achievement.profileachievement_id} className={styles.item}>
-                            {/* Order Controls */}
                             <div className={styles.orderControls}>
                                 <button
                                     className={styles.orderButton}
                                     onClick={() => handleMove(index, -1)}
-                                    disabled={index === 0}
+                                    disabled={index === 0 || isSubmitting}
                                     title="Move up"
                                 >
                                     <FiArrowUp size={10} />
@@ -226,19 +218,17 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
                                 <button
                                     className={styles.orderButton}
                                     onClick={() => handleMove(index, 1)}
-                                    disabled={index === achievements.length - 1}
+                                    disabled={index === achievements.length - 1 || isSubmitting}
                                     title="Move down"
                                 >
                                     <FiArrowDown size={10} />
                                 </button>
                             </div>
 
-                            {/* Icon */}
                             <div className={styles.itemIcon}>
                                 <FiAward />
                             </div>
 
-                            {/* Content */}
                             <div className={styles.itemContent}>
                                 <h4 className={styles.itemTitle}>{achievement.title}</h4>
                                 {achievement.description && (
@@ -248,11 +238,11 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
                                 )}
                             </div>
 
-                            {/* Actions */}
                             <div className={styles.itemActions}>
                                 <button
                                     className={styles.actionButton}
                                     onClick={() => handleEdit(achievement)}
+                                    disabled={isSubmitting}
                                     title="Edit"
                                 >
                                     <FiEdit2 size={14} />
@@ -260,6 +250,7 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
                                 <button
                                     className={`${styles.actionButton} ${styles.deleteButton}`}
                                     onClick={() => handleDelete(achievement.profileachievement_id, achievement.title)}
+                                    disabled={isSubmitting}
                                     title="Delete"
                                 >
                                     <FiTrash2 size={14} />
@@ -269,22 +260,22 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
                     ))}
                 </div>
             ) : (
-                <div className={styles.emptyState}>
-                    <FiAward size={32} />
-                    <p>No achievements added yet</p>
-                    {!showForm && (
+                !showForm && (
+                    <div className={styles.emptyState}>
+                        <FiAward size={32} />
+                        <p>No achievements added yet</p>
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => setShowForm(true)}
+                            onClick={handleAdd}
                             icon={<FiPlus />}
                         >
                             Add your first achievement
                         </Button>
-                    )}
-                </div>
+                    </div>
+                )
             )}
-        </div>
+        </SectionLayout>
     );
 };
 
