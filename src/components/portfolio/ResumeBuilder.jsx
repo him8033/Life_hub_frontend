@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/routes/routes.constants';
 import { useGetResumeProjectQuery, useGetTemplateSectionsQuery } from '@/services/api/portfolioApi';
@@ -58,6 +58,7 @@ export default function ResumeBuilder({ resumeId, onBack, onPreview, onGenerateP
     const router = useRouter();
     const [activeSection, setActiveSection] = useState('basic-info');
     const [initialized, setInitialized] = useState(false);
+    const refreshKeyRef = useRef(0);
 
     // Fetch resume data
     const { data, isLoading, refetch } = useGetResumeProjectQuery(resumeId, { skip: !resumeId });
@@ -104,10 +105,21 @@ export default function ResumeBuilder({ resumeId, onBack, onPreview, onGenerateP
         refetch();
     }, [refetch]);
 
-    // Handle section data updates
+    // Force refresh preview
+    const forceRefreshPreview = useCallback(() => {
+        refreshKeyRef.current += 1;
+        refetch();
+    }, [refetch]);
+
+    // Handle section data updates - with immediate refresh
     const handleSectionUpdate = useCallback(() => {
-        setTimeout(() => refreshPreview(), 500);
-    }, [refreshPreview]);
+        // Refetch data immediately
+        refetch();
+        // Also force a refresh after a short delay
+        setTimeout(() => {
+            forceRefreshPreview();
+        }, 300);
+    }, [refetch, forceRefreshPreview]);
 
     // Get section icon
     const getSectionIcon = (iconName) => {
@@ -133,7 +145,7 @@ export default function ResumeBuilder({ resumeId, onBack, onPreview, onGenerateP
 
     // Check if preview is available
     const canPreview = resume?.is_public && !!resume?.slug;
-    const previewUrl = canPreview ? `/resume-preview/${resume.slug}?embed=true` : null;
+    const previewUrl = canPreview ? `/resume-preview/${resume.slug}?embed=true&t=${refreshKeyRef.current}` : null;
 
     if (isLoading) return <Loader text="Loading resume builder..." />;
 
@@ -154,9 +166,10 @@ export default function ResumeBuilder({ resumeId, onBack, onPreview, onGenerateP
             onPreview={canPreview ? () => onPreview(resume.slug) : null}
             onExport={() => onGeneratePDF(resumeId)}
             defaultLayout={50}
-            defaultSize="a4" // Default to A4 for resume
+            defaultSize="a4"
             defaultZoom={100}
-            viewMode="document" // Document mode for resume
+            viewMode="document"
+            refreshTrigger={refreshKeyRef.current}
         />
     );
 }

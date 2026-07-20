@@ -2,6 +2,7 @@
 
 'use client';
 
+import { useEffect } from 'react';
 import { FiRefreshCw } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import styles from '@/styles/common/preview/PreviewPanel.module.css';
@@ -21,6 +22,21 @@ export default function PreviewPanel({
     zoomLabel,
     isWebpage = false,
 }) {
+    // Reload iframe when previewKey changes
+    useEffect(() => {
+        if (iframeRef.current && previewUrl) {
+            // Force iframe to reload
+            const iframe = iframeRef.current;
+            const currentSrc = iframe.src;
+            if (currentSrc && !currentSrc.includes('about:blank')) {
+                iframe.src = 'about:blank';
+                setTimeout(() => {
+                    iframe.src = previewUrl;
+                }, 100);
+            }
+        }
+    }, [previewKey, previewUrl, iframeRef]);
+
     return (
         <div className={styles.previewPanel}>
             <div className={styles.previewLabel}>

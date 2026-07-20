@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/routes/routes.constants';
 import { useGetPortfolioProjectQuery, useGetThemeSectionsQuery } from '@/services/api/portfolioApi';
@@ -58,6 +58,7 @@ export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
     const router = useRouter();
     const [activeSection, setActiveSection] = useState('basic-info');
     const [initialized, setInitialized] = useState(false);
+    const refreshKeyRef = useRef(0);
 
     // Fetch portfolio data
     const { data, isLoading, refetch } = useGetPortfolioProjectQuery(portfolioId, { skip: !portfolioId });
@@ -104,10 +105,21 @@ export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
         refetch();
     }, [refetch]);
 
-    // Handle section data updates
+    // Force refresh preview
+    const forceRefreshPreview = useCallback(() => {
+        refreshKeyRef.current += 1;
+        refetch();
+    }, [refetch]);
+
+    // Handle section data updates - with immediate refresh
     const handleSectionUpdate = useCallback(() => {
-        setTimeout(() => refreshPreview(), 500);
-    }, [refreshPreview]);
+        // Refetch data immediately
+        refetch();
+        // Also force a refresh after a short delay
+        setTimeout(() => {
+            forceRefreshPreview();
+        }, 300);
+    }, [refetch, forceRefreshPreview]);
 
     // Get section icon
     const getSectionIcon = (iconName) => {
@@ -133,7 +145,7 @@ export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
 
     // Check if preview is available
     const canPreview = portfolio?.is_public && !!portfolio?.slug;
-    const previewUrl = canPreview ? `/portfolio-preview/${portfolio.slug}?embed=true` : null;
+    const previewUrl = canPreview ? `/portfolio-preview/${portfolio.slug}?embed=true&t=${refreshKeyRef.current}` : null;
 
     if (isLoading) return <Loader text="Loading portfolio builder..." />;
 
@@ -157,6 +169,7 @@ export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
             defaultSize="desktop" // Default to desktop viewport
             defaultZoom={100}
             viewMode="webpage" // Webpage mode for portfolio
+            refreshTrigger={refreshKeyRef.current}
         />
     );
 }

@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useResizablePanel } from '@/hooks/useResizablePanel';
 import { usePreviewSettings, PAPER_SIZES } from '@/hooks/usePreviewSettings';
 import PreviewTopBar from './PreviewTopBar';
@@ -35,7 +35,8 @@ export default function PreviewBuilder({
     defaultLayout = 50,
     defaultSize = 'a4',
     defaultZoom = 100,
-    viewMode = 'document', // 'document' for resume, 'webpage' for portfolio
+    viewMode = 'document',
+    refreshTrigger = 0, // New prop to force refresh
 }) {
     const { leftWidth, setLeftWidth, isDragging, handleMouseDown, containerRef } = useResizablePanel(defaultLayout);
     const {
@@ -57,6 +58,16 @@ export default function PreviewBuilder({
         isWebpage,
         getViewportLabel,
     } = usePreviewSettings(defaultSize, defaultZoom, viewMode);
+
+    const previousRefreshTrigger = useRef(refreshTrigger);
+
+    // Force refresh when refreshTrigger changes
+    useEffect(() => {
+        if (previousRefreshTrigger.current !== refreshTrigger) {
+            previousRefreshTrigger.current = refreshTrigger;
+            refresh();
+        }
+    }, [refreshTrigger, refresh]);
 
     // Ctrl+P shortcut
     useEffect(() => {
