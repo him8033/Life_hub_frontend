@@ -6,13 +6,12 @@ import React, { useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-    FiUser, FiMail, FiPhone, FiMapPin, FiGlobe, FiCamera, FiTrash2, FiEdit2
+    FiUser, FiMail, FiPhone, FiMapPin, FiGlobe, FiCamera
 } from 'react-icons/fi';
 
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
-import SquareImageUpload from '@/components/common/SquareImageUpload';
-import Button from '@/components/common/buttons/Button';
+import ProfileImageUpload from '@/components/common/ProfileImageUpload';
 import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -45,8 +44,7 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
         },
     });
 
-    const { reset, handleSubmit, watch } = methods;
-    const firstName = watch('first_name');
+    const { reset, handleSubmit } = methods;
 
     useEffect(() => {
         if (basicInfo) {
@@ -59,8 +57,12 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                 full_address: basicInfo.full_address || '',
                 website: basicInfo.website || '',
             });
+            
+            // Set preview from existing image
             if (basicInfo.image_url) {
                 setImagePreview(basicInfo.image_url);
+            } else {
+                setImagePreview('');
             }
         }
     }, [basicInfo, reset]);
@@ -72,12 +74,14 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
     };
 
     const handleImageRemove = () => {
+        // Called when user clicks X on the uploaded image (new image)
         setImageFile(null);
         setImagePreview('');
         setRemoveImage(false);
     };
 
-    const handleRemoveExistingImage = () => {
+    const handleImageDelete = () => {
+        // Called when user clicks "Remove Photo" on existing image
         setImageFile(null);
         setImagePreview('');
         setRemoveImage(true);
@@ -86,6 +90,8 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
     const handleFormSubmit = async (data) => {
         try {
             const formData = new FormData();
+
+            // Basic fields
             formData.append('first_name', data.first_name);
             formData.append('last_name', data.last_name || '');
             formData.append('email', data.email);
@@ -94,13 +100,25 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
             if (data.full_address) formData.append('full_address', data.full_address);
             if (data.website) formData.append('website', data.website);
 
+            // Image handling
             if (removeImage) {
+                // User wants to delete the existing image
                 formData.append('remove_image', 'true');
             } else if (imageFile) {
-                formData.append('image', imageFile, imageFile.name);
+                // User uploaded a new image
+                formData.append('image', imageFile);
             }
 
-            await saveBasicInfo({ snapshotId, data: formData }).unwrap();
+            // If updating existing, include the profilebasicinfo_id
+            if (basicInfo?.profilebasicinfo_id) {
+                formData.append('profilebasicinfo_id', basicInfo.profilebasicinfo_id);
+            }
+
+            await saveBasicInfo({
+                snapshotId,
+                data: formData
+            }).unwrap();
+
             showSnackbar('Basic info saved successfully', 'success', 3000);
             refetch();
 
@@ -123,6 +141,12 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
         basicInfo.image_url
     );
 
+    // Check if there's an existing basic info ID for update
+    const isUpdate = !!basicInfo?.profilebasicinfo_id;
+
+    // Determine if we should show the existing image
+    const showExistingImage = basicInfo?.image_url && !imageFile && !removeImage;
+
     return (
         <SectionLayout
             title="Basic Information"
@@ -132,7 +156,7 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
             isSaving={isSaving}
             hasData={hasData}
             onSave={handleSubmit(handleFormSubmit)}
-            saveButtonText={hasData ? 'Update Info' : 'Save Info'}
+            saveButtonText={isUpdate ? 'Update Info' : 'Save Info'}
         >
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -209,52 +233,28 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                                     Profile Photo
                                 </h4>
 
-                                {basicInfo?.image_url && !imageFile && !removeImage ? (
-                                    <div className={styles.existingPhoto}>
-                                        <div className={styles.photoFrame}>
-                                            <img
-                                                src={basicInfo.image_url}
-                                                alt="Profile"
-                                                className={styles.profileImage}
-                                            />
-                                        </div>
-                                        <div className={styles.photoActions}>
-                                            <button
-                                                type="button"
-                                                className={styles.changePhotoBtn}
-                                                onClick={() => {
-                                                    // Trigger file input
-                                                    document.getElementById('photo-upload-input')?.click();
-                                                }}
-                                            >
-                                                <FiEdit2 size={14} />
-                                                Change
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className={styles.removePhotoBtn}
-                                                onClick={handleRemoveExistingImage}
-                                                disabled={isSaving}
-                                            >
-                                                <FiTrash2 size={14} />
-                                                Remove
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <SquareImageUpload
-                                        onImageSelect={handleImageSelect}
-                                        onRemove={handleImageRemove}
-                                        previewUrl={imagePreview}
-                                        disabled={isSaving}
-                                        maxSizeMB={5}
-                                        label={imagePreview ? 'Change Photo' : 'Upload Photo'}
-                                        size="medium"
-                                        enableCrop={true}
-                                        aspectRatio={1}
-                                        showCropControls={true}
-                                    />
-                                )}
+                                <ProfileImageUpload
+                                    onImageSelect={handleImageSelect}
+                                    onRemove={handleImageRemove}
+                                    onImageDelete={handleImageDelete}
+                                    imageUrl={showExistingImage ? basicInfo.image_url : null}
+                                    previewUrl={imagePreview || null}
+                                    firstName={basicInfo?.first_name || ''}
+                                    lastName={basicInfo?.last_name || ''}
+                                    disabled={isSaving}
+                                    loading={isSaving}
+                                    maxSizeMB={5}
+                                    label="Upload Photo"
+                                    changeLabel="Change Photo"
+                                    removeLabel="Remove Photo"
+                                    size="medium"
+                                    enableCrop={true}
+                                    aspectRatio={1}
+                                    showCropControls={true}
+                                    showDelete={true}
+                                    imageSize={160}
+                                    borderWidth={4}
+                                />
 
                                 <p className={styles.photoHint}>
                                     Square image recommended (e.g., 400×400px)
