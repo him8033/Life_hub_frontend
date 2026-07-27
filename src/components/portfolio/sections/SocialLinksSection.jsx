@@ -2,19 +2,20 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     FiLink, FiPlus, FiEdit2, FiTrash2, FiStar,
-    FiArrowUp, FiArrowDown, FiX, FiCheck,
-    FiLinkedin, FiGithub, FiTwitter, FiGlobe
+    FiArrowUp, FiArrowDown,
+    FiLinkedin, FiGithub, FiTwitter, FiGlobe, FiInstagram, FiFacebook, FiYoutube
 } from 'react-icons/fi';
 
 import FormInput from '@/components/common/forms/FormInput';
 import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
+import { SectionModal } from './common/SectionModal';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -28,7 +29,7 @@ import {
 import { socialLinkSchema } from '@/lib/validations/portfolio/sections/socialLinkSchema';
 import styles from '@/styles/portfolio/sections/SocialLinksSection.module.css';
 
-const platformOptions = [
+const PLATFORM_OPTIONS = [
     { value: 'LinkedIn', label: 'LinkedIn' },
     { value: 'GitHub', label: 'GitHub' },
     { value: 'Twitter', label: 'Twitter' },
@@ -36,22 +37,38 @@ const platformOptions = [
     { value: 'Instagram', label: 'Instagram' },
     { value: 'YouTube', label: 'YouTube' },
     { value: 'Website', label: 'Website' },
-    { value: 'Other', label: 'Other' },
+    { value: 'Other', label: 'Other (Custom)' },
 ];
 
 const platformIcons = {
     LinkedIn: FiLinkedin,
     GitHub: FiGithub,
     Twitter: FiTwitter,
+    Facebook: FiFacebook,
+    Instagram: FiInstagram,
+    YouTube: FiYoutube,
     Website: FiGlobe,
+    Other: FiLink,
+};
+
+const platformColors = {
+    LinkedIn: '#0A66C2',
+    GitHub: '#333333',
+    Twitter: '#1DA1F2',
+    Facebook: '#1877F2',
+    Instagram: '#E4405F',
+    YouTube: '#FF0000',
+    Website: '#667eea',
+    Other: '#6b7280',
 };
 
 const SocialLinksSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
-    const [showForm, setShowForm] = useState(false);
-    const [editingId, setEditingId] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [editingLink, setEditingLink] = useState(null);
+    const [customPlatformName, setCustomPlatformName] = useState('');
 
     const { data, isLoading, refetch } = useGetProfileSocialLinksQuery(snapshotId, { skip: !snapshotId });
     const [createProfileLink, { isLoading: isCreating }] = useCreateProfileSocialLinkMutation();
@@ -62,57 +79,109 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
     const socialLinks = data?.data || [];
     const isSubmitting = isCreating || isUpdating;
 
+    // Get existing platform names (excluding the current one when editing)
+    const existingPlatforms = useMemo(() => {
+        if (editingLink) {
+            return socialLinks
+                .filter(link => link.profilesociallink_id !== editingLink.profilesociallink_id)
+                .map(link => link.platform_name);
+        }
+        return socialLinks.map(link => link.platform_name);
+    }, [socialLinks, editingLink]);
+
+    // Filter available platforms (exclude already added ones, but keep "Other" always available)
+    const availablePlatforms = useMemo(() => {
+        return PLATFORM_OPTIONS.filter(
+            platform => platform.value === 'Other' || !existingPlatforms.includes(platform.value)
+        );
+    }, [existingPlatforms]);
+
     const methods = useForm({
         resolver: zodResolver(socialLinkSchema),
         defaultValues: {
             platform_name: '',
             url: '',
-            icon: '',
         },
     });
 
-    const { reset, handleSubmit, setValue } = methods;
+    const { reset, handleSubmit, watch, setValue } = methods;
+    const selectedPlatform = watch('platform_name');
+
+    // Check if "Other" is selected
+    const isOtherSelected = selectedPlatform === 'Other';
+
+    // When editing, check if the platform is custom
+    React.useEffect(() => {
+        if (editingLink) {
+            const isCustom = !PLATFORM_OPTIONS.some(p => p.value === editingLink.platform_name);
+            if (isCustom) {
+                setValue('platform_name', 'Other');
+                setCustomPlatformName(editingLink.platform_name);
+            } else {
+                setValue('platform_name', editingLink.platform_name);
+                setCustomPlatformName('');
+            }
+        }
+    }, [editingLink, setValue]);
+
+    // Reset custom platform name when switching away from "Other"
+    React.useEffect(() => {
+        if (!isOtherSelected) {
+            setCustomPlatformName('');
+        }
+    }, [isOtherSelected]);
 
     const handleAdd = () => {
-        setEditingId(null);
+        setEditingLink(null);
+        setCustomPlatformName('');
         reset({
             platform_name: '',
             url: '',
-            icon: '',
         });
-        setShowForm(true);
+        setShowModal(true);
     };
 
     const handleEdit = (link) => {
-        setValue('platform_name', link.platform_name);
-        setValue('url', link.url);
-        setValue('icon', link.icon || '');
-        setEditingId(link.profilesociallink_id);
-        setShowForm(true);
+        setEditingLink(link);
+        setShowModal(true);
     };
 
     const handleCancel = () => {
         reset();
-        setEditingId(null);
-        setShowForm(false);
+        setEditingLink(null);
+        setCustomPlatformName('');
+        setShowModal(false);
     };
 
     const handleFormSubmit = async (formData) => {
         try {
+            let platformName = formData.platform_name;
+            
+            // If "Other" is selected, use the custom platform name
+            if (platformName === 'Other') {
+                if (!customPlatformName || !customPlatformName.trim()) {
+                    showSnackbar('Please enter a custom platform name', 'error', 3000);
+                    return;
+                }
+                platformName = customPlatformName.trim();
+            }
+
             const payload = {
-                platform_name: formData.platform_name,
+                platform_name: platformName,
                 url: formData.url,
-                icon: formData.icon || '',
                 is_primary: false,
                 is_active: true,
             };
 
-            if (editingId) {
-                await updateProfileLink({ linkId: editingId, data: payload }).unwrap();
-                showSnackbar('Social link updated', 'success', 3000);
+            if (editingLink) {
+                await updateProfileLink({ 
+                    linkId: editingLink.profilesociallink_id, 
+                    data: payload 
+                }).unwrap();
+                showSnackbar('Social link updated successfully', 'success', 3000);
             } else {
                 await createProfileLink({ snapshotId, data: payload }).unwrap();
-                showSnackbar('Social link added', 'success', 3000);
+                showSnackbar('Social link added successfully', 'success', 3000);
             }
             handleCancel();
             refetch();
@@ -187,150 +256,201 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
         return <IconComponent size={18} />;
     };
 
+    const getPlatformColor = (platformName) => {
+        return platformColors[platformName] || platformColors.Other;
+    };
+
+    // Check if a platform is a standard one
+    const isStandardPlatform = (platformName) => {
+        return PLATFORM_OPTIONS.some(p => p.value === platformName);
+    };
+
     if (isLoading) return null;
 
     return (
-        <SectionLayout
-            title="Social Links"
-            subtitle="Add your professional profiles and social media links"
-            icon={FiLink}
-            isLoading={isLoading}
-            isSaving={isSubmitting}
-            hasData={socialLinks.length > 0}
-            onSave={handleAdd}
-            saveButtonText="Add Link"
-        >
-            {/* Form */}
-            {showForm && (
-                <div className={styles.formCard}>
-                    <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(handleFormSubmit)}>
-                            <div className={styles.formRow}>
-                                <FormSelect
-                                    name="platform_name"
-                                    label="Platform"
-                                    options={platformOptions}
-                                    placeholder="Select platform"
-                                    required
-                                    disabled={isSubmitting}
-                                />
-                                <FormInput
-                                    name="url"
-                                    label="URL"
-                                    placeholder="https://..."
-                                    icon={<FiLink />}
-                                    required
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            <FormInput
-                                name="icon"
-                                label="Icon (optional)"
-                                placeholder="e.g., fa-github"
-                                disabled={isSubmitting}
-                            />
-                            <div className={styles.formActions}>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={handleCancel}
-                                    disabled={isSubmitting}
-                                    icon={<FiX />}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    size="sm"
-                                    isLoading={isSubmitting}
-                                    loadingText="Saving..."
-                                    icon={<FiCheck />}
-                                >
-                                    {editingId ? 'Update' : 'Add'}
-                                </Button>
-                            </div>
-                        </form>
-                    </FormProvider>
-                </div>
-            )}
-
-            {/* List */}
-            {socialLinks.length > 0 ? (
-                <div className={styles.linksList}>
-                    {socialLinks.map((link, index) => (
-                        <div key={link.profilesociallink_id} className={styles.linkItem}>
-                            <div className={styles.orderControls}>
-                                <button
-                                    className={styles.orderButton}
-                                    onClick={() => handleMove(index, -1)}
-                                    disabled={index === 0 || isSubmitting}
-                                    title="Move up"
-                                >
-                                    <FiArrowUp size={10} />
-                                </button>
-                                <span className={styles.orderNumber}>{index + 1}</span>
-                                <button
-                                    className={styles.orderButton}
-                                    onClick={() => handleMove(index, 1)}
-                                    disabled={index === socialLinks.length - 1 || isSubmitting}
-                                    title="Move down"
-                                >
-                                    <FiArrowDown size={10} />
-                                </button>
-                            </div>
-                            <div className={styles.platformIcon}>{getPlatformIcon(link.platform_name)}</div>
-                            <div className={styles.linkInfo}>
-                                <div className={styles.linkName}>
-                                    {link.platform_name}
-                                    {link.is_primary && <span className={styles.primaryBadge}><FiStar size={10} /> Primary</span>}
+        <>
+            <SectionLayout
+                title="Social Links"
+                subtitle={`${socialLinks.length} link${socialLinks.length !== 1 ? 's' : ''}`}
+                icon={FiLink}
+                isLoading={isLoading}
+                isSaving={isSubmitting}
+                hasData={socialLinks.length > 0}
+                onSave={handleAdd}
+                saveButtonText="Add Link"
+            >
+                {socialLinks.length > 0 ? (
+                    <div className={styles.linksGrid}>
+                        {socialLinks.map((link, index) => (
+                            <div key={link.profilesociallink_id} className={styles.linkCard}>
+                                <div className={styles.cardHeader}>
+                                    <div className={styles.platformInfo}>
+                                        <div 
+                                            className={styles.platformIcon}
+                                            style={{ backgroundColor: getPlatformColor(link.platform_name) }}
+                                        >
+                                            {getPlatformIcon(link.platform_name)}
+                                        </div>
+                                        <div className={styles.linkInfo}>
+                                            <div className={styles.linkName}>
+                                                {link.platform_name}
+                                                {!isStandardPlatform(link.platform_name) && (
+                                                    <span className={styles.customBadge}>Custom</span>
+                                                )}
+                                                {link.is_primary && (
+                                                    <span className={styles.primaryBadge}>
+                                                        <FiStar size={10} /> Primary
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <a 
+                                                href={link.url} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer" 
+                                                className={styles.linkUrl}
+                                                title={link.url}
+                                            >
+                                                {link.url}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div className={styles.cardActions}>
+                                        <button
+                                            className={styles.actionBtn}
+                                            onClick={() => handleEdit(link)}
+                                            title="Edit link"
+                                        >
+                                            <FiEdit2 size={14} />
+                                        </button>
+                                        <button
+                                            className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                                            onClick={() => handleDelete(link.profilesociallink_id, link.platform_name)}
+                                            title="Delete link"
+                                        >
+                                            <FiTrash2 size={14} />
+                                        </button>
+                                    </div>
                                 </div>
-                                <a href={link.url} target="_blank" rel="noopener noreferrer" className={styles.linkUrl}>{link.url}</a>
+                                
+                                <div className={styles.cardBody}>
+                                    <div className={styles.orderControls}>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, -1)}
+                                            disabled={index === 0 || isSubmitting}
+                                            title="Move up"
+                                        >
+                                            <FiArrowUp size={12} />
+                                        </button>
+                                        <span className={styles.orderNumber}>{index + 1}</span>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, 1)}
+                                            disabled={index === socialLinks.length - 1 || isSubmitting}
+                                            title="Move down"
+                                        >
+                                            <FiArrowDown size={12} />
+                                        </button>
+                                    </div>
+                                    {!link.is_primary && (
+                                        <button
+                                            className={styles.primaryBtn}
+                                            onClick={() => handleSetPrimary(link.profilesociallink_id)}
+                                            disabled={isSubmitting}
+                                            title="Set as primary"
+                                        >
+                                            <FiStar size={14} />
+                                            Set as Primary
+                                        </button>
+                                    )}
+                                </div>
                             </div>
-                            <div className={styles.linkActions}>
-                                {!link.is_primary && (
-                                    <button
-                                        className={styles.actionButton}
-                                        onClick={() => handleSetPrimary(link.profilesociallink_id)}
-                                        disabled={isSubmitting}
-                                        title="Set as primary"
-                                    >
-                                        <FiStar size={14} />
-                                    </button>
-                                )}
-                                <button
-                                    className={styles.actionButton}
-                                    onClick={() => handleEdit(link)}
-                                    disabled={isSubmitting}
-                                    title="Edit"
-                                >
-                                    <FiEdit2 size={14} />
-                                </button>
-                                <button
-                                    className={`${styles.actionButton} ${styles.deleteButton}`}
-                                    onClick={() => handleDelete(link.profilesociallink_id, link.platform_name)}
-                                    disabled={isSubmitting}
-                                    title="Delete"
-                                >
-                                    <FiTrash2 size={14} />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                !showForm && (
+                        ))}
+                    </div>
+                ) : (
                     <div className={styles.emptyState}>
-                        <FiLink size={32} />
-                        <p>No social links added yet</p>
-                        <Button variant="outline" size="sm" onClick={handleAdd} icon={<FiPlus />}>
-                            Add your first link
+                        <div className={styles.emptyIcon}>
+                            <FiLink size={48} />
+                        </div>
+                        <h3 className={styles.emptyTitle}>No social links added yet</h3>
+                        <p className={styles.emptyDescription}>
+                            Connect your social profiles and professional networks
+                        </p>
+                        <Button
+                            variant="primary"
+                            onClick={handleAdd}
+                            icon={<FiPlus />}
+                            className={styles.emptyButton}
+                        >
+                            Add Link
                         </Button>
                     </div>
-                )
+                )}
+            </SectionLayout>
+
+            {/* Modal for Add/Edit */}
+            {showModal && (
+                <SectionModal
+                    opened={true}
+                    onClose={handleCancel}
+                    title={editingLink ? 'Edit Social Link' : 'Add Social Link'}
+                    subtitle={editingLink ? `Update "${editingLink.platform_name}"` : 'Connect your social profile'}
+                    onSave={handleSubmit(handleFormSubmit)}
+                    isSaving={isSubmitting}
+                    saveText={editingLink ? 'Update' : 'Add'}
+                    size="md"
+                >
+                    <FormProvider {...methods}>
+                        <form className={styles.modalForm}>
+                            <FormSelect
+                                name="platform_name"
+                                label="Platform *"
+                                options={availablePlatforms}
+                                placeholder={availablePlatforms.length > 0 ? 'Select a platform' : 'No platforms available'}
+                                required
+                                disabled={isSubmitting || availablePlatforms.length === 0}
+                            />
+                            
+                            {isOtherSelected && (
+                                <div className={styles.customPlatformInput}>
+                                    <FormInput
+                                        name="custom_platform_name"
+                                        label="Custom Platform Name *"
+                                        placeholder="Enter custom platform name (e.g., Dev.to, Hashnode)"
+                                        value={customPlatformName}
+                                        onChange={(e) => setCustomPlatformName(e.target.value)}
+                                        required
+                                        disabled={isSubmitting}
+                                    />
+                                    <p className={styles.customPlatformHint}>
+                                        This name will be displayed on your profile
+                                    </p>
+                                </div>
+                            )}
+                            
+                            <FormInput
+                                name="url"
+                                label="URL *"
+                                placeholder="https://linkedin.com/in/username"
+                                icon={<FiLink size={16} />}
+                                required
+                                disabled={isSubmitting}
+                            />
+                            
+                            <p className={styles.modalHint}>
+                                Enter the full URL to your profile (e.g., https://linkedin.com/in/username)
+                            </p>
+                            
+                            {availablePlatforms.length === 0 && !editingLink && !isOtherSelected && (
+                                <p className={styles.noPlatformsMessage}>
+                                    All standard platforms have been added. Select "Other" to add a custom platform.
+                                </p>
+                            )}
+                        </form>
+                    </FormProvider>
+                </SectionModal>
             )}
-        </SectionLayout>
+        </>
     );
 };
 
