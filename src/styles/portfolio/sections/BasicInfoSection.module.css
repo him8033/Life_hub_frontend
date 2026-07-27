@@ -1,31 +1,108 @@
 /* src/styles/portfolio/sections/BasicInfoSection.module.css */
 
-.formGrid {
+/* ==========================================================
+   BASIC INFO SECTION
+   Clean • Modern • Dashboard Style
+========================================================== */
+
+/* ===========================
+   FORM CONTAINER
+=========================== */
+
+.formContainer {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 2.5rem;
+    align-items: flex-start;
+}
+
+/* ===========================
+   LEFT COLUMN - FORM FIELDS
+=========================== */
+
+.leftColumn {
     display: flex;
-    gap: var(--spacing-8);
+    flex-direction: column;
+    gap: 1.25rem;
 }
 
-.imageSection {
-    flex-shrink: 0;
-    width: 180px;
+.fieldRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
 }
 
-.imageLabel {
+.fieldItem {
+    margin: 0;
+}
+
+/* ===========================
+   RIGHT COLUMN - PHOTO SECTION
+=========================== */
+
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.photoSection {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    transition: all 0.25s ease;
+}
+
+.photoSection:hover {
+    border-color: var(--primary);
+}
+
+.photoSectionTitle {
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
-    font-size: var(--text-sm);
+    gap: 0.5rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: var(--foreground);
-    margin-bottom: var(--spacing-3);
+    margin: 0;
 }
 
-.imageDisplay {
+.photoIcon {
+    color: var(--primary);
+}
+
+/* ===========================
+   EXISTING PHOTO
+=========================== */
+
+.existingPhoto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.photoFrame {
     width: 160px;
     height: 160px;
-    border-radius: var(--radius-xl);
+    border-radius: 50%;
     overflow: hidden;
     border: 3px solid var(--border);
+    background: var(--muted);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease;
+    flex-shrink: 0;
+}
+
+.photoFrame:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary);
 }
 
 .profileImage {
@@ -34,81 +111,175 @@
     object-fit: cover;
 }
 
-.imagePlaceholder {
+/* ===========================
+   PHOTO ACTIONS
+=========================== */
+
+.photoActions {
+    display: flex;
+    gap: 0.75rem;
     width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--muted);
-    color: var(--muted-foreground);
 }
 
-.existingImageContainer {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-2);
-    align-items: center;
-}
-
-.existingImage {
-    width: 160px;
-    height: 160px;
-    border-radius: var(--radius-xl);
-    object-fit: cover;
-    border: 3px solid var(--border);
-}
-
-.removeImageButton {
+.changePhotoBtn,
+.removePhotoBtn {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: var(--spacing-1) var(--spacing-2);
-    background: transparent;
-    color: var(--destructive);
-    border: 1px solid var(--destructive);
-    border-radius: var(--radius-sm);
-    font-size: var(--text-xs);
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    font-weight: 500;
     cursor: pointer;
-    width: fit-content;
-    transition: all 0.2s;
-}
-
-.removeImageButton:hover {
-    background: var(--destructive);
-    color: white;
-}
-
-.fieldsSection {
+    transition: 0.25s;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
     flex: 1;
-    min-width: 0;
 }
 
-.row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-4);
-    margin-bottom: var(--spacing-4);
+.changePhotoBtn:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
 }
 
-.formItem {
-    margin-bottom: var(--spacing-4);
+.removePhotoBtn {
+    border-color: var(--destructive);
+    color: var(--destructive);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .formGrid {
-        flex-direction: column;
-    }
+.removePhotoBtn:hover:not(:disabled) {
+    background: var(--destructive);
+    color: #fff;
+}
 
-    .imageSection {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.removePhotoBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
-    .row {
+/* ===========================
+   PHOTO HINT
+=========================== */
+
+.photoHint {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    text-align: center;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ===========================
+   SUMMARY SECTION
+=========================== */
+
+.summarySection {
+    margin-top: 2rem;
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+}
+
+.summaryHint {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+    font-style: italic;
+}
+
+/* ===========================
+   RESPONSIVE - TABLET
+=========================== */
+
+@media (max-width: 1024px) {
+    .formContainer {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .rightColumn {
+        max-width: 320px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .photoFrame {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+/* ===========================
+   RESPONSIVE - MOBILE
+=========================== */
+
+@media (max-width: 768px) {
+    .fieldRow {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .formContainer {
+        gap: 1.5rem;
+    }
+
+    .leftColumn {
+        gap: 1rem;
+    }
+
+    .photoSection {
+        padding: 1.25rem;
+    }
+
+    .photoFrame {
+        width: 140px;
+        height: 140px;
+    }
+
+    .photoActions {
+        flex-direction: column;
+    }
+
+    .summarySection {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+    }
+}
+
+/* ===========================
+   RESPONSIVE - SMALL MOBILE
+=========================== */
+
+@media (max-width: 480px) {
+    .formContainer {
+        gap: 1.25rem;
+    }
+
+    .photoSection {
+        padding: 1rem;
+        border-radius: var(--radius-lg);
+    }
+
+    .photoFrame {
+        width: 120px;
+        height: 120px;
+        border-width: 2px;
+    }
+
+    .photoSectionTitle {
+        font-size: 0.85rem;
+    }
+
+    .photoHint {
+        font-size: 0.7rem;
+    }
+
+    .changePhotoBtn,
+    .removePhotoBtn {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.75rem;
     }
 }

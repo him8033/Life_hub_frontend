@@ -3,7 +3,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FiFolder, FiPlus, FiEdit2, FiTrash2, FiExternalLink, FiGithub, FiImage, FiStar } from 'react-icons/fi';
+import { FiFolder, FiPlus, FiEdit2, FiTrash2, FiExternalLink, FiGithub, FiImage, FiStar, FiCalendar, FiChevronRight } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
@@ -76,49 +76,89 @@ const ProjectsSection = ({ snapshotId, onDataChange }) => {
                 saveButtonText="Add Project"
             >
                 {projects.length > 0 ? (
-                    <div className={styles.grid}>
+                    <div className={styles.projectsContainer}>
                         {projects.map((project) => (
-                            <div key={project.profileproject_id} className={`${styles.card} ${project.is_featured ? styles.featured : ''}`}>
-                                <div className={styles.thumbnail}>
-                                    {project.thumbnail_url ? (
-                                        <img src={project.thumbnail_url} alt={project.project_name} className={styles.thumbImg} />
-                                    ) : (
-                                        <div className={styles.thumbPlaceholder}><FiImage size={32} /></div>
-                                    )}
-                                    {project.is_featured && <span className={styles.featuredBadge}><FiStar size={10} /> Featured</span>}
-                                </div>
-                                <div className={styles.cardBody}>
-                                    <h4 className={styles.projectName}>{project.project_name}</h4>
-                                    <p className={styles.projectDesc}>{project.short_description}</p>
-                                    <div className={styles.links}>
-                                        {project.code_url && (
-                                            <a href={project.code_url} target="_blank" rel="noopener" className={styles.link}>
-                                                <FiGithub size={14} /> Code
-                                            </a>
-                                        )}
-                                        {project.live_url && (
-                                            <a href={project.live_url} target="_blank" rel="noopener" className={styles.link}>
-                                                <FiExternalLink size={14} /> Live
-                                            </a>
+                            <div key={project.profileproject_id} className={styles.projectCard}>
+                                <div className={styles.cardHeader}>
+                                    <div className={styles.projectInfo}>
+                                        <h3 className={styles.projectTitle}>{project.project_name}</h3>
+                                        {project.is_featured && (
+                                            <span className={styles.featuredBadge}>
+                                                <FiStar size={12} />
+                                                Featured
+                                            </span>
                                         )}
                                     </div>
                                     <div className={styles.cardActions}>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            icon={<FiEdit2 />}
+                                        <button
+                                            className={styles.actionBtn}
                                             onClick={() => handleEdit(project)}
+                                            title="Edit project"
                                         >
-                                            Edit
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            icon={<FiTrash2 />}
+                                            <FiEdit2 size={16} />
+                                        </button>
+                                        <button
+                                            className={`${styles.actionBtn} ${styles.deleteBtn}`}
                                             onClick={() => handleDelete(project.profileproject_id, project.project_name)}
+                                            title="Delete project"
                                         >
-                                            Delete
-                                        </Button>
+                                            <FiTrash2 size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className={styles.cardBody}>
+                                    {project.thumbnail_url ? (
+                                        <div className={styles.thumbnailWrapper}>
+                                            <img
+                                                src={project.thumbnail_url}
+                                                alt={project.project_name}
+                                                className={styles.thumbnail}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className={styles.thumbnailPlaceholder}>
+                                            <FiImage size={32} />
+                                            <span>No thumbnail</span>
+                                        </div>
+                                    )}
+
+                                    <div className={styles.content}>
+                                        <p className={styles.description}>{project.short_description}</p>
+
+                                        <div className={styles.links}>
+                                            {project.code_url && (
+                                                <a
+                                                    href={project.code_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={styles.link}
+                                                >
+                                                    <FiGithub size={14} />
+                                                    <span>Code</span>
+                                                </a>
+                                            )}
+                                            {project.live_url && (
+                                                <a
+                                                    href={project.live_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={styles.link}
+                                                >
+                                                    <FiExternalLink size={14} />
+                                                    <span>Live Demo</span>
+                                                </a>
+                                            )}
+                                        </div>
+
+                                        <div className={styles.meta}>
+                                            {project.is_live && (
+                                                <span className={styles.statusBadge}>
+                                                    <span className={styles.statusDot} />
+                                                    Live
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -126,10 +166,20 @@ const ProjectsSection = ({ snapshotId, onDataChange }) => {
                     </div>
                 ) : (
                     <div className={styles.emptyState}>
-                        <FiFolder size={32} />
-                        <p>No projects added yet</p>
-                        <Button variant="outline" size="sm" onClick={handleAdd} icon={<FiPlus />}>
-                            Add your first project
+                        <div className={styles.emptyIcon}>
+                            <FiFolder size={48} />
+                        </div>
+                        <h3 className={styles.emptyTitle}>No projects added yet</h3>
+                        <p className={styles.emptyDescription}>
+                            Showcase your work by adding your first project
+                        </p>
+                        <Button
+                            variant="primary"
+                            onClick={handleAdd}
+                            icon={<FiPlus />}
+                            className={styles.emptyButton}
+                        >
+                            Add Project
                         </Button>
                     </div>
                 )}

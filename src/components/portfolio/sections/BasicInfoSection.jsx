@@ -6,8 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-    FiUser, FiMail, FiPhone,
-    FiMapPin, FiGlobe, FiCamera, FiSave, FiTrash2
+    FiUser, FiMail, FiPhone, FiMapPin, FiGlobe, FiCamera, FiTrash2, FiEdit2
 } from 'react-icons/fi';
 
 import FormInput from '@/components/common/forms/FormInput';
@@ -24,12 +23,10 @@ import styles from '@/styles/portfolio/sections/BasicInfoSection.module.css';
 const BasicInfoSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
 
-    // Image states
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState('');
     const [removeImage, setRemoveImage] = useState(false);
 
-    // API
     const { data, isLoading, refetch } = useGetBasicInfoQuery(snapshotId, { skip: !snapshotId });
     const [saveBasicInfo, { isLoading: isSaving }] = useSaveBasicInfoMutation();
 
@@ -48,9 +45,9 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
         },
     });
 
-    const { reset, handleSubmit } = methods;
+    const { reset, handleSubmit, watch } = methods;
+    const firstName = watch('first_name');
 
-    // Populate form when data loads
     useEffect(() => {
         if (basicInfo) {
             reset({
@@ -107,7 +104,6 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
             showSnackbar('Basic info saved successfully', 'success', 3000);
             refetch();
 
-            // Notify parent to refresh preview
             if (onDataChange) {
                 onDataChange();
             }
@@ -140,115 +136,146 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
         >
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(handleFormSubmit)}>
-                    <div className={styles.formGrid}>
-                        {/* Profile Image */}
-                        <div className={styles.imageSection}>
-                            <label className={styles.imageLabel}>
-                                <FiCamera /> Profile Photo
-                            </label>
-
-                            {basicInfo?.image_url && !imageFile && !removeImage && (
-                                <div className={styles.existingImageContainer}>
-                                    <img
-                                        src={basicInfo.image_url}
-                                        alt="Profile"
-                                        className={styles.existingImage}
-                                    />
-                                    <button
-                                        type="button"
-                                        className={styles.removeImageButton}
-                                        onClick={handleRemoveExistingImage}
-                                        disabled={isSaving}
-                                    >
-                                        <FiTrash2 /> Remove
-                                    </button>
-                                </div>
-                            )}
-
-                            {(!basicInfo?.image_url || imageFile || removeImage) && (
-                                <SquareImageUpload
-                                    onImageSelect={handleImageSelect}
-                                    onRemove={handleImageRemove}
-                                    previewUrl={imagePreview}
-                                    disabled={isSaving}
-                                    maxSizeMB={5}
-                                    label="Upload Photo"
-                                    size="small"
-                                    enableCrop={true}
-                                    aspectRatio={1}
-                                    showCropControls={true}
-                                />
-                            )}
-                        </div>
-
-                        {/* Fields */}
-                        <div className={styles.fieldsSection}>
-                            <div className={styles.row}>
+                    <div className={styles.formContainer}>
+                        {/* Left Column - Form Fields */}
+                        <div className={styles.leftColumn}>
+                            {/* Name Row */}
+                            <div className={styles.fieldRow}>
                                 <FormInput
                                     name="first_name"
                                     label="First Name *"
                                     placeholder="Enter first name"
-                                    icon={<FiUser />}
+                                    icon={<FiUser size={16} />}
                                     disabled={isSaving}
-                                    className={styles.formItem}
+                                    className={styles.fieldItem}
                                 />
                                 <FormInput
                                     name="last_name"
                                     label="Last Name"
                                     placeholder="Enter last name"
-                                    icon={<FiUser />}
+                                    icon={<FiUser size={16} />}
                                     disabled={isSaving}
-                                    className={styles.formItem}
+                                    className={styles.fieldItem}
                                 />
                             </div>
 
-                            <div className={styles.row}>
+                            {/* Email & Phone */}
+                            <div className={styles.fieldRow}>
                                 <FormInput
                                     name="email"
                                     label="Email *"
                                     type="email"
                                     placeholder="your@email.com"
-                                    icon={<FiMail />}
+                                    icon={<FiMail size={16} />}
                                     disabled={isSaving}
-                                    className={styles.formItem}
+                                    className={styles.fieldItem}
                                 />
                                 <FormInput
                                     name="phone"
                                     label="Phone"
                                     placeholder="+91 9876543210"
-                                    icon={<FiPhone />}
+                                    icon={<FiPhone size={16} />}
                                     disabled={isSaving}
-                                    className={styles.formItem}
+                                    className={styles.fieldItem}
                                 />
                             </div>
 
+                            {/* Website */}
                             <FormInput
                                 name="website"
                                 label="Website"
                                 placeholder="https://yourwebsite.com"
-                                icon={<FiGlobe />}
+                                icon={<FiGlobe size={16} />}
                                 disabled={isSaving}
-                                className={styles.formItem}
+                                className={styles.fieldItem}
                             />
 
-                            <FormTextarea
-                                name="summary"
-                                label="Professional Summary"
-                                placeholder="Write a brief professional summary..."
-                                rows={4}
-                                disabled={isSaving}
-                                className={styles.formItem}
-                            />
-
+                            {/* Full Address */}
                             <FormInput
                                 name="full_address"
                                 label="Full Address"
                                 placeholder="Enter your complete address"
-                                icon={<FiMapPin />}
+                                icon={<FiMapPin size={16} />}
                                 disabled={isSaving}
-                                className={styles.formItem}
+                                className={styles.fieldItem}
                             />
                         </div>
+
+                        {/* Right Column - Profile Photo */}
+                        <div className={styles.rightColumn}>
+                            <div className={styles.photoSection}>
+                                <h4 className={styles.photoSectionTitle}>
+                                    <FiCamera className={styles.photoIcon} />
+                                    Profile Photo
+                                </h4>
+
+                                {basicInfo?.image_url && !imageFile && !removeImage ? (
+                                    <div className={styles.existingPhoto}>
+                                        <div className={styles.photoFrame}>
+                                            <img
+                                                src={basicInfo.image_url}
+                                                alt="Profile"
+                                                className={styles.profileImage}
+                                            />
+                                        </div>
+                                        <div className={styles.photoActions}>
+                                            <button
+                                                type="button"
+                                                className={styles.changePhotoBtn}
+                                                onClick={() => {
+                                                    // Trigger file input
+                                                    document.getElementById('photo-upload-input')?.click();
+                                                }}
+                                            >
+                                                <FiEdit2 size={14} />
+                                                Change
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={styles.removePhotoBtn}
+                                                onClick={handleRemoveExistingImage}
+                                                disabled={isSaving}
+                                            >
+                                                <FiTrash2 size={14} />
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <SquareImageUpload
+                                        onImageSelect={handleImageSelect}
+                                        onRemove={handleImageRemove}
+                                        previewUrl={imagePreview}
+                                        disabled={isSaving}
+                                        maxSizeMB={5}
+                                        label={imagePreview ? 'Change Photo' : 'Upload Photo'}
+                                        size="medium"
+                                        enableCrop={true}
+                                        aspectRatio={1}
+                                        showCropControls={true}
+                                    />
+                                )}
+
+                                <p className={styles.photoHint}>
+                                    Square image recommended (e.g., 400×400px)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Professional Summary - Full Width */}
+                    <div className={styles.summarySection}>
+                        <FormTextarea
+                            name="summary"
+                            label="Professional Summary"
+                            placeholder="A brief, compelling overview of your career."
+                            rows={4}
+                            disabled={isSaving}
+                            className={styles.fieldItem}
+                        />
+                        <p className={styles.summaryHint}>
+                            Write a brief professional summary...
+                        </p>
                     </div>
                 </form>
             </FormProvider>

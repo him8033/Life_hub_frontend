@@ -15,7 +15,6 @@ import FormInput from '@/components/common/forms/FormInput';
 import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
-import { SectionItemList } from './common/SectionItem';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -57,11 +56,11 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
     const { data, isLoading, refetch } = useGetProfileSocialLinksQuery(snapshotId, { skip: !snapshotId });
     const [createProfileLink, { isLoading: isCreating }] = useCreateProfileSocialLinkMutation();
     const [updateProfileLink, { isLoading: isUpdating }] = useUpdateProfileSocialLinkMutation();
-    const [deleteProfileLink, { isLoading: isDeleting }] = useDeleteProfileSocialLinkMutation();
+    const [deleteProfileLink] = useDeleteProfileSocialLinkMutation();
     const [reorderProfileLinks] = useReorderProfileSocialLinksMutation();
 
     const socialLinks = data?.data || [];
-    const isSubmitting = isCreating || isUpdating || isDeleting;
+    const isSubmitting = isCreating || isUpdating;
 
     const methods = useForm({
         resolver: zodResolver(socialLinkSchema),
@@ -267,6 +266,7 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                                     className={styles.orderButton}
                                     onClick={() => handleMove(index, -1)}
                                     disabled={index === 0 || isSubmitting}
+                                    title="Move up"
                                 >
                                     <FiArrowUp size={10} />
                                 </button>
@@ -275,6 +275,7 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                                     className={styles.orderButton}
                                     onClick={() => handleMove(index, 1)}
                                     disabled={index === socialLinks.length - 1 || isSubmitting}
+                                    title="Move down"
                                 >
                                     <FiArrowDown size={10} />
                                 </button>
