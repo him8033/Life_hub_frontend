@@ -1,126 +1,60 @@
 /* src/styles/portfolio/sections/HobbiesSection.module.css */
 
-/* ============================================
-   FORM CARD
-   ============================================ */
+/* ==========================================================
+   HOBBIES SECTION
+   Card-Based Layout • Grid View (Same as Strengths)
+========================================================== */
 
-.formCard {
-    padding: var(--spacing-4);
-    background: var(--card);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    margin-bottom: var(--spacing-5);
-    box-shadow: var(--shadow-sm);
-}
-
-.formCard:hover {
-    border-color: var(--primary);
-    box-shadow: var(--shadow-md);
-}
-
-.formRow {
-    display: flex;
-    align-items: flex-end;
-    gap: var(--spacing-4);
-}
-
-.formInput {
-    flex: 1;
-    margin-bottom: 0;
-}
-
-.formActions {
-    display: flex;
-    gap: var(--spacing-2);
-    flex-shrink: 0;
-}
-
-/* ============================================
-   HOBBIES GRID
-   ============================================ */
+/* ===========================
+   GRID CONTAINER
+=========================== */
 
 .hobbiesGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--spacing-3);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
 }
 
-/* ============================================
-   HOBBY ITEM
-   ============================================ */
+/* ===========================
+   HOBBY CARD
+=========================== */
 
-.hobbyItem {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-3) var(--spacing-4);
-    background: var(--card);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.hobbyItem:hover {
-    border-color: var(--primary);
-    box-shadow: var(--shadow-sm);
-}
-
-/* ============================================
-   ORDER CONTROLS
-   ============================================ */
-
-.orderControls {
+.hobbyCard {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    flex-shrink: 0;
-}
-
-.orderButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    background: none;
+    background: var(--card);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--muted-foreground);
-    cursor: pointer;
-    transition: all 0.2s ease;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-.orderButton:hover:not(:disabled) {
-    background: var(--accent);
-    color: var(--primary);
+.hobbyCard:hover {
     border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
 }
 
-.orderButton:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
+/* ===========================
+   CARD HEADER
+=========================== */
 
-.orderNumber {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--muted-foreground);
-    min-width: 20px;
-    text-align: center;
-}
-
-/* ============================================
-   HOBBY CONTENT
-   ============================================ */
-
-.hobbyContent {
-    flex: 1;
+.cardHeader {
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    gap: 0.75rem;
+    flex: 1;
+    min-height: 80px;
+}
+
+.hobbyInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
     min-width: 0;
 }
 
@@ -128,183 +62,458 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    background: color-mix(in srgb, var(--primary) 10%, transparent);
-    color: var(--primary);
+    width: 40px;
+    height: 40px;
     border-radius: var(--radius-md);
+    color: #ffffff;
     flex-shrink: 0;
+}
+
+.hobbyContent {
+    flex: 1;
+    min-width: 0;
 }
 
 .hobbyName {
     font-size: var(--text-sm);
-    font-weight: 500;
+    font-weight: 600;
     color: var(--foreground);
+    display: block;
     line-height: 1.3;
 }
 
-/* ============================================
-   HOBBY ACTIONS
-   ============================================ */
+/* ===========================
+   CARD ACTIONS
+=========================== */
 
-.hobbyActions {
+.cardActions {
     display: flex;
-    gap: var(--spacing-1);
+    gap: 0.4rem;
     flex-shrink: 0;
 }
 
-.actionButton {
+.actionBtn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    background: var(--muted);
+    width: 32px;
+    height: 32px;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
+    background: var(--background);
     color: var(--muted-foreground);
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.actionButton:hover:not(:disabled) {
-    background: var(--accent);
-    color: var(--primary);
+.actionBtn:hover {
+    background: var(--primary);
+    color: #ffffff;
     border-color: var(--primary);
+    transform: scale(1.05);
 }
 
-.actionButton:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.deleteButton:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--destructive) 10%, transparent);
-    color: var(--destructive);
+.actionBtn.deleteBtn:hover {
+    background: var(--destructive);
     border-color: var(--destructive);
 }
 
-/* ============================================
+/* ===========================
+   CARD FOOTER
+=========================== */
+
+.cardFooter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.25rem;
+    border-top: 1px solid var(--border);
+    background: var(--muted);
+    min-height: 44px;
+}
+
+.orderControls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.orderBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.orderBtn:hover:not(:disabled) {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.orderBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.orderNumber {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    min-width: 24px;
+    text-align: center;
+    line-height: 1;
+}
+
+/* ===========================
+   MODAL FORM
+=========================== */
+
+.modalForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 0.25rem 0;
+}
+
+.modalHint {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin: -0.5rem 0 0 0;
+    font-style: italic;
+}
+
+/* ===========================
+   SECTIONS
+=========================== */
+
+.section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.section:hover {
+    border-color: var(--primary);
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: var(--muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.sectionIcon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    color: var(--primary);
+}
+
+.sectionHeader div {
+    flex: 1;
+    min-width: 0;
+}
+
+.sectionTitle {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0 0 0.15rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sectionDescription {
+    font-size: var(--text-xs);
+    color: var(--muted-foreground);
+    margin: 0;
+}
+
+.sectionContent {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ===========================
    EMPTY STATE
-   ============================================ */
+=========================== */
 
 .emptyState {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-8);
-    color: var(--muted-foreground);
+    justify-content: center;
+    padding: 4rem 2rem;
     text-align: center;
     border: 2px dashed var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     background: var(--muted);
 }
 
-.emptyState svg {
+.emptyIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--card);
     color: var(--muted-foreground);
+    margin-bottom: 1.5rem;
+    border: 2px solid var(--border);
 }
 
-.emptyState p {
-    margin: 0;
-    font-size: var(--text-sm);
+.emptyIcon svg {
+    width: 48px;
+    height: 48px;
 }
 
-/* ============================================
-   DARK MODE
-   ============================================ */
-
-.dark .formCard {
-    background: var(--gray-900);
-    border-color: var(--gray-800);
+.emptyTitle {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0 0 0.5rem 0;
 }
 
-.dark .formCard:hover {
-    border-color: var(--primary);
+.emptyDescription {
+    font-size: var(--text-base);
+    color: var(--muted-foreground);
+    margin: 0 0 1.5rem 0;
+    max-width: 400px;
 }
 
-.dark .hobbyItem {
-    background: var(--gray-900);
-    border-color: var(--gray-800);
+.emptyButton {
+    padding: 0.6rem 1.5rem;
 }
 
-.dark .hobbyItem:hover {
-    border-color: var(--primary);
+/* ===========================
+   RESPONSIVE - TABLET
+=========================== */
+
+@media (max-width: 1024px) {
+    .hobbiesGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
 }
 
-.dark .hobbyIcon {
-    background: color-mix(in srgb, var(--primary) 15%, var(--gray-900));
-}
-
-.dark .actionButton {
-    background: var(--gray-800);
-    border-color: var(--gray-700);
-}
-
-.dark .orderButton {
-    background: var(--gray-800);
-    border-color: var(--gray-700);
-}
-
-.dark .emptyState {
-    background: var(--gray-900);
-    border-color: var(--gray-800);
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
+/* ===========================
+   RESPONSIVE - MOBILE
+=========================== */
 
 @media (max-width: 768px) {
-    .formRow {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .formActions {
-        justify-content: flex-end;
-    }
-
     .hobbiesGrid {
         grid-template-columns: 1fr;
+        gap: 0.75rem;
     }
 
-    .hobbyItem {
-        padding: var(--spacing-2) var(--spacing-3);
-        gap: var(--spacing-2);
+    .cardHeader {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        min-height: 70px;
     }
 
-    .formActions {
-        flex-direction: column;
-    }
-
-    .formActions button {
+    .hobbyInfo {
         width: 100%;
+    }
+
+    .cardActions {
+        width: 100%;
+        justify-content: flex-end;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .cardFooter {
+        padding: 0.4rem 1rem;
+        min-height: 40px;
+    }
+
+    .orderControls {
+        gap: 0.4rem;
+    }
+
+    .orderBtn {
+        width: 26px;
+        height: 26px;
+    }
+
+    .orderBtn svg {
+        width: 11px;
+        height: 11px;
+    }
+
+    .orderNumber {
+        font-size: 10px;
+        min-width: 20px;
+    }
+
+    .emptyState {
+        padding: 3rem 1.5rem;
+    }
+
+    .emptyIcon {
+        width: 64px;
+        height: 64px;
+    }
+
+    .emptyIcon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .emptyTitle {
+        font-size: var(--text-lg);
+    }
+
+    .emptyDescription {
+        font-size: var(--text-sm);
+    }
+
+    .sectionHeader {
+        padding: 0.75rem 1rem;
+    }
+
+    .sectionContent {
+        padding: 1rem;
+    }
+
+    .modalForm {
+        gap: 1rem;
     }
 }
 
+/* ===========================
+   RESPONSIVE - SMALL MOBILE
+=========================== */
+
 @media (max-width: 480px) {
-    .hobbyItem {
-        flex-direction: column;
-        align-items: stretch;
-        gap: var(--spacing-2);
+    .hobbyCard {
+        border-radius: var(--radius-md);
+    }
+
+    .cardHeader {
+        padding: 0.6rem 0.75rem;
+        min-height: 60px;
     }
 
     .hobbyIcon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .hobbyIcon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hobbyName {
+        font-size: var(--text-xs);
+    }
+
+    .actionBtn {
         width: 28px;
         height: 28px;
     }
 
-    .hobbyActions {
-        justify-content: flex-end;
-        padding-top: var(--spacing-1);
-        border-top: 1px solid var(--border);
+    .actionBtn svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .cardFooter {
+        padding: 0.3rem 0.75rem;
+        min-height: 36px;
     }
 
     .orderControls {
-        flex-direction: row;
-        gap: var(--spacing-1);
-        justify-content: center;
+        gap: 0.3rem;
+    }
+
+    .orderBtn {
+        width: 22px;
+        height: 22px;
+    }
+
+    .orderBtn svg {
+        width: 9px;
+        height: 9px;
+    }
+
+    .orderNumber {
+        font-size: 9px;
+        min-width: 16px;
+    }
+
+    .emptyState {
+        padding: 2.5rem 1rem;
+    }
+
+    .emptyIcon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .emptyIcon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .emptyTitle {
+        font-size: var(--text-base);
+    }
+
+    .emptyDescription {
+        font-size: var(--text-sm);
+    }
+
+    .modalHint {
+        font-size: 10px;
+    }
+
+    .sectionHeader {
+        padding: 0.6rem 0.75rem;
+    }
+
+    .sectionContent {
+        padding: 0.75rem;
+    }
+
+    .sectionIcon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .sectionTitle {
+        font-size: var(--text-sm);
+    }
+
+    .sectionDescription {
+        font-size: var(--text-xs);
+    }
+
+    .modalForm {
+        gap: 0.75rem;
     }
 }

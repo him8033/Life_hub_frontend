@@ -7,13 +7,14 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     FiHeart, FiPlus, FiEdit2, FiTrash2, FiX, FiCheck,
-    FiArrowUp, FiArrowDown, FiMusic, FiBook, FiCamera,
-    FiCoffee, FiTarget
+    FiArrowUp, FiArrowDown, FiInfo, FiMusic, FiBook, FiCamera,
+    FiCoffee, FiTarget, FiCode, FiDroplet, FiSun, FiMoon
 } from 'react-icons/fi';
 
 import FormInput from '@/components/common/forms/FormInput';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
+import { SectionModal } from './common/SectionModal';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -27,20 +28,37 @@ import {
 import { hobbySchema } from '@/lib/validations/portfolio/sections/hobbySchema';
 import styles from '@/styles/portfolio/sections/HobbiesSection.module.css';
 
+// Array of colors for hobby icons
+const HOBBY_COLORS = [
+    '#ec4899', // pink
+    '#f59e0b', // warning
+    '#10b981', // success
+    '#667eea', // primary
+    '#ef4444', // error
+    '#3b82f6', // blue
+    '#8b5cf6', // violet
+    '#14b8a6', // teal
+    '#f97316', // orange
+    '#22d3ee', // cyan
+];
+
 // Random icons for visual variety
-const hobbyIcons = [FiMusic, FiBook, FiCamera, FiCoffee, FiTarget, FiHeart];
+const hobbyIcons = [
+    FiMusic, FiBook, FiCamera, FiCoffee, FiTarget,
+    FiHeart, FiCode, FiDroplet, FiSun, FiMoon
+];
 
 const getHobbyIcon = (index) => {
     const IconComponent = hobbyIcons[index % hobbyIcons.length];
-    return <IconComponent size={16} />;
+    return <IconComponent size={20} />;
 };
 
 const HobbiesSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
-    const [showForm, setShowForm] = useState(false);
-    const [editingId, setEditingId] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [editingHobby, setEditingHobby] = useState(null);
 
     const { data, isLoading, refetch } = useGetHobbiesQuery(snapshotId, { skip: !snapshotId });
     const [createHobby, { isLoading: isCreating }] = useCreateHobbyMutation();
@@ -58,30 +76,41 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
         },
     });
 
-    const { reset, handleSubmit, setValue } = methods;
+    const { reset, handleSubmit } = methods;
+
+    const getHobbyColor = (index) => {
+        return HOBBY_COLORS[index % HOBBY_COLORS.length];
+    };
 
     const handleAdd = () => {
-        setEditingId(null);
-        reset({
-            hobby_name: '',
-        });
-        setShowForm(true);
+        setEditingHobby(null);
+        reset({ hobby_name: '' });
+        setShowModal(true);
+    };
+
+    const handleEdit = (hobby) => {
+        setEditingHobby(hobby);
+        reset({ hobby_name: hobby.hobby_name });
+        setShowModal(true);
     };
 
     const handleCancel = () => {
         reset();
-        setEditingId(null);
-        setShowForm(false);
+        setEditingHobby(null);
+        setShowModal(false);
     };
 
     const handleFormSubmit = async (formData) => {
         try {
-            if (editingId) {
-                await updateHobby({ hobbyId: editingId, data: formData }).unwrap();
-                showSnackbar('Hobby updated', 'success', 3000);
+            if (editingHobby) {
+                await updateHobby({
+                    hobbyId: editingHobby.profilehobby_id,
+                    data: formData
+                }).unwrap();
+                showSnackbar('Hobby updated successfully', 'success', 3000);
             } else {
                 await createHobby({ snapshotId, data: formData }).unwrap();
-                showSnackbar('Hobby added', 'success', 3000);
+                showSnackbar('Hobby added successfully', 'success', 3000);
             }
             handleCancel();
             refetch();
@@ -92,12 +121,6 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to save hobby'), 'error', 5000);
         }
-    };
-
-    const handleEdit = (hobby) => {
-        setValue('hobby_name', hobby.hobby_name);
-        setEditingId(hobby.profilehobby_id);
-        setShowForm(true);
     };
 
     const handleDelete = async (hobbyId, hobbyName) => {
@@ -144,133 +167,154 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
         }
     };
 
+    // Handle Enter key press in form
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSubmit(handleFormSubmit)();
+        }
+    };
+
     if (isLoading) return null;
 
     return (
-        <SectionLayout
-            title="Hobbies & Interests"
-            subtitle="Add your personal interests and activities"
-            icon={FiHeart}
-            isLoading={isLoading}
-            isSaving={isSubmitting}
-            hasData={hobbies.length > 0}
-            onSave={handleAdd}
-            saveButtonText="Add Hobby"
-        >
-            {/* Form */}
-            {showForm && (
-                <div className={styles.formCard}>
+        <>
+            <SectionLayout
+                title="Hobbies & Interests"
+                subtitle={`${hobbies.length} hobby${hobbies.length !== 1 ? 's' : ''}`}
+                icon={FiHeart}
+                isLoading={isLoading}
+                isSaving={isSubmitting}
+                hasData={hobbies.length > 0}
+                onSave={handleAdd}
+                saveButtonText="Add Hobby"
+            >
+                {hobbies.length > 0 ? (
+                    <div className={styles.hobbiesGrid}>
+                        {hobbies.map((hobby, index) => (
+                            <div key={hobby.profilehobby_id} className={styles.hobbyCard}>
+                                <div className={styles.cardHeader}>
+                                    <div className={styles.hobbyInfo}>
+                                        <div
+                                            className={styles.hobbyIcon}
+                                            style={{ backgroundColor: getHobbyColor(index) }}
+                                        >
+                                            {getHobbyIcon(index)}
+                                        </div>
+                                        <div className={styles.hobbyContent}>
+                                            <span className={styles.hobbyName}>{hobby.hobby_name}</span>
+                                        </div>
+                                    </div>
+                                    <div className={styles.cardActions}>
+                                        <button
+                                            className={styles.actionBtn}
+                                            onClick={() => handleEdit(hobby)}
+                                            title="Edit hobby"
+                                            disabled={isSubmitting}
+                                        >
+                                            <FiEdit2 size={14} />
+                                        </button>
+                                        <button
+                                            className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                                            onClick={() => handleDelete(hobby.profilehobby_id, hobby.hobby_name)}
+                                            title="Delete hobby"
+                                            disabled={isSubmitting}
+                                        >
+                                            <FiTrash2 size={14} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className={styles.cardFooter}>
+                                    <div className={styles.orderControls}>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, -1)}
+                                            disabled={index === 0 || isSubmitting}
+                                            title="Move up"
+                                        >
+                                            <FiArrowUp size={12} />
+                                        </button>
+                                        <span className={styles.orderNumber}>{index + 1}</span>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, 1)}
+                                            disabled={index === hobbies.length - 1 || isSubmitting}
+                                            title="Move down"
+                                        >
+                                            <FiArrowDown size={12} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className={styles.emptyState}>
+                        <div className={styles.emptyIcon}>
+                            <FiHeart size={48} />
+                        </div>
+                        <h3 className={styles.emptyTitle}>No hobbies added yet</h3>
+                        <p className={styles.emptyDescription}>
+                            Add your personal interests and activities
+                        </p>
+                        <Button
+                            variant="primary"
+                            onClick={handleAdd}
+                            icon={<FiPlus />}
+                            className={styles.emptyButton}
+                        >
+                            Add Hobby
+                        </Button>
+                    </div>
+                )}
+            </SectionLayout>
+
+            {/* Modal for Add/Edit */}
+            {showModal && (
+                <SectionModal
+                    opened={true}
+                    onClose={handleCancel}
+                    title={editingHobby ? 'Edit Hobby' : 'Add Hobby'}
+                    subtitle={editingHobby ? `Update "${editingHobby.hobby_name}"` : 'Add a new hobby or interest'}
+                    onSave={handleSubmit(handleFormSubmit)}
+                    isSaving={isSubmitting}
+                    saveText={editingHobby ? 'Update' : 'Add'}
+                    size="md"
+                >
                     <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(handleFormSubmit)}>
-                            <div className={styles.formRow}>
-                                <FormInput
-                                    name="hobby_name"
-                                    label="Hobby Name"
-                                    placeholder="e.g., Photography, Reading, Traveling"
-                                    icon={<FiHeart />}
-                                    required
-                                    autoFocus
-                                    disabled={isSubmitting}
-                                    className={styles.formInput}
-                                />
-                                <div className={styles.formActions}>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={handleCancel}
+                        <form className={styles.modalForm} onSubmit={(e) => e.preventDefault()}>
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <FiInfo className={styles.sectionIcon} />
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Hobby Details</h3>
+                                        <p className={styles.sectionDescription}>
+                                            Enter a hobby or personal interest
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.sectionContent}>
+                                    <FormInput
+                                        name="hobby_name"
+                                        label="Hobby Name *"
+                                        placeholder="e.g., Photography, Reading, Traveling"
+                                        icon={<FiHeart size={16} />}
+                                        required
+                                        autoFocus
                                         disabled={isSubmitting}
-                                        icon={<FiX />}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        variant="primary"
-                                        size="sm"
-                                        isLoading={isSubmitting}
-                                        loadingText="Saving..."
-                                        icon={<FiCheck />}
-                                    >
-                                        {editingId ? 'Update' : 'Add'}
-                                    </Button>
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                    <p className={styles.modalHint}>
+                                        Add hobbies that showcase your personality and interests outside of work.
+                                    </p>
                                 </div>
                             </div>
                         </form>
                     </FormProvider>
-                </div>
+                </SectionModal>
             )}
-
-            {/* Hobbies List - Tag/Pill Style */}
-            {hobbies.length > 0 ? (
-                <div className={styles.hobbiesGrid}>
-                    {hobbies.map((hobby, index) => (
-                        <div key={hobby.profilehobby_id} className={styles.hobbyItem}>
-                            <div className={styles.orderControls}>
-                                <button
-                                    className={styles.orderButton}
-                                    onClick={() => handleMove(index, -1)}
-                                    disabled={index === 0 || isSubmitting}
-                                    title="Move up"
-                                >
-                                    <FiArrowUp size={10} />
-                                </button>
-                                <span className={styles.orderNumber}>{index + 1}</span>
-                                <button
-                                    className={styles.orderButton}
-                                    onClick={() => handleMove(index, 1)}
-                                    disabled={index === hobbies.length - 1 || isSubmitting}
-                                    title="Move down"
-                                >
-                                    <FiArrowDown size={10} />
-                                </button>
-                            </div>
-
-                            <div className={styles.hobbyContent}>
-                                <span className={styles.hobbyIcon}>
-                                    {getHobbyIcon(index)}
-                                </span>
-                                <span className={styles.hobbyName}>{hobby.hobby_name}</span>
-                            </div>
-
-                            <div className={styles.hobbyActions}>
-                                <button
-                                    className={styles.actionButton}
-                                    onClick={() => handleEdit(hobby)}
-                                    disabled={isSubmitting}
-                                    title="Edit"
-                                >
-                                    <FiEdit2 size={14} />
-                                </button>
-                                <button
-                                    className={`${styles.actionButton} ${styles.deleteButton}`}
-                                    onClick={() => handleDelete(hobby.profilehobby_id, hobby.hobby_name)}
-                                    disabled={isSubmitting}
-                                    title="Delete"
-                                >
-                                    <FiTrash2 size={14} />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                !showForm && (
-                    <div className={styles.emptyState}>
-                        <FiHeart size={32} />
-                        <p>No hobbies added yet</p>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleAdd}
-                            icon={<FiPlus />}
-                        >
-                            Add your first hobby
-                        </Button>
-                    </div>
-                )
-            )}
-        </SectionLayout>
+        </>
     );
 };
 
