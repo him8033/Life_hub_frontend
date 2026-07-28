@@ -1,202 +1,277 @@
 /* src/styles/portfolio/sections/SkillsSection.module.css */
 
-/* ============================================
-   FORM CARD
-   ============================================ */
+/* ==========================================================
+   SKILLS SECTION
+   Clean • Modern • Card-Based Layout
+========================================================== */
 
-.formCard {
-    padding: var(--spacing-4);
-    background: var(--card);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    margin-bottom: var(--spacing-5);
-    box-shadow: var(--shadow-sm);
-}
+/* ===========================
+   CONTAINER
+=========================== */
 
-.formCard:hover {
-    border-color: var(--primary);
-    box-shadow: var(--shadow-md);
-}
-
-.formRow {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-4);
-    margin-bottom: var(--spacing-4);
-}
-
-.formActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--spacing-2);
-    padding-top: var(--spacing-3);
-    margin-top: var(--spacing-4);
-    border-top: 1px solid var(--border);
-}
-
-/* ============================================
-   LEVEL PREVIEW
-   ============================================ */
-
-.levelPreview {
+.skillsContainer {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-1);
-    padding: var(--spacing-2);
-    background: var(--muted);
-    border-radius: var(--radius-md);
+    gap: 1.5rem;
 }
 
-.previewLabel {
-    font-size: var(--text-xs);
-    color: var(--muted-foreground);
-    font-weight: 500;
-}
+/* ===========================
+   CATEGORY SECTION
+=========================== */
 
-.levelText {
-    font-size: var(--text-xs);
-    color: var(--primary);
-    font-weight: 500;
-}
-
-/* ============================================
-   SKILLS LIST
-   ============================================ */
-
-.skillsList {
+.categorySection {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-4);
+    gap: 0.75rem;
 }
 
-.categoryGroup {
-    margin-bottom: var(--spacing-2);
+.categoryHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .categoryTitle {
-    font-size: var(--text-sm);
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--muted-foreground);
-    margin: 0 0 var(--spacing-3) 0;
+    margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.skillsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-2);
+.categoryCount {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    background: var(--muted);
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--radius-full);
 }
 
-/* ============================================
+/* ===========================
+   SKILLS GRID
+=========================== */
+
+.skillsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.75rem;
+}
+
+/* ===========================
    SKILL CARD
-   ============================================ */
+=========================== */
 
 .skillCard {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-3);
-    transition: all 0.2s ease;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
 }
 
 .skillCard:hover {
     border-color: var(--primary);
     box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
 }
 
 .skillCard.featured {
-    border-color: #f59e0b;
-    background: color-mix(in srgb, #f59e0b 3%, var(--card));
+    border-color: var(--warning);
+    background: color-mix(in srgb, var(--warning) 3%, var(--card));
 }
 
-.skillHeader {
+/* ===========================
+   CARD HEADER
+=========================== */
+
+.cardHeader {
     display: flex;
     align-items: center;
-    gap: var(--spacing-2);
-}
-
-.skillImg {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-sm);
-    object-fit: cover;
-    flex-shrink: 0;
-}
-
-.skillIcon {
-    font-size: var(--text-xl);
-    flex-shrink: 0;
+    justify-content: space-between;
+    gap: 0.75rem;
 }
 
 .skillInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     flex: 1;
     min-width: 0;
 }
 
-.skillName {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    display: block;
-    color: var(--foreground);
-}
-
-.skillLevel {
-    font-size: var(--text-xs);
-    color: var(--muted-foreground);
-}
-
-/* ============================================
-   SKILL ACTIONS
-   ============================================ */
-
-.skillActions {
-    display: flex;
-    gap: 2px;
+.skillIconWrapper {
     flex-shrink: 0;
-}
-
-.actionButton {
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    border-radius: var(--radius-sm);
     background: var(--muted);
+}
+
+.skillImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.skillIcon {
+    font-size: 1.25rem;
+}
+
+.skillName {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.featuredBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.1rem 0.5rem;
+    background: var(--warning);
+    color: #ffffff;
+    border-radius: var(--radius-full);
+    font-size: 0.6rem;
+    font-weight: 600;
+}
+
+.skillMeta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.skillLevel {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.skillExperience {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.7rem;
+    color: var(--muted-foreground);
+}
+
+/* ===========================
+   CARD ACTIONS
+=========================== */
+
+.cardActions {
+    display: flex;
+    gap: 0.3rem;
+    flex-shrink: 0;
+}
+
+.actionBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
+    background: var(--background);
     color: var(--muted-foreground);
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.actionButton:hover:not(:disabled) {
-    background: var(--accent);
-    color: var(--primary);
+.actionBtn:hover:not(:disabled) {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
 }
 
-.actionButton:disabled {
-    opacity: 0.5;
+.actionBtn.deleteBtn:hover {
+    background: var(--destructive);
+    border-color: var(--destructive);
+}
+
+.actionBtn.featureBtn:hover {
+    background: var(--warning);
+    border-color: var(--warning);
+}
+
+.starActive {
+    color: var(--warning);
+    fill: var(--warning);
+}
+
+/* ===========================
+   CARD FOOTER
+=========================== */
+
+.cardFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--border);
+}
+
+.orderControls {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.orderBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--background);
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.orderBtn:hover:not(:disabled) {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.orderBtn:disabled {
+    opacity: 0.3;
     cursor: not-allowed;
 }
 
-.featuredStar {
-    color: #f59e0b;
-    fill: #f59e0b;
+.orderNumber {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    min-width: 18px;
+    text-align: center;
 }
-
-/* ============================================
-   LEVEL BAR
-   ============================================ */
 
 .levelBar {
     display: flex;
     gap: 4px;
-    margin-top: var(--spacing-2);
+    flex: 1;
+    max-width: 120px;
 }
 
 .levelDot {
-    width: 100%;
+    flex: 1;
     height: 4px;
     background: var(--border);
     border-radius: 2px;
@@ -207,113 +282,612 @@
     background: var(--primary);
 }
 
-.featured .levelDot.active {
-    background: #f59e0b;
+.skillCard.featured .levelDot.active {
+    background: var(--warning);
 }
 
-/* ============================================
+/* ===========================
+   MODAL FORM
+=========================== */
+
+.modalForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0.25rem 0;
+}
+
+/* ===========================
+   SECTIONS
+=========================== */
+
+.section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.section:hover {
+    border-color: var(--primary);
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: var(--muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.sectionIcon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    color: var(--primary);
+}
+
+.sectionHeader div {
+    flex: 1;
+    min-width: 0;
+}
+
+.sectionTitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0 0 0.15rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sectionDescription {
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+    margin: 0;
+}
+
+.sectionContent {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ===========================
+   FORM ROW
+=========================== */
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* ===========================
+   LEVEL PREVIEW
+=========================== */
+
+.levelPreview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.75rem 1rem;
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.previewLabel {
+    font-size: 0.7rem;
+    color: var(--muted-foreground);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.levelBarPreview {
+    display: flex;
+    gap: 4px;
+}
+
+.levelText {
+    font-size: 0.8rem;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* ===========================
+   EDIT NOTICE
+=========================== */
+
+.editNotice {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--warning);
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in srgb, var(--warning) 8%, transparent);
+    border-radius: var(--radius-sm);
+    border: 1px solid color-mix(in srgb, var(--warning) 15%, transparent);
+    margin-top: -0.5rem;
+}
+
+.editNotice svg {
+    flex-shrink: 0;
+}
+
+/* ===========================
    EMPTY STATE
-   ============================================ */
+=========================== */
 
 .emptyState {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-8);
-    color: var(--muted-foreground);
+    justify-content: center;
+    padding: 4rem 2rem;
     text-align: center;
     border: 2px dashed var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     background: var(--muted);
 }
 
-.emptyState svg {
+.emptyIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--card);
     color: var(--muted-foreground);
+    margin-bottom: 1.5rem;
+    border: 2px solid var(--border);
 }
 
-.emptyState p {
-    margin: 0;
-    font-size: var(--text-sm);
+.emptyIcon svg {
+    width: 48px;
+    height: 48px;
 }
 
-/* ============================================
-   DARK MODE
-   ============================================ */
-
-.dark .formCard {
-    background: var(--gray-900);
-    border-color: var(--gray-800);
+.emptyTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0 0 0.5rem 0;
 }
 
-.dark .formCard:hover {
-    border-color: var(--primary);
+.emptyDescription {
+    font-size: 0.95rem;
+    color: var(--muted-foreground);
+    margin: 0 0 1.5rem 0;
+    max-width: 400px;
 }
 
-.dark .skillCard {
-    background: var(--gray-900);
-    border-color: var(--gray-800);
+.emptyButton {
+    padding: 0.6rem 1.5rem;
 }
 
-.dark .skillCard:hover {
-    border-color: var(--primary);
+/* ===========================
+   RESPONSIVE - TABLET
+=========================== */
+
+@media (max-width: 1024px) {
+    .skillsGrid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
 }
 
-.dark .actionButton {
-    background: var(--gray-800);
-    border-color: var(--gray-700);
-}
-
-.dark .emptyState {
-    background: var(--gray-900);
-    border-color: var(--gray-800);
-}
-
-.dark .levelPreview {
-    background: var(--gray-800);
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
+/* ===========================
+   RESPONSIVE - MOBILE
+=========================== */
 
 @media (max-width: 768px) {
-    .formRow {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-3);
-    }
-
     .skillsGrid {
         grid-template-columns: 1fr;
     }
 
-    .skillCard {
-        padding: var(--spacing-3);
-    }
-
-    .formActions {
-        flex-direction: column;
-    }
-
-    .formActions button {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .skillHeader {
+    .cardHeader {
         flex-wrap: wrap;
     }
 
     .skillInfo {
-        flex: 1;
-        min-width: 120px;
+        width: 100%;
     }
 
-    .skillActions {
+    .cardActions {
         width: 100%;
         justify-content: flex-end;
-        padding-top: var(--spacing-1);
+        padding-top: 0.4rem;
         border-top: 1px solid var(--border);
+    }
+
+    .cardFooter {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .levelBar {
+        max-width: none;
+        flex: 1;
+        min-width: 80px;
+    }
+
+    .sectionHeader {
+        padding: 0.75rem 1rem;
+    }
+
+    .sectionContent {
+        padding: 1rem;
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .modalForm {
+        gap: 1rem;
+    }
+
+    .emptyState {
+        padding: 3rem 1.5rem;
+    }
+
+    .emptyIcon {
+        width: 64px;
+        height: 64px;
+    }
+
+    .emptyIcon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .emptyTitle {
+        font-size: 1.1rem;
+    }
+
+    .emptyDescription {
+        font-size: 0.85rem;
+    }
+
+    .categoryTitle {
+        font-size: 0.75rem;
+    }
+
+    .skillName {
+        font-size: 0.85rem;
+    }
+}
+
+/* ===========================
+   RESPONSIVE - SMALL MOBILE
+=========================== */
+
+@media (max-width: 480px) {
+    .skillCard {
+        padding: 0.6rem 0.75rem;
+        border-radius: var(--radius-md);
+    }
+
+    .skillIconWrapper {
+        width: 32px;
+        height: 32px;
+    }
+
+    .skillIcon {
+        font-size: 1rem;
+    }
+
+    .actionBtn {
+        width: 28px;
+        height: 28px;
+    }
+
+    .actionBtn svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .orderBtn {
+        width: 24px;
+        height: 24px;
+    }
+
+    .orderBtn svg {
+        width: 10px;
+        height: 10px;
+    }
+
+    .orderNumber {
+        font-size: 9px;
+        min-width: 16px;
+    }
+
+    .skillName {
+        font-size: 0.8rem;
+    }
+
+    .skillLevel {
+        font-size: 0.7rem;
+    }
+
+    .skillExperience {
+        font-size: 0.65rem;
+    }
+
+    .featuredBadge {
+        font-size: 0.55rem;
+        padding: 0.05rem 0.4rem;
+    }
+
+    .cardFooter {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+    }
+
+    .orderControls {
+        justify-content: center;
+    }
+
+    .levelBar {
+        max-width: none;
+        min-width: unset;
+    }
+
+    .sectionHeader {
+        padding: 0.6rem 0.75rem;
+    }
+
+    .sectionContent {
+        padding: 0.75rem;
+    }
+
+    .sectionIcon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .sectionTitle {
+        font-size: 0.9rem;
+    }
+
+    .sectionDescription {
+        font-size: 0.75rem;
+    }
+
+    .levelPreview {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .levelText {
+        font-size: 0.7rem;
+    }
+
+    .editNotice {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .emptyState {
+        padding: 2.5rem 1rem;
+    }
+
+    .emptyIcon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .emptyIcon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .emptyTitle {
+        font-size: 1rem;
+    }
+
+    .emptyDescription {
+        font-size: 0.8rem;
+    }
+
+    .modalForm {
+        gap: 0.75rem;
+    }
+}
+
+/* Add to SkillsSection.module.css */
+
+/* ===========================
+   DISABLED SELECT WRAPPER (Edit Mode)
+=========================== */
+
+.disabledSelectWrapper {
+    position: relative;
+}
+
+/* Overlay for disabled select to show skill info */
+.disabledSelectOverlay {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: var(--muted);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    margin-top: 0.25rem;
+}
+
+.disabledSelectIcon {
+    font-size: 1.25rem;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.disabledSelectName {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.disabledSelectCategory {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin-left: auto;
+    padding: 0.1rem 0.6rem;
+    background: var(--card);
+    border-radius: var(--radius-full);
+}
+
+/* ===========================
+   EDIT NOTICE
+=========================== */
+
+.editNotice {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--warning);
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in srgb, var(--warning) 8%, transparent);
+    border-radius: var(--radius-sm);
+    border: 1px solid color-mix(in srgb, var(--warning) 15%, transparent);
+    margin-top: 0.5rem;
+}
+
+.editNotice svg {
+    flex-shrink: 0;
+}
+
+/* ===========================
+   EDIT BUTTON
+=========================== */
+
+.actionBtn.editBtn:hover {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+/* ===========================
+   RESPONSIVE - MOBILE
+=========================== */
+
+@media (max-width: 768px) {
+    .disabledSelectOverlay {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .disabledSelectCategory {
+        margin-left: 0;
+        width: 100%;
+        text-align: left;
+        padding: 0.1rem 0.6rem;
+    }
+
+    .disabledSelectIcon {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+    }
+
+    .disabledSelectName {
+        font-size: 0.85rem;
+    }
+
+    .editNotice {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .disabledSelectOverlay {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .disabledSelectIcon {
+        width: 24px;
+        height: 24px;
+        font-size: 0.9rem;
+    }
+
+    .disabledSelectName {
+        font-size: 0.8rem;
+    }
+
+    .disabledSelectCategory {
+        font-size: 0.7rem;
+        width: auto;
+    }
+}
+
+/* Add to SkillsSection.module.css */
+
+/* ===========================
+   EDIT NOTICE
+=========================== */
+
+.editNotice {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--warning);
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in srgb, var(--warning) 8%, transparent);
+    border-radius: var(--radius-sm);
+    border: 1px solid color-mix(in srgb, var(--warning) 15%, transparent);
+    margin-top: 0.5rem;
+}
+
+.editNotice svg {
+    flex-shrink: 0;
+}
+
+/* ===========================
+   EDIT BUTTON
+=========================== */
+
+.actionBtn.editBtn:hover {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+/* ===========================
+   RESPONSIVE - MOBILE
+=========================== */
+
+@media (max-width: 768px) {
+    .editNotice {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .editNotice {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
     }
 }
