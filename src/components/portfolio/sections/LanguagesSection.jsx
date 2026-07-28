@@ -2,17 +2,18 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     FiFlag, FiPlus, FiEdit2, FiTrash2, FiX, FiCheck,
-    FiArrowUp, FiArrowDown
+    FiArrowUp, FiArrowDown, FiInfo
 } from 'react-icons/fi';
 
 import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
+import { SectionModal } from './common/SectionModal';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -41,12 +42,26 @@ const proficiencyColors = {
     native: '#f59e0b',
 };
 
+// Array of colors for language icons
+const LANGUAGE_COLORS = [
+    '#667eea', // primary
+    '#10b981', // success
+    '#f59e0b', // warning
+    '#ef4444', // error
+    '#3b82f6', // blue
+    '#8b5cf6', // violet
+    '#ec4899', // pink
+    '#14b8a6', // teal
+    '#f97316', // orange
+    '#22d3ee', // cyan
+];
+
 const LanguagesSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
-    const [showForm, setShowForm] = useState(false);
-    const [editingId, setEditingId] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [editingLanguage, setEditingLanguage] = useState(null);
 
     const { data, isLoading, refetch } = useGetProfileLanguagesQuery(snapshotId, { skip: !snapshotId });
     const { data: masterLanguagesData } = useGetPublicMasterLanguagesQuery();
@@ -59,14 +74,21 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
     const masterLanguages = masterLanguagesData?.data || [];
     const isSubmitting = isCreating || isUpdating;
 
-    // Filter out already added languages
-    const addedLanguageIds = languages.map(l => l.language_value);
-    const availableLanguages = masterLanguages
-        .filter(lang => !addedLanguageIds.includes(lang.masterlanguage_id) || editingId === languages.find(l => l.language_value === lang.masterlanguage_id)?.profilelanguage_id)
-        .map(lang => ({
+    // Get existing language IDs
+    const existingLanguageIds = useMemo(() => {
+        return languages.map(l => l.language_value);
+    }, [languages]);
+
+    // Filter available languages
+    const availableLanguages = useMemo(() => {
+        const filtered = masterLanguages.filter(
+            lang => !existingLanguageIds.includes(lang.masterlanguage_id)
+        );
+        return filtered.map(lang => ({
             value: lang.masterlanguage_id,
-            label: `${lang.name} ${lang.icon || ''}`,
+            label: `${lang.icon || '🌐'} ${lang.name}`,
         }));
+    }, [masterLanguages, existingLanguageIds]);
 
     const methods = useForm({
         resolver: zodResolver(profileLanguageSchema),
@@ -76,31 +98,47 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
         },
     });
 
-    const { reset, handleSubmit, setValue } = methods;
+    const { reset, handleSubmit } = methods;
+
+    const getLanguageColor = (index) => {
+        return LANGUAGE_COLORS[index % LANGUAGE_COLORS.length];
+    };
 
     const handleAdd = () => {
-        setEditingId(null);
+        setEditingLanguage(null);
         reset({
             language_id: '',
             proficiency: '',
         });
-        setShowForm(true);
+        setShowModal(true);
+    };
+
+    const handleEdit = (language) => {
+        setEditingLanguage(language);
+        reset({
+            language_id: language.language_value,
+            proficiency: language.proficiency,
+        });
+        setShowModal(true);
     };
 
     const handleCancel = () => {
         reset();
-        setEditingId(null);
-        setShowForm(false);
+        setEditingLanguage(null);
+        setShowModal(false);
     };
 
     const handleFormSubmit = async (formData) => {
         try {
-            if (editingId) {
-                await updateLanguage({ mappingId: editingId, data: formData }).unwrap();
-                showSnackbar('Language updated', 'success', 3000);
+            if (editingLanguage) {
+                await updateLanguage({
+                    mappingId: editingLanguage.profilelanguage_id,
+                    data: formData
+                }).unwrap();
+                showSnackbar('Language updated successfully', 'success', 3000);
             } else {
                 await createLanguage({ snapshotId, data: formData }).unwrap();
-                showSnackbar('Language added', 'success', 3000);
+                showSnackbar('Language added successfully', 'success', 3000);
             }
             handleCancel();
             refetch();
@@ -109,16 +147,8 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
                 onDataChange();
             }
         } catch (error) {
-            const errorMsg = extractErrorMessage(error, 'Failed to save language');
-            showSnackbar(errorMsg, 'error', 5000);
+            showSnackbar(extractErrorMessage(error, 'Failed to save language'), 'error', 5000);
         }
-    };
-
-    const handleEdit = (language) => {
-        setValue('language_id', language.language_value);
-        setValue('proficiency', language.proficiency);
-        setEditingId(language.profilelanguage_id);
-        setShowForm(true);
     };
 
     const handleDelete = async (mappingId, languageName) => {
@@ -132,7 +162,7 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
         if (!ok) return;
         try {
             await deleteLanguage(mappingId).unwrap();
-            showSnackbar('Language removed', 'success', 3000);
+            showSnackbar('Language removed successfully', 'success', 3000);
             refetch();
 
             if (onDataChange) {
@@ -169,160 +199,211 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
         return proficiencyColors[proficiency] || '#94a3b8';
     };
 
+    const getProficiencyLabel = (proficiency) => {
+        const found = proficiencyOptions.find(p => p.value === proficiency);
+        return found ? found.label : proficiency;
+    };
+
+    // Handle Enter key press in form
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSubmit(handleFormSubmit)();
+        }
+    };
+
     if (isLoading) return null;
 
     return (
-        <SectionLayout
-            title="Languages"
-            subtitle="Add languages you know with proficiency levels"
-            icon={FiFlag}
-            isLoading={isLoading}
-            isSaving={isSubmitting}
-            hasData={languages.length > 0}
-            onSave={handleAdd}
-            saveButtonText="Add Language"
-            isDisabled={availableLanguages.length === 0 && !editingId}
-        >
-            {/* Form */}
-            {showForm && (
-                <div className={styles.formCard}>
-                    <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(handleFormSubmit)}>
-                            <div className={styles.formGrid}>
-                                <FormSelect
-                                    name="language_id"
-                                    label="Language"
-                                    options={availableLanguages}
-                                    placeholder="Select language"
-                                    required
-                                    disabled={isSubmitting || (!editingId && availableLanguages.length === 0)}
-                                />
-                                <FormSelect
-                                    name="proficiency"
-                                    label="Proficiency"
-                                    options={proficiencyOptions}
-                                    placeholder="Select level"
-                                    required
-                                    disabled={isSubmitting}
-                                />
+        <>
+            <SectionLayout
+                title="Languages"
+                subtitle={`${languages.length} language${languages.length !== 1 ? 's' : ''}`}
+                icon={FiFlag}
+                isLoading={isLoading}
+                isSaving={isSubmitting}
+                hasData={languages.length > 0}
+                onSave={handleAdd}
+                saveButtonText="Add Language"
+                isDisabled={availableLanguages.length === 0 && !editingLanguage}
+            >
+                {languages.length > 0 ? (
+                    <div className={styles.languagesGrid}>
+                        {languages.map((language, index) => (
+                            <div key={language.profilelanguage_id} className={styles.languageCard}>
+                                <div className={styles.cardHeader}>
+                                    <div className={styles.languageInfo}>
+                                        <div
+                                            className={styles.languageIcon}
+                                            style={{ backgroundColor: getLanguageColor(index) }}
+                                        >
+                                            <FiFlag size={20} />
+                                        </div>
+                                        <div className={styles.languageContent}>
+                                            <span className={styles.languageName}>
+                                                {language.language_name}
+                                                {language.language_code && (
+                                                    <span className={styles.languageCode}>
+                                                        {language.language_code}
+                                                    </span>
+                                                )}
+                                            </span>
+                                            <div
+                                                className={styles.proficiencyBadge}
+                                                style={{
+                                                    backgroundColor: `${getProficiencyColor(language.proficiency)}20`,
+                                                    color: getProficiencyColor(language.proficiency),
+                                                    borderColor: `${getProficiencyColor(language.proficiency)}40`
+                                                }}
+                                            >
+                                                {getProficiencyLabel(language.proficiency)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={styles.cardActions}>
+                                        <button
+                                            className={styles.actionBtn}
+                                            onClick={() => handleEdit(language)}
+                                            title="Edit language"
+                                            disabled={isSubmitting}
+                                        >
+                                            <FiEdit2 size={14} />
+                                        </button>
+                                        <button
+                                            className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                                            onClick={() => handleDelete(language.profilelanguage_id, language.language_name)}
+                                            title="Remove language"
+                                            disabled={isSubmitting}
+                                        >
+                                            <FiTrash2 size={14} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className={styles.cardFooter}>
+                                    <div className={styles.orderControls}>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, -1)}
+                                            disabled={index === 0 || isSubmitting}
+                                            title="Move up"
+                                        >
+                                            <FiArrowUp size={12} />
+                                        </button>
+                                        <span className={styles.orderNumber}>{index + 1}</span>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, 1)}
+                                            disabled={index === languages.length - 1 || isSubmitting}
+                                            title="Move down"
+                                        >
+                                            <FiArrowDown size={12} />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div className={styles.formActions}>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={handleCancel}
-                                    disabled={isSubmitting}
-                                    icon={<FiX />}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    size="sm"
-                                    isLoading={isSubmitting}
-                                    loadingText="Saving..."
-                                    icon={<FiCheck />}
-                                >
-                                    {editingId ? 'Update' : 'Add'}
-                                </Button>
+                        ))}
+                    </div>
+                ) : (
+                    <div className={styles.emptyState}>
+                        <div className={styles.emptyIcon}>
+                            <FiFlag size={48} />
+                        </div>
+                        <h3 className={styles.emptyTitle}>No languages added yet</h3>
+                        <p className={styles.emptyDescription}>
+                            Add languages you know with proficiency levels
+                        </p>
+                        {masterLanguages.length > 0 ? (
+                            <Button
+                                variant="primary"
+                                onClick={handleAdd}
+                                icon={<FiPlus />}
+                                className={styles.emptyButton}
+                            >
+                                Add Language
+                            </Button>
+                        ) : (
+                            <p className={styles.noLanguagesMessage}>
+                                No languages available in the master list.
+                            </p>
+                        )}
+                    </div>
+                )}
+            </SectionLayout>
+
+            {/* Modal for Add/Edit */}
+            {showModal && (
+                <SectionModal
+                    opened={true}
+                    onClose={handleCancel}
+                    title={editingLanguage ? 'Edit Language' : 'Add Language'}
+                    subtitle={editingLanguage ? `Update "${editingLanguage.language_name}"` : 'Add a new language'}
+                    onSave={handleSubmit(handleFormSubmit)}
+                    isSaving={isSubmitting}
+                    saveText={editingLanguage ? 'Update' : 'Add'}
+                    size="md"
+                >
+                    <FormProvider {...methods}>
+                        <form className={styles.modalForm} onSubmit={(e) => e.preventDefault()}>
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <FiInfo className={styles.sectionIcon} />
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Language Details</h3>
+                                        <p className={styles.sectionDescription}>
+                                            Select a language and set your proficiency level
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.sectionContent}>
+                                    {editingLanguage ? (
+                                        <div className={styles.editLanguageDisplay}>
+                                            <span className={styles.editLanguageIcon}>
+                                                {editingLanguage.language_icon || '🌐'}
+                                            </span>
+                                            <span className={styles.editLanguageName}>
+                                                {editingLanguage.language_name}
+                                            </span>
+                                            <span className={styles.editLanguageCode}>
+                                                {editingLanguage.language_code}
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <FormSelect
+                                            name="language_id"
+                                            label="Select Language *"
+                                            options={availableLanguages}
+                                            placeholder="Search and select a language..."
+                                            required
+                                            disabled={isSubmitting || availableLanguages.length === 0}
+                                            onKeyDown={handleKeyDown}
+                                        />
+                                    )}
+                                    <FormSelect
+                                        name="proficiency"
+                                        label="Proficiency Level *"
+                                        options={proficiencyOptions}
+                                        placeholder="Select your proficiency level..."
+                                        required
+                                        disabled={isSubmitting}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                    {editingLanguage && (
+                                        <p className={styles.editNotice}>
+                                            <FiInfo size={14} />
+                                            Language name cannot be changed. To change the language, please remove and add a new one.
+                                        </p>
+                                    )}
+                                    <p className={styles.modalHint}>
+                                        Choose the proficiency level that best describes your ability in this language.
+                                    </p>
+                                </div>
                             </div>
                         </form>
                     </FormProvider>
-                </div>
+                </SectionModal>
             )}
-
-            {/* Languages List */}
-            {languages.length > 0 ? (
-                <div className={styles.languagesList}>
-                    {languages.map((language, index) => (
-                        <div key={language.profilelanguage_id} className={styles.languageItem}>
-                            <div className={styles.orderControls}>
-                                <button
-                                    className={styles.orderButton}
-                                    onClick={() => handleMove(index, -1)}
-                                    disabled={index === 0 || isSubmitting}
-                                    title="Move up"
-                                >
-                                    <FiArrowUp size={10} />
-                                </button>
-                                <span className={styles.orderNumber}>{index + 1}</span>
-                                <button
-                                    className={styles.orderButton}
-                                    onClick={() => handleMove(index, 1)}
-                                    disabled={index === languages.length - 1 || isSubmitting}
-                                    title="Move down"
-                                >
-                                    <FiArrowDown size={10} />
-                                </button>
-                            </div>
-
-                            <div className={styles.languageIcon}>
-                                <FiFlag />
-                            </div>
-
-                            <div className={styles.languageInfo}>
-                                <div className={styles.languageName}>
-                                    {language.language_name}
-                                    {language.language_code && (
-                                        <span className={styles.languageCode}>
-                                            {language.language_code}
-                                        </span>
-                                    )}
-                                </div>
-                                <div
-                                    className={styles.proficiencyBadge}
-                                    style={{
-                                        backgroundColor: `${getProficiencyColor(language.proficiency)}20`,
-                                        color: getProficiencyColor(language.proficiency),
-                                        borderColor: `${getProficiencyColor(language.proficiency)}40`
-                                    }}
-                                >
-                                    {language.proficiency}
-                                </div>
-                            </div>
-
-                            <div className={styles.languageActions}>
-                                <button
-                                    className={styles.actionButton}
-                                    onClick={() => handleEdit(language)}
-                                    disabled={isSubmitting}
-                                    title="Edit"
-                                >
-                                    <FiEdit2 size={14} />
-                                </button>
-                                <button
-                                    className={`${styles.actionButton} ${styles.deleteButton}`}
-                                    onClick={() => handleDelete(language.profilelanguage_id, language.language_name)}
-                                    disabled={isSubmitting}
-                                    title="Delete"
-                                >
-                                    <FiTrash2 size={14} />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                !showForm && (
-                    <div className={styles.emptyState}>
-                        <FiFlag size={32} />
-                        <p>No languages added yet</p>
-                        {masterLanguages.length > 0 && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleAdd}
-                                icon={<FiPlus />}
-                            >
-                                Add your first language
-                            </Button>
-                        )}
-                    </div>
-                )
-            )}
-        </SectionLayout>
+        </>
     );
 };
 
