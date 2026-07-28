@@ -5,10 +5,10 @@
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { 
-    FiBriefcase, FiPlus, FiEdit2, FiTrash2, 
-    FiArrowUp, FiArrowDown, FiX, FiCheck, 
-    FiCalendar, FiMapPin, FiImage, FiTrash 
+import {
+    FiBriefcase, FiPlus, FiEdit2, FiTrash2,
+    FiCalendar, FiMapPin, FiImage, FiX, FiCheck,
+    FiArrowUp, FiArrowDown, FiInfo, FiLink
 } from 'react-icons/fi';
 
 import FormInput from '@/components/common/forms/FormInput';
@@ -17,6 +17,7 @@ import FormSelect from '@/components/common/forms/FormSelect';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
+import { SectionModal } from './common/SectionModal';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -43,8 +44,8 @@ const ExperienceSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
-    const [showForm, setShowForm] = useState(false);
-    const [editingId, setEditingId] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [editingExperience, setEditingExperience] = useState(null);
     const [logoFile, setLogoFile] = useState(null);
     const [logoPreview, setLogoPreview] = useState('');
     const [removeLogo, setRemoveLogo] = useState(false);
@@ -60,37 +61,37 @@ const ExperienceSection = ({ snapshotId, onDataChange }) => {
 
     const methods = useForm({
         resolver: zodResolver(experienceSchema),
-        defaultValues: { 
-            company_name: '', 
-            role: '', 
-            employment_type: '', 
-            start_date: '', 
-            end_date: '', 
-            is_current: 'false', 
-            description: '', 
-            full_address: '' 
+        defaultValues: {
+            company_name: '',
+            role: '',
+            employment_type: '',
+            start_date: '',
+            end_date: '',
+            is_current: 'false',
+            description: '',
+            full_address: ''
         },
     });
 
-    const { reset, handleSubmit, setValue, watch } = methods;
+    const { reset, handleSubmit, watch } = methods;
     const isCurrent = watch('is_current');
 
-    const handleLogoSelect = (file, url) => { 
-        setLogoFile(file); 
-        setLogoPreview(url); 
-        setRemoveLogo(false); 
+    const handleLogoSelect = (file, url) => {
+        setLogoFile(file);
+        setLogoPreview(url);
+        setRemoveLogo(false);
     };
-    
-    const handleLogoRemove = () => { 
-        setLogoFile(null); 
-        setLogoPreview(''); 
-        setRemoveLogo(false); 
+
+    const handleLogoRemove = () => {
+        setLogoFile(null);
+        setLogoPreview('');
+        setRemoveLogo(false);
     };
-    
-    const handleRemoveExistingLogo = () => { 
-        setLogoFile(null); 
-        setLogoPreview(''); 
-        setRemoveLogo(true); 
+
+    const handleRemoveExistingLogo = () => {
+        setLogoFile(null);
+        setLogoPreview('');
+        setRemoveLogo(true);
     };
 
     const handleFormSubmit = async (formData) => {
@@ -113,19 +114,17 @@ const ExperienceSection = ({ snapshotId, onDataChange }) => {
                 payload.append('company_logo', logoFile, logoFile.name);
             }
 
-            if (editingId) {
-                await updateExperience({ expId: editingId, data: payload }).unwrap();
-                showSnackbar('Experience updated', 'success', 3000);
+            if (editingExperience) {
+                await updateExperience({
+                    expId: editingExperience.profileexperience_id,
+                    data: payload
+                }).unwrap();
+                showSnackbar('Experience updated successfully', 'success', 3000);
             } else {
                 await createExperience({ snapshotId, data: payload }).unwrap();
-                showSnackbar('Experience added', 'success', 3000);
+                showSnackbar('Experience added successfully', 'success', 3000);
             }
-            reset();
-            setEditingId(null);
-            setShowForm(false);
-            setLogoFile(null);
-            setLogoPreview('');
-            setRemoveLogo(false);
+            handleCancel();
             refetch();
 
             if (onDataChange) {
@@ -137,44 +136,50 @@ const ExperienceSection = ({ snapshotId, onDataChange }) => {
     };
 
     const handleAdd = () => {
-        setEditingId(null);
-        reset({ 
-            company_name: '', 
-            role: '', 
-            employment_type: '', 
-            start_date: '', 
-            end_date: '', 
-            is_current: 'false', 
-            description: '', 
-            full_address: '' 
+        setEditingExperience(null);
+        reset({
+            company_name: '',
+            role: '',
+            employment_type: '',
+            start_date: '',
+            end_date: '',
+            is_current: 'false',
+            description: '',
+            full_address: ''
         });
         setLogoFile(null);
         setLogoPreview('');
         setRemoveLogo(false);
-        setShowForm(true);
+        setShowModal(true);
     };
 
     const handleEdit = (exp) => {
-        setValue('company_name', exp.company_name);
-        setValue('role', exp.role);
-        setValue('employment_type', exp.employment_type);
-        setValue('start_date', exp.start_date);
-        setValue('end_date', exp.end_date || '');
-        setValue('is_current', String(exp.is_current ?? false));
-        setValue('description', exp.description || '');
-        setValue('full_address', exp.full_address || '');
-        if (exp.company_logo_url) setLogoPreview(exp.company_logo_url);
-        setEditingId(exp.profileexperience_id);
-        setShowForm(true);
+        setEditingExperience(exp);
+        reset({
+            company_name: exp.company_name,
+            role: exp.role,
+            employment_type: exp.employment_type,
+            start_date: exp.start_date,
+            end_date: exp.end_date || '',
+            is_current: String(exp.is_current ?? false),
+            description: exp.description || '',
+            full_address: exp.full_address || '',
+        });
+        if (exp.company_logo_url) {
+            setLogoPreview(exp.company_logo_url);
+        }
+        setLogoFile(null);
+        setRemoveLogo(false);
+        setShowModal(true);
     };
 
     const handleCancel = () => {
         reset();
-        setEditingId(null);
-        setShowForm(false);
+        setEditingExperience(null);
         setLogoFile(null);
         setLogoPreview('');
         setRemoveLogo(false);
+        setShowModal(false);
     };
 
     const handleDelete = async (expId, role) => {
@@ -206,7 +211,7 @@ const ExperienceSection = ({ snapshotId, onDataChange }) => {
         [newList[index], newList[targetIndex]] = [newList[targetIndex], newList[index]];
         try {
             await reorderExperience({
-                snapshotId, 
+                snapshotId,
                 data: { order: newList.map(e => e.profileexperience_id) }
             }).unwrap();
             refetch();
@@ -224,225 +229,307 @@ const ExperienceSection = ({ snapshotId, onDataChange }) => {
     if (isLoading) return null;
 
     return (
-        <SectionLayout
-            title="Experience"
-            subtitle="Add your work history"
-            icon={FiBriefcase}
-            isLoading={isLoading}
-            isSaving={isSubmitting}
-            hasData={experiences.length > 0}
-            onSave={handleAdd}
-            saveButtonText="Add Experience"
-        >
-            {/* Form */}
-            {showForm && (
-                <div className={styles.formCard}>
-                    <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(handleFormSubmit)}>
-                            <div className={styles.formRow}>
-                                <FormInput 
-                                    name="company_name" 
-                                    label="Company *" 
-                                    placeholder="Company name" 
-                                    icon={<FiBriefcase />} 
-                                    required 
-                                    disabled={isSubmitting} 
-                                />
-                                <FormInput 
-                                    name="role" 
-                                    label="Role *" 
-                                    placeholder="e.g., Senior Developer" 
-                                    icon={<FiBriefcase />} 
-                                    required 
-                                    disabled={isSubmitting} 
-                                />
-                            </div>
-                            <div className={styles.formRow}>
-                                <FormSelect 
-                                    name="employment_type" 
-                                    label="Employment Type *" 
-                                    options={employmentTypes} 
-                                    placeholder="Select type" 
-                                    required 
-                                    disabled={isSubmitting} 
-                                />
-                                <div>
-                                    <FormInput 
-                                        name="start_date" 
-                                        label="Start Date *" 
-                                        type="date" 
-                                        icon={<FiCalendar />} 
-                                        required 
-                                        disabled={isSubmitting} 
-                                    />
-                                    {isCurrent !== 'true' && (
-                                        <FormInput 
-                                            name="end_date" 
-                                            label="End Date" 
-                                            type="date" 
-                                            icon={<FiCalendar />} 
-                                            disabled={isSubmitting} 
-                                        />
-                                    )}
-                                </div>
-                            </div>
-                            <FormSelect 
-                                name="is_current" 
-                                label="Current Job?" 
-                                options={[
-                                    { value: 'false', label: 'No' }, 
-                                    { value: 'true', label: 'Yes' }
-                                ]} 
-                                disabled={isSubmitting} 
-                            />
-                            <FormTextarea 
-                                name="description" 
-                                label="Description" 
-                                placeholder="Job responsibilities..." 
-                                rows={3} 
-                                disabled={isSubmitting} 
-                            />
-                            <FormInput 
-                                name="full_address" 
-                                label="Location" 
-                                placeholder="City, Country" 
-                                icon={<FiMapPin />} 
-                                disabled={isSubmitting} 
-                            />
-
-                            <div className={styles.formItem}>
-                                <label className={styles.logoLabel}>
-                                    <FiImage /> Company Logo
-                                </label>
-                                {editingId && logoPreview && !logoFile && !removeLogo && (
-                                    <div className={styles.existingLogo}>
-                                        <img src={logoPreview} alt="Logo" className={styles.logoPreview} />
-                                        <button 
-                                            type="button" 
-                                            className={styles.removeLogoButton} 
-                                            onClick={handleRemoveExistingLogo} 
-                                            disabled={isSubmitting}
+        <>
+            <SectionLayout
+                title="Experience"
+                subtitle={`${experiences.length} experience${experiences.length !== 1 ? 's' : ''}`}
+                icon={FiBriefcase}
+                isLoading={isLoading}
+                isSaving={isSubmitting}
+                hasData={experiences.length > 0}
+                onSave={handleAdd}
+                saveButtonText="Add Experience"
+            >
+                {experiences.length > 0 ? (
+                    <div className={styles.experienceContainer}>
+                        {experiences.map((exp, index) => (
+                            <div key={exp.profileexperience_id} className={styles.experienceCard}>
+                                <div className={styles.cardHeader}>
+                                    <div className={styles.experienceInfo}>
+                                        <h3 className={styles.experienceTitle}>{exp.role}</h3>
+                                        {exp.is_current && (
+                                            <span className={styles.currentBadge}>Current</span>
+                                        )}
+                                    </div>
+                                    <div className={styles.cardActions}>
+                                        <button
+                                            className={styles.actionBtn}
+                                            onClick={() => handleEdit(exp)}
+                                            title="Edit experience"
                                         >
-                                            <FiTrash /> Remove
+                                            <FiEdit2 size={16} />
+                                        </button>
+                                        <button
+                                            className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                                            onClick={() => handleDelete(exp.profileexperience_id, exp.role)}
+                                            title="Delete experience"
+                                        >
+                                            <FiTrash2 size={16} />
                                         </button>
                                     </div>
-                                )}
-                                {(!logoPreview || logoFile || removeLogo) && (
-                                    <SquareImageUpload 
-                                        onImageSelect={handleLogoSelect} 
-                                        onRemove={handleLogoRemove} 
-                                        previewUrl={logoFile ? logoPreview : ''} 
-                                        disabled={isSubmitting} 
-                                        maxSizeMB={2} 
-                                        label="Upload Logo" 
-                                        size="small" 
-                                        enableCrop 
-                                        aspectRatio={1} 
-                                        showCropControls 
-                                    />
-                                )}
+                                </div>
+
+                                <div className={styles.cardBody}>
+                                    {exp.company_logo_url ? (
+                                        <div className={styles.logoWrapper}>
+                                            <img
+                                                src={exp.company_logo_url}
+                                                alt={exp.company_name}
+                                                className={styles.logo}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className={styles.logoPlaceholder}>
+                                            <FiBriefcase size={32} />
+                                            <span>{exp.company_name?.charAt(0) || '?'}</span>
+                                        </div>
+                                    )}
+
+                                    <div className={styles.content}>
+                                        <p className={styles.companyName}>{exp.company_name}</p>
+                                        <p className={styles.employmentType}>{exp.employment_type}</p>
+
+                                        <div className={styles.meta}>
+                                            <span className={styles.dateRange}>
+                                                <FiCalendar size={14} />
+                                                {formatDate(exp.start_date)} - {exp.is_current ? 'Present' : formatDate(exp.end_date)}
+                                            </span>
+                                            {exp.full_address && (
+                                                <span className={styles.location}>
+                                                    <FiMapPin size={14} />
+                                                    {exp.full_address}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {exp.description && (
+                                            <p className={styles.description}>{exp.description}</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className={styles.cardFooter}>
+                                    <div className={styles.orderControls}>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, -1)}
+                                            disabled={index === 0 || isSubmitting}
+                                            title="Move up"
+                                        >
+                                            <FiArrowUp size={12} />
+                                        </button>
+                                        <span className={styles.orderNumber}>{index + 1}</span>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, 1)}
+                                            disabled={index === experiences.length - 1 || isSubmitting}
+                                            title="Move down"
+                                        >
+                                            <FiArrowDown size={12} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className={styles.emptyState}>
+                        <div className={styles.emptyIcon}>
+                            <FiBriefcase size={48} />
+                        </div>
+                        <h3 className={styles.emptyTitle}>No experience added yet</h3>
+                        <p className={styles.emptyDescription}>
+                            Add your work history to showcase your professional journey
+                        </p>
+                        <Button
+                            variant="primary"
+                            onClick={handleAdd}
+                            icon={<FiPlus />}
+                            className={styles.emptyButton}
+                        >
+                            Add Experience
+                        </Button>
+                    </div>
+                )}
+            </SectionLayout>
+
+            {/* Modal for Add/Edit - Improved Design */}
+            {showModal && (
+                <SectionModal
+                    opened={true}
+                    onClose={handleCancel}
+                    title={editingExperience ? 'Edit Experience' : 'Add Experience'}
+                    subtitle={editingExperience ? `Update "${editingExperience.role}"` : 'Add your work experience'}
+                    onSave={handleSubmit(handleFormSubmit)}
+                    isSaving={isSubmitting}
+                    saveText={editingExperience ? 'Update' : 'Add'}
+                    size="lg"
+                >
+                    <FormProvider {...methods}>
+                        <form className={styles.modalForm}>
+                            {/* Company & Role Section */}
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <FiInfo className={styles.sectionIcon} />
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Company & Role</h3>
+                                        <p className={styles.sectionDescription}>
+                                            Basic information about your position
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.sectionContent}>
+                                    <div className={styles.formRow}>
+                                        <FormInput
+                                            name="company_name"
+                                            label="Company *"
+                                            placeholder="Company name"
+                                            icon={<FiBriefcase size={16} />}
+                                            required
+                                            disabled={isSubmitting}
+                                        />
+                                        <FormInput
+                                            name="role"
+                                            label="Role *"
+                                            placeholder="e.g., Senior Developer"
+                                            icon={<FiBriefcase size={16} />}
+                                            required
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className={styles.formActions}>
-                                <Button 
-                                    type="button" 
-                                    variant="outline" 
-                                    size="sm" 
-                                    onClick={handleCancel} 
-                                    disabled={isSubmitting} 
-                                    icon={<FiX />}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button 
-                                    type="submit" 
-                                    variant="primary" 
-                                    size="sm" 
-                                    isLoading={isSubmitting} 
-                                    loadingText="Saving..." 
-                                    icon={<FiCheck />}
-                                >
-                                    {editingId ? 'Update' : 'Add'}
-                                </Button>
+                            {/* Employment Details Section */}
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <FiLink className={styles.sectionIcon} />
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Employment Details</h3>
+                                        <p className={styles.sectionDescription}>
+                                            Type, dates and location
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.sectionContent}>
+                                    <div className={styles.formRow}>
+                                        <FormSelect
+                                            name="employment_type"
+                                            label="Employment Type *"
+                                            options={employmentTypes}
+                                            placeholder="Select type"
+                                            required
+                                            disabled={isSubmitting}
+                                        />
+                                        <FormSelect
+                                            name="is_current"
+                                            label="Current Job?"
+                                            options={[
+                                                { value: 'false', label: 'No' },
+                                                { value: 'true', label: 'Yes' }
+                                            ]}
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div className={styles.formRow}>
+                                        <FormInput
+                                            name="start_date"
+                                            label="Start Date *"
+                                            type="date"
+                                            icon={<FiCalendar size={16} />}
+                                            required
+                                            disabled={isSubmitting}
+                                        />
+                                        {isCurrent !== 'true' && (
+                                            <FormInput
+                                                name="end_date"
+                                                label="End Date"
+                                                type="date"
+                                                icon={<FiCalendar size={16} />}
+                                                disabled={isSubmitting}
+                                            />
+                                        )}
+                                    </div>
+                                    <FormInput
+                                        name="full_address"
+                                        label="Location"
+                                        placeholder="City, Country"
+                                        icon={<FiMapPin size={16} />}
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Description Section */}
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <FiInfo className={styles.sectionIcon} />
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Description</h3>
+                                        <p className={styles.sectionDescription}>
+                                            Your responsibilities and achievements
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.sectionContent}>
+                                    <FormTextarea
+                                        name="description"
+                                        label="Description"
+                                        placeholder="Describe your responsibilities and achievements..."
+                                        rows={3}
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Company Logo Section */}
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <FiImage className={styles.sectionIcon} />
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Company Logo</h3>
+                                        <p className={styles.sectionDescription}>
+                                            Upload your company logo
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.sectionContent}>
+                                    {editingExperience && logoPreview && !logoFile && !removeLogo ? (
+                                        <div className={styles.existingLogo}>
+                                            <img src={logoPreview} alt="Logo" className={styles.logoPreview} />
+                                            <button
+                                                type="button"
+                                                className={styles.removeLogoBtn}
+                                                onClick={handleRemoveExistingLogo}
+                                                disabled={isSubmitting}
+                                            >
+                                                <FiX size={12} /> Remove
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <SquareImageUpload
+                                            onImageSelect={handleLogoSelect}
+                                            onRemove={handleLogoRemove}
+                                            previewUrl={logoFile ? logoPreview : ''}
+                                            disabled={isSubmitting}
+                                            maxSizeMB={2}
+                                            label="Upload Logo"
+                                            size="small"
+                                            enableCrop
+                                            aspectRatio={1}
+                                            showCropControls
+                                        />
+                                    )}
+                                    <p className={styles.logoHint}>
+                                        Square image recommended (e.g., 100×100px)
+                                    </p>
+                                </div>
                             </div>
                         </form>
                     </FormProvider>
-                </div>
+                </SectionModal>
             )}
-
-            {/* List */}
-            {experiences.length > 0 ? (
-                <div className={styles.list}>
-                    {experiences.map((exp, index) => (
-                        <div key={exp.profileexperience_id} className={styles.item}>
-                            <div className={styles.orderControls}>
-                                <button 
-                                    className={styles.orderButton} 
-                                    onClick={() => handleMove(index, -1)} 
-                                    disabled={index === 0 || isSubmitting}
-                                >
-                                    <FiArrowUp size={10} />
-                                </button>
-                                <span className={styles.orderNumber}>{index + 1}</span>
-                                <button 
-                                    className={styles.orderButton} 
-                                    onClick={() => handleMove(index, 1)} 
-                                    disabled={index === experiences.length - 1 || isSubmitting}
-                                >
-                                    <FiArrowDown size={10} />
-                                </button>
-                            </div>
-                            <div className={styles.logo}>
-                                {exp.company_logo_url ? (
-                                    <img src={exp.company_logo_url} alt={exp.company_name} />
-                                ) : (
-                                    <FiBriefcase />
-                                )}
-                            </div>
-                            <div className={styles.info}>
-                                <h4 className={styles.role}>{exp.role}</h4>
-                                <p className={styles.company}>{exp.company_name} · {exp.employment_type}</p>
-                                <div className={styles.meta}>
-                                    <span className={styles.date}>
-                                        <FiCalendar size={12} /> {formatDate(exp.start_date)} - {exp.is_current ? 'Present' : formatDate(exp.end_date)}
-                                    </span>
-                                    {exp.is_current && <span className={styles.currentBadge}>Current</span>}
-                                </div>
-                                {exp.description && <p className={styles.description}>{exp.description}</p>}
-                            </div>
-                            <div className={styles.actions}>
-                                <button 
-                                    className={styles.actionButton} 
-                                    onClick={() => handleEdit(exp)} 
-                                    disabled={isSubmitting}
-                                    title="Edit"
-                                >
-                                    <FiEdit2 size={14} />
-                                </button>
-                                <button 
-                                    className={`${styles.actionButton} ${styles.deleteButton}`} 
-                                    onClick={() => handleDelete(exp.profileexperience_id, exp.role)} 
-                                    disabled={isSubmitting}
-                                    title="Delete"
-                                >
-                                    <FiTrash2 size={14} />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                !showForm && (
-                    <div className={styles.emptyState}>
-                        <FiBriefcase size={32} />
-                        <p>No experience added yet</p>
-                        <Button variant="outline" size="sm" onClick={handleAdd} icon={<FiPlus />}>
-                            Add your first experience
-                        </Button>
-                    </div>
-                )
-            )}
-        </SectionLayout>
+        </>
     );
 };
 
