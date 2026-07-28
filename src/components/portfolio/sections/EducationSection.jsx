@@ -7,7 +7,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     FiBook, FiPlus, FiEdit2, FiTrash2, FiArrowUp, FiArrowDown,
-    FiX, FiCheck, FiCalendar, FiMapPin, FiAward
+    FiCalendar, FiMapPin, FiAward, FiInfo, FiLink, FiX, FiCheck
 } from 'react-icons/fi';
 
 import FormInput from '@/components/common/forms/FormInput';
@@ -15,6 +15,7 @@ import FormTextarea from '@/components/common/forms/FormTextarea';
 import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
+import { SectionModal } from './common/SectionModal';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
@@ -32,8 +33,8 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
-    const [showForm, setShowForm] = useState(false);
-    const [editingId, setEditingId] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [editingEducation, setEditingEducation] = useState(null);
 
     const { data, isLoading, refetch } = useGetProfileEducationQuery(snapshotId, { skip: !snapshotId });
     const [createEducation, { isLoading: isCreating }] = useCreateProfileEducationMutation();
@@ -58,11 +59,11 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
         },
     });
 
-    const { reset, handleSubmit, setValue, watch } = methods;
+    const { reset, handleSubmit, watch } = methods;
     const isCurrent = watch('is_current');
 
     const handleAdd = () => {
-        setEditingId(null);
+        setEditingEducation(null);
         reset({
             degree_name: '',
             institution_name: '',
@@ -73,13 +74,13 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
             description: '',
             full_address: '',
         });
-        setShowForm(true);
+        setShowModal(true);
     };
 
     const handleCancel = () => {
         reset();
-        setEditingId(null);
-        setShowForm(false);
+        setEditingEducation(null);
+        setShowModal(false);
     };
 
     const handleFormSubmit = async (formData) => {
@@ -90,12 +91,15 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
                 end_date: formData.is_current === 'true' ? null : formData.end_date || null,
             };
 
-            if (editingId) {
-                await updateEducation({ eduId: editingId, data: payload }).unwrap();
-                showSnackbar('Education updated', 'success', 3000);
+            if (editingEducation) {
+                await updateEducation({
+                    eduId: editingEducation.profileeducation_id,
+                    data: payload
+                }).unwrap();
+                showSnackbar('Education updated successfully', 'success', 3000);
             } else {
                 await createEducation({ snapshotId, data: payload }).unwrap();
-                showSnackbar('Education added', 'success', 3000);
+                showSnackbar('Education added successfully', 'success', 3000);
             }
             handleCancel();
             refetch();
@@ -109,16 +113,18 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
     };
 
     const handleEdit = (edu) => {
-        setValue('degree_name', edu.degree_name);
-        setValue('institution_name', edu.institution_name);
-        setValue('start_date', edu.start_date);
-        setValue('end_date', edu.end_date || '');
-        setValue('is_current', String(edu.is_current ?? false));
-        setValue('score', edu.score || '');
-        setValue('description', edu.description || '');
-        setValue('full_address', edu.full_address || '');
-        setEditingId(edu.profileeducation_id);
-        setShowForm(true);
+        setEditingEducation(edu);
+        reset({
+            degree_name: edu.degree_name,
+            institution_name: edu.institution_name,
+            start_date: edu.start_date,
+            end_date: edu.end_date || '',
+            is_current: String(edu.is_current ?? false),
+            score: edu.score || '',
+            description: edu.description || '',
+            full_address: edu.full_address || '',
+        });
+        setShowModal(true);
     };
 
     const handleDelete = async (eduId, degreeName) => {
@@ -173,191 +179,256 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
     if (isLoading) return null;
 
     return (
-        <SectionLayout
-            title="Education"
-            subtitle="Add your academic qualifications"
-            icon={FiBook}
-            isLoading={isLoading}
-            isSaving={isSubmitting}
-            hasData={educations.length > 0}
-            onSave={handleAdd}
-            saveButtonText="Add Education"
-        >
-            {/* Form */}
-            {showForm && (
-                <div className={styles.formCard}>
-                    <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(handleFormSubmit)}>
-                            <div className={styles.formRow}>
-                                <FormInput
-                                    name="degree_name"
-                                    label="Degree *"
-                                    placeholder="e.g., Bachelor of Technology"
-                                    icon={<FiBook />}
-                                    required
-                                    disabled={isSubmitting}
-                                />
-                                <FormInput
-                                    name="institution_name"
-                                    label="Institution *"
-                                    placeholder="e.g., IIT Delhi"
-                                    icon={<FiAward />}
-                                    required
-                                    disabled={isSubmitting}
-                                />
+        <>
+            <SectionLayout
+                title="Education"
+                subtitle={`${educations.length} education${educations.length !== 1 ? 's' : ''}`}
+                icon={FiBook}
+                isLoading={isLoading}
+                isSaving={isSubmitting}
+                hasData={educations.length > 0}
+                onSave={handleAdd}
+                saveButtonText="Add Education"
+            >
+                {educations.length > 0 ? (
+                    <div className={styles.educationContainer}>
+                        {educations.map((edu, index) => (
+                            <div key={edu.profileeducation_id} className={styles.educationCard}>
+                                <div className={styles.cardHeader}>
+                                    <div className={styles.educationInfo}>
+                                        <h3 className={styles.educationTitle}>{edu.degree_name}</h3>
+                                        {edu.is_current && (
+                                            <span className={styles.currentBadge}>Current</span>
+                                        )}
+                                    </div>
+                                    <div className={styles.cardActions}>
+                                        <button
+                                            className={styles.actionBtn}
+                                            onClick={() => handleEdit(edu)}
+                                            title="Edit education"
+                                        >
+                                            <FiEdit2 size={16} />
+                                        </button>
+                                        <button
+                                            className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                                            onClick={() => handleDelete(edu.profileeducation_id, edu.degree_name)}
+                                            title="Delete education"
+                                        >
+                                            <FiTrash2 size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className={styles.cardBody}>
+                                    <div className={styles.iconWrapper}>
+                                        <FiBook size={32} />
+                                    </div>
+
+                                    <div className={styles.content}>
+                                        <p className={styles.institutionName}>{edu.institution_name}</p>
+
+                                        <div className={styles.meta}>
+                                            <span className={styles.dateRange}>
+                                                <FiCalendar size={14} />
+                                                {formatDate(edu.start_date)} - {edu.is_current ? 'Present' : formatDate(edu.end_date)}
+                                            </span>
+                                            {edu.score && (
+                                                <span className={styles.scoreBadge}>
+                                                    <FiAward size={12} />
+                                                    {edu.score}
+                                                </span>
+                                            )}
+                                            {edu.full_address && (
+                                                <span className={styles.location}>
+                                                    <FiMapPin size={14} />
+                                                    {edu.full_address}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {edu.description && (
+                                            <p className={styles.description}>{edu.description}</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className={styles.cardFooter}>
+                                    <div className={styles.orderControls}>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, -1)}
+                                            disabled={index === 0 || isSubmitting}
+                                            title="Move up"
+                                        >
+                                            <FiArrowUp size={12} />
+                                        </button>
+                                        <span className={styles.orderNumber}>{index + 1}</span>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, 1)}
+                                            disabled={index === educations.length - 1 || isSubmitting}
+                                            title="Move down"
+                                        >
+                                            <FiArrowDown size={12} />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div className={styles.formRow}>
-                                <FormInput
-                                    name="start_date"
-                                    label="Start Date *"
-                                    type="date"
-                                    icon={<FiCalendar />}
-                                    required
-                                    disabled={isSubmitting}
-                                />
-                                {isCurrent !== 'true' && (
+                        ))}
+                    </div>
+                ) : (
+                    <div className={styles.emptyState}>
+                        <div className={styles.emptyIcon}>
+                            <FiBook size={48} />
+                        </div>
+                        <h3 className={styles.emptyTitle}>No education added yet</h3>
+                        <p className={styles.emptyDescription}>
+                            Add your academic qualifications to showcase your educational background
+                        </p>
+                        <Button
+                            variant="primary"
+                            onClick={handleAdd}
+                            icon={<FiPlus />}
+                            className={styles.emptyButton}
+                        >
+                            Add Education
+                        </Button>
+                    </div>
+                )}
+            </SectionLayout>
+
+            {/* Modal for Add/Edit */}
+            {showModal && (
+                <SectionModal
+                    opened={true}
+                    onClose={handleCancel}
+                    title={editingEducation ? 'Edit Education' : 'Add Education'}
+                    subtitle={editingEducation ? `Update "${editingEducation.degree_name}"` : 'Add your academic qualification'}
+                    onSave={handleSubmit(handleFormSubmit)}
+                    isSaving={isSubmitting}
+                    saveText={editingEducation ? 'Update' : 'Add'}
+                    size="lg"
+                >
+                    <FormProvider {...methods}>
+                        <form className={styles.modalForm}>
+                            {/* Degree & Institution Section */}
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <FiInfo className={styles.sectionIcon} />
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Degree & Institution</h3>
+                                        <p className={styles.sectionDescription}>
+                                            Basic information about your education
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.sectionContent}>
+                                    <div className={styles.formRow}>
+                                        <FormInput
+                                            name="degree_name"
+                                            label="Degree *"
+                                            placeholder="e.g., Bachelor of Technology"
+                                            icon={<FiBook size={16} />}
+                                            required
+                                            disabled={isSubmitting}
+                                        />
+                                        <FormInput
+                                            name="institution_name"
+                                            label="Institution *"
+                                            placeholder="e.g., IIT Delhi"
+                                            icon={<FiAward size={16} />}
+                                            required
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Duration & Details Section */}
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <FiLink className={styles.sectionIcon} />
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Duration & Details</h3>
+                                        <p className={styles.sectionDescription}>
+                                            Dates, score and location
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.sectionContent}>
+                                    <div className={styles.formRow}>
+                                        <FormInput
+                                            name="start_date"
+                                            label="Start Date *"
+                                            type="date"
+                                            icon={<FiCalendar size={16} />}
+                                            required
+                                            disabled={isSubmitting}
+                                        />
+                                        {isCurrent !== 'true' && (
+                                            <FormInput
+                                                name="end_date"
+                                                label="End Date"
+                                                type="date"
+                                                icon={<FiCalendar size={16} />}
+                                                disabled={isSubmitting}
+                                            />
+                                        )}
+                                    </div>
+                                    <div className={styles.formRow}>
+                                        <FormSelect
+                                            name="is_current"
+                                            label="Currently Studying?"
+                                            options={[
+                                                { value: 'false', label: 'No' },
+                                                { value: 'true', label: 'Yes' },
+                                            ]}
+                                            disabled={isSubmitting}
+                                        />
+                                        <FormInput
+                                            name="score"
+                                            label="Score / Grade"
+                                            placeholder="e.g., 8.5 CGPA, 85%"
+                                            icon={<FiAward size={16} />}
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
                                     <FormInput
-                                        name="end_date"
-                                        label="End Date"
-                                        type="date"
-                                        icon={<FiCalendar />}
+                                        name="full_address"
+                                        label="Location"
+                                        placeholder="City, State, Country"
+                                        icon={<FiMapPin size={16} />}
                                         disabled={isSubmitting}
                                     />
-                                )}
+                                </div>
                             </div>
-                            <div className={styles.formRow}>
-                                <FormSelect
-                                    name="is_current"
-                                    label="Currently Studying?"
-                                    options={[
-                                        { value: 'false', label: 'No' },
-                                        { value: 'true', label: 'Yes' },
-                                    ]}
-                                    disabled={isSubmitting}
-                                />
-                                <FormInput
-                                    name="score"
-                                    label="Score / Grade"
-                                    placeholder="e.g., 8.5 CGPA, 85%"
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            <FormTextarea
-                                name="description"
-                                label="Description"
-                                placeholder="Additional details..."
-                                rows={2}
-                                disabled={isSubmitting}
-                            />
-                            <FormInput
-                                name="full_address"
-                                label="Address"
-                                placeholder="City, State, Country"
-                                icon={<FiMapPin />}
-                                disabled={isSubmitting}
-                            />
 
-                            <div className={styles.formActions}>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={handleCancel}
-                                    disabled={isSubmitting}
-                                    icon={<FiX />}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    size="sm"
-                                    isLoading={isSubmitting}
-                                    loadingText="Saving..."
-                                    icon={<FiCheck />}
-                                >
-                                    {editingId ? 'Update' : 'Add'}
-                                </Button>
+                            {/* Description Section */}
+                            <div className={styles.section}>
+                                <div className={styles.sectionHeader}>
+                                    <FiInfo className={styles.sectionIcon} />
+                                    <div>
+                                        <h3 className={styles.sectionTitle}>Description</h3>
+                                        <p className={styles.sectionDescription}>
+                                            Additional details about your education
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className={styles.sectionContent}>
+                                    <FormTextarea
+                                        name="description"
+                                        label="Description"
+                                        placeholder="Additional details about your education..."
+                                        rows={3}
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
                             </div>
                         </form>
                     </FormProvider>
-                </div>
+                </SectionModal>
             )}
-
-            {/* Education List */}
-            {educations.length > 0 ? (
-                <div className={styles.list}>
-                    {educations.map((edu, index) => (
-                        <div key={edu.profileeducation_id} className={styles.item}>
-                            <div className={styles.orderControls}>
-                                <button
-                                    className={styles.orderButton}
-                                    onClick={() => handleMove(index, -1)}
-                                    disabled={index === 0 || isSubmitting}
-                                >
-                                    <FiArrowUp size={10} />
-                                </button>
-                                <span className={styles.orderNumber}>{index + 1}</span>
-                                <button
-                                    className={styles.orderButton}
-                                    onClick={() => handleMove(index, 1)}
-                                    disabled={index === educations.length - 1 || isSubmitting}
-                                >
-                                    <FiArrowDown size={10} />
-                                </button>
-                            </div>
-
-                            <div className={styles.icon}>
-                                <FiBook />
-                            </div>
-
-                            <div className={styles.info}>
-                                <h4 className={styles.degree}>{edu.degree_name}</h4>
-                                <p className={styles.institution}>{edu.institution_name}</p>
-                                <div className={styles.meta}>
-                                    <span className={styles.date}>
-                                        <FiCalendar size={12} />
-                                        {formatDate(edu.start_date)} - {edu.is_current ? 'Present' : formatDate(edu.end_date)}
-                                    </span>
-                                    {edu.score && <span className={styles.score}>{edu.score}</span>}
-                                    {edu.is_current && <span className={styles.currentBadge}>Current</span>}
-                                </div>
-                                {edu.description && <p className={styles.description}>{edu.description}</p>}
-                            </div>
-
-                            <div className={styles.actions}>
-                                <button
-                                    className={styles.actionButton}
-                                    onClick={() => handleEdit(edu)}
-                                    disabled={isSubmitting}
-                                    title="Edit"
-                                >
-                                    <FiEdit2 size={14} />
-                                </button>
-                                <button
-                                    className={`${styles.actionButton} ${styles.deleteButton}`}
-                                    onClick={() => handleDelete(edu.profileeducation_id, edu.degree_name)}
-                                    disabled={isSubmitting}
-                                    title="Delete"
-                                >
-                                    <FiTrash2 size={14} />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                !showForm && (
-                    <div className={styles.emptyState}>
-                        <FiBook size={32} />
-                        <p>No education added yet</p>
-                        <Button variant="outline" size="sm" onClick={handleAdd} icon={<FiPlus />}>
-                            Add your first education
-                        </Button>
-                    </div>
-                )
-            )}
-        </SectionLayout>
+        </>
     );
 };
 
