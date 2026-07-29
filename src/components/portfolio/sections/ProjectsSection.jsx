@@ -3,13 +3,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FiFolder, FiPlus, FiEdit2, FiTrash2, FiExternalLink, FiGithub, FiImage, FiStar, FiCalendar, FiChevronRight } from 'react-icons/fi';
+import { FiFolder, FiPlus, FiEdit2, FiTrash2, FiExternalLink, FiGithub, FiImage, FiStar, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
 import { useSnackbar } from '@/context/SnackbarContext';
 import { useConfirm } from '@/context/ConfirmContext';
 import { extractErrorMessage } from '@/utils/errorHandler';
-import { useGetProfileProjectsQuery, useDeleteProfileProjectMutation } from '@/services/api/portfolioApi';
+import { useGetProfileProjectsQuery, useDeleteProfileProjectMutation, useReorderProfileProjectsMutation } from '@/services/api/portfolioApi';
 import ProjectFormModal from '@/components/portfolio/sections/ProjectFormModal';
 import styles from '@/styles/portfolio/sections/ProjectsSection.module.css';
 
@@ -21,6 +21,7 @@ const ProjectsSection = ({ snapshotId, onDataChange }) => {
 
     const { data, isLoading, refetch } = useGetProfileProjectsQuery(snapshotId, { skip: !snapshotId });
     const [deleteProject] = useDeleteProfileProjectMutation();
+    const [reorderProjects] = useReorderProfileProjectsMutation();
 
     const projects = data?.data || [];
     const isSubmitting = false;
@@ -54,6 +55,24 @@ const ProjectsSection = ({ snapshotId, onDataChange }) => {
         }
     };
 
+    const handleMove = async (index, direction) => {
+        const newList = [...projects];
+        const targetIndex = index + direction;
+        if (targetIndex < 0 || targetIndex >= newList.length) return;
+        [newList[index], newList[targetIndex]] = [newList[targetIndex], newList[index]];
+
+        try {
+            await reorderProjects({
+                snapshotId,
+                data: { order: newList.map(p => p.profileproject_id) },
+            }).unwrap();
+            refetch();
+            if (onDataChange) onDataChange();
+        } catch (error) {
+            showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 5000);
+        }
+    };
+
     const handleFormSuccess = () => {
         setShowForm(false);
         setEditingProject(null);
@@ -77,7 +96,7 @@ const ProjectsSection = ({ snapshotId, onDataChange }) => {
             >
                 {projects.length > 0 ? (
                     <div className={styles.projectsContainer}>
-                        {projects.map((project) => (
+                        {projects.map((project, index) => (
                             <div key={project.profileproject_id} className={styles.projectCard}>
                                 <div className={styles.cardHeader}>
                                     <div className={styles.projectInfo}>
@@ -159,6 +178,28 @@ const ProjectsSection = ({ snapshotId, onDataChange }) => {
                                                 </span>
                                             )}
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div className={styles.cardFooter}>
+                                    <div className={styles.orderControls}>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, -1)}
+                                            disabled={index === 0 || isSubmitting}
+                                            title="Move up"
+                                        >
+                                            <FiArrowUp size={12} />
+                                        </button>
+                                        <span className={styles.orderNumber}>{index + 1}</span>
+                                        <button
+                                            className={styles.orderBtn}
+                                            onClick={() => handleMove(index, 1)}
+                                            disabled={index === projects.length - 1 || isSubmitting}
+                                            title="Move down"
+                                        >
+                                            <FiArrowDown size={12} />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
