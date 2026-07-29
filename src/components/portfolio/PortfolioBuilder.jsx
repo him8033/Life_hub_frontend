@@ -1,3 +1,5 @@
+// src/components/portfolio/PortfolioBuilder.jsx
+
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -92,6 +94,28 @@ export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
         return aPos - bPos;
     });
 
+    // Get current section index
+    const currentIndex = visibleSections.findIndex(s => s.id === activeSection);
+
+    // Get previous and next section names
+    const prevSection = currentIndex > 0 ? visibleSections[currentIndex - 1] : null;
+    const nextSection = currentIndex < visibleSections.length - 1 ? visibleSections[currentIndex + 1] : null;
+
+    // Navigation handlers
+    const handlePrevious = useCallback(() => {
+        const prevIndex = currentIndex - 1;
+        if (prevIndex >= 0) {
+            setActiveSection(visibleSections[prevIndex].id);
+        }
+    }, [currentIndex, visibleSections]);
+
+    const handleNext = useCallback(() => {
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < visibleSections.length) {
+            setActiveSection(visibleSections[nextIndex].id);
+        }
+    }, [currentIndex, visibleSections]);
+
     // Set initial active section
     useEffect(() => {
         if (themeSectionsData && !initialized && visibleSections.length > 0) {
@@ -136,11 +160,33 @@ export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
         return ts?.is_required ?? PROFILE_SECTIONS.find(s => s.id === sectionId)?.required ?? false;
     };
 
-    // Render section content
+    // Render section content with navigation props
     const renderSection = (sectionId) => {
         const Comp = SECTION_COMPONENTS[sectionId];
         if (!Comp || !snapshotId) return null;
-        return <Comp snapshotId={snapshotId} onDataChange={handleSectionUpdate} />;
+
+        const index = visibleSections.findIndex(s => s.id === sectionId);
+        const isFirst = index === 0;
+        const isLast = index === visibleSections.length - 1;
+
+        // Get previous and next section names for this specific section
+        const prev = index > 0 ? visibleSections[index - 1] : null;
+        const next = index < visibleSections.length - 1 ? visibleSections[index + 1] : null;
+
+        return (
+            <Comp
+                snapshotId={snapshotId}
+                onDataChange={handleSectionUpdate}
+                onPrevious={handlePrevious}
+                onNext={handleNext}
+                showPrevious={index > 0}
+                showNext={index < visibleSections.length - 1}
+                isFirstStep={isFirst}
+                isLastStep={isLast}
+                previousSectionName={prev?.title || ''}
+                nextSectionName={next?.title || ''}
+            />
+        );
     };
 
     // Check if preview is available
@@ -166,9 +212,9 @@ export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
             onPreview={canPreview ? () => onPreview(portfolio.slug) : null}
             onExport={null}
             defaultLayout={50}
-            defaultSize="desktop" // Default to desktop viewport
+            defaultSize="desktop"
             defaultZoom={100}
-            viewMode="webpage" // Webpage mode for portfolio
+            viewMode="webpage"
             refreshTrigger={refreshKeyRef.current}
         />
     );
