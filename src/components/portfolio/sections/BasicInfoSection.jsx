@@ -19,7 +19,18 @@ import { useGetBasicInfoQuery, useSaveBasicInfoMutation } from '@/services/api/p
 import { basicInfoSchema } from '@/lib/validations/portfolio/sections/basicInfoSchema';
 import styles from '@/styles/portfolio/sections/BasicInfoSection.module.css';
 
-const BasicInfoSection = ({ snapshotId, onDataChange }) => {
+const BasicInfoSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
 
     const [imageFile, setImageFile] = useState(null);
@@ -57,7 +68,7 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
                 full_address: basicInfo.full_address || '',
                 website: basicInfo.website || '',
             });
-            
+
             // Set preview from existing image
             if (basicInfo.image_url) {
                 setImagePreview(basicInfo.image_url);
@@ -157,6 +168,14 @@ const BasicInfoSection = ({ snapshotId, onDataChange }) => {
             hasData={hasData}
             onSave={handleSubmit(handleFormSubmit)}
             saveButtonText={isUpdate ? 'Update Info' : 'Save Info'}
+            onPrevious={onPrevious}
+            onNext={onNext}
+            showPrevious={showPrevious}
+            showNext={showNext}
+            isFirstStep={isFirstStep}
+            isLastStep={isLastStep}
+            previousSectionName={previousSectionName}
+            nextSectionName={nextSectionName}
         >
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(handleFormSubmit)}>

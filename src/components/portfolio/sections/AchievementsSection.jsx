@@ -42,7 +42,18 @@ const ACHIEVEMENT_COLORS = [
     '#f97316', // orange
 ];
 
-const AchievementsSection = ({ snapshotId, onDataChange }) => {
+const AchievementsSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -184,6 +195,14 @@ const AchievementsSection = ({ snapshotId, onDataChange }) => {
                 hasData={achievements.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Achievement"
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {achievements.length > 0 ? (
                     <div className={styles.achievementsGrid}>

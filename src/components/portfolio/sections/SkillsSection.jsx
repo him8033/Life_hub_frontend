@@ -28,7 +28,18 @@ import { useGetPublicMasterSkillsQuery } from '@/services/api/portfolioApi';
 import { profileSkillSchema } from '@/lib/validations/portfolio/sections/profileSkillSchema';
 import styles from '@/styles/portfolio/sections/SkillsSection.module.css';
 
-const SkillsSection = ({ snapshotId, onDataChange }) => {
+const SkillsSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
     const [showModal, setShowModal] = useState(false);
     const [editingSkill, setEditingSkill] = useState(null);
@@ -189,6 +200,14 @@ const SkillsSection = ({ snapshotId, onDataChange }) => {
                 hasData={profileSkills.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Skill"
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {profileSkills.length > 0 ? (
                     <div className={styles.skillsContainer}>

@@ -29,7 +29,18 @@ import {
 import { certificateSchema } from '@/lib/validations/portfolio/sections/certificateSchema';
 import styles from '@/styles/portfolio/sections/CertificateSection.module.css';
 
-const CertificateSection = ({ snapshotId, onDataChange }) => {
+const CertificateSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -228,6 +239,14 @@ const CertificateSection = ({ snapshotId, onDataChange }) => {
                 hasData={certificates.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Certificate"
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {certificates.length > 0 ? (
                     <div className={styles.certificateContainer}>

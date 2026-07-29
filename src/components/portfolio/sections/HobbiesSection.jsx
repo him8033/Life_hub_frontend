@@ -53,7 +53,18 @@ const getHobbyIcon = (index) => {
     return <IconComponent size={20} />;
 };
 
-const HobbiesSection = ({ snapshotId, onDataChange }) => {
+const HobbiesSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -188,6 +199,14 @@ const HobbiesSection = ({ snapshotId, onDataChange }) => {
                 hasData={hobbies.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Hobby"
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {hobbies.length > 0 ? (
                     <div className={styles.hobbiesGrid}>

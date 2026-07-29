@@ -29,7 +29,18 @@ import {
 import { educationSchema } from '@/lib/validations/portfolio/sections/educationSchema';
 import styles from '@/styles/portfolio/sections/EducationSection.module.css';
 
-const EducationSection = ({ snapshotId, onDataChange }) => {
+const EducationSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -189,6 +200,14 @@ const EducationSection = ({ snapshotId, onDataChange }) => {
                 hasData={educations.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Education"
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {educations.length > 0 ? (
                     <div className={styles.educationContainer}>

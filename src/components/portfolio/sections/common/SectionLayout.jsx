@@ -5,7 +5,7 @@
 import React from 'react';
 import Button from '@/components/common/buttons/Button';
 import Loader from '@/components/common/Loader';
-import { FiSave } from 'react-icons/fi';
+import { FiSave, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import styles from '@/styles/portfolio/sections/common/SectionLayout.module.css';
 
 export const SectionLayout = ({
@@ -17,11 +17,19 @@ export const SectionLayout = ({
     hasData = false,
     onSave,
     onCancel,
+    onPrevious,
+    onNext,
     children,
     saveButtonText,
     cancelButtonText = 'Cancel',
     showCancel = false,
-    isEditing = true, // Always editing by default
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+    isEditing = true,
 }) => {
     if (isLoading) {
         return (
@@ -31,11 +39,9 @@ export const SectionLayout = ({
         );
     }
 
-    // Safely render icon
     const renderIcon = () => {
         if (!Icon) return null;
         try {
-            // If Icon is a valid React component
             if (typeof Icon === 'function' || typeof Icon === 'object') {
                 return <Icon className={styles.headerIcon} size={20} />;
             }
@@ -80,10 +86,42 @@ export const SectionLayout = ({
                 </div>
             </div>
 
-            {/* Content */}
+            {/* Content - Scrollable */}
             <div className={styles.content}>
                 {children}
             </div>
+
+            {/* Floating Navigation Buttons */}
+            {(showPrevious || showNext) && (
+                <div className={styles.floatingNav}>
+                    {showPrevious && (
+                        <button
+                            className={`${styles.floatingBtn} ${styles.prevBtn}`}
+                            onClick={onPrevious}
+                            disabled={isSaving || isFirstStep}
+                            title={`Previous: ${previousSectionName}`}
+                        >
+                            <FiArrowLeft size={20} />
+                            {previousSectionName && (
+                                <span className={styles.btnLabel}>{previousSectionName}</span>
+                            )}
+                        </button>
+                    )}
+                    {showNext && (
+                        <button
+                            className={`${styles.floatingBtn} ${styles.nextBtn}`}
+                            onClick={onNext}
+                            disabled={isSaving || isLastStep}
+                            title={`Next: ${nextSectionName}`}
+                        >
+                            {nextSectionName && (
+                                <span className={styles.btnLabel}>{nextSectionName}</span>
+                            )}
+                            <FiArrowRight size={20} />
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

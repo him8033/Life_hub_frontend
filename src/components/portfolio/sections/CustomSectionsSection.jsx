@@ -42,7 +42,18 @@ const SECTION_COLORS = [
     '#22d3ee', // cyan
 ];
 
-const CustomSectionsSection = ({ snapshotId, onDataChange }) => {
+const CustomSectionsSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = ''
+}) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -212,6 +223,14 @@ const CustomSectionsSection = ({ snapshotId, onDataChange }) => {
                 hasData={sections.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Section"
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {sections.length > 0 ? (
                     <div className={styles.sectionsList}>

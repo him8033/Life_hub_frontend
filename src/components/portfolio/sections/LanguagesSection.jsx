@@ -56,7 +56,18 @@ const LANGUAGE_COLORS = [
     '#22d3ee', // cyan
 ];
 
-const LanguagesSection = ({ snapshotId, onDataChange }) => {
+const LanguagesSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -226,6 +237,14 @@ const LanguagesSection = ({ snapshotId, onDataChange }) => {
                 onSave={handleAdd}
                 saveButtonText="Add Language"
                 isDisabled={availableLanguages.length === 0 && !editingLanguage}
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {languages.length > 0 ? (
                     <div className={styles.languagesGrid}>

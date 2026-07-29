@@ -40,7 +40,18 @@ const employmentTypes = [
     { value: 'Self-employed', label: 'Self-employed' },
 ];
 
-const ExperienceSection = ({ snapshotId, onDataChange }) => {
+const ExperienceSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -239,6 +250,14 @@ const ExperienceSection = ({ snapshotId, onDataChange }) => {
                 hasData={experiences.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Experience"
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {experiences.length > 0 ? (
                     <div className={styles.experienceContainer}>

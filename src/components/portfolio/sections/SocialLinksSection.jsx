@@ -62,7 +62,18 @@ const platformColors = {
     Other: '#6b7280',
 };
 
-const SocialLinksSection = ({ snapshotId, onDataChange }) => {
+const SocialLinksSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
 
@@ -156,7 +167,7 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
     const handleFormSubmit = async (formData) => {
         try {
             let platformName = formData.platform_name;
-            
+
             // If "Other" is selected, use the custom platform name
             if (platformName === 'Other') {
                 if (!customPlatformName || !customPlatformName.trim()) {
@@ -174,9 +185,9 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
             };
 
             if (editingLink) {
-                await updateProfileLink({ 
-                    linkId: editingLink.profilesociallink_id, 
-                    data: payload 
+                await updateProfileLink({
+                    linkId: editingLink.profilesociallink_id,
+                    data: payload
                 }).unwrap();
                 showSnackbar('Social link updated successfully', 'success', 3000);
             } else {
@@ -278,6 +289,14 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                 hasData={socialLinks.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Link"
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {socialLinks.length > 0 ? (
                     <div className={styles.linksGrid}>
@@ -285,7 +304,7 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                             <div key={link.profilesociallink_id} className={styles.linkCard}>
                                 <div className={styles.cardHeader}>
                                     <div className={styles.platformInfo}>
-                                        <div 
+                                        <div
                                             className={styles.platformIcon}
                                             style={{ backgroundColor: getPlatformColor(link.platform_name) }}
                                         >
@@ -303,10 +322,10 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                                                     </span>
                                                 )}
                                             </div>
-                                            <a 
-                                                href={link.url} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer" 
+                                            <a
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                                 className={styles.linkUrl}
                                                 title={link.url}
                                             >
@@ -331,7 +350,7 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <div className={styles.cardBody}>
                                     <div className={styles.orderControls}>
                                         <button
@@ -399,6 +418,14 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                     isSaving={isSubmitting}
                     saveText={editingLink ? 'Update' : 'Add'}
                     size="md"
+                    onPrevious={onPrevious}
+                    onNext={onNext}
+                    showPrevious={showPrevious}
+                    showNext={showNext}
+                    isFirstStep={isFirstStep}
+                    isLastStep={isLastStep}
+                    previousSectionName={previousSectionName}
+                    nextSectionName={nextSectionName}
                 >
                     <FormProvider {...methods}>
                         <form className={styles.modalForm}>
@@ -410,7 +437,7 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                                 required
                                 disabled={isSubmitting || availablePlatforms.length === 0}
                             />
-                            
+
                             {isOtherSelected && (
                                 <div className={styles.customPlatformInput}>
                                     <FormInput
@@ -427,7 +454,7 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                                     </p>
                                 </div>
                             )}
-                            
+
                             <FormInput
                                 name="url"
                                 label="URL *"
@@ -436,11 +463,11 @@ const SocialLinksSection = ({ snapshotId, onDataChange }) => {
                                 required
                                 disabled={isSubmitting}
                             />
-                            
+
                             <p className={styles.modalHint}>
                                 Enter the full URL to your profile (e.g., https://linkedin.com/in/username)
                             </p>
-                            
+
                             {availablePlatforms.length === 0 && !editingLink && !isOtherSelected && (
                                 <p className={styles.noPlatformsMessage}>
                                     All standard platforms have been added. Select "Other" to add a custom platform.

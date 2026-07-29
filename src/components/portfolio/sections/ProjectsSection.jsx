@@ -13,7 +13,18 @@ import { useGetProfileProjectsQuery, useDeleteProfileProjectMutation, useReorder
 import ProjectFormModal from '@/components/portfolio/sections/ProjectFormModal';
 import styles from '@/styles/portfolio/sections/ProjectsSection.module.css';
 
-const ProjectsSection = ({ snapshotId, onDataChange }) => {
+const ProjectsSection = ({
+    snapshotId,
+    onDataChange,
+    onPrevious,
+    onNext,
+    showPrevious = false,
+    showNext = false,
+    isFirstStep = false,
+    isLastStep = false,
+    previousSectionName = '',
+    nextSectionName = '',
+}) => {
     const { showSnackbar } = useSnackbar();
     const confirm = useConfirm();
     const [showForm, setShowForm] = useState(false);
@@ -93,6 +104,14 @@ const ProjectsSection = ({ snapshotId, onDataChange }) => {
                 hasData={projects.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Project"
+                onPrevious={onPrevious}
+                onNext={onNext}
+                showPrevious={showPrevious}
+                showNext={showNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                previousSectionName={previousSectionName}
+                nextSectionName={nextSectionName}
             >
                 {projects.length > 0 ? (
                     <div className={styles.projectsContainer}>
