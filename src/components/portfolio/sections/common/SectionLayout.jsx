@@ -52,43 +52,45 @@ export const SectionLayout = ({
     };
 
     return (
-        <div className={styles.container}>
-            {/* Header */}
-            <div className={styles.header}>
-                <div className={styles.headerLeft}>
-                    {Icon && renderIcon()}
-                    <div>
-                        <h3 className={styles.title}>{title}</h3>
-                        {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+        <div className={styles.wrapper}>
+            <div className={styles.container}>
+                {/* Header */}
+                <div className={styles.header}>
+                    <div className={styles.headerLeft}>
+                        {Icon && renderIcon()}
+                        <div>
+                            <h3 className={styles.title}>{title}</h3>
+                            {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+                        </div>
+                    </div>
+                    <div className={styles.headerActions}>
+                        {showCancel && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={onCancel}
+                                disabled={isSaving}
+                            >
+                                {cancelButtonText}
+                            </Button>
+                        )}
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            isLoading={isSaving}
+                            loadingText={isSaving ? 'Saving...' : ''}
+                            icon={<FiSave size={16} />}
+                            onClick={onSave}
+                        >
+                            {saveButtonText || (hasData ? 'Update' : 'Save')}
+                        </Button>
                     </div>
                 </div>
-                <div className={styles.headerActions}>
-                    {showCancel && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onCancel}
-                            disabled={isSaving}
-                        >
-                            {cancelButtonText}
-                        </Button>
-                    )}
-                    <Button
-                        variant="primary"
-                        size="sm"
-                        isLoading={isSaving}
-                        loadingText={isSaving ? 'Saving...' : ''}
-                        icon={<FiSave size={16} />}
-                        onClick={onSave}
-                    >
-                        {saveButtonText || (hasData ? 'Update' : 'Save')}
-                    </Button>
-                </div>
-            </div>
 
-            {/* Content - Scrollable */}
-            <div className={styles.content}>
-                {children}
+                {/* Content - Scrollable */}
+                <div className={styles.content}>
+                    {children}
+                </div>
             </div>
 
             {/* Floating Navigation Buttons */}
