@@ -2,8 +2,8 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useForm, FormProvider, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     FiUser, FiMail, FiPhone, FiMapPin, FiGlobe, FiCamera
@@ -36,6 +36,10 @@ const BasicInfoSection = ({
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState('');
     const [removeImage, setRemoveImage] = useState(false);
+    const [isAutoSaving, setIsAutoSaving] = useState(false);
+    const [lastSavedData, setLastSavedData] = useState(null);
+    const saveTimeoutRef = useRef(null);
+    const isInitialMount = useRef(true);
 
     const { data, isLoading, refetch } = useGetBasicInfoQuery(snapshotId, { skip: !snapshotId });
     const [saveBasicInfo, { isLoading: isSaving }] = useSaveBasicInfoMutation();
@@ -53,13 +57,23 @@ const BasicInfoSection = ({
             full_address: '',
             website: '',
         },
+        mode: 'onChange',
     });
 
-    const { reset, handleSubmit } = methods;
+    const { reset, handleSubmit, watch, getValues } = methods;
 
+    // Watch all form fields
+    const formValues = useWatch({
+        control: methods.control,
+    });
+
+    // Track if form has changed
+    const [hasChanges, setHasChanges] = useState(false);
+
+    // Reset form when basicInfo loads
     useEffect(() => {
         if (basicInfo) {
-            reset({
+            const values = {
                 first_name: basicInfo.first_name || '',
                 last_name: basicInfo.last_name || '',
                 email: basicInfo.email || '',
@@ -67,42 +81,235 @@ const BasicInfoSection = ({
                 summary: basicInfo.summary || '',
                 full_address: basicInfo.full_address || '',
                 website: basicInfo.website || '',
-            });
+            };
+            reset(values);
+            setLastSavedData(values);
+            setHasChanges(false);
 
-            // Set preview from existing image
             if (basicInfo.image_url) {
                 setImagePreview(basicInfo.image_url);
             } else {
                 setImagePreview('');
             }
         }
+        isInitialMount.current = false;
     }, [basicInfo, reset]);
 
-    const handleImageSelect = (file, previewUrl) => {
+    // Check for changes in form values
+    useEffect(() => {
+        if (isInitialMount.current || !basicInfo) return;
+
+        const currentValues = getValues();
+        const hasChanged = JSON.stringify(currentValues) !== JSON.stringify(lastSavedData);
+        setHasChanges(hasChanged);
+
+        // Auto-save on change with debounce
+        if (hasChanged && !isSaving) {
+            // Clear existing timeout
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+
+            // Set new timeout for auto-save (1.5 second delay)
+            saveTimeoutRef.current = setTimeout(() => {
+                handleAutoSave(currentValues);
+            }, 1500);
+        }
+
+        return () => {
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+        };
+    }, [formValues, basicInfo, lastSavedData, isSaving]);
+
+    // Auto-save function
+    const handleAutoSave = useCallback(async (values) => {
+        if (!values || !basicInfo) return;
+
+        try {
+            setIsAutoSaving(true);
+
+            // Check if any required fields are empty
+            if (!values.first_name || !values.email) {
+                return; // Don't auto-save if required fields are empty
+            }
+
+            const formData = new FormData();
+            formData.append('first_name', values.first_name || '');
+            formData.append('last_name', values.last_name || '');
+            formData.append('email', values.email || '');
+            if (values.phone) formData.append('phone', values.phone);
+            if (values.summary) formData.append('summary', values.summary);
+            if (values.full_address) formData.append('full_address', values.full_address);
+            if (values.website) formData.append('website', values.website);
+
+            // Handle image removal
+            if (removeImage) {
+                formData.append('remove_image', 'true');
+            } else if (imageFile) {
+                formData.append('image', imageFile);
+            }
+
+            if (basicInfo?.profilebasicinfo_id) {
+                formData.append('profilebasicinfo_id', basicInfo.profilebasicinfo_id);
+            }
+
+            // Check if data has actually changed before saving
+            const currentData = {
+                first_name: values.first_name || '',
+                last_name: values.last_name || '',
+                email: values.email || '',
+                phone: values.phone || '',
+                summary: values.summary || '',
+                full_address: values.full_address || '',
+                website: values.website || '',
+            };
+
+            if (JSON.stringify(currentData) === JSON.stringify(lastSavedData) && !imageFile && !removeImage) {
+                return; // No changes to save
+            }
+
+            await saveBasicInfo({
+                snapshotId,
+                data: formData
+            }).unwrap();
+
+            setLastSavedData(currentData);
+            setHasChanges(false);
+            setIsAutoSaving(false);
+
+            if (onDataChange) {
+                onDataChange();
+            }
+        } catch (error) {
+            setIsAutoSaving(false);
+            // Don't show snackbar for auto-save errors to avoid spamming
+            console.error('Auto-save failed:', error);
+        }
+    }, [basicInfo, imageFile, removeImage, lastSavedData, saveBasicInfo, snapshotId, onDataChange]);
+
+    // Handle navigation (save before navigating)
+    const handleNavigate = useCallback(async (direction) => {
+        const currentValues = getValues();
+
+        // Check if required fields are filled
+        if (!currentValues.first_name || !currentValues.email) {
+            showSnackbar('Please fill in all required fields (First Name and Email)', 'warning', 3000);
+            return;
+        }
+
+        // If there are changes, save immediately
+        if (hasChanges || imageFile || removeImage) {
+            try {
+                setIsAutoSaving(true);
+                const formData = new FormData();
+                formData.append('first_name', currentValues.first_name || '');
+                formData.append('last_name', currentValues.last_name || '');
+                formData.append('email', currentValues.email || '');
+                if (currentValues.phone) formData.append('phone', currentValues.phone);
+                if (currentValues.summary) formData.append('summary', currentValues.summary);
+                if (currentValues.full_address) formData.append('full_address', currentValues.full_address);
+                if (currentValues.website) formData.append('website', currentValues.website);
+
+                if (removeImage) {
+                    formData.append('remove_image', 'true');
+                } else if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+
+                if (basicInfo?.profilebasicinfo_id) {
+                    formData.append('profilebasicinfo_id', basicInfo.profilebasicinfo_id);
+                }
+
+                await saveBasicInfo({
+                    snapshotId,
+                    data: formData
+                }).unwrap();
+
+                setLastSavedData({
+                    first_name: currentValues.first_name || '',
+                    last_name: currentValues.last_name || '',
+                    email: currentValues.email || '',
+                    phone: currentValues.phone || '',
+                    summary: currentValues.summary || '',
+                    full_address: currentValues.full_address || '',
+                    website: currentValues.website || '',
+                });
+                setHasChanges(false);
+                setIsAutoSaving(false);
+
+                if (onDataChange) {
+                    onDataChange();
+                }
+
+                // Navigate after save
+                if (direction === 'next' && onNext) {
+                    onNext();
+                } else if (direction === 'previous' && onPrevious) {
+                    onPrevious();
+                }
+            } catch (error) {
+                setIsAutoSaving(false);
+                showSnackbar('Failed to save before navigating', 'error', 3000);
+            }
+        } else {
+            // No changes, navigate directly
+            if (direction === 'next' && onNext) {
+                onNext();
+            } else if (direction === 'previous' && onPrevious) {
+                onPrevious();
+            }
+        }
+    }, [hasChanges, imageFile, removeImage, basicInfo, saveBasicInfo, snapshotId, onDataChange, onNext, onPrevious, getValues, showSnackbar]);
+
+    // Handle Next button click with auto-save
+    const handleNextWithSave = useCallback(() => {
+        handleNavigate('next');
+    }, [handleNavigate]);
+
+    // Handle Previous button click with auto-save
+    const handlePreviousWithSave = useCallback(() => {
+        handleNavigate('previous');
+    }, [handleNavigate]);
+
+    // Handle image selection with auto-save
+    const handleImageSelectWithAutoSave = useCallback((file, previewUrl) => {
         setImageFile(file);
         setImagePreview(previewUrl);
         setRemoveImage(false);
-    };
+        // Mark as changed to trigger auto-save
+        setHasChanges(true);
+    }, []);
+
+    // Handle manual save button click
+    const handleManualSave = useCallback((data) => {
+        // Clear any pending auto-save
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+        }
+        // Call the original form submit
+        handleFormSubmit(data);
+    }, []);
 
     const handleImageRemove = () => {
-        // Called when user clicks X on the uploaded image (new image)
         setImageFile(null);
         setImagePreview('');
         setRemoveImage(false);
+        setHasChanges(true);
     };
 
     const handleImageDelete = () => {
-        // Called when user clicks "Remove Photo" on existing image
         setImageFile(null);
         setImagePreview('');
         setRemoveImage(true);
+        setHasChanges(true);
     };
 
     const handleFormSubmit = async (data) => {
         try {
             const formData = new FormData();
 
-            // Basic fields
             formData.append('first_name', data.first_name);
             formData.append('last_name', data.last_name || '');
             formData.append('email', data.email);
@@ -111,16 +318,12 @@ const BasicInfoSection = ({
             if (data.full_address) formData.append('full_address', data.full_address);
             if (data.website) formData.append('website', data.website);
 
-            // Image handling
             if (removeImage) {
-                // User wants to delete the existing image
                 formData.append('remove_image', 'true');
             } else if (imageFile) {
-                // User uploaded a new image
                 formData.append('image', imageFile);
             }
 
-            // If updating existing, include the profilebasicinfo_id
             if (basicInfo?.profilebasicinfo_id) {
                 formData.append('profilebasicinfo_id', basicInfo.profilebasicinfo_id);
             }
@@ -132,6 +335,18 @@ const BasicInfoSection = ({
 
             showSnackbar('Basic info saved successfully', 'success', 3000);
             refetch();
+
+            const currentValues = {
+                first_name: data.first_name || '',
+                last_name: data.last_name || '',
+                email: data.email || '',
+                phone: data.phone || '',
+                summary: data.summary || '',
+                full_address: data.full_address || '',
+                website: data.website || '',
+            };
+            setLastSavedData(currentValues);
+            setHasChanges(false);
 
             if (onDataChange) {
                 onDataChange();
@@ -152,10 +367,7 @@ const BasicInfoSection = ({
         basicInfo.image_url
     );
 
-    // Check if there's an existing basic info ID for update
     const isUpdate = !!basicInfo?.profilebasicinfo_id;
-
-    // Determine if we should show the existing image
     const showExistingImage = basicInfo?.image_url && !imageFile && !removeImage;
 
     return (
@@ -164,12 +376,12 @@ const BasicInfoSection = ({
             subtitle="Your personal details for resumes and portfolios"
             icon={FiUser}
             isLoading={isLoading}
-            isSaving={isSaving}
+            isSaving={isSaving || isAutoSaving}
             hasData={hasData}
-            onSave={handleSubmit(handleFormSubmit)}
+            onSave={handleSubmit(handleManualSave)}
             saveButtonText={isUpdate ? 'Update Info' : 'Save Info'}
-            onPrevious={onPrevious}
-            onNext={onNext}
+            onPrevious={handlePreviousWithSave}
+            onNext={handleNextWithSave}
             showPrevious={showPrevious}
             showNext={showNext}
             isFirstStep={isFirstStep}
@@ -178,7 +390,7 @@ const BasicInfoSection = ({
             nextSectionName={nextSectionName}
         >
             <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(handleFormSubmit)}>
+                <form onSubmit={handleSubmit(handleManualSave)}>
                     <div className={styles.formContainer}>
                         {/* Left Column - Form Fields */}
                         <div className={styles.leftColumn}>
@@ -253,7 +465,7 @@ const BasicInfoSection = ({
                                 </h4>
 
                                 <ProfileImageUpload
-                                    onImageSelect={handleImageSelect}
+                                    onImageSelect={handleImageSelectWithAutoSave}
                                     onRemove={handleImageRemove}
                                     onImageDelete={handleImageDelete}
                                     imageUrl={showExistingImage ? basicInfo.image_url : null}
@@ -296,6 +508,18 @@ const BasicInfoSection = ({
                             Write a brief professional summary...
                         </p>
                     </div>
+
+                    {/* Auto-save indicator */}
+                    {isAutoSaving && (
+                        <div className={styles.autoSaveIndicator}>
+                            <span className={styles.autoSaveText}>Auto-saving...</span>
+                        </div>
+                    )}
+                    {hasChanges && !isAutoSaving && !isSaving && (
+                        <div className={styles.unsavedIndicator}>
+                            <span className={styles.unsavedText}>Unsaved changes</span>
+                        </div>
+                    )}
                 </form>
             </FormProvider>
         </SectionLayout>
