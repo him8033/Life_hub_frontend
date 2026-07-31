@@ -14,18 +14,27 @@
     flex-direction: column;
     gap: 1.5rem;
     padding: 0.25rem 0;
+    overflow: visible !important;
 }
 
 /* ===========================
-   SECTIONS
+   SECTIONS - FIX OVERFLOW
 =========================== */
 
 .section {
     background: var(--card, #ffffff);
     border: 1px solid var(--border, #e5e7eb);
     border-radius: var(--radius-lg, 8px);
-    overflow: hidden;
+    overflow: visible !important;
+    /* Changed from hidden to visible */
     transition: border-color 0.2s ease;
+    position: relative;
+    z-index: 1;
+}
+
+/* Give the skills section higher z-index */
+.section:has(.searchSelectWrapper) {
+    z-index: 100;
 }
 
 .section:hover {
@@ -97,6 +106,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow: visible !important;
 }
 
 /* ===========================
@@ -110,13 +120,14 @@
 }
 
 /* ===========================
-   TOGGLE SECTIONS
+   TOGGLE SECTIONS - FIX OVERFLOW
 =========================== */
 
 .toggleSections {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    overflow: visible !important;
 }
 
 .toggleWrapper {
@@ -124,7 +135,8 @@
     flex-direction: column;
     gap: 0;
     border-radius: var(--radius-md, 6px);
-    overflow: hidden;
+    overflow: visible !important;
+    /* Changed from hidden to visible */
     border: 1px solid var(--border, #e5e7eb);
     transition: border-color 0.2s ease;
 }
@@ -144,6 +156,7 @@
     cursor: pointer;
     user-select: none;
     transition: background 0.2s ease;
+    border-radius: var(--radius-md, 6px);
 }
 
 .toggleSection:hover {
@@ -248,12 +261,57 @@
     padding: 1rem 1rem 1.25rem;
     background: var(--muted, #f9fafb);
     border-top: 1px solid var(--border, #e5e7eb);
+    overflow: visible !important;
+    border-radius: 0 0 var(--radius-md, 6px) var(--radius-md, 6px);
 }
 
 .toggleInnerContent {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow: visible !important;
+    position: relative;
+}
+
+/* ===========================
+   SEARCH SELECT WRAPPER - FIX DROPDOWN
+=========================== */
+
+.searchSelectWrapper {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+    z-index: 9999 !important;
+}
+
+/* Ensure the wrapper doesn't clip the dropdown */
+.searchSelectWrapper>div {
+    overflow: visible !important;
+}
+
+.addSkillRow {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    margin-top: 0.5rem;
+    position: relative;
+    z-index: 1000;
+}
+
+.addSkillBtn {
+    flex-shrink: 0;
+    margin-bottom: 0.25rem;
+    position: relative;
+    z-index: 1000;
+}
+
+/* Ensure the form search select dropdown appears above everything */
+.searchSelectWrapper :global(.dropdown) {
+    z-index: 99999 !important;
+}
+
+.searchSelectWrapper :global(.wrapper) {
+    z-index: 9999 !important;
 }
 
 /* ===========================
@@ -538,50 +596,62 @@
     margin: 0;
 }
 
-.addSkillRow {
+/* ===========================
+   SUCCESS BANNER
+=========================== */
+
+.successBanner {
     display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.skillSelect {
-    flex: 1;
-    padding: 0.45rem 0.75rem;
-    border: 1px solid var(--border, #e5e7eb);
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
     border-radius: var(--radius-md, 6px);
-    background: var(--card, #ffffff);
-    font-size: 0.85rem;
-    font-family: inherit;
-    color: var(--foreground, #111827);
-    cursor: pointer;
-    transition: all 0.2s ease;
 }
 
-.skillSelect:focus {
-    outline: none;
-    border-color: var(--primary, #667eea);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+.successIcon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    color: var(--success, #10b981);
 }
 
-.skillSelect:disabled {
-    opacity: 0.5;
+.successTitle {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--success, #10b981);
+}
+
+.successDescription {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted-foreground, #6b7280);
+    margin-top: 0.1rem;
+}
+
+/* ===========================
+   TOGGLE DISABLED STATE
+=========================== */
+
+.toggleDisabled {
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
-.skillPlaceholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
+.toggleDisabled:hover {
     background: var(--card, #ffffff);
-    border-radius: var(--radius-md, 6px);
-    border: 1px dashed var(--border, #e5e7eb);
+    border-color: var(--border, #e5e7eb);
 }
 
-.skillPlaceholderText {
-    font-size: 0.85rem;
-    color: var(--muted-foreground, #6b7280);
-    margin: 0;
+.toggleDisabled .toggleThumb {
+    background: var(--muted-foreground, #9ca3af);
+}
+
+.toggleDisabled .toggleTrack {
+    background: var(--border, #e5e7eb);
 }
 
 /* ===========================
@@ -629,16 +699,18 @@
         width: 100%;
     }
 
+    /* Updated add skill row for mobile */
     .addSkillRow {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .skillSelect {
+    .searchSelectWrapper {
+        min-width: unset;
         width: 100%;
     }
 
-    .addSkillRow button {
+    .addSkillBtn {
         width: 100%;
     }
 
@@ -707,16 +779,25 @@
         padding: 0.75rem;
     }
 
-    .skillPlaceholder {
-        padding: 1rem;
+    .successBanner {
+        padding: 0.75rem 1rem;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
-    .skillPlaceholderText {
-        font-size: 0.8rem;
+    .successIcon {
+        width: 28px;
+        height: 28px;
+        margin-top: 0;
     }
 
-    .helperText {
-        font-size: 0.65rem;
+    .successTitle {
+        font-size: 0.85rem;
+    }
+
+    .successDescription {
+        font-size: 0.75rem;
     }
 }
 
@@ -784,11 +865,6 @@
         padding: 0.4rem 0.6rem;
     }
 
-    .skillSelect {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.6rem;
-    }
-
     .toggleSection {
         padding: 0.5rem 0.6rem;
     }
@@ -830,91 +906,28 @@
     .toggleContentArea {
         padding: 0.5rem;
     }
-}
 
-/* Add these styles to your existing CSS module */
-
-/* ===========================
-   SUCCESS BANNER
-=========================== */
-
-.successBanner {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    border-radius: var(--radius-md, 6px);
-}
-
-.successIcon {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    color: var(--success, #10b981);
-}
-
-.successTitle {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--success, #10b981);
-}
-
-.successDescription {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--muted-foreground, #6b7280);
-    margin-top: 0.1rem;
-}
-
-/* ===========================
-   TOGGLE DISABLED STATE
-=========================== */
-
-.toggleDisabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.toggleDisabled:hover {
-    background: var(--card, #ffffff);
-    border-color: var(--border, #e5e7eb);
-}
-
-.toggleDisabled .toggleThumb {
-    background: var(--muted-foreground, #9ca3af);
-}
-
-.toggleDisabled .toggleTrack {
-    background: var(--border, #e5e7eb);
-}
-
-/* ===========================
-   RESPONSIVE - MOBILE
-=========================== */
-
-@media (max-width: 768px) {
-    .successBanner {
-        padding: 0.75rem 1rem;
+    .addSkillRow {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
+        gap: 0.5rem;
     }
 
-    .successIcon {
-        width: 28px;
-        height: 28px;
-        margin-top: 0;
+    .addSkillBtn {
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 0.4rem 0.75rem;
+    }
+
+    .successBanner {
+        padding: 0.5rem 0.75rem;
+        gap: 0.5rem;
     }
 
     .successTitle {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     .successDescription {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
 }

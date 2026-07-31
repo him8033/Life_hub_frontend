@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -14,6 +14,7 @@ import {
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
 import FormSelect from '@/components/common/forms/FormSelect';
+import FormSearchSelect from '@/components/common/forms/FormSearchSelect';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
 import { SectionModal } from './common/SectionModal';
@@ -26,7 +27,7 @@ import {
     useUpdateProjectImageMutation, useDeleteProjectImageMutation,
     useReorderProjectImagesMutation,
 } from '@/services/api/portfolioApi';
-import { useGetPublicMasterSkillsQuery } from '@/services/api/portfolioApi';
+import { useLazyGetPublicMasterSkillsQuery } from '@/services/api/portfolioApi';
 import { projectSchema } from '@/lib/validations/portfolio/sections/projectSchema';
 import styles from '@/styles/portfolio/sections/ProjectFormModal.module.css';
 
@@ -53,6 +54,10 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
     const [galleryPreview, setGalleryPreview] = useState('');
     const [galleryCaption, setGalleryCaption] = useState('');
 
+    // Skills - Search state
+    const [selectedSkill, setSelectedSkill] = useState(null);
+    const isFetchingRef = useRef(false);
+
     const [createProject, { isLoading: isCreating }] = useCreateProfileProjectMutation();
     const [updateProject, { isLoading: isUpdating }] = useUpdateProfileProjectMutation();
     const isSubmitting = isCreating || isUpdating;
@@ -62,7 +67,7 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
         isEdit ? projectId : createdProjectId,
         { skip: !(isEdit ? projectId : createdProjectId) }
     );
-    const { data: masterSkillsData } = useGetPublicMasterSkillsQuery();
+    const [searchMasterSkills] = useLazyGetPublicMasterSkillsQuery();
 
     // Images - Fetch data with proper refetch
     const { data: projectImagesData, refetch: refetchImages, isLoading: imagesLoading } = useGetProjectImagesQuery(
@@ -78,12 +83,48 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
     const [reorderImages] = useReorderProjectImagesMutation();
 
     const projectSkills = projectSkillsData?.data || [];
-    const masterSkills = masterSkillsData?.data || [];
     const projectImages = projectImagesData?.data || [];
 
-    const addedSkillIds = new Set(projectSkills.map(s => s.skill_value));
-    const availableSkills = masterSkills.filter(s => !addedSkillIds.has(s.masterskill_id));
-    const [selectedSkillId, setSelectedSkillId] = useState('');
+    // Memoize added skill IDs
+    const addedSkillIds = useMemo(() => {
+        return new Set(projectSkills.map(s => s.skill_value));
+    }, [projectSkills]);
+
+    // Fetch skills function
+    const fetchSkills = useCallback(async (search) => {
+        if (isFetchingRef.current) {
+            return [];
+        }
+
+        try {
+            if (!search || search.trim().length < 2) {
+                return [];
+            }
+
+            isFetchingRef.current = true;
+
+            const response = await searchMasterSkills({
+                search: search.trim(),
+                page: 1,
+                page_size: 20,
+            }).unwrap();
+
+            const results = response?.data?.results || [];
+
+            // Filter out already added skills
+            const filteredSkills = results.filter(
+                skill => !addedSkillIds.has(skill.masterskill_id)
+            );
+
+            return filteredSkills;
+
+        } catch (error) {
+            console.error("Failed to search skills:", error);
+            return [];
+        } finally {
+            isFetchingRef.current = false;
+        }
+    }, [searchMasterSkills, addedSkillIds]);
 
     // Initialize form with project data
     const methods = useForm({
@@ -100,7 +141,8 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
         },
     });
 
-    const { reset, handleSubmit } = methods;
+    const { reset, handleSubmit, setValue, getValues, watch } = methods;
+    const selectedSkillId = watch('skill_id');
 
     // Reset form when project changes
     useEffect(() => {
@@ -120,6 +162,7 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
             }
             setIsProjectCreated(true);
             setCreatedProjectId(project.profileproject_id);
+            setSelectedSkill(null);
         } else {
             reset({
                 project_name: '',
@@ -141,17 +184,16 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
             setGalleryFile(null);
             setGalleryPreview('');
             setGalleryCaption('');
+            setSelectedSkill(null);
         }
     }, [project, reset]);
 
     // Auto-enable sections when data is loaded in edit mode
     useEffect(() => {
         if (isEdit && !imagesLoading && !skillsLoading) {
-            // Enable gallery section if there are images
             if (projectImages.length > 0) {
                 setShowGallerySection(true);
             }
-            // Enable skills section if there are skills
             if (projectSkills.length > 0) {
                 setShowSkillsSection(true);
             }
@@ -163,8 +205,6 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
         if (createdProjectId && !isEdit) {
             refetchImages();
             refetchSkills();
-            // Auto-enable sections after project creation (new project)
-            // Don't auto-enable - user should manually toggle
         }
     }, [createdProjectId, isEdit]);
 
@@ -203,14 +243,16 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
         onSuccess();
     };
 
-    // Skills
-    const handleAddSkill = async () => {
+    // Skills - Add skill
+    const handleAddSkill = async (value, item) => {
         const currentProjectId = isEdit ? projectId : createdProjectId;
-        if (!selectedSkillId || !currentProjectId) return;
+        if (!value || !currentProjectId) return;
+
         try {
-            await addProjectSkill({ projectId: currentProjectId, data: { skill_id: selectedSkillId } }).unwrap();
+            await addProjectSkill({ projectId: currentProjectId, data: { skill_id: value } }).unwrap();
             showSnackbar('Skill added successfully', 'success', 3000);
-            setSelectedSkillId('');
+            setSelectedSkill(null);
+            setValue('skill_id', '');
             refetchSkills();
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to add skill'), 'error', 5000);
@@ -227,6 +269,14 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
             showSnackbar(extractErrorMessage(error, 'Failed to remove skill'), 'error', 5000);
         }
     };
+
+    const handleSkillSelect = useCallback((value, item) => {
+        if (item) {
+            setSelectedSkill(item);
+        } else {
+            setSelectedSkill(null);
+        }
+    }, []);
 
     // Gallery Images
     const handleUploadGalleryImage = async () => {
@@ -295,6 +345,27 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
             showSnackbar(extractErrorMessage(error, 'Failed to reorder images'), 'error', 5000);
         }
     };
+
+    // Build options for FormSearchSelect
+    const buildOptions = useCallback(() => {
+        const currentValue = getValues('skill_id');
+
+        if (!currentValue) {
+            return [];
+        }
+
+        if (selectedSkill) {
+            return [{
+                masterskill_id: selectedSkill.masterskill_id,
+                name: selectedSkill.name,
+                icon: selectedSkill.icon || '💻',
+                category_name: selectedSkill.category_name,
+                ...selectedSkill
+            }];
+        }
+
+        return [];
+    }, [selectedSkill, getValues]);
 
     // Toggle handlers
     const handleEditToggle = (type) => {
@@ -579,6 +650,79 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
                     {/* Toggle Sections - Show only when project is ready (edit mode or created) */}
                     {isProjectReady && (
                         <div className={styles.toggleSections}>
+                            {/* Skills Toggle with Content - UPDATED with FormSearchSelect */}
+                            {renderToggleWithContent(
+                                'Project Skills',
+                                <FiCode size={16} />,
+                                showSkills,
+                                () => handleEditToggle('skills'),
+                                projectSkills.length,
+                                showSkills ? 'Hide skills section' : 'Add technologies and tools used',
+                                // Skills Content
+                                <div className={styles.toggleInnerContent}>
+                                    <div className={styles.projectSkillTags}>
+                                        {projectSkills.map(ps => (
+                                            <span key={ps.id} className={styles.skillTag}>
+                                                {ps.skill_name}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveSkill(ps.skill_value, ps.skill_name)}
+                                                    className={styles.removeSkillBtn}
+                                                    disabled={isSubmitting}
+                                                >
+                                                    <FiX size={10} />
+                                                </button>
+                                            </span>
+                                        ))}
+                                        {projectSkills.length === 0 && (
+                                            <span className={styles.noSkills}>No skills added yet</span>
+                                        )}
+                                    </div>
+
+                                    {/* Searchable Skill Selector */}
+                                    <div className={styles.addSkillRow}>
+                                        <div className={styles.searchSelectWrapper}>
+                                            <FormSearchSelect
+                                                name="skill_id"
+                                                placeholder="Search skills..."
+                                                fetchOptions={fetchSkills}
+                                                options={buildOptions()}
+                                                valueKey="masterskill_id"
+                                                labelKey="name"
+                                                // iconKey="icon"
+                                                categoryKey="category_name"
+                                                showCategory={true}
+                                                disabled={isSubmitting || !currentProjectIdValue}
+                                                minSearchLength={2}
+                                                debounce={300}
+                                                size="md"
+                                                emptyMessage="No skills found"
+                                                onChange={handleSkillSelect}
+                                            />
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            variant="primary"
+                                            size="md"
+                                            onClick={() => {
+                                                const value = getValues('skill_id');
+                                                if (value) {
+                                                    // Find the selected skill from the options
+                                                    const skill = selectedSkill || { masterskill_id: value };
+                                                    handleAddSkill(value, skill);
+                                                }
+                                            }}
+                                            disabled={!selectedSkillId || isSubmitting || !currentProjectIdValue}
+                                            icon={<FiPlus />}
+                                            className={styles.addSkillBtn}
+                                        >
+                                            Add
+                                        </Button>
+                                    </div>
+                                </div>,
+                                true
+                            )}
+
                             {/* Gallery Toggle with Content */}
                             {renderToggleWithContent(
                                 'Project Gallery',
@@ -703,68 +847,6 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
                                             </Button>
                                         </div>
                                     </div>
-                                </div>,
-                                true
-                            )}
-
-                            {/* Skills Toggle with Content */}
-                            {renderToggleWithContent(
-                                'Project Skills',
-                                <FiCode size={16} />,
-                                showSkills,
-                                () => handleEditToggle('skills'),
-                                projectSkills.length,
-                                showSkills ? 'Hide skills section' : 'Add technologies and tools used',
-                                // Skills Content
-                                <div className={styles.toggleInnerContent}>
-                                    <div className={styles.projectSkillTags}>
-                                        {projectSkills.map(ps => (
-                                            <span key={ps.id} className={styles.skillTag}>
-                                                {ps.skill_icon || '💻'} {ps.skill_name}
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleRemoveSkill(ps.skill_value, ps.skill_name)}
-                                                    className={styles.removeSkillBtn}
-                                                    disabled={isSubmitting}
-                                                >
-                                                    <FiX size={10} />
-                                                </button>
-                                            </span>
-                                        ))}
-                                        {projectSkills.length === 0 && (
-                                            <span className={styles.noSkills}>No skills added yet</span>
-                                        )}
-                                    </div>
-                                    {availableSkills.length > 0 && (
-                                        <div className={styles.addSkillRow}>
-                                            <select
-                                                value={selectedSkillId}
-                                                onChange={e => setSelectedSkillId(e.target.value)}
-                                                className={styles.skillSelect}
-                                                disabled={isSubmitting || !currentProjectIdValue}
-                                            >
-                                                <option value="">Select a skill...</option>
-                                                {availableSkills.map(s => (
-                                                    <option key={s.masterskill_id} value={s.masterskill_id}>
-                                                        {s.icon || ''} {s.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={handleAddSkill}
-                                                disabled={!selectedSkillId || isSubmitting || !currentProjectIdValue}
-                                                icon={<FiPlus />}
-                                            >
-                                                Add
-                                            </Button>
-                                        </div>
-                                    )}
-                                    {availableSkills.length === 0 && projectSkills.length > 0 && (
-                                        <p className={styles.noSkills}>All available skills have been added</p>
-                                    )}
                                 </div>,
                                 true
                             )}
