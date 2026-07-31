@@ -2,15 +2,16 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-    FiCode, FiPlus, FiTrash2, FiStar, FiX, FiClock,
+    FiCode, FiPlus, FiTrash2, FiStar, FiClock,
     FiInfo, FiAward, FiArrowUp, FiArrowDown, FiEdit2
 } from 'react-icons/fi';
 
 import FormSelect from '@/components/common/forms/FormSelect';
+import FormSearchSelect from '@/components/common/forms/FormSearchSelect';
 import FormInput from '@/components/common/forms/FormInput';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
@@ -24,7 +25,7 @@ import {
     useDeleteProfileSkillMutation,
     useReorderProfileSkillsMutation,
 } from '@/services/api/portfolioApi';
-import { useGetPublicMasterSkillsQuery } from '@/services/api/portfolioApi';
+import { useLazyGetPublicMasterSkillsQuery } from '@/services/api/portfolioApi';
 import { profileSkillSchema } from '@/lib/validations/portfolio/sections/profileSkillSchema';
 import styles from '@/styles/portfolio/sections/SkillsSection.module.css';
 
@@ -43,21 +44,89 @@ const SkillsSection = ({
     const { showSnackbar } = useSnackbar();
     const [showModal, setShowModal] = useState(false);
     const [editingSkill, setEditingSkill] = useState(null);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [allSkills, setAllSkills] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedSkill, setSelectedSkill] = useState(null);
+    const isFetchingRef = useRef(false);
 
     const { data, isLoading, refetch } = useGetProfileSkillsQuery(snapshotId, { skip: !snapshotId });
-    const { data: masterSkillsData } = useGetPublicMasterSkillsQuery();
+    const [searchMasterSkills] = useLazyGetPublicMasterSkillsQuery();
     const [createSkill, { isLoading: isCreating }] = useCreateProfileSkillMutation();
     const [updateSkill, { isLoading: isUpdating }] = useUpdateProfileSkillMutation();
     const [deleteSkill] = useDeleteProfileSkillMutation();
     const [reorderSkills] = useReorderProfileSkillsMutation();
 
     const profileSkills = data?.data || [];
-    const masterSkills = masterSkillsData?.data || [];
     const isSubmitting = isCreating || isUpdating;
 
-    // Filter available skills (not already added)
-    const addedSkillIds = new Set(profileSkills.map(s => s.skill_value));
-    const availableSkills = masterSkills.filter(s => !addedSkillIds.has(s.masterskill_id));
+    // Memoize added skill IDs
+    const addedSkillIds = useMemo(() => {
+        return new Set(profileSkills.map(s => s.skill_value));
+    }, [profileSkills]);
+
+    const fetchSkills = useCallback(async (search) => {
+        if (isFetchingRef.current) {
+            return [];
+        }
+
+        try {
+            if (!search || search.trim().length < 2) {
+                return [];
+            }
+
+            isFetchingRef.current = true;
+
+            const response = await searchMasterSkills({
+                search: search.trim(),
+                page: 1,
+                page_size: 20,
+            }).unwrap();
+
+            const results = response?.data?.results || [];
+
+            const filteredSkills = results.filter(
+                skill => !addedSkillIds.has(skill.masterskill_id)
+            );
+
+            return filteredSkills;
+
+        } catch (error) {
+            console.error("Failed to search skills:", error);
+            return [];
+        } finally {
+            isFetchingRef.current = false;
+        }
+    }, [searchMasterSkills, addedSkillIds]);
+
+    const loadMoreSkills = useCallback(async () => {
+        if (!hasMore || isFetchingRef.current) return;
+
+        const nextPage = page + 1;
+        try {
+            isFetchingRef.current = true;
+
+            const response = await searchMasterSkills({
+                search: searchTerm.trim() || undefined,
+                page: nextPage,
+                page_size: 20,
+            }).unwrap();
+
+            const newSkills = response?.data?.results || [];
+            const filteredSkills = newSkills.filter(
+                skill => !addedSkillIds.has(skill.masterskill_id)
+            );
+
+            setAllSkills(prev => [...prev, ...filteredSkills]);
+            setHasMore(!!response?.data?.next);
+            setPage(nextPage);
+        } catch (error) {
+            console.error("Failed to load more skills:", error);
+        } finally {
+            isFetchingRef.current = false;
+        }
+    }, [searchMasterSkills, addedSkillIds, hasMore, page, searchTerm]);
 
     const methods = useForm({
         resolver: zodResolver(profileSkillSchema),
@@ -69,25 +138,41 @@ const SkillsSection = ({
         },
     });
 
-    const { reset, handleSubmit, watch, setValue } = methods;
-    const selectedSkillId = watch('skill_id');
+    const { reset, handleSubmit, watch, setValue, getValues } = methods;
     const selectedLevel = watch('level');
+    const selectedSkillId = watch('skill_id');
+
+    // Update selected skill when ID changes
+    useEffect(() => {
+        if (selectedSkillId && selectedSkill && selectedSkill.masterskill_id !== selectedSkillId) {
+            const found = allSkills.find(s => s.masterskill_id === selectedSkillId);
+            if (found) {
+                setSelectedSkill(found);
+            }
+        }
+    }, [selectedSkillId, selectedSkill, allSkills]);
 
     const handleAdd = () => {
         setEditingSkill(null);
+        setSelectedSkill(null);
         reset({
             skill_id: '',
             level: 3,
             years_of_experience: 0,
             is_featured: false,
         });
+        setSearchTerm('');
+        setAllSkills([]);
+        setPage(1);
+        setHasMore(true);
         setShowModal(true);
     };
 
     const handleEdit = (skill) => {
         setEditingSkill(skill);
+        setSelectedSkill(null);
         reset({
-            skill_id: skill.skill_value, // Use skill_value (masterskill_id)
+            skill_id: skill.skill_value,
             level: skill.level,
             years_of_experience: parseFloat(skill.years_of_experience) || 0,
             is_featured: skill.is_featured || false,
@@ -98,13 +183,26 @@ const SkillsSection = ({
     const handleCancel = () => {
         reset();
         setEditingSkill(null);
+        setSelectedSkill(null);
         setShowModal(false);
+        setSearchTerm('');
+        setAllSkills([]);
+        setPage(1);
+        setHasMore(true);
     };
+
+    const handleSkillSelect = useCallback((value, item) => {
+        if (item) {
+            setSelectedSkill(item);
+        } else {
+            setSelectedSkill(null);
+        }
+    }, []);
 
     const handleAddSkill = async (formData) => {
         try {
             const payload = {
-                skill_id: formData.skill_id, // This is the masterskill_id
+                skill_id: formData.skill_id,
                 level: Number(formData.level),
                 years_of_experience: Number(formData.years_of_experience) || 0,
                 is_featured: Boolean(formData.is_featured),
@@ -186,6 +284,38 @@ const SkillsSection = ({
         const labels = { 1: 'Beginner', 2: 'Elementary', 3: 'Intermediate', 4: 'Advanced', 5: 'Expert' };
         return labels[level] || 'Intermediate';
     };
+
+    const buildOptions = useCallback(() => {
+        if (!selectedSkillId) {
+            return [];
+        }
+
+        if (selectedSkill) {
+            return [{
+                masterskill_id: selectedSkill.masterskill_id,
+                name: selectedSkill.name,
+                icon: selectedSkill.icon || '💻',
+                category_name: selectedSkill.category_name,
+                ...selectedSkill
+            }];
+        }
+
+        if (selectedSkillId) {
+            const found = allSkills.find(s => s.masterskill_id === selectedSkillId);
+            if (found) {
+                setSelectedSkill(found);
+                return [{
+                    masterskill_id: found.masterskill_id,
+                    name: found.name,
+                    icon: found.icon || '💻',
+                    category_name: found.category_name,
+                    ...found
+                }];
+            }
+        }
+
+        return [];
+    }, [selectedSkill, selectedSkillId, allSkills]);
 
     if (isLoading) return null;
 
@@ -367,13 +497,12 @@ const SkillsSection = ({
                                         <p className={styles.sectionDescription}>
                                             {editingSkill
                                                 ? 'The skill name cannot be changed'
-                                                : 'Select a skill from the available list'}
+                                                : 'Search for skills from the available list'}
                                         </p>
                                     </div>
                                 </div>
                                 <div className={styles.sectionContent}>
                                     {editingSkill ? (
-                                        // Edit mode - Show disabled select with current skill
                                         <FormSelect
                                             name="skill_id"
                                             label="Selected Skill *"
@@ -387,18 +516,27 @@ const SkillsSection = ({
                                             disabled={true}
                                         />
                                     ) : (
-                                        // Add mode - Show active select
-                                        <FormSelect
-                                            name="skill_id"
-                                            label="Select Skill *"
-                                            options={availableSkills.map(s => ({
-                                                value: s.masterskill_id,
-                                                label: `${s.icon || ''} ${s.name}`,
-                                            }))}
-                                            placeholder="Search and select a skill..."
-                                            required
-                                            disabled={isSubmitting}
-                                        />
+                                        <div style={{ position: 'relative', zIndex: 9999 }}>
+                                            <FormSearchSelect
+                                                name="skill_id"
+                                                label="Search and Select Skill *"
+                                                placeholder="Search skills by name..."
+                                                fetchOptions={fetchSkills}
+                                                options={buildOptions()}
+                                                valueKey="masterskill_id"
+                                                labelKey="name"
+                                                // iconKey="icon"
+                                                categoryKey="category_name"
+                                                showCategory={true}
+                                                required={true}
+                                                disabled={isSubmitting}
+                                                minSearchLength={2}
+                                                debounce={300}
+                                                size="md"
+                                                emptyMessage="No skills found"
+                                                onChange={handleSkillSelect}
+                                            />
+                                        </div>
                                     )}
                                     {editingSkill && (
                                         <p className={styles.editNotice}>

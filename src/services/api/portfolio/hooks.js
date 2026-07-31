@@ -66,6 +66,7 @@ export const {
     useDeleteSkillCategoryMutation,
     // Master Skills
     useGetPublicMasterSkillsQuery,
+    useLazyGetPublicMasterSkillsQuery,
     useGetAdminMasterSkillsQuery,
     useCreateMasterSkillMutation,
     useGetMasterSkillQuery,

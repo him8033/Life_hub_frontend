@@ -3,9 +3,14 @@ import { portfolioApi } from './index';
 export const masterSkillEndpoints = (builder) => ({
     // Public - Active skills only (for dropdowns)
     getPublicMasterSkills: builder.query({
-        query: () => ({
+        query: (params = {}) => ({
             url: "portfoliohub/public/master-skills/",
             method: "GET",
+            params: {
+                search: params.search || undefined,
+                page: params.page || 1,
+                page_size: params.page_size || 20,
+            },
         }),
         providesTags: ["MasterSkill"],
     }),
