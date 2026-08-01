@@ -3,31 +3,84 @@ import Minimal from './Minimal';
 import Creative from './Creative';
 import Corporate from './Corporate';
 
-// Map template_key to component
-const TEMPLATE_MAP = {
-    'modern_ats': ModernATS,
-    'minimal': Minimal,
-    'creative': Creative,
-    'corporate': Corporate,
+/**
+ * Resume Template Registry
+ *
+ * Key Rules:
+ * - The object key is the unique template_key.
+ * - This key MUST exactly match the template_key stored in the Resume Template key in database/API.
+ * - If the key contains a hyphen (-), it must be wrapped in quotes.
+ *
+ * Example:
+ *   ✅ 'modern-minimalist'
+ *   ❌ modern-minimalist
+ */
+const TEMPLATES = {
+    'modern-minimalist': {
+        name: 'Modern ATS',
+        component: ModernATS,
+    },
+
+    minimal: {
+        name: 'Minimal',
+        component: Minimal,
+    },
+
+    creative: {
+        name: 'Creative',
+        component: Creative,
+    },
+
+    corporate: {
+        name: 'Corporate',
+        component: Corporate,
+    },
 };
 
-// Default fallback template
-const DEFAULT_TEMPLATE = ModernATS;
+/**
+ * Default template shown when:
+ * - templateKey is null/undefined
+ * - templateKey doesn't exist in TEMPLATES
+ *
+ * IMPORTANT:
+ * This value MUST be one of the keys defined above.
+ */
+const DEFAULT_TEMPLATE_KEY = 'modern-minimalist';
 
+/**
+ * Returns the React component for a template.
+ */
 export const getTemplate = (templateKey) => {
-    return TEMPLATE_MAP[templateKey] || DEFAULT_TEMPLATE;
+    return (
+        TEMPLATES[templateKey]?.component ??
+        TEMPLATES[DEFAULT_TEMPLATE_KEY].component
+    );
 };
 
+/**
+ * Returns all available template keys.
+ *
+ * Example:
+ * [
+ *   'modern-minimalist',
+ *   'minimal',
+ *   'creative',
+ *   'corporate'
+ * ]
+ */
 export const getTemplateList = () => {
-    return Object.keys(TEMPLATE_MAP);
+    return Object.keys(TEMPLATES);
 };
 
+/**
+ * Returns the display name of a template.
+ * Falls back to the default template name if the key is invalid.
+ */
 export const getTemplateName = (templateKey) => {
-    const names = {
-        'modern_ats': 'Modern ATS',
-        'minimal': 'Minimal',
-        'creative': 'Creative',
-        'corporate': 'Corporate',
-    };
-    return names[templateKey] || 'Modern ATS';
+    return (
+        TEMPLATES[templateKey]?.name ??
+        TEMPLATES[DEFAULT_TEMPLATE_KEY].name
+    );
 };
+
+export default TEMPLATES;

@@ -1,95 +1,136 @@
 // src/components/portfolio/theme/ThemeRegistry.js
 
 /**
+ * ============================================
  * PORTFOLIO THEME REGISTRY
- * 
- * HOW TO ADD A NEW THEME:
- * 
- * 1. Create your theme component file in this directory (e.g., MyNewTheme.jsx)
+ * ============================================
+ *
+ * HOW TO ADD A NEW THEME
+ *
+ * 1. Create your theme component
+ *    Example:
+ *      MyNewTheme.jsx
+ *
  * 2. Import it below
- * 3. Add it to THEME_MAP with a unique key
- * 4. Add its display name to THEME_NAMES
- * 
+ *
+ * 3. Register it inside THEMES.
+ *
+ * IMPORTANT:
+ * - The object key is the unique theme_key.
+ * - The key MUST exactly match the theme_key stored in your database/API.
+ * - If the key contains a hyphen (-), wrap it in quotes.
+ *
  * Example:
- *   import MyNewTheme from './MyNewTheme';
- *   
- *   const THEME_MAP = {
- *     'my_new_theme': MyNewTheme,  // ← Add here
- *   };
- *   
- *   const THEME_NAMES = {
- *     'my_new_theme': 'My New Theme',  // ← Add here
- *   };
+ *
+ * THEMES = {
+ *   'my-new-theme': {
+ *      name: 'My New Theme',
+ *      component: MyNewTheme,
+ *   }
+ * }
+ *
+ * That's it.
+ * No other place needs updating.
+ * ============================================
  */
 
 import PortfolioTheme from './PortfolioTheme';
 import TestTheme from './TestTheme';
 import DefaultTheme from './DefaultTheme';
 
-// ============================================
-// 1. REGISTER YOUR THEME HERE
-// ============================================
-// Map theme_key (from API) → React Component
-// ============================================
+/**
+ * ============================================
+ * REGISTER ALL THEMES HERE
+ * ============================================
+ */
+const THEMES = {
+    portfolio_theme: {
+        name: 'Portfolio Theme',
+        component: PortfolioTheme,
+    },
 
-const THEME_MAP = {
-    'portfolio_theme': PortfolioTheme,   // Main portfolio theme
-    'test_theme': TestTheme,             // Test theme
-    'default': DefaultTheme,             // Fallback theme
-    // 👇 Add your new theme here
-    // 'your_theme_key': YourThemeComponent,
+    test_theme: {
+        name: 'Test Theme',
+        component: TestTheme,
+    },
+
+    default: {
+        name: 'Default Theme',
+        component: DefaultTheme,
+    },
+
+    // Example:
+    // 'modern-minimalist': {
+    //     name: 'Modern Minimalist',
+    //     component: ModernMinimalist,
+    // },
 };
 
-// ============================================
-// 2. ADD YOUR THEME NAME HERE
-// ============================================
-// Map theme_key → Display Name (shown in UI)
-// ============================================
+/**
+ * ============================================
+ * DEFAULT THEME
+ * ============================================
+ *
+ * Used when:
+ * - themeKey is null/undefined
+ * - themeKey doesn't exist
+ *
+ * IMPORTANT:
+ * This key MUST exist inside THEMES.
+ * ============================================
+ */
+const DEFAULT_THEME_KEY = 'portfolio_theme';
 
-const THEME_NAMES = {
-    'portfolio_theme': 'Portfolio Theme',
-    'test_theme': 'Test Theme',
-    'default': 'Default Theme',
-    // 👇 Add your theme name here
-    // 'your_theme_key': 'Your Theme Display Name',
-};
-
-// ============================================
-// 3. SET DEFAULT THEME
-// ============================================
-// Fallback theme when key is not found
-// ============================================
-
-const DEFAULT_THEME = PortfolioTheme;
-
-// ============================================
-// EXPORTED FUNCTIONS (Don't change these)
-// ============================================
-
+/**
+ * Returns the React component for a theme.
+ */
 export const getPortfolioTheme = (themeKey) => {
-    return THEME_MAP[themeKey] || DEFAULT_THEME;
+    return (
+        THEMES[themeKey]?.component ??
+        THEMES[DEFAULT_THEME_KEY].component
+    );
 };
 
+/**
+ * Returns all registered theme keys.
+ */
 export const getThemeList = () => {
-    return Object.keys(THEME_MAP);
+    return Object.keys(THEMES);
 };
 
+/**
+ * Returns the display name for a theme.
+ */
 export const getThemeName = (themeKey) => {
-    return THEME_NAMES[themeKey] || themeKey || 'Unknown Theme';
+    return (
+        THEMES[themeKey]?.name ??
+        THEMES[DEFAULT_THEME_KEY].name
+    );
 };
 
+/**
+ * Returns the default theme component.
+ */
 export const getDefaultTheme = () => {
-    return DEFAULT_THEME;
+    return THEMES[DEFAULT_THEME_KEY].component;
 };
 
+/**
+ * Checks whether a theme is registered.
+ */
 export const isThemeRegistered = (themeKey) => {
-    return themeKey in THEME_MAP;
+    return themeKey in THEMES;
 };
 
+/**
+ * Returns metadata for all registered themes.
+ */
 export const getThemesMetadata = () => {
-    return Object.keys(THEME_MAP).map(key => ({
-        key: key,
-        component: THEME_MAP[key],
-        name: THEME_NAMES[key] || key,
+    return Object.entries(THEMES).map(([key, value]) => ({
+        key,
+        name: value.name,
+        component: value.component,
     }));
 };
+
+export default THEMES;
