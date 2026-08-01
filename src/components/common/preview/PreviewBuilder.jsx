@@ -49,6 +49,7 @@ export default function PreviewBuilder({
         zoom,
         previewKey,
         refresh,
+        refreshIframe, // New method
         zoomIn,
         zoomOut,
         zoomReset,
@@ -61,13 +62,16 @@ export default function PreviewBuilder({
 
     const previousRefreshTrigger = useRef(refreshTrigger);
 
-    // Force refresh when refreshTrigger changes
+    // Force refresh when refreshTrigger changes - using the history-safe method
     useEffect(() => {
         if (previousRefreshTrigger.current !== refreshTrigger) {
             previousRefreshTrigger.current = refreshTrigger;
+            // Use refreshIframe for history-safe reload
+            refreshIframe();
+            // Also update key for any dependent components
             refresh();
         }
-    }, [refreshTrigger, refresh]);
+    }, [refreshTrigger, refresh, refreshIframe]);
 
     // Ctrl+P shortcut
     useEffect(() => {
@@ -91,7 +95,10 @@ export default function PreviewBuilder({
                 onSettings={onSettings}
                 onPreview={onPreview}
                 onExport={onExport}
-                onRefresh={refresh}
+                onRefresh={() => {
+                    refreshIframe();
+                    refresh();
+                }}
                 onPrint={print}
                 canPrint={canPrint}
                 viewportSize={viewportSize}
@@ -132,7 +139,10 @@ export default function PreviewBuilder({
                         onZoomIn={zoomIn}
                         onZoomOut={zoomOut}
                         onZoomReset={zoomReset}
-                        onRefresh={refresh}
+                        onRefresh={() => {
+                            refreshIframe();
+                            refresh();
+                        }}
                         paperLabel={isWebpage ? getViewportLabel() : paper?.label}
                         zoomLabel={zoom}
                         isWebpage={isWebpage}

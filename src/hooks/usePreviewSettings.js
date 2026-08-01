@@ -39,10 +39,50 @@ export function usePreviewSettings(defaultSize = 'a4', defaultZoom = 100, viewMo
     const [zoom, setZoom] = useState(defaultZoom);
     const [previewKey, setPreviewKey] = useState(0);
     const iframeRef = useRef(null);
+    const refreshCount = useRef(0);
 
     const refresh = useCallback(() => {
+        // Increment refresh count for tracking
+        refreshCount.current += 1;
+        // Use a more stable key that doesn't cause history issues
         setPreviewKey(prev => prev + 1);
     }, []);
+
+    // Method to refresh without creating history entries
+    const refreshIframe = useCallback(() => {
+        if (iframeRef.current) {
+            try {
+                // Try to use location.reload() which doesn't create history entries
+                if (iframeRef.current.contentWindow?.location?.reload) {
+                    iframeRef.current.contentWindow.location.reload();
+                    return;
+                }
+            } catch (e) {
+                // Cross-origin - fallback to src change
+            }
+
+            // Fallback: change src without adding to history
+            const currentSrc = iframeRef.current.src;
+            if (currentSrc && !currentSrc.includes('about:blank')) {
+                // Use a unique but non-history-changing approach
+                const url = new URL(currentSrc);
+                const timestamp = Date.now();
+                url.searchParams.set('_refresh', timestamp.toString());
+
+                // Use replace to avoid history entry
+                try {
+                    iframeRef.current.contentWindow?.location?.replace(url.toString());
+                } catch (e) {
+                    // Ultimate fallback
+                    const tempSrc = iframeRef.current.src;
+                    iframeRef.current.src = 'about:blank';
+                    setTimeout(() => {
+                        iframeRef.current.src = tempSrc;
+                    }, 50);
+                }
+            }
+        }
+    }, [iframeRef]);
 
     const zoomIn = () => setZoom(prev => Math.min(prev + 10, 200));
     const zoomOut = () => setZoom(prev => Math.max(prev - 10, 30));
@@ -141,6 +181,7 @@ export function usePreviewSettings(defaultSize = 'a4', defaultZoom = 100, viewMo
         zoom,
         previewKey,
         refresh,
+        refreshIframe, // New method for history-safe refresh
         zoomIn,
         zoomOut,
         zoomReset,

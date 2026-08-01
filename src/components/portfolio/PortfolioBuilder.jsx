@@ -61,6 +61,7 @@ export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
     const [activeSection, setActiveSection] = useState('basic-info');
     const [initialized, setInitialized] = useState(false);
     const refreshKeyRef = useRef(0);
+    const saveTimeoutRef = useRef(null);
 
     // Fetch portfolio data
     const { data, isLoading, refetch } = useGetPortfolioProjectQuery(portfolioId, { skip: !portfolioId });
@@ -137,13 +138,29 @@ export default function PortfolioBuilder({ portfolioId, onBack, onPreview }) {
 
     // Handle section data updates - with immediate refresh
     const handleSectionUpdate = useCallback(() => {
+        // Clear any pending timeout
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+        }
+
         // Refetch data immediately
         refetch();
-        // Also force a refresh after a short delay
-        setTimeout(() => {
+
+        // Debounce the force refresh to prevent multiple rapid refreshes
+        saveTimeoutRef.current = setTimeout(() => {
             forceRefreshPreview();
+            saveTimeoutRef.current = null;
         }, 300);
     }, [refetch, forceRefreshPreview]);
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+        };
+    }, []);
 
     // Get section icon
     const getSectionIcon = (iconName) => {

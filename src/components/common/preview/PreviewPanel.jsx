@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { FiRefreshCw } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import styles from '@/styles/common/preview/PreviewPanel.module.css';
@@ -22,20 +22,63 @@ export default function PreviewPanel({
     zoomLabel,
     isWebpage = false,
 }) {
-    // Reload iframe when previewKey changes
+    const isFirstLoad = useRef(true);
+
+    // Use location.replace to avoid adding history entries
     useEffect(() => {
         if (iframeRef.current && previewUrl) {
-            // Force iframe to reload
             const iframe = iframeRef.current;
-            const currentSrc = iframe.src;
-            if (currentSrc && !currentSrc.includes('about:blank')) {
-                iframe.src = 'about:blank';
-                setTimeout(() => {
+
+            // Try to use location.replace if available
+            try {
+                if (iframe.contentWindow?.location?.replace) {
+                    if (!isFirstLoad.current) {
+                        // Use replace for subsequent loads
+                        iframe.contentWindow.location.replace(previewUrl);
+                    } else {
+                        // First load can use src
+                        iframe.src = previewUrl;
+                        isFirstLoad.current = false;
+                    }
+                } else {
+                    // Fallback: use src but with a cache-busting parameter
+                    // that doesn't affect history
+                    const url = new URL(previewUrl, window.location.origin);
+                    url.searchParams.set('_t', Date.now());
+                    iframe.src = url.toString();
+                }
+            } catch (error) {
+                // Cross-origin fallback - reload iframe without adding history
+                if (!isFirstLoad.current) {
+                    // Use a hidden technique to reload without history
+                    const currentSrc = iframe.src;
+                    if (currentSrc && !currentSrc.includes('about:blank')) {
+                        // Force reload without history using a temporary document
+                        iframe.src = 'about:blank';
+                        setTimeout(() => {
+                            iframe.src = previewUrl;
+                        }, 50);
+                    }
+                } else {
                     iframe.src = previewUrl;
-                }, 100);
+                    isFirstLoad.current = false;
+                }
             }
         }
     }, [previewKey, previewUrl, iframeRef]);
+
+    // Cleanup function to prevent memory leaks
+    useEffect(() => {
+        return () => {
+            if (iframeRef.current) {
+                try {
+                    iframeRef.current.src = 'about:blank';
+                } catch (e) {
+                    // Ignore errors
+                }
+            }
+        };
+    }, [iframeRef]);
 
     return (
         <div className={styles.previewPanel}>
@@ -81,6 +124,7 @@ export default function PreviewPanel({
                                     border: 'none',
                                     display: 'block',
                                 } : {}}
+                                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
                             />
                         </div>
                     </div>
