@@ -3,9 +3,14 @@ import { portfolioApi } from './index';
 export const masterLanguageEndpoints = (builder) => ({
     // Public - Active languages only (for dropdowns)
     getPublicMasterLanguages: builder.query({
-        query: () => ({
+        query: (params = {}) => ({
             url: "portfoliohub/public/master-languages/",
             method: "GET",
+            params: {
+                search: params.search || undefined,
+                page: params.page || 1,
+                page_size: params.page_size || 20,
+            },
         }),
         providesTags: ["MasterLanguage"],
     }),

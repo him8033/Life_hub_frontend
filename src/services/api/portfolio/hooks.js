@@ -74,6 +74,7 @@ export const {
     useDeleteMasterSkillMutation,
     // Master Languages
     useGetPublicMasterLanguagesQuery,
+    useLazyGetPublicMasterLanguagesQuery,
     useGetAdminMasterLanguagesQuery,
     useCreateMasterLanguageMutation,
     useGetMasterLanguageQuery,

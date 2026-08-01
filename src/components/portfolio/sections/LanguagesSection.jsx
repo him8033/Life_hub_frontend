@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fi';
 
 import FormSelect from '@/components/common/forms/FormSelect';
+import FormSearchSelect from '@/components/common/forms/FormSearchSelect';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
 import { SectionModal } from './common/SectionModal';
@@ -24,7 +25,7 @@ import {
     useDeleteProfileLanguageMutation,
     useReorderProfileLanguagesMutation,
 } from '@/services/api/portfolioApi';
-import { useGetPublicMasterLanguagesQuery } from '@/services/api/portfolioApi';
+import { useLazyGetPublicMasterLanguagesQuery } from '@/services/api/portfolioApi';
 import { profileLanguageSchema } from '@/lib/validations/portfolio/sections/profileLanguageSchema';
 import styles from '@/styles/portfolio/sections/LanguagesSection.module.css';
 
@@ -73,33 +74,59 @@ const LanguagesSection = ({
 
     const [showModal, setShowModal] = useState(false);
     const [editingLanguage, setEditingLanguage] = useState(null);
+    const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const isFetchingRef = useRef(false);
 
     const { data, isLoading, refetch } = useGetProfileLanguagesQuery(snapshotId, { skip: !snapshotId });
-    const { data: masterLanguagesData } = useGetPublicMasterLanguagesQuery();
+    const [searchMasterLanguages] = useLazyGetPublicMasterLanguagesQuery();
     const [createLanguage, { isLoading: isCreating }] = useCreateProfileLanguageMutation();
     const [updateLanguage, { isLoading: isUpdating }] = useUpdateProfileLanguageMutation();
     const [deleteLanguage] = useDeleteProfileLanguageMutation();
     const [reorderLanguages] = useReorderProfileLanguagesMutation();
 
     const languages = data?.data || [];
-    const masterLanguages = masterLanguagesData?.data || [];
     const isSubmitting = isCreating || isUpdating;
 
     // Get existing language IDs
     const existingLanguageIds = useMemo(() => {
-        return languages.map(l => l.language_value);
+        return new Set(languages.map(l => l.language_value));
     }, [languages]);
 
-    // Filter available languages
-    const availableLanguages = useMemo(() => {
-        const filtered = masterLanguages.filter(
-            lang => !existingLanguageIds.includes(lang.masterlanguage_id)
-        );
-        return filtered.map(lang => ({
-            value: lang.masterlanguage_id,
-            label: `${lang.icon || '🌐'} ${lang.name}`,
-        }));
-    }, [masterLanguages, existingLanguageIds]);
+    // Fetch languages function
+    const fetchLanguages = useCallback(async (search) => {
+        if (isFetchingRef.current) {
+            return [];
+        }
+
+        try {
+            if (!search || search.trim().length < 2) {
+                return [];
+            }
+
+            isFetchingRef.current = true;
+
+            const response = await searchMasterLanguages({
+                search: search.trim(),
+                page: 1,
+                page_size: 20,
+            }).unwrap();
+
+            const results = response?.data?.results || [];
+
+            // Filter out already added languages
+            const filteredLanguages = results.filter(
+                lang => !existingLanguageIds.has(lang.masterlanguage_id)
+            );
+
+            return filteredLanguages;
+
+        } catch (error) {
+            console.error("Failed to search languages:", error);
+            return [];
+        } finally {
+            isFetchingRef.current = false;
+        }
+    }, [searchMasterLanguages, existingLanguageIds]);
 
     const methods = useForm({
         resolver: zodResolver(profileLanguageSchema),
@@ -109,7 +136,7 @@ const LanguagesSection = ({
         },
     });
 
-    const { reset, handleSubmit } = methods;
+    const { reset, handleSubmit, setValue, getValues } = methods;
 
     const getLanguageColor = (index) => {
         return LANGUAGE_COLORS[index % LANGUAGE_COLORS.length];
@@ -117,6 +144,7 @@ const LanguagesSection = ({
 
     const handleAdd = () => {
         setEditingLanguage(null);
+        setSelectedLanguage(null);
         reset({
             language_id: '',
             proficiency: '',
@@ -126,6 +154,7 @@ const LanguagesSection = ({
 
     const handleEdit = (language) => {
         setEditingLanguage(language);
+        setSelectedLanguage(null);
         reset({
             language_id: language.language_value,
             proficiency: language.proficiency,
@@ -136,8 +165,17 @@ const LanguagesSection = ({
     const handleCancel = () => {
         reset();
         setEditingLanguage(null);
+        setSelectedLanguage(null);
         setShowModal(false);
     };
+
+    const handleLanguageSelect = useCallback((value, item) => {
+        if (item) {
+            setSelectedLanguage(item);
+        } else {
+            setSelectedLanguage(null);
+        }
+    }, []);
 
     const handleFormSubmit = async (formData) => {
         try {
@@ -215,6 +253,27 @@ const LanguagesSection = ({
         return found ? found.label : proficiency;
     };
 
+    // Build options for FormSearchSelect
+    const buildOptions = useCallback(() => {
+        const currentValue = getValues('language_id');
+
+        if (!currentValue) {
+            return [];
+        }
+
+        if (selectedLanguage) {
+            return [{
+                masterlanguage_id: selectedLanguage.masterlanguage_id,
+                name: selectedLanguage.name,
+                icon: selectedLanguage.icon || '🌐',
+                language_code: selectedLanguage.language_code,
+                ...selectedLanguage
+            }];
+        }
+
+        return [];
+    }, [selectedLanguage, getValues]);
+
     // Handle Enter key press in form
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -236,7 +295,7 @@ const LanguagesSection = ({
                 hasData={languages.length > 0}
                 onSave={handleAdd}
                 saveButtonText="Add Language"
-                isDisabled={availableLanguages.length === 0 && !editingLanguage}
+                isDisabled={false}
                 onPrevious={onPrevious}
                 onNext={onNext}
                 showPrevious={showPrevious}
@@ -332,20 +391,14 @@ const LanguagesSection = ({
                         <p className={styles.emptyDescription}>
                             Add languages you know with proficiency levels
                         </p>
-                        {masterLanguages.length > 0 ? (
-                            <Button
-                                variant="primary"
-                                onClick={handleAdd}
-                                icon={<FiPlus />}
-                                className={styles.emptyButton}
-                            >
-                                Add Language
-                            </Button>
-                        ) : (
-                            <p className={styles.noLanguagesMessage}>
-                                No languages available in the master list.
-                            </p>
-                        )}
+                        <Button
+                            variant="primary"
+                            onClick={handleAdd}
+                            icon={<FiPlus />}
+                            className={styles.emptyButton}
+                        >
+                            Add Language
+                        </Button>
                     </div>
                 )}
             </SectionLayout>
@@ -388,15 +441,27 @@ const LanguagesSection = ({
                                             </span>
                                         </div>
                                     ) : (
-                                        <FormSelect
-                                            name="language_id"
-                                            label="Select Language *"
-                                            options={availableLanguages}
-                                            placeholder="Search and select a language..."
-                                            required
-                                            disabled={isSubmitting || availableLanguages.length === 0}
-                                            onKeyDown={handleKeyDown}
-                                        />
+                                        <div style={{ position: 'relative', zIndex: 9999 }}>
+                                            <FormSearchSelect
+                                                name="language_id"
+                                                label="Select Language *"
+                                                placeholder="Search languages by name..."
+                                                fetchOptions={fetchLanguages}
+                                                options={buildOptions()}
+                                                valueKey="masterlanguage_id"
+                                                labelKey="name"
+                                                iconKey="icon"
+                                                categoryKey="language_code"
+                                                showCategory={true}
+                                                required={true}
+                                                disabled={isSubmitting}
+                                                minSearchLength={2}
+                                                debounce={300}
+                                                size="md"
+                                                emptyMessage="No languages found"
+                                                onChange={handleLanguageSelect}
+                                            />
+                                        </div>
                                     )}
                                     <FormSelect
                                         name="proficiency"
