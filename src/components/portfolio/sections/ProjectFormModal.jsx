@@ -13,6 +13,7 @@ import {
 
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
+import RichTextEditor from '@/components/common/forms/RichTextEditor';
 import FormSelect from '@/components/common/forms/FormSelect';
 import FormSearchSelect from '@/components/common/forms/FormSearchSelect';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
@@ -512,21 +513,26 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
                                         required
                                         disabled={isSubmitting || isFormDisabled}
                                     />
-                                    <FormTextarea
+                                    {/* Updated to RichTextEditor */}
+                                    <RichTextEditor
                                         name="short_description"
-                                        label="Short Description *"
+                                        label="Short Description"
                                         placeholder="Brief overview of your project..."
-                                        rows={2}
-                                        required
+                                        minHeight="120px"
+                                        maxHeight="300px"
                                         disabled={isSubmitting || isFormDisabled}
+                                        size="md"
                                     />
-                                    <FormTextarea
+                                    {/* Updated to RichTextEditor */}
+                                    {/* <RichTextEditor
                                         name="full_description"
                                         label="Full Description"
                                         placeholder="Detailed description of your project..."
-                                        rows={3}
+                                        minHeight="120px"
+                                        maxHeight="300px"
                                         disabled={isSubmitting || isFormDisabled}
-                                    />
+                                        size="md"
+                                    /> */}
                                 </div>
                             </div>
 
@@ -650,7 +656,7 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
                     {/* Toggle Sections - Show only when project is ready (edit mode or created) */}
                     {isProjectReady && (
                         <div className={styles.toggleSections}>
-                            {/* Skills Toggle with Content - UPDATED with FormSearchSelect */}
+                            {/* Skills Toggle with Content */}
                             {renderToggleWithContent(
                                 'Project Skills',
                                 <FiCode size={16} />,
@@ -707,7 +713,6 @@ const ProjectFormModal = ({ snapshotId, project, onClose, onSuccess }) => {
                                             onClick={() => {
                                                 const value = getValues('skill_id');
                                                 if (value) {
-                                                    // Find the selected skill from the options
                                                     const skill = selectedSkill || { masterskill_id: value };
                                                     handleAddSkill(value, skill);
                                                 }

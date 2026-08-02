@@ -1,0 +1,629 @@
+/* src/styles/common/forms/RichTextEditor.module.css */
+
+/* ============================================
+   RICH TEXT EDITOR
+   ============================================ */
+
+.formItem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2, 0.5rem);
+    width: 100%;
+}
+
+/* ============================================
+   LABEL
+   ============================================ */
+.formLabel {
+    font-weight: 600;
+    color: var(--foreground, #111827);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1, 0.25rem);
+    font-size: var(--text-sm, 0.875rem);
+}
+
+.labelIcon {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 0.25rem;
+    color: var(--muted-foreground, #6b7280);
+}
+
+.required {
+    color: var(--destructive, #dc2626);
+    margin-left: 0.15rem;
+}
+
+/* Label sizes */
+.labelSm {
+    font-size: var(--text-xs, 0.75rem);
+}
+
+.labelMd {
+    font-size: var(--text-sm, 0.875rem);
+}
+
+.labelLg {
+    font-size: var(--text-base, 1rem);
+}
+
+/* ============================================
+   EDITOR WRAPPER
+   ============================================ */
+
+.editorWrapper {
+    border: 2px solid var(--border, #e5e7eb);
+    border-radius: var(--radius-md, 0.5rem);
+    overflow: hidden;
+    transition: all 0.2s ease;
+    background: var(--background, #ffffff);
+}
+
+.editorWrapper:hover {
+    border-color: var(--primary, #667eea);
+}
+
+.editorWrapper:focus-within {
+    border-color: var(--ring, #667eea);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring, #667eea) 20%, transparent);
+}
+
+.editorWrapper.hasError {
+    border-color: var(--destructive, #dc2626);
+}
+
+.editorWrapper.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.editorWrapper.disabled .editorContent {
+    cursor: not-allowed;
+}
+
+/* ============================================
+   EDITOR CONTAINER
+   ============================================ */
+
+.editorContainer {
+    position: relative;
+    width: 100%;
+    background: var(--background, #ffffff);
+}
+
+/* ============================================
+   EDITOR CONTENT - FIXED DARK MODE
+   ============================================ */
+
+.editorContent {
+    padding: 0.75rem 1rem;
+    outline: none;
+    background: var(--background, #ffffff) !important;
+    color: var(--foreground, #111827);
+    font-size: var(--text-base, 1rem);
+    line-height: 1.75;
+    min-height: 150px;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    /* Ensure content takes full width */
+    width: 100%;
+}
+
+.editorContent:focus {
+    outline: none;
+}
+
+/* Placeholder styling */
+.editorContent .ProseMirror-empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted-foreground, #6b7280);
+    pointer-events: none;
+    opacity: 1;
+}
+
+.editorContent .ProseMirror {
+    min-height: inherit;
+    outline: none;
+    background: transparent;
+    color: inherit;
+}
+
+.editorContent .ProseMirror:focus {
+    outline: none;
+}
+
+/* Editor content styles for rich text */
+.editorContent .ProseMirror h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+    color: var(--foreground, #111827);
+}
+
+.editorContent .ProseMirror h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    color: var(--foreground, #111827);
+}
+
+.editorContent .ProseMirror h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    color: var(--foreground, #111827);
+}
+
+.editorContent .ProseMirror h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    color: var(--foreground, #111827);
+}
+
+.editorContent .ProseMirror ul,
+.editorContent .ProseMirror ol {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+}
+
+.editorContent .ProseMirror ul {
+    list-style-type: disc;
+}
+
+.editorContent .ProseMirror ol {
+    list-style-type: decimal;
+}
+
+.editorContent .ProseMirror li {
+    margin: 0.25rem 0;
+    color: var(--foreground, #111827);
+}
+
+.editorContent .ProseMirror blockquote {
+    border-left: 4px solid var(--primary, #667eea);
+    padding-left: 1rem;
+    margin: 0.5rem 0;
+    color: var(--muted-foreground, #6b7280);
+}
+
+.editorContent .ProseMirror code {
+    background: var(--muted, #f3f4f6);
+    padding: 0.1rem 0.3rem;
+    border-radius: var(--radius-sm, 0.375rem);
+    font-size: 0.9em;
+    color: var(--foreground, #111827);
+}
+
+.editorContent .ProseMirror pre {
+    background: var(--muted, #f3f4f6);
+    padding: 1rem;
+    border-radius: var(--radius-sm, 0.375rem);
+    overflow-x: auto;
+    color: var(--foreground, #111827);
+}
+
+.editorContent .ProseMirror pre code {
+    background: transparent;
+    padding: 0;
+}
+
+.editorContent .ProseMirror img {
+    max-width: 100%;
+    border-radius: var(--radius-sm, 0.375rem);
+    margin: 0.5rem 0;
+}
+
+.editorContent .ProseMirror a {
+    color: var(--primary, #667eea);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.editorContent .ProseMirror a:hover {
+    color: color-mix(in srgb, var(--primary, #667eea) 80%, #000);
+}
+
+/* Editor size variants */
+.editorSm .editorContent .ProseMirror {
+    font-size: var(--text-sm, 0.875rem);
+    padding: 0.5rem 0.75rem;
+    min-height: 100px;
+}
+
+.editorSm .editorContent .ProseMirror h1 {
+    font-size: 1.5rem;
+}
+
+.editorSm .editorContent .ProseMirror h2 {
+    font-size: 1.25rem;
+}
+
+.editorSm .editorContent .ProseMirror h3 {
+    font-size: 1.1rem;
+}
+
+.editorSm .editorContent .ProseMirror h4 {
+    font-size: 1rem;
+}
+
+.editorMd .editorContent .ProseMirror {
+    font-size: var(--text-base, 1rem);
+    padding: 0.75rem 1rem;
+    min-height: 150px;
+}
+
+.editorLg .editorContent .ProseMirror {
+    font-size: var(--text-lg, 1.125rem);
+    padding: 1rem 1.25rem;
+    min-height: 200px;
+}
+
+.editorLg .editorContent .ProseMirror h1 {
+    font-size: 2.5rem;
+}
+
+.editorLg .editorContent .ProseMirror h2 {
+    font-size: 2rem;
+}
+
+.editorLg .editorContent .ProseMirror h3 {
+    font-size: 1.5rem;
+}
+
+.editorLg .editorContent .ProseMirror h4 {
+    font-size: 1.25rem;
+}
+
+/* Expanded state */
+.expanded .editorContent .ProseMirror {
+    min-height: 400px !important;
+    max-height: none !important;
+}
+
+/* ============================================
+   TOOLBAR
+   ============================================ */
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--muted, #f3f4f6);
+    border-bottom: 1px solid var(--border, #e5e7eb);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.toolbarGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.toolbarDivider {
+    width: 1px;
+    height: 24px;
+    background: var(--border, #e5e7eb);
+    margin: 0 0.25rem;
+}
+
+/* ============================================
+   MENU BUTTON
+   ============================================ */
+
+.menuButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: var(--radius-sm, 0.375rem);
+    background: transparent;
+    color: var(--muted-foreground, #6b7280);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+}
+
+.menuButton:hover:not(.disabled) {
+    background: var(--accent, #f3f4f6);
+    color: var(--foreground, #111827);
+}
+
+.menuButton.active {
+    background: color-mix(in srgb, var(--primary, #667eea) 15%, transparent);
+    color: var(--primary, #667eea);
+}
+
+.menuButton.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   CHARACTER COUNT
+   ============================================ */
+
+.charCount {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.25rem 0.75rem 0.5rem;
+    border-top: 1px solid var(--border, #e5e7eb);
+    background: var(--muted, #f3f4f6);
+}
+
+.charCountText {
+    font-size: var(--text-xs, 0.75rem);
+    color: var(--muted-foreground, #6b7280);
+}
+
+.charCountExceed {
+    color: var(--destructive, #dc2626);
+}
+
+/* ============================================
+   DESCRIPTION
+   ============================================ */
+
+.description {
+    color: var(--muted-foreground, #6b7280);
+    font-size: var(--text-xs, 0.75rem);
+}
+
+.descriptionSm {
+    font-size: var(--text-xs, 0.75rem);
+}
+
+.descriptionMd {
+    font-size: var(--text-sm, 0.875rem);
+}
+
+.descriptionLg {
+    font-size: var(--text-base, 1rem);
+}
+
+/* ============================================
+   ERROR
+   ============================================ */
+
+.errorMessage {
+    color: var(--destructive, #dc2626);
+    font-size: var(--text-xs, 0.75rem);
+}
+
+.errorSm {
+    font-size: var(--text-xs, 0.75rem);
+}
+
+.errorMd {
+    font-size: var(--text-sm, 0.875rem);
+}
+
+.errorLg {
+    font-size: var(--text-base, 1rem);
+}
+
+/* ============================================
+   DARK MODE - FIXED
+   ============================================ */
+
+:global(.dark) .editorWrapper {
+    background: var(--gray-800, #1f2937);
+    border-color: var(--gray-700, #374151);
+}
+
+:global(.dark) .editorWrapper:hover {
+    border-color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .editorWrapper:focus-within {
+    border-color: var(--ring, #7f9cf5);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring, #7f9cf5) 25%, transparent);
+}
+
+:global(.dark) .editorContainer {
+    background: var(--gray-800, #1f2937);
+}
+
+:global(.dark) .editorContent {
+    background: var(--gray-800, #1f2937) !important;
+    color: var(--gray-200, #e5e7eb);
+}
+
+:global(.dark) .editorContent .ProseMirror {
+    background: transparent !important;
+    color: var(--gray-200, #e5e7eb);
+}
+
+:global(.dark) .editorContent .ProseMirror h1,
+:global(.dark) .editorContent .ProseMirror h2,
+:global(.dark) .editorContent .ProseMirror h3,
+:global(.dark) .editorContent .ProseMirror h4,
+:global(.dark) .editorContent .ProseMirror li,
+:global(.dark) .editorContent .ProseMirror p {
+    color: var(--gray-200, #e5e7eb);
+}
+
+:global(.dark) .editorContent .ProseMirror blockquote {
+    color: var(--gray-400, #666666);
+    border-left-color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .editorContent .ProseMirror code {
+    background: var(--gray-700, #374151);
+    color: var(--gray-200, #e5e7eb);
+}
+
+:global(.dark) .editorContent .ProseMirror pre {
+    background: var(--gray-700, #374151);
+    color: var(--gray-200, #e5e7eb);
+}
+
+:global(.dark) .editorContent .ProseMirror pre code {
+    background: transparent;
+    color: var(--gray-200, #e5e7eb);
+}
+
+:global(.dark) .editorContent .ProseMirror a {
+    color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .editorContent .ProseMirror a:hover {
+    color: color-mix(in srgb, var(--primary, #7f9cf5) 80%, #fff);
+}
+
+:global(.dark) .editorContent .ProseMirror-empty::before {
+    color: var(--gray-500, #6b7280);
+}
+
+:global(.dark) .toolbar {
+    background: var(--gray-800, #1f2937);
+    border-color: var(--gray-700, #374151);
+}
+
+:global(.dark) .menuButton {
+    color: var(--gray-400, #666666);
+}
+
+:global(.dark) .menuButton:hover:not(.disabled) {
+    background: var(--gray-700, #374151);
+    color: var(--gray-200, #e5e7eb);
+}
+
+:global(.dark) .menuButton.active {
+    background: color-mix(in srgb, var(--primary, #7f9cf5) 20%, var(--gray-800, #1f2937));
+    color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .toolbarDivider {
+    background: var(--gray-700, #374151);
+}
+
+:global(.dark) .charCount {
+    background: var(--gray-800, #1f2937);
+    border-color: var(--gray-700, #374151);
+}
+
+:global(.dark) .charCountText {
+    color: var(--gray-500, #6b7280);
+}
+
+:global(.dark) .charCountExceed {
+    color: var(--error, #ef4444);
+}
+
+:global(.dark) .description {
+    color: var(--gray-500, #6b7280);
+}
+
+:global(.dark) .errorMessage {
+    color: var(--error, #ef4444);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .toolbar {
+        padding: 0.35rem 0.5rem;
+        gap: 0.15rem;
+    }
+
+    .toolbarGroup {
+        gap: 0.1rem;
+    }
+
+    .menuButton {
+        width: 28px;
+        height: 28px;
+    }
+
+    .menuButton svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .editorContent .ProseMirror {
+        padding: 0.6rem 0.75rem;
+        font-size: var(--text-sm, 0.875rem);
+        min-height: 120px;
+    }
+
+    .expanded .editorContent .ProseMirror {
+        min-height: 300px !important;
+    }
+
+    .toolbarDivider {
+        height: 20px;
+        margin: 0 0.15rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .toolbar {
+        padding: 0.25rem 0.35rem;
+        gap: 0.1rem;
+        flex-wrap: wrap;
+    }
+
+    .menuButton {
+        width: 26px;
+        height: 26px;
+    }
+
+    .menuButton svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .editorContent .ProseMirror {
+        padding: 0.5rem 0.6rem;
+        font-size: var(--text-sm, 0.875rem);
+        min-height: 100px;
+    }
+
+    .expanded .editorContent .ProseMirror {
+        min-height: 250px !important;
+    }
+
+    .toolbarDivider {
+        height: 18px;
+    }
+
+    .charCount {
+        padding: 0.15rem 0.5rem 0.35rem;
+    }
+
+    .charCountText {
+        font-size: 10px;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .editorContent,
+    .menuButton {
+        transition: none !important;
+    }
+}
+
+.menuButton:focus-visible {
+    outline: 2px solid var(--primary, #667eea);
+    outline-offset: 2px;
+}
+
+:global(.dark) .menuButton:focus-visible {
+    outline-color: var(--primary, #7f9cf5);
+}

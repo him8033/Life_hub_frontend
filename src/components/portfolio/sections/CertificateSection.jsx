@@ -12,6 +12,7 @@ import {
 
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
+import RichTextEditor from '@/components/common/forms/RichTextEditor';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
@@ -322,7 +323,10 @@ const CertificateSection = ({
                                         )}
 
                                         {cert.description && (
-                                            <p className={styles.description}>{cert.description}</p>
+                                            <div
+                                                className={styles.description}
+                                                dangerouslySetInnerHTML={{ __html: cert.description }}
+                                            />
                                         )}
                                     </div>
                                 </div>
@@ -464,7 +468,7 @@ const CertificateSection = ({
                                 </div>
                             </div>
 
-                            {/* Description Section */}
+                            {/* Description Section - UPDATED with RichTextEditor */}
                             <div className={styles.section}>
                                 <div className={styles.sectionHeader}>
                                     <FiInfo className={styles.sectionIcon} />
@@ -476,12 +480,14 @@ const CertificateSection = ({
                                     </div>
                                 </div>
                                 <div className={styles.sectionContent}>
-                                    <FormTextarea
+                                    <RichTextEditor
                                         name="description"
                                         label="Description"
                                         placeholder="Additional details about your certification..."
-                                        rows={3}
+                                        minHeight="120px"
+                                        maxHeight="300px"
                                         disabled={isSubmitting}
+                                        size="md"
                                     />
                                 </div>
                             </div>

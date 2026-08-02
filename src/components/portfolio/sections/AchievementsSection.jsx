@@ -12,6 +12,7 @@ import {
 
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
+import RichTextEditor from '@/components/common/forms/RichTextEditor';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
 import { SectionModal } from './common/SectionModal';
@@ -219,9 +220,10 @@ const AchievementsSection = ({
                                         <div className={styles.achievementContent}>
                                             <span className={styles.achievementTitle}>{achievement.title}</span>
                                             {achievement.description && (
-                                                <span className={styles.achievementDescription}>
-                                                    {achievement.description}
-                                                </span>
+                                                <div
+                                                    className={styles.achievementDescription}
+                                                    dangerouslySetInnerHTML={{ __html: achievement.description }}
+                                                />
                                             )}
                                         </div>
                                     </div>
@@ -300,7 +302,7 @@ const AchievementsSection = ({
                     onSave={handleSubmit(handleFormSubmit)}
                     isSaving={isSubmitting}
                     saveText={editingAchievement ? 'Update' : 'Add'}
-                    size="md"
+                    size="lg"
                 >
                     <FormProvider {...methods}>
                         <form className={styles.modalForm} onSubmit={(e) => e.preventDefault()}>
@@ -325,21 +327,14 @@ const AchievementsSection = ({
                                         disabled={isSubmitting}
                                         onKeyDown={handleKeyDown}
                                     />
-                                    <FormTextarea
+                                    <RichTextEditor
                                         name="description"
                                         label="Description (Optional)"
                                         placeholder="Brief description of the achievement..."
-                                        rows={3}
+                                        minHeight="120px"
+                                        maxHeight="300px"
                                         disabled={isSubmitting}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter' && e.shiftKey) {
-                                                return;
-                                            }
-                                            if (e.key === 'Enter') {
-                                                e.preventDefault();
-                                                handleSubmit(handleFormSubmit)();
-                                            }
-                                        }}
+                                        size="md"
                                     />
                                     <p className={styles.modalHint}>
                                         Be specific and highlight what makes this achievement significant.

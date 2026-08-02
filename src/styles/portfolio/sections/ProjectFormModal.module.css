@@ -26,7 +26,6 @@
     border: 1px solid var(--border, #e5e7eb);
     border-radius: var(--radius-lg, 8px);
     overflow: visible !important;
-    /* Changed from hidden to visible */
     transition: border-color 0.2s ease;
     position: relative;
     z-index: 1;
@@ -136,7 +135,6 @@
     gap: 0;
     border-radius: var(--radius-md, 6px);
     overflow: visible !important;
-    /* Changed from hidden to visible */
     border: 1px solid var(--border, #e5e7eb);
     transition: border-color 0.2s ease;
 }
@@ -652,6 +650,188 @@
 
 .toggleDisabled .toggleTrack {
     background: var(--border, #e5e7eb);
+}
+
+/* ============================================
+   DARK MODE
+=========================================== */
+
+:global(.dark) .section {
+    background: var(--gray-200, #2e2e2e);
+    border-color: var(--gray-300, #404040);
+}
+
+:global(.dark) .section:hover {
+    border-color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .sectionHeader {
+    background: var(--gray-100, #1a1a1a);
+    border-color: var(--gray-300, #404040);
+}
+
+:global(.dark) .sectionTitle {
+    color: var(--gray-800, #f0f0f0);
+}
+
+:global(.dark) .sectionDescription {
+    color: var(--gray-500, #a0a0a0);
+}
+
+:global(.dark) .sectionIcon {
+    color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .toggleSection {
+    background: var(--gray-200, #2e2e2e);
+}
+
+:global(.dark) .toggleSection:hover {
+    background: var(--gray-100, #1a1a1a);
+}
+
+:global(.dark) .toggleLabel {
+    color: var(--gray-800, #f0f0f0);
+}
+
+:global(.dark) .toggleDescription {
+    color: var(--gray-500, #a0a0a0);
+}
+
+:global(.dark) .toggleContentArea {
+    background: var(--gray-100, #1a1a1a);
+    border-color: var(--gray-300, #404040);
+}
+
+:global(.dark) .toggleWrapper {
+    border-color: var(--gray-300, #404040);
+}
+
+:global(.dark) .toggleWrapper:hover {
+    border-color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .toggleWrapper:has(.toggleContentArea) {
+    border-color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .captionInput {
+    background: var(--gray-200, #2e2e2e);
+    border-color: var(--gray-300, #404040);
+    color: var(--gray-800, #f0f0f0);
+}
+
+:global(.dark) .captionInput:focus {
+    border-color: var(--primary, #7f9cf5);
+    box-shadow: 0 0 0 3px rgba(127, 156, 245, 0.2);
+}
+
+:global(.dark) .captionInput::placeholder {
+    color: var(--gray-500, #6b7280);
+}
+
+:global(.dark) .existingThumb {
+    background: var(--gray-100, #1a1a1a);
+    border-color: var(--gray-300, #404040);
+}
+
+:global(.dark) .skillTag {
+    background: rgba(127, 156, 245, 0.15);
+    color: var(--primary, #7f9cf5);
+    border-color: rgba(127, 156, 245, 0.25);
+}
+
+:global(.dark) .skillTag:hover {
+    background: rgba(127, 156, 245, 0.25);
+}
+
+:global(.dark) .noSkills {
+    color: var(--gray-500, #a0a0a0);
+}
+
+:global(.dark) .galleryItem {
+    background: var(--gray-200, #2e2e2e);
+    border-color: var(--gray-300, #404040);
+}
+
+:global(.dark) .helperText {
+    color: var(--gray-500, #a0a0a0);
+}
+
+:global(.dark) .badge {
+    background: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .toggleSwitch {
+    background: var(--gray-300, #404040);
+}
+
+:global(.dark) .toggleThumb {
+    background: var(--gray-800, #f0f0f0);
+}
+
+:global(.dark) .toggleWrapper:has(.toggleThumbChecked) .toggleTrack {
+    background: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .successBanner {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.25);
+}
+
+:global(.dark) .successTitle {
+    color: var(--success, #10b981);
+}
+
+:global(.dark) .successDescription {
+    color: var(--gray-500, #a0a0a0);
+}
+
+:global(.dark) .removeThumbBtn {
+    color: var(--destructive, #ef4444);
+    border-color: var(--destructive, #ef4444);
+}
+
+:global(.dark) .removeThumbBtn:hover:not(:disabled) {
+    background: var(--destructive, #ef4444);
+    color: #ffffff;
+}
+
+:global(.dark) .toggleIcon {
+    background: rgba(127, 156, 245, 0.15);
+    color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .toggleCount {
+    color: var(--gray-500, #a0a0a0);
+}
+
+:global(.dark) .thumbPreview {
+    border-color: var(--gray-300, #404040);
+}
+
+:global(.dark) .galleryOverlay {
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+}
+
+:global(.dark) .galleryActionBtn {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+:global(.dark) .galleryActionBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+:global(.dark) .reorderBtn {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+:global(.dark) .reorderBtn:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.95);
+}
+
+:global(.dark) .primaryBadge {
+    background: #d97706;
 }
 
 /* ===========================

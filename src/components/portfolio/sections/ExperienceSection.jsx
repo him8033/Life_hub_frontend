@@ -13,6 +13,7 @@ import {
 
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
+import RichTextEditor from '@/components/common/forms/RichTextEditor';
 import FormSelect from '@/components/common/forms/FormSelect';
 import SquareImageUpload from '@/components/common/SquareImageUpload';
 import Button from '@/components/common/buttons/Button';
@@ -322,7 +323,10 @@ const ExperienceSection = ({
                                         </div>
 
                                         {exp.description && (
-                                            <p className={styles.description}>{exp.description}</p>
+                                            <div
+                                                className={styles.description}
+                                                dangerouslySetInnerHTML={{ __html: exp.description }}
+                                            />
                                         )}
                                     </div>
                                 </div>
@@ -479,7 +483,7 @@ const ExperienceSection = ({
                                 </div>
                             </div>
 
-                            {/* Description Section */}
+                            {/* Description Section - UPDATED with RichTextEditor */}
                             <div className={styles.section}>
                                 <div className={styles.sectionHeader}>
                                     <FiInfo className={styles.sectionIcon} />
@@ -491,12 +495,14 @@ const ExperienceSection = ({
                                     </div>
                                 </div>
                                 <div className={styles.sectionContent}>
-                                    <FormTextarea
+                                    <RichTextEditor
                                         name="description"
                                         label="Description"
                                         placeholder="Describe your responsibilities and achievements..."
-                                        rows={3}
+                                        minHeight="120px"
+                                        maxHeight="300px"
                                         disabled={isSubmitting}
+                                        size="md"
                                     />
                                 </div>
                             </div>

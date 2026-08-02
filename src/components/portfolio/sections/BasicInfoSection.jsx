@@ -18,6 +18,7 @@ import { extractErrorMessage } from '@/utils/errorHandler';
 import { useGetBasicInfoQuery, useSaveBasicInfoMutation } from '@/services/api/portfolioApi';
 import { basicInfoSchema } from '@/lib/validations/portfolio/sections/basicInfoSchema';
 import styles from '@/styles/portfolio/sections/BasicInfoSection.module.css';
+import RichTextEditor from '@/components/common/forms/RichTextEditor';
 
 const BasicInfoSection = ({
     snapshotId,
@@ -496,12 +497,23 @@ const BasicInfoSection = ({
 
                     {/* Professional Summary - Full Width */}
                     <div className={styles.summarySection}>
-                        <FormTextarea
+                        {/* <FormTextarea
                             name="summary"
                             label="Professional Summary"
                             placeholder="A brief, compelling overview of your career."
                             rows={4}
                             disabled={isSaving}
+                            className={styles.fieldItem}
+                        /> */}
+                        <RichTextEditor
+                            name="summary"
+                            label="Professional Summary"
+                            placeholder="A brief, compelling overview of your career..."
+                            description="Write a brief professional summary that highlights your key skills and experience."
+                            minHeight="120px"
+                            maxHeight="300px"
+                            disabled={isSaving}
+                            size="md"
                             className={styles.fieldItem}
                         />
                         <p className={styles.summaryHint}>

@@ -12,6 +12,7 @@ import {
 
 import FormInput from '@/components/common/forms/FormInput';
 import FormTextarea from '@/components/common/forms/FormTextarea';
+import RichTextEditor from '@/components/common/forms/RichTextEditor';
 import FormSelect from '@/components/common/forms/FormSelect';
 import Button from '@/components/common/buttons/Button';
 import { SectionLayout } from './common/SectionLayout';
@@ -266,7 +267,10 @@ const EducationSection = ({
                                         </div>
 
                                         {edu.description && (
-                                            <p className={styles.description}>{edu.description}</p>
+                                            <div
+                                                className={styles.description}
+                                                dangerouslySetInnerHTML={{ __html: edu.description }}
+                                            />
                                         )}
                                     </div>
                                 </div>
@@ -422,7 +426,7 @@ const EducationSection = ({
                                 </div>
                             </div>
 
-                            {/* Description Section */}
+                            {/* Description Section - UPDATED with RichTextEditor */}
                             <div className={styles.section}>
                                 <div className={styles.sectionHeader}>
                                     <FiInfo className={styles.sectionIcon} />
@@ -434,12 +438,14 @@ const EducationSection = ({
                                     </div>
                                 </div>
                                 <div className={styles.sectionContent}>
-                                    <FormTextarea
+                                    <RichTextEditor
                                         name="description"
                                         label="Description"
                                         placeholder="Additional details about your education..."
-                                        rows={3}
+                                        minHeight="120px"
+                                        maxHeight="300px"
                                         disabled={isSubmitting}
+                                        size="md"
                                     />
                                 </div>
                             </div>

@@ -162,7 +162,10 @@ const ProjectsSection = ({
                                     )}
 
                                     <div className={styles.content}>
-                                        <p className={styles.description}>{project.short_description}</p>
+                                        <div
+                                            className={styles.description}
+                                            dangerouslySetInnerHTML={{ __html: project.short_description }}
+                                        />
 
                                         <div className={styles.links}>
                                             {project.code_url && (
