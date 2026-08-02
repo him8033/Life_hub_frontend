@@ -1,23 +1,468 @@
-/* ResumePreview.module.css - Add this to your existing file */
+/* ResumePreview.module.css */
 
-.publicPage {
+.previewWrapper {
     min-height: 100vh;
-    background: var(--background);
+    background: #f1f5f9;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Template container styles - templates will handle their own styling */
-.publicPage>* {
-    /* Templates will define their own styles */
+/* Top Bar */
+.topBar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
-/* Ensure templates render properly */
-.publicPage :global(.template-container) {
-    /* Any global template styles */
+.backBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #475569;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-/* Print styles for public resume */
+.backBtn:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+}
+
+.topBarInfo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+.topBarTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* Template Switcher */
+.templateSwitcher {
+    position: relative;
+}
+
+.templateBadge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 12px;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.templateBadge:hover {
+    background: #e2e8f0;
+}
+
+.templateBadge.changed {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #92400e;
+}
+
+.templateDropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 220px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    padding: 8px 0;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropdownHeader {
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dropdownItem {
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    font-size: 13px;
+    color: #1e293b;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.dropdownItem:hover {
+    background: #f1f5f9;
+}
+
+.dropdownItem.active {
+    background: #e2e8f0;
+    font-weight: 600;
+}
+
+.dropdownDivider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 4px 0;
+}
+
+.topBarActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Zoom Controls */
+.zoomControls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.zoomBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: #475569;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.zoomBtn:hover {
+    background: #e2e8f0;
+}
+
+.zoomLevel {
+    font-size: 12px;
+    font-weight: 500;
+    color: #1e293b;
+    min-width: 40px;
+    text-align: center;
+}
+
+.zoomResetBtn {
+    padding: 4px 10px;
+    background: transparent;
+    border: none;
+    font-size: 11px;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.zoomResetBtn:hover {
+    background: #e2e8f0;
+}
+
+.pageCount {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+    padding: 4px 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.previewBadge {
+    padding: 3px 10px;
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.topBarBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: #0f172a;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.topBarBtn:hover {
+    background: #1e293b;
+}
+
+/* Preview Content */
+.previewContent {
+    flex: 1;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #f1f5f9;
+}
+
+.previewContent.embedded {
+    padding: 0;
+    background: white;
+}
+
+/* A4 Page Container */
+.a4PageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 900px;
+    transition: transform 0.2s ease;
+}
+
+/* Page Navigation */
+.pageNavigation {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 16px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    justify-content: center;
+}
+
+.navBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #475569;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.navBtn:hover:not(:disabled) {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.navBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pageIndicator {
+    font-size: 13px;
+    color: #1e293b;
+    font-weight: 500;
+    min-width: 100px;
+    text-align: center;
+}
+
+/* A4 Page */
+.a4Page {
+    width: 794px;
+    /* 210mm at 96dpi */
+    min-height: 1123px;
+    /* 297mm at 96dpi */
+    background: white;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* A4 Content */
+.a4Content {
+    width: 100%;
+    min-height: 1123px;
+    padding: 0;
+    background: white;
+}
+
+/* Page Number Indicator at Bottom */
+.pageNumberIndicator {
+    text-align: center;
+    font-size: 12px;
+    color: #94a3b8;
+    padding: 4px 0;
+}
+
+/* Embedded Mode Badge */
+.embeddedBadge {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    padding: 6px 14px;
+    background: rgba(15, 23, 42, 0.85);
+    color: white;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+/* Print Styles */
 @media print {
-    .publicPage {
+    .previewWrapper {
         background: white !important;
+    }
+
+    .topBar {
+        display: none !important;
+    }
+
+    .previewContent {
+        padding: 0 !important;
+        background: white !important;
+    }
+
+    .a4PageContainer {
+        transform: none !important;
+        max-width: 100% !important;
+        gap: 0 !important;
+    }
+
+    .a4Page {
+        width: 100% !important;
+        min-height: auto !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        page-break-after: always;
+    }
+
+    .a4Content {
+        min-height: auto !important;
+    }
+
+    .pageNavigation {
+        display: none !important;
+    }
+
+    .pageNumberIndicator {
+        display: none !important;
+    }
+
+    .embeddedBadge {
+        display: none !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .a4Page {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .a4Content {
+        min-height: auto;
+    }
+
+    .previewContent {
+        padding: 20px 12px;
+    }
+
+    .topBar {
+        padding: 10px 16px;
+    }
+
+    .topBarInfo {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .topBarActions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .pageNavigation {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .pageIndicator {
+        min-width: auto;
+        padding: 0 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    .topBar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .topBarInfo {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .topBarActions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .zoomControls {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .previewContent {
+        padding: 12px 8px;
+    }
+
+    .pageNavigation {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .navBtn {
+        width: 100%;
+        justify-content: center;
     }
 }
