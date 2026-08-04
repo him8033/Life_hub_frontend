@@ -1,0 +1,580 @@
+/* ============================================
+   RICH TEXT GLOBAL STYLES
+   Used by all templates and components
+   ============================================ */
+
+/* Light Mode (Default) */
+.rich-text-content,
+.rich-text-light {
+    font-size: inherit;
+    color: #1a1a1a;
+    line-height: inherit;
+    background: transparent;
+}
+
+/* Dark Mode */
+.rich-text-dark {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+/* Auto Mode - follows system preference */
+@media (prefers-color-scheme: dark) {
+    .rich-text-content:not(.rich-text-light):not(.rich-text-dark) {
+        background: #1e293b;
+        color: #e2e8f0;
+    }
+}
+
+/* Paragraphs */
+.rich-text-content p,
+.rich-text-light p,
+.rich-text-dark p {
+    margin: 0 0 0.5rem 0;
+}
+
+.rich-text-content p:last-child,
+.rich-text-light p:last-child,
+.rich-text-dark p:last-child {
+    margin-bottom: 0;
+}
+
+/* Bullet Lists */
+.bullet-list {
+    margin-top: 0.25rem;
+}
+
+.bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.375rem;
+    padding: 0.0625rem 0;
+    line-height: 1.6;
+}
+
+.bullet-item:first-child {
+    padding-top: 0;
+}
+
+.bullet-item:last-child {
+    padding-bottom: 0;
+}
+
+.bullet-symbol {
+    flex-shrink: 0;
+    font-weight: 400;
+}
+
+/* Light mode bullet symbol */
+.rich-text-content .bullet-symbol,
+.rich-text-light .bullet-symbol {
+    color: #64748b;
+}
+
+/* Dark mode bullet symbol */
+.rich-text-dark .bullet-symbol {
+    color: #94a3b8;
+}
+
+/* Preserve formatting inside bullet items */
+.bullet-item strong,
+.bullet-item b {
+    font-weight: 700;
+}
+
+.bullet-item em,
+.bullet-item i {
+    font-style: italic;
+}
+
+.bullet-item u {
+    text-decoration: underline;
+}
+
+.bullet-item del,
+.bullet-item strike {
+    text-decoration: line-through;
+}
+
+.bullet-item sub {
+    vertical-align: sub;
+    font-size: 0.8em;
+}
+
+.bullet-item sup {
+    vertical-align: super;
+    font-size: 0.8em;
+}
+
+/* Lists */
+.rich-text-content ul,
+.rich-text-light ul,
+.rich-text-dark ul {
+    list-style-type: disc !important;
+    padding-left: 1.5rem;
+    margin: 0.25rem 0;
+}
+
+.rich-text-content ul[style*="list-style-type: circle"],
+.rich-text-light ul[style*="list-style-type: circle"],
+.rich-text-dark ul[style*="list-style-type: circle"] {
+    list-style-type: circle !important;
+}
+
+.rich-text-content ul[style*="list-style-type: square"],
+.rich-text-light ul[style*="list-style-type: square"],
+.rich-text-dark ul[style*="list-style-type: square"] {
+    list-style-type: square !important;
+}
+
+.rich-text-content ul ul,
+.rich-text-light ul ul,
+.rich-text-dark ul ul {
+    list-style-type: circle !important;
+}
+
+.rich-text-content ul ul ul,
+.rich-text-light ul ul ul,
+.rich-text-dark ul ul ul {
+    list-style-type: square !important;
+}
+
+.rich-text-content ol,
+.rich-text-light ol,
+.rich-text-dark ol {
+    list-style-type: decimal !important;
+    padding-left: 1.5rem;
+    margin: 0.25rem 0;
+}
+
+.rich-text-content ol[style*="list-style-type: upper-roman"],
+.rich-text-light ol[style*="list-style-type: upper-roman"],
+.rich-text-dark ol[style*="list-style-type: upper-roman"] {
+    list-style-type: upper-roman !important;
+}
+
+.rich-text-content ol[style*="list-style-type: upper-alpha"],
+.rich-text-light ol[style*="list-style-type: upper-alpha"],
+.rich-text-dark ol[style*="list-style-type: upper-alpha"] {
+    list-style-type: upper-alpha !important;
+}
+
+.rich-text-content ol[style*="list-style-type: lower-alpha"],
+.rich-text-light ol[style*="list-style-type: lower-alpha"],
+.rich-text-dark ol[style*="list-style-type: lower-alpha"] {
+    list-style-type: lower-alpha !important;
+}
+
+.rich-text-content ol[style*="list-style-type: lower-roman"],
+.rich-text-light ol[style*="list-style-type: lower-roman"],
+.rich-text-dark ol[style*="list-style-type: lower-roman"] {
+    list-style-type: lower-roman !important;
+}
+
+.rich-text-content ol ol,
+.rich-text-light ol ol,
+.rich-text-dark ol ol {
+    list-style-type: lower-alpha !important;
+}
+
+.rich-text-content ol ol ol,
+.rich-text-light ol ol ol,
+.rich-text-dark ol ol ol {
+    list-style-type: lower-roman !important;
+}
+
+/* Decimal parenthesis */
+.rich-text-content .custom-ol-parenthesis,
+.rich-text-light .custom-ol-parenthesis,
+.rich-text-dark .custom-ol-parenthesis,
+.rich-text-content ol[style*="list-style-type: none"],
+.rich-text-light ol[style*="list-style-type: none"],
+.rich-text-dark ol[style*="list-style-type: none"] {
+    list-style-type: none !important;
+    counter-reset: item;
+    padding-left: 1.5rem;
+}
+
+.rich-text-content .custom-ol-parenthesis li,
+.rich-text-light .custom-ol-parenthesis li,
+.rich-text-dark .custom-ol-parenthesis li,
+.rich-text-content ol[style*="list-style-type: none"] li,
+.rich-text-light ol[style*="list-style-type: none"] li,
+.rich-text-dark ol[style*="list-style-type: none"] li {
+    counter-increment: item;
+    position: relative;
+    padding-left: 0.5rem;
+}
+
+.rich-text-content .custom-ol-parenthesis li::marker,
+.rich-text-light .custom-ol-parenthesis li::marker,
+.rich-text-dark .custom-ol-parenthesis li::marker,
+.rich-text-content ol[style*="list-style-type: none"] li::marker,
+.rich-text-light ol[style*="list-style-type: none"] li::marker,
+.rich-text-dark ol[style*="list-style-type: none"] li::marker {
+    content: counter(item) ") ";
+}
+
+/* Task Lists */
+.rich-text-content ul[data-type="taskList"],
+.rich-text-light ul[data-type="taskList"],
+.rich-text-dark ul[data-type="taskList"] {
+    list-style: none !important;
+    padding-left: 0;
+}
+
+.rich-text-content ul[data-type="taskList"] li,
+.rich-text-light ul[data-type="taskList"] li,
+.rich-text-dark ul[data-type="taskList"] li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.rich-text-content ul[data-type="taskList"] li input[type="checkbox"],
+.rich-text-light ul[data-type="taskList"] li input[type="checkbox"],
+.rich-text-dark ul[data-type="taskList"] li input[type="checkbox"] {
+    margin-top: 0.25rem;
+    cursor: pointer;
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Headings */
+.rich-text-content h1,
+.rich-text-light h1,
+.rich-text-dark h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+}
+
+.rich-text-content h2,
+.rich-text-light h2,
+.rich-text-dark h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+}
+
+.rich-text-content h3,
+.rich-text-light h3,
+.rich-text-dark h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+}
+
+.rich-text-content h4,
+.rich-text-light h4,
+.rich-text-dark h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+}
+
+/* Light mode headings */
+.rich-text-content h1,
+.rich-text-content h2,
+.rich-text-content h3,
+.rich-text-content h4,
+.rich-text-light h1,
+.rich-text-light h2,
+.rich-text-light h3,
+.rich-text-light h4 {
+    color: #1a1a1a;
+}
+
+/* Dark mode headings */
+.rich-text-dark h1,
+.rich-text-dark h2,
+.rich-text-dark h3,
+.rich-text-dark h4 {
+    color: #f1f5f9;
+}
+
+/* Links */
+.rich-text-content a,
+.rich-text-light a,
+.rich-text-dark a {
+    text-decoration: underline;
+}
+
+.rich-text-content a:hover,
+.rich-text-light a:hover,
+.rich-text-dark a:hover {
+    text-decoration: none;
+}
+
+/* Light mode links */
+.rich-text-content a,
+.rich-text-light a {
+    color: #667eea;
+}
+
+.rich-text-content a:hover,
+.rich-text-light a:hover {
+    color: #5a67d8;
+}
+
+/* Dark mode links */
+.rich-text-dark a {
+    color: #818cf8;
+}
+
+.rich-text-dark a:hover {
+    color: #a5b4fc;
+}
+
+/* Code - Black background with white text (same in all modes) */
+.rich-text-content code,
+.rich-text-light code,
+.rich-text-dark code {
+    background: #1a1a1a;
+    color: #ffffff;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.rich-text-content pre,
+.rich-text-light pre,
+.rich-text-dark pre {
+    background: #1a1a1a;
+    color: #ffffff;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    margin: 0.5rem 0;
+    border: 1px solid #333333;
+}
+
+.rich-text-content pre code,
+.rich-text-light pre code,
+.rich-text-dark pre code {
+    background: transparent;
+    padding: 0;
+    color: #ffffff;
+}
+
+/* Syntax highlighting colors for code inside pre */
+.rich-text-content pre .keyword,
+.rich-text-light pre .keyword,
+.rich-text-dark pre .keyword {
+    color: #ff79c6;
+}
+
+.rich-text-content pre .string,
+.rich-text-light pre .string,
+.rich-text-dark pre .string {
+    color: #f1fa8c;
+}
+
+.rich-text-content pre .comment,
+.rich-text-light pre .comment,
+.rich-text-dark pre .comment {
+    color: #6272a4;
+    font-style: italic;
+}
+
+.rich-text-content pre .function,
+.rich-text-light pre .function,
+.rich-text-dark pre .function {
+    color: #50fa7b;
+}
+
+.rich-text-content pre .number,
+.rich-text-light pre .number,
+.rich-text-dark pre .number {
+    color: #bd93f9;
+}
+
+.rich-text-content pre .operator,
+.rich-text-light pre .operator,
+.rich-text-dark pre .operator {
+    color: #ff79c6;
+}
+
+.rich-text-content pre .variable,
+.rich-text-light pre .variable,
+.rich-text-dark pre .variable {
+    color: #f8f8f2;
+}
+
+.rich-text-content pre .class,
+.rich-text-light pre .class,
+.rich-text-dark pre .class {
+    color: #8be9fd;
+}
+
+.rich-text-content pre .tag,
+.rich-text-light pre .tag,
+.rich-text-dark pre .tag {
+    color: #ff79c6;
+}
+
+.rich-text-content pre .attribute,
+.rich-text-light pre .attribute,
+.rich-text-dark pre .attribute {
+    color: #50fa7b;
+}
+
+.rich-text-content pre .value,
+.rich-text-light pre .value,
+.rich-text-dark pre .value {
+    color: #f1fa8c;
+}
+
+/* Tables */
+.rich-text-content table,
+.rich-text-light table,
+.rich-text-dark table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.rich-text-content table td,
+.rich-text-content table th,
+.rich-text-light table td,
+.rich-text-light table th,
+.rich-text-dark table td,
+.rich-text-dark table th {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+}
+
+/* Light mode table */
+.rich-text-content table td,
+.rich-text-content table th,
+.rich-text-light table td,
+.rich-text-light table th {
+    border: 1px solid #d1d5db;
+}
+
+.rich-text-content table th,
+.rich-text-light table th {
+    background: #f3f4f6;
+    color: #1a1a1a;
+}
+
+.rich-text-content table td,
+.rich-text-light table td {
+    color: #1a1a1a;
+}
+
+/* Dark mode table */
+.rich-text-dark table td,
+.rich-text-dark table th {
+    border: 1px solid #334155;
+}
+
+.rich-text-dark table th {
+    background: #1e293b;
+    color: #f1f5f9;
+}
+
+.rich-text-dark table td {
+    color: #e2e8f0;
+}
+
+/* Blockquotes */
+.rich-text-content blockquote,
+.rich-text-light blockquote,
+.rich-text-dark blockquote {
+    padding-left: 1rem;
+    margin: 0.5rem 0;
+}
+
+/* Light mode blockquote */
+.rich-text-content blockquote,
+.rich-text-light blockquote {
+    border-left: 4px solid #667eea;
+    color: #475569;
+}
+
+/* Dark mode blockquote */
+.rich-text-dark blockquote {
+    border-left: 4px solid #818cf8;
+    color: #94a3b8;
+}
+
+/* Images */
+.rich-text-content img,
+.rich-text-light img,
+.rich-text-dark img {
+    max-width: 100%;
+    border-radius: 0.375rem;
+    margin: 0.5rem 0;
+}
+
+/* Line heights */
+.rich-text-content [style*="line-height: 1"],
+.rich-text-light [style*="line-height: 1"],
+.rich-text-dark [style*="line-height: 1"] {
+    line-height: 1 !important;
+}
+
+.rich-text-content [style*="line-height: 1.15"],
+.rich-text-light [style*="line-height: 1.15"],
+.rich-text-dark [style*="line-height: 1.15"] {
+    line-height: 1.15 !important;
+}
+
+.rich-text-content [style*="line-height: 1.5"],
+.rich-text-light [style*="line-height: 1.5"],
+.rich-text-dark [style*="line-height: 1.5"] {
+    line-height: 1.5 !important;
+}
+
+.rich-text-content [style*="line-height: 1.75"],
+.rich-text-light [style*="line-height: 1.75"],
+.rich-text-dark [style*="line-height: 1.75"] {
+    line-height: 1.75 !important;
+}
+
+.rich-text-content [style*="line-height: 2"],
+.rich-text-light [style*="line-height: 2"],
+.rich-text-dark [style*="line-height: 2"] {
+    line-height: 2 !important;
+}
+
+.rich-text-content [style*="line-height: 2.5"],
+.rich-text-light [style*="line-height: 2.5"],
+.rich-text-dark [style*="line-height: 2.5"] {
+    line-height: 2.5 !important;
+}
+
+.rich-text-content [style*="line-height: 3"],
+.rich-text-light [style*="line-height: 3"],
+.rich-text-dark [style*="line-height: 3"] {
+    line-height: 3 !important;
+}
+
+/* Text alignment */
+.rich-text-content [style*="text-align: left"],
+.rich-text-light [style*="text-align: left"],
+.rich-text-dark [style*="text-align: left"] {
+    text-align: left !important;
+}
+
+.rich-text-content [style*="text-align: center"],
+.rich-text-light [style*="text-align: center"],
+.rich-text-dark [style*="text-align: center"] {
+    text-align: center !important;
+}
+
+.rich-text-content [style*="text-align: right"],
+.rich-text-light [style*="text-align: right"],
+.rich-text-dark [style*="text-align: right"] {
+    text-align: right !important;
+}
+
+.rich-text-content [style*="text-align: justify"],
+.rich-text-light [style*="text-align: justify"],
+.rich-text-dark [style*="text-align: justify"] {
+    text-align: justify !important;
+}

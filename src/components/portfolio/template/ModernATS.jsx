@@ -1,9 +1,10 @@
-// ModernATS.jsx
+// ModernATS.jsx - Updated with RichTextRenderer
 import styles from '@/styles/portfolio/template/ModernATS.module.css';
+import RichTextRenderer from '@/components/common/RichTextRenderer';
 import { FiMail, FiPhone, FiMapPin, FiGlobe, FiGithub, FiLinkedin } from 'react-icons/fi';
 
 export default function ModernATS({ data }) {
-    const { resume, basic_info, social_links, skills, experiences, educations, projects, strengths } = data;
+    const { resume, basic_info, social_links, skills, experiences, educations, projects, strengths, certificates, achievements } = data;
 
     const getSocial = (platform) => social_links?.find(l => l.platform_name?.toLowerCase() === platform);
     const website = getSocial('website');
@@ -40,23 +41,28 @@ export default function ModernATS({ data }) {
 
     const groupedSkills = groupSkillsByCategory();
 
+    // Helper to check if content has meaningful text
+    const hasContent = (html) => {
+        if (!html) return false;
+        const cleaned = html.replace(/<p>\s*<\/p>/g, '').trim();
+        return cleaned.length > 0;
+    };
+
     return (
         <div className={styles.page} style={{ '--primary': resume?.primary_color || '#D97706' }}>
             <div className={styles.container}>
-                {/* Header - Name centered */}
+                {/* Header */}
                 <header className={styles.header}>
                     <h1 className={styles.name}>
                         {basic_info?.first_name || ''} {basic_info?.last_name || ''}
                     </h1>
 
-                    {/* Contact - Line 2: Phone | Email | Address */}
                     <div className={styles.contactLine}>
                         {basic_info?.phone && <span>{basic_info.phone}</span>}
                         {basic_info?.email && <span>{basic_info.email}</span>}
                         {basic_info?.full_address && <span>{basic_info.full_address}</span>}
                     </div>
 
-                    {/* Social Links - Line 3: LinkedIn | GitHub | Website */}
                     <div className={styles.socialLine}>
                         {linkedin && <span>{cleanUrl(linkedin.url)}</span>}
                         {github && <span>{cleanUrl(github.url)}</span>}
@@ -64,15 +70,19 @@ export default function ModernATS({ data }) {
                     </div>
                 </header>
 
-                {/* Summary */}
-                {basic_info?.summary && (
+                {/* Summary - Light mode only */}
+                {basic_info?.summary && hasContent(basic_info.summary) && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>SUMMARY</h2>
-                        <p className={styles.summary}>{basic_info.summary}</p>
+                        <RichTextRenderer
+                            html={basic_info.summary}
+                            mode="light"
+                            className={styles.summaryContent}
+                        />
                     </section>
                 )}
 
-                {/* Experience */}
+                {/* Experience - Light mode only */}
                 {experiences?.length > 0 && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>EXPERIENCE</h2>
@@ -81,47 +91,47 @@ export default function ModernATS({ data }) {
                                 <h3 className={styles.expRole}>{exp.role}</h3>
                                 <div className={styles.expCompanyLine}>
                                     <span className={styles.expCompany}>
-                                        {exp.company_name} {exp.location && `| ${exp.location}`}
+                                        {exp.company_name} {exp.full_address && `| ${exp.full_address}`}
                                     </span>
                                     <span className={styles.expDate}>
                                         {formatDate(exp.start_date)} – {exp.is_current ? 'Present' : formatDate(exp.end_date)}
                                     </span>
                                 </div>
-                                {exp.description && (
-                                    <div className={styles.expDescWrapper}>
-                                        {exp.description.split('\n').map((line, idx) => (
-                                            line.trim() && <p key={idx} className={styles.expDesc}>- {line.trim()}</p>
-                                        ))}
-                                    </div>
+                                {exp.description && hasContent(exp.description) && (
+                                    <RichTextRenderer
+                                        html={exp.description}
+                                        mode="light"
+                                        className={styles.expDescription}
+                                    />
                                 )}
                             </div>
                         ))}
                     </section>
                 )}
 
-                {/* Production Project Experience */}
+                {/* Projects - Light mode only */}
                 {projects?.length > 0 && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>PRODUCTION PROJECT EXPERIENCE</h2>
-                        {projects.map((project) => (
-                            <div key={project.profileproject_id} className={styles.projectItem}>
-                                <h3 className={styles.projectName}>{project.project_name}</h3>
-                                {/* {project.short_description && (
-                                    <p className={styles.projectDesc}>{project.short_description}</p>
-                                )} */}
-                                {project.full_description && (
-                                    <div className={styles.projectDescWrapper}>
-                                        {project.full_description.split('\n').map((line, idx) => (
-                                            line.trim() && <p key={idx} className={styles.projectDesc}>- {line.trim()}</p>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                        {projects.map((project) => {
+                            const descHtml = project.short_description || project.full_description;
+                            return (
+                                <div key={project.profileproject_id} className={styles.projectItem}>
+                                    <h3 className={styles.projectName}>{project.project_name}</h3>
+                                    {descHtml && hasContent(descHtml) && (
+                                        <RichTextRenderer
+                                            html={descHtml}
+                                            mode="light"
+                                            className={styles.projectDescription}
+                                        />
+                                    )}
+                                </div>
+                            );
+                        })}
                     </section>
                 )}
 
-                {/* Skills - Categorized */}
+                {/* Skills */}
                 {skills?.length > 0 && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>SKILLS</h2>
@@ -138,7 +148,7 @@ export default function ModernATS({ data }) {
                     </section>
                 )}
 
-                {/* Education */}
+                {/* Education - Light mode only */}
                 {educations?.length > 0 && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>EDUCATION</h2>
@@ -156,14 +166,67 @@ export default function ModernATS({ data }) {
                                     </span>
                                 </div>
                                 <p className={styles.eduInstitution}>
-                                    {edu.institution_name} {edu.location && `| ${edu.location}`}
+                                    {edu.institution_name} {edu.full_address && `| ${edu.full_address}`}
                                 </p>
+                                {edu.description && hasContent(edu.description) && (
+                                    <RichTextRenderer
+                                        html={edu.description}
+                                        mode="light"
+                                        className={styles.eduDescription}
+                                    />
+                                )}
                             </div>
                         ))}
                     </section>
                 )}
 
-                {/* Strengths - 2 per row */}
+                {/* Certificates - Light mode only */}
+                {certificates?.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>CERTIFICATES</h2>
+                        {certificates.map((cert) => (
+                            <div key={cert.profilecertificate_id} className={styles.certItem}>
+                                <div className={styles.certHeader}>
+                                    <h3 className={styles.certTitle}>{cert.title}</h3>
+                                    <span className={styles.certMeta}>
+                                        {cert.issued_by && <span>{cert.issued_by}</span>}
+                                        {cert.issued_date && (
+                                            <span>{formatDate(cert.issued_date)}</span>
+                                        )}
+                                    </span>
+                                </div>
+                                {cert.description && hasContent(cert.description) && (
+                                    <RichTextRenderer
+                                        html={cert.description}
+                                        mode="light"
+                                        className={styles.certDescription}
+                                    />
+                                )}
+                            </div>
+                        ))}
+                    </section>
+                )}
+
+                {/* Achievements - Light mode only */}
+                {achievements?.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>ACHIEVEMENTS</h2>
+                        {achievements.map((ach) => (
+                            <div key={ach.profileachievement_id} className={styles.achItem}>
+                                <h3 className={styles.achTitle}>{ach.title}</h3>
+                                {ach.description && hasContent(ach.description) && (
+                                    <RichTextRenderer
+                                        html={ach.description}
+                                        mode="light"
+                                        className={styles.achDescription}
+                                    />
+                                )}
+                            </div>
+                        ))}
+                    </section>
+                )}
+
+                {/* Strengths */}
                 {strengths?.length > 0 && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>STRENGTHS</h2>

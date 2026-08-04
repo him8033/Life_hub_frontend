@@ -1,9 +1,10 @@
-/* src/styles/common/forms/RichTextEditor.module.css */
-
 /* ============================================
-   RICH TEXT EDITOR
+   RICH TEXT EDITOR - FIXED FOR NEXT.JS CSS MODULES
    ============================================ */
 
+/* ============================================
+   CSS VARIABLES (using globals)
+   ============================================ */
 .formItem {
     display: flex;
     flex-direction: column;
@@ -51,7 +52,6 @@
 /* ============================================
    EDITOR WRAPPER
    ============================================ */
-
 .editorWrapper {
     border: 2px solid var(--border, #e5e7eb);
     border-radius: var(--radius-md, 0.5rem);
@@ -66,7 +66,7 @@
 
 .editorWrapper:focus-within {
     border-color: var(--ring, #667eea);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring, #667eea) 20%, transparent);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 .editorWrapper.hasError {
@@ -85,7 +85,6 @@
 /* ============================================
    EDITOR CONTAINER
    ============================================ */
-
 .editorContainer {
     position: relative;
     width: 100%;
@@ -93,9 +92,8 @@
 }
 
 /* ============================================
-   EDITOR CONTENT - FIXED DARK MODE
+   EDITOR CONTENT
    ============================================ */
-
 .editorContent {
     padding: 0.75rem 1rem;
     outline: none;
@@ -108,7 +106,6 @@
     overflow-y: auto;
     font-family: inherit;
     transition: all 0.3s ease;
-    /* Ensure content takes full width */
     width: 100%;
 }
 
@@ -224,7 +221,7 @@
 }
 
 .editorContent .ProseMirror a:hover {
-    color: color-mix(in srgb, var(--primary, #667eea) 80%, #000);
+    color: #4a5db8;
 }
 
 /* Editor size variants */
@@ -287,7 +284,6 @@
 /* ============================================
    TOOLBAR
    ============================================ */
-
 .toolbar {
     display: flex;
     flex-wrap: wrap;
@@ -316,7 +312,6 @@
 /* ============================================
    MENU BUTTON
    ============================================ */
-
 .menuButton {
     display: flex;
     align-items: center;
@@ -338,7 +333,7 @@
 }
 
 .menuButton.active {
-    background: color-mix(in srgb, var(--primary, #667eea) 15%, transparent);
+    background: rgba(102, 126, 234, 0.15);
     color: var(--primary, #667eea);
 }
 
@@ -347,10 +342,196 @@
     cursor: not-allowed;
 }
 
+.menuButton:focus-visible {
+    outline: 2px solid var(--primary, #667eea);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   SELECT DROPDOWN (Font Family)
+   ============================================ */
+.select {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: var(--radius-sm, 0.375rem);
+    background: var(--background, #ffffff);
+    color: var(--foreground, #111827);
+    font-size: var(--text-sm, 0.875rem);
+    cursor: pointer;
+    max-width: 120px;
+    height: 30px;
+}
+
+.select:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.select:focus {
+    outline: 2px solid var(--ring, #667eea);
+    outline-offset: 1px;
+}
+
+/* ============================================
+   COLOR PICKER
+   ============================================ */
+.colorPickerWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.colorPickerTrigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: var(--radius-sm, 0.375rem);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 2px;
+}
+
+.colorPickerTrigger:hover:not(.disabled) {
+    background: var(--accent, #f3f4f6);
+}
+
+.colorPickerTrigger.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.colorPreview {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-sm, 0.375rem);
+    border: 1px solid var(--border, #e5e7eb);
+}
+
+.colorPickerDropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    background: var(--background, #ffffff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: var(--radius-md, 0.5rem);
+    box-shadow: var(--shadow-lg-value, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+    padding: 8px;
+    z-index: 1000;
+    min-width: 180px;
+    max-width: 200px;
+}
+
+.colorPickerGrid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+}
+
+.colorOption {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm, 0.375rem);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+}
+
+.colorOption:hover {
+    transform: scale(1.1);
+    border-color: var(--primary, #667eea);
+}
+
+.colorSelected {
+    border-color: var(--primary, #667eea);
+    box-shadow: 0 0 0 1px var(--primary, #667eea);
+}
+
+/* ============================================
+   DROPDOWN MENU
+   ============================================ */
+.dropdownWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdownContent {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 180px;
+    background: var(--background, #ffffff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: var(--radius-md, 0.5rem);
+    box-shadow: var(--shadow-lg-value, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+    padding: 4px;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm, 0.375rem);
+    cursor: pointer;
+    font-size: var(--text-sm, 0.875rem);
+    color: var(--foreground, #111827);
+    transition: background 0.15s ease;
+}
+
+.dropdownItem:hover {
+    background: var(--muted, #f3f4f6);
+}
+
+.dropdownItem span {
+    font-weight: 500;
+    min-width: 20px;
+}
+
+.dropdownDivider {
+    height: 1px;
+    background: var(--border, #e5e7eb);
+    margin: 4px 8px;
+}
+
+/* ============================================
+   TASK LIST STYLES
+   ============================================ */
+.taskList {
+    list-style: none;
+    padding-left: 0;
+}
+
+.taskItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 2px 0;
+}
+
+.taskItem input[type="checkbox"] {
+    margin-top: 4px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary, #667eea);
+}
+
+.taskItem .taskChecked {
+    text-decoration: line-through;
+    color: var(--muted-foreground, #6b7280);
+}
+
 /* ============================================
    CHARACTER COUNT
    ============================================ */
-
 .charCount {
     display: flex;
     justify-content: flex-end;
@@ -371,7 +552,6 @@
 /* ============================================
    DESCRIPTION
    ============================================ */
-
 .description {
     color: var(--muted-foreground, #6b7280);
     font-size: var(--text-xs, 0.75rem);
@@ -392,7 +572,6 @@
 /* ============================================
    ERROR
    ============================================ */
-
 .errorMessage {
     color: var(--destructive, #dc2626);
     font-size: var(--text-xs, 0.75rem);
@@ -411,12 +590,12 @@
 }
 
 /* ============================================
-   DARK MODE - FIXED
+   DARK MODE - Using .dark class from global.css
    ============================================ */
-
+/* All dark mode styles are wrapped with :global(.dark) to ensure purity */
 :global(.dark) .editorWrapper {
-    background: var(--gray-800, #1f2937);
-    border-color: var(--gray-700, #374151);
+    background: var(--background, #1f2937);
+    border-color: var(--border, #374151);
 }
 
 :global(.dark) .editorWrapper:hover {
@@ -425,21 +604,21 @@
 
 :global(.dark) .editorWrapper:focus-within {
     border-color: var(--ring, #7f9cf5);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring, #7f9cf5) 25%, transparent);
+    box-shadow: 0 0 0 3px rgba(127, 156, 245, 0.25);
 }
 
 :global(.dark) .editorContainer {
-    background: var(--gray-800, #1f2937);
+    background: var(--background, #1f2937);
 }
 
 :global(.dark) .editorContent {
-    background: var(--gray-800, #1f2937) !important;
-    color: var(--gray-200, #e5e7eb);
+    background: var(--background, #1f2937) !important;
+    color: var(--foreground, #e5e7eb);
 }
 
 :global(.dark) .editorContent .ProseMirror {
     background: transparent !important;
-    color: var(--gray-200, #e5e7eb);
+    color: var(--foreground, #e5e7eb);
 }
 
 :global(.dark) .editorContent .ProseMirror h1,
@@ -448,27 +627,27 @@
 :global(.dark) .editorContent .ProseMirror h4,
 :global(.dark) .editorContent .ProseMirror li,
 :global(.dark) .editorContent .ProseMirror p {
-    color: var(--gray-200, #e5e7eb);
+    color: var(--foreground, #e5e7eb);
 }
 
 :global(.dark) .editorContent .ProseMirror blockquote {
-    color: var(--gray-400, #666666);
+    color: var(--muted-foreground, #9ca3af);
     border-left-color: var(--primary, #7f9cf5);
 }
 
 :global(.dark) .editorContent .ProseMirror code {
-    background: var(--gray-700, #374151);
-    color: var(--gray-200, #e5e7eb);
+    background: var(--muted, #374151);
+    color: var(--foreground, #e5e7eb);
 }
 
 :global(.dark) .editorContent .ProseMirror pre {
-    background: var(--gray-700, #374151);
-    color: var(--gray-200, #e5e7eb);
+    background: var(--muted, #374151);
+    color: var(--foreground, #e5e7eb);
 }
 
 :global(.dark) .editorContent .ProseMirror pre code {
     background: transparent;
-    color: var(--gray-200, #e5e7eb);
+    color: var(--foreground, #e5e7eb);
 }
 
 :global(.dark) .editorContent .ProseMirror a {
@@ -476,61 +655,120 @@
 }
 
 :global(.dark) .editorContent .ProseMirror a:hover {
-    color: color-mix(in srgb, var(--primary, #7f9cf5) 80%, #fff);
+    color: #9bb0f7;
 }
 
 :global(.dark) .editorContent .ProseMirror-empty::before {
-    color: var(--gray-500, #6b7280);
+    color: var(--muted-foreground, #6b7280);
 }
 
 :global(.dark) .toolbar {
-    background: var(--gray-800, #1f2937);
-    border-color: var(--gray-700, #374151);
+    background: var(--background, #1f2937);
+    border-color: var(--border, #374151);
 }
 
 :global(.dark) .menuButton {
-    color: var(--gray-400, #666666);
+    color: var(--muted-foreground, #9ca3af);
 }
 
 :global(.dark) .menuButton:hover:not(.disabled) {
-    background: var(--gray-700, #374151);
-    color: var(--gray-200, #e5e7eb);
+    background: var(--accent, #374151);
+    color: var(--foreground, #e5e7eb);
 }
 
 :global(.dark) .menuButton.active {
-    background: color-mix(in srgb, var(--primary, #7f9cf5) 20%, var(--gray-800, #1f2937));
+    background: rgba(127, 156, 245, 0.2);
     color: var(--primary, #7f9cf5);
 }
 
+:global(.dark) .menuButton:focus-visible {
+    outline-color: var(--primary, #7f9cf5);
+}
+
 :global(.dark) .toolbarDivider {
-    background: var(--gray-700, #374151);
+    background: var(--border, #374151);
 }
 
 :global(.dark) .charCount {
-    background: var(--gray-800, #1f2937);
-    border-color: var(--gray-700, #374151);
+    background: var(--background, #1f2937);
+    border-color: var(--border, #374151);
 }
 
 :global(.dark) .charCountText {
-    color: var(--gray-500, #6b7280);
+    color: var(--muted-foreground, #6b7280);
 }
 
 :global(.dark) .charCountExceed {
-    color: var(--error, #ef4444);
+    color: var(--destructive, #ef4444);
 }
 
 :global(.dark) .description {
-    color: var(--gray-500, #6b7280);
+    color: var(--muted-foreground, #9ca3af);
 }
 
 :global(.dark) .errorMessage {
-    color: var(--error, #ef4444);
+    color: var(--destructive, #ef4444);
+}
+
+:global(.dark) .colorPickerDropdown {
+    background: var(--background, #1f2937);
+    border-color: var(--border, #374151);
+}
+
+:global(.dark) .colorPickerTrigger {
+    border-color: var(--border, #374151);
+}
+
+:global(.dark) .colorPickerTrigger:hover:not(.disabled) {
+    background: var(--accent, #374151);
+}
+
+:global(.dark) .colorPreview {
+    border-color: var(--border, #374151);
+}
+
+:global(.dark) .dropdownContent {
+    background: var(--background, #1f2937);
+    border-color: var(--border, #374151);
+}
+
+:global(.dark) .dropdownItem {
+    color: var(--foreground, #e5e7eb);
+}
+
+:global(.dark) .dropdownItem:hover {
+    background: var(--accent, #374151);
+}
+
+:global(.dark) .dropdownDivider {
+    background: var(--border, #374151);
+}
+
+:global(.dark) .select {
+    background: var(--background, #1f2937);
+    border-color: var(--border, #374151);
+    color: var(--foreground, #e5e7eb);
+}
+
+:global(.dark) .select:focus {
+    outline-color: var(--primary, #7f9cf5);
+}
+
+:global(.dark) .taskItem .taskChecked {
+    color: var(--muted-foreground, #6b7280);
+}
+
+:global(.dark) .formLabel {
+    color: var(--foreground, #e5e7eb);
+}
+
+:global(.dark) .required {
+    color: var(--destructive, #ef4444);
 }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
-
 @media (max-width: 768px) {
     .toolbar {
         padding: 0.35rem 0.5rem;
@@ -551,6 +789,18 @@
         height: 14px;
     }
 
+    .colorPickerTrigger {
+        width: 28px;
+        height: 28px;
+    }
+
+    .select {
+        max-width: 100px;
+        height: 28px;
+        font-size: var(--text-xs, 0.75rem);
+        padding: 0.15rem 0.35rem;
+    }
+
     .editorContent .ProseMirror {
         padding: 0.6rem 0.75rem;
         font-size: var(--text-sm, 0.875rem);
@@ -564,6 +814,22 @@
     .toolbarDivider {
         height: 20px;
         margin: 0 0.15rem;
+    }
+
+    .colorPickerDropdown {
+        min-width: 150px;
+        max-width: 160px;
+        left: -30px;
+    }
+
+    .colorOption {
+        width: 20px;
+        height: 20px;
+    }
+
+    .dropdownContent {
+        min-width: 150px;
+        left: -20px;
     }
 }
 
@@ -582,6 +848,18 @@
     .menuButton svg {
         width: 12px;
         height: 12px;
+    }
+
+    .colorPickerTrigger {
+        width: 26px;
+        height: 26px;
+    }
+
+    .select {
+        max-width: 80px;
+        height: 26px;
+        font-size: 10px;
+        padding: 0.1rem 0.25rem;
     }
 
     .editorContent .ProseMirror {
@@ -605,25 +883,82 @@
     .charCountText {
         font-size: 10px;
     }
+
+    .colorPickerDropdown {
+        min-width: 130px;
+        max-width: 140px;
+        left: -40px;
+        padding: 6px;
+    }
+
+    .colorOption {
+        width: 18px;
+        height: 18px;
+    }
+
+    .dropdownContent {
+        min-width: 130px;
+        left: -30px;
+        padding: 2px;
+    }
+
+    .dropdownItem {
+        font-size: var(--text-xs, 0.75rem);
+        padding: 4px 8px;
+    }
 }
 
 /* ============================================
    ACCESSIBILITY
    ============================================ */
-
 @media (prefers-reduced-motion: reduce) {
 
     .editorContent,
-    .menuButton {
+    .menuButton,
+    .colorOption,
+    .dropdownItem {
         transition: none !important;
     }
 }
 
-.menuButton:focus-visible {
-    outline: 2px solid var(--primary, #667eea);
-    outline-offset: 2px;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .editorWrapper {
+        border-width: 2px;
+    }
+
+    .menuButton.active {
+        background: var(--primary, #667eea);
+        color: #ffffff;
+    }
+
+    :global(.dark) .menuButton.active {
+        background: var(--primary, #7f9cf5);
+        color: #1f2937;
+    }
 }
 
-:global(.dark) .menuButton:focus-visible {
-    outline-color: var(--primary, #7f9cf5);
+/* Print styles */
+@media print {
+    .toolbar {
+        display: none !important;
+    }
+
+    .editorWrapper {
+        border: 1px solid #ccc;
+    }
+
+    .editorContent {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .editorContent .ProseMirror {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .charCount {
+        display: none !important;
+    }
 }
