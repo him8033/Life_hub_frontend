@@ -89,6 +89,7 @@
     background: #e2e8f0;
     min-width: 200px;
     transition: width 0.3s ease;
+    padding: 0;
 }
 
 /* ============================================

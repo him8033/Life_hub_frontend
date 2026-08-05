@@ -33,9 +33,9 @@ export default function PreviewPanel({
 
         const container = containerRef.current;
 
-        // Reduced padding to minimize gapping
-        const availableWidth = container.clientWidth - 8;
-        const availableHeight = container.clientHeight - 8;
+        // Minimal padding to reduce gapping
+        const availableWidth = container.clientWidth - 4;
+        const availableHeight = container.clientHeight - 4;
 
         const paperWidth = parseFloat(paperStyle.width) || 794;
         const paperHeight = parseFloat(paperStyle.height) || 1123;
@@ -43,7 +43,8 @@ export default function PreviewPanel({
         const scaleX = availableWidth / paperWidth;
         const scaleY = availableHeight / paperHeight;
 
-        return Math.max(Math.min(scaleX, scaleY, 1), 0.1);
+        // Allow scaling up to fill space, but don't exceed 1.5x (150%)
+        return Math.max(Math.min(scaleX, scaleY, 1.5), 0.1);
     }, [paperStyle]);
 
     // Update scale on resize
@@ -145,11 +146,11 @@ export default function PreviewPanel({
                             className={isWebpage ? styles.webpagePaper : styles.paper}
                             style={{
                                 ...paperStyle,
-                                transform: `scale(${finalScale})`,
+                                transform: isWebpage ? 'none' : `scale(${finalScale})`,
                                 transformOrigin: 'top center',
-                                // Ensure the paper maintains its fixed pixel size
-                                width: paperStyle.width || '794px',
-                                height: paperStyle.height || '1123px',
+                                // For webpage: take full width, for document: use fixed size
+                                width: isWebpage ? '100%' : (paperStyle.width || '794px'),
+                                height: isWebpage ? '100%' : (paperStyle.height || '1123px'),
                                 // Prevent scaling from affecting layout
                                 flexShrink: 0,
                             }}

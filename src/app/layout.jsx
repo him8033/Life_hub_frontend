@@ -9,8 +9,29 @@ import GlobalSnackbarRenderer from "@/components/Application/GlobalSnackbarRende
 import { ConfirmProvider } from "@/context/ConfirmContext";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import { usePathname } from "next/navigation";
 
 const assistant = Assistant({ subsets: ["latin"], weight: ["400", "600", "700"] });
+
+function ThemeToggleWrapper() {
+  const pathname = usePathname();
+
+  // Hide theme toggle on preview and public portfolio/resume pages
+  const isPreviewPage = pathname?.includes('/portfolio-preview') ||
+                       pathname?.includes('/resume-preview') ||
+                       pathname?.includes('/portfolio/') ||
+                       pathname?.includes('/resume/');
+
+  if (isPreviewPage) {
+    return null;
+  }
+
+  return (
+    <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 99999 }}>
+      <ThemeToggle />
+    </div>
+  );
+}
 
 export default function RootLayout({ children }) {
   return (
@@ -21,20 +42,8 @@ export default function RootLayout({ children }) {
             <SnackbarProvider>
               <GlobalSnackbarRenderer />
               <ConfirmProvider>
-                {/* <div className="min-h-screen flex flex-col">
-                  <main className="flex-1 relative">
-                    {children}
-
-                    <div className="fixed bottom-5 right-5 z-50">
-                      <ThemeToggle />
-                    </div>
-                  </main>
-                </div> */}
                 {children}
-                {/* Move ThemeToggle outside children flow with high z-index */}
-                <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 99999 }}>
-                  <ThemeToggle />
-                </div>
+                <ThemeToggleWrapper />
               </ConfirmProvider>
             </SnackbarProvider>
           </Provider>

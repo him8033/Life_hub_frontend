@@ -15,10 +15,10 @@ export const PAPER_SIZES = [
 // Viewport sizes for portfolio (webpage view)
 export const VIEWPORT_SIZES = [
     { value: 'desktop', label: 'Desktop', w: 1440, h: 900 },
-    { value: 'laptop', label: 'Laptop', w: 1024, h: 768 },
-    { value: 'tablet', label: 'Tablet', w: 768, h: 1024 },
-    { value: 'mobile', label: 'Mobile', w: 375, h: 812 },
-    { value: 'custom', label: 'Custom', w: null, h: null },
+    // { value: 'laptop', label: 'Laptop', w: 1024, h: 768 },
+    // { value: 'tablet', label: 'Tablet', w: 768, h: 1024 },
+    // { value: 'mobile', label: 'Mobile', w: 375, h: 812 },
+    // { value: 'custom', label: 'Custom', w: null, h: null },
 ];
 
 export const LAYOUTS = [
@@ -120,8 +120,8 @@ export function usePreviewSettings(defaultSize = 'a4', defaultZoom = 100, viewMo
             }
 
             return {
-                width: `${size.w * s}px`,
-                height: `${size.h * s}px`,
+                width: `${size.w * 3.78}px`,
+                height: `${size.h * 3.78}px`,
                 boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
                 borderRadius: '4px',
                 background: 'white',
