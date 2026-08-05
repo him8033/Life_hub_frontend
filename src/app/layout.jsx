@@ -18,9 +18,7 @@ function ThemeToggleWrapper() {
 
   // Hide theme toggle on preview and public portfolio/resume pages
   const isPreviewPage = pathname?.includes('/portfolio-preview') ||
-                       pathname?.includes('/resume-preview') ||
-                       pathname?.includes('/portfolio/') ||
-                       pathname?.includes('/resume/');
+                       pathname?.includes('/resume-preview');
 
   if (isPreviewPage) {
     return null;

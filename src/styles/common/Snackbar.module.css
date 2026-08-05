@@ -1,3 +1,5 @@
+/* src/styles/common/Snackbar.module.css */
+
 /* ================= WRAPPER ================= */
 
 .snackbarWrapper {
@@ -15,7 +17,7 @@
 
 /* Bottom Center (default) */
 .bottom-center {
-    bottom: 24px;
+    bottom: var(--spacing-6);
     left: 50%;
     transform: translateX(-50%);
     justify-content: center;
@@ -23,19 +25,19 @@
 
 /* Bottom Left */
 .bottom-left {
-    bottom: 24px;
-    left: 24px;
+    bottom: var(--spacing-6);
+    left: var(--spacing-6);
 }
 
 /* Bottom Right */
 .bottom-right {
-    bottom: 24px;
-    right: 24px;
+    bottom: var(--spacing-6);
+    right: var(--spacing-6);
 }
 
 /* Top Center */
 .top-center {
-    top: 24px;
+    top: var(--spacing-6);
     left: 50%;
     transform: translateX(-50%);
     justify-content: center;
@@ -43,23 +45,23 @@
 
 /* Top Left */
 .top-left {
-    top: 24px;
-    left: 24px;
+    top: var(--spacing-6);
+    left: var(--spacing-6);
 }
 
 /* Top Right */
 .top-right {
-    top: 24px;
-    right: 24px;
+    top: var(--spacing-6);
+    right: var(--spacing-6);
 }
 
 /* ================= SNACKBAR BOX ================= */
 
 .snackbar {
     position: relative;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: var(--card);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg-value);
     overflow: hidden;
     min-width: 320px;
     max-width: 420px;
@@ -73,6 +75,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -85,6 +88,7 @@
         opacity: 0;
         transform: translateY(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -97,6 +101,7 @@
         opacity: 1;
         transform: translateY(0);
     }
+
     to {
         opacity: 0;
         transform: translateY(20px);
@@ -108,6 +113,7 @@
         opacity: 1;
         transform: translateY(0);
     }
+
     to {
         opacity: 0;
         transform: translateY(-20px);
@@ -115,8 +121,13 @@
 }
 
 @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 /* Apply animation based on position */
@@ -161,18 +172,29 @@
     width: 4px;
 }
 
-.success .leftStrip { background: #10b981; }
-.error .leftStrip { background: #ef4444; }
-.warning .leftStrip { background: #f59e0b; }
-.info .leftStrip { background: #3b82f6; }
+.success .leftStrip {
+    background: var(--success);
+}
+
+.error .leftStrip {
+    background: var(--error);
+}
+
+.warning .leftStrip {
+    background: var(--warning);
+}
+
+.info .leftStrip {
+    background: var(--primary-500);
+}
 
 /* ================= CONTENT ================= */
 
 .snackbarContent {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 14px 10px 16px;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3) var(--spacing-2) var(--spacing-4);
 }
 
 /* ================= ICON ================= */
@@ -184,10 +206,21 @@
     flex-shrink: 0;
 }
 
-.success .iconWrapper { color: #10b981; }
-.error .iconWrapper { color: #ef4444; }
-.warning .iconWrapper { color: #f59e0b; }
-.info .iconWrapper { color: #3b82f6; }
+.success .iconWrapper {
+    color: var(--success);
+}
+
+.error .iconWrapper {
+    color: var(--error);
+}
+
+.warning .iconWrapper {
+    color: var(--warning);
+}
+
+.info .iconWrapper {
+    color: var(--primary-500);
+}
 
 .icon {
     width: 18px;
@@ -202,15 +235,15 @@
 }
 
 .message {
-    color: #1f2937;
-    font-size: 13px;
+    color: var(--text-primary);
+    font-size: var(--text-sm);
     font-weight: 500;
     line-height: 1.4;
 }
 
 .timeRemaining {
-    color: #6b7280;
-    font-size: 11px;
+    color: var(--text-tertiary);
+    font-size: var(--text-xs);
     margin-top: 1px;
 }
 
@@ -219,7 +252,7 @@
 .closeButton {
     background: transparent;
     border: none;
-    color: #9ca3af;
+    color: var(--gray-400);
     cursor: pointer;
     width: 24px;
     height: 24px;
@@ -232,8 +265,8 @@
 }
 
 .closeButton:hover {
-    background: #f3f4f6;
-    color: #4b5563;
+    background: var(--muted);
+    color: var(--text-secondary);
 }
 
 .closeButton svg {
@@ -245,7 +278,7 @@
 
 .bottomProgress {
     height: 2px;
-    background: #e5e7eb;
+    background: var(--border);
     overflow: hidden;
 }
 
@@ -253,21 +286,32 @@
     height: 100%;
     width: 100%;
     transform-origin: left;
-    transition: width 0.1s linear; /* synced with JS */
+    transition: width 0.1s linear;
+    /* synced with JS */
 }
 
-.success .progressBar { background: #10b981; }
-.error .progressBar { background: #ef4444; }
-.warning .progressBar { background: #f59e0b; }
-.info .progressBar { background: #3b82f6; }
+.success .progressBar {
+    background: var(--success);
+}
+
+.error .progressBar {
+    background: var(--error);
+}
+
+.warning .progressBar {
+    background: var(--warning);
+}
+
+.info .progressBar {
+    background: var(--primary-500);
+}
 
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 640px) {
-
     .snackbarWrapper {
-        left: 16px !important;
-        right: 16px !important;
+        left: var(--spacing-4) !important;
+        right: var(--spacing-4) !important;
         transform: none !important;
     }
 
@@ -278,16 +322,16 @@
     }
 
     .snackbarContent {
-        padding: 12px 14px;
-        gap: 10px;
+        padding: var(--spacing-3) var(--spacing-3);
+        gap: var(--spacing-2);
     }
 
     .message {
-        font-size: 13px;
+        font-size: var(--text-sm);
     }
 
     .timeRemaining {
-        font-size: 11px;
+        font-size: var(--text-xs);
     }
 
     .icon {
@@ -298,30 +342,5 @@
 
 /* ================= DARK MODE ================= */
 
-@media (prefers-color-scheme: dark) {
-
-    .snackbar {
-        background: #1f2937;
-    }
-
-    .message {
-        color: #f9fafb;
-    }
-
-    .timeRemaining {
-        color: #9ca3af;
-    }
-
-    .closeButton {
-        color: #6b7280;
-    }
-
-    .closeButton:hover {
-        background: #374151;
-        color: #e5e7eb;
-    }
-
-    .bottomProgress {
-        background: #374151;
-    }
-}
+/* Dark mode is handled by the global CSS variables */
+/* No need for @media (prefers-color-scheme: dark) since we use CSS variables */
