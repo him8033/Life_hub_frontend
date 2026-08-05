@@ -23,7 +23,7 @@ import Color from '@tiptap/extension-color';
 import { TextStyle } from '@tiptap/extension-text-style';
 import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
-import FontFamily from '@tiptap/extension-font-family'; // font family uses TextStyle
+import FontFamily from '@tiptap/extension-font-family';
 import Subscript from '@tiptap/extension-subscript';
 import Superscript from '@tiptap/extension-superscript';
 import { Table } from '@tiptap/extension-table';
@@ -51,14 +51,23 @@ import {
     FiCheckSquare,
     FiCornerDownRight,
     FiCornerUpLeft,
-    FiMenu,
     FiTable,
     FiDelete,
+    FiEdit,
 } from 'react-icons/fi';
 import { IoListCircleOutline } from 'react-icons/io5';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import styles from '@/styles/common/forms/RichTextEditor.module.css';
+
+// Import constants
+import {
+    BULLET_STYLES,
+    NUMBERING_STYLES,
+    FONT_FAMILIES,
+    COLOR_PALETTE,
+    TABLE_DEFAULT_CONFIG,
+} from '@/constants/richTextEditor.constants';
 
 // ---------- Small UI helpers ----------
 
@@ -105,18 +114,8 @@ const DropdownMenu = ({ trigger, children, disabled }) => {
 
 const ColorPicker = ({ onSelect, currentColor, label, disabled }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [customColor, setCustomColor] = useState('');
     const pickerRef = useRef(null);
-
-    const colors = [
-        '#000000', '#DC2626', '#EF4444', '#F87171', '#FCA5A5',
-        '#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0',
-        '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE',
-        '#7C3AED', '#8B5CF6', '#A78BFA', '#C4B5FD', '#DDD6FE',
-        '#D97706', '#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A',
-        '#DB2777', '#EC4899', '#F472B6', '#F9A8D4', '#FBCFE8',
-        '#4B5563', '#6B7280', '#9CA3AF', '#D1D5DB', '#E5E7EB',
-        '#FFFFFF',
-    ];
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -127,6 +126,21 @@ const ColorPicker = ({ onSelect, currentColor, label, disabled }) => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    const handleCustomColorChange = (e) => {
+        const color = e.target.value;
+        setCustomColor(color);
+        onSelect(color);
+    };
+
+    const handleCustomColorInput = (e) => {
+        const color = e.target.value;
+        setCustomColor(color);
+        // Only apply if it's a valid hex color
+        if (/^#[0-9A-Fa-f]{6}$/.test(color) || /^#[0-9A-Fa-f]{3}$/.test(color)) {
+            onSelect(color);
+        }
+    };
 
     return (
         <div className={styles.colorPickerWrapper} ref={pickerRef}>
@@ -145,7 +159,7 @@ const ColorPicker = ({ onSelect, currentColor, label, disabled }) => {
             {isOpen && !disabled && (
                 <div className={styles.colorPickerDropdown}>
                     <div className={styles.colorPickerGrid}>
-                        {colors.map((color) => (
+                        {COLOR_PALETTE.map((color) => (
                             <button
                                 key={color}
                                 type="button"
@@ -158,46 +172,36 @@ const ColorPicker = ({ onSelect, currentColor, label, disabled }) => {
                             />
                         ))}
                     </div>
+
+                    {/* Custom color picker section */}
+                    <div className={styles.colorPickerCustom}>
+                        <div className={styles.colorPickerCustomLabel}>
+                            <FiEdit size={12} />
+                            <span>Custom Color</span>
+                        </div>
+                        <div className={styles.colorPickerCustomInput}>
+                            <input
+                                type="color"
+                                value={customColor || currentColor || '#000000'}
+                                onChange={handleCustomColorChange}
+                                className={styles.colorPickerNativeInput}
+                                title="Pick a custom color"
+                            />
+                            <input
+                                type="text"
+                                value={customColor || currentColor || ''}
+                                onChange={handleCustomColorInput}
+                                placeholder="#000000"
+                                className={styles.colorPickerHexInput}
+                                maxLength={7}
+                            />
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
     );
 };
-
-// ---------- Config constants ----------
-
-const LINE_HEIGHT_OPTIONS = [
-    { value: '1', label: '1.0' },
-    { value: '1.15', label: '1.15' },
-    { value: '1.5', label: '1.5' },
-    { value: '1.75', label: '1.75' },
-    { value: '2', label: '2.0' },
-    { value: '2.5', label: '2.5' },
-    { value: '3', label: '3.0' },
-];
-
-const BULLET_STYLES = [
-    { value: 'disc', label: '●', name: 'Normal Bullet' },
-    { value: 'circle', label: '○', name: 'Circle Bullet' },
-    { value: 'square', label: '■', name: 'Square Bullet' },
-];
-
-const NUMBERING_STYLES = [
-    { value: 'decimal', label: '1.', name: '1, 2, 3' },
-    { value: 'decimal-parenthesis', label: '1)', name: '1), 2), 3)' },
-    { value: 'upper-roman', label: 'I.', name: 'I, II, III' },
-    { value: 'upper-alpha', label: 'A.', name: 'A, B, C' },
-    { value: 'lower-alpha', label: 'a.', name: 'a, b, c' },
-    { value: 'lower-roman', label: 'i.', name: 'i, ii, iii' },
-];
-
-const FONT_FAMILIES = [
-    { label: 'Default', value: '' },
-    { label: 'Inter', value: 'Inter, sans-serif' },
-    { label: 'Arial', value: 'Arial, sans-serif' },
-    { label: 'Times New Roman', value: '"Times New Roman", serif' },
-    { label: 'Monospace', value: '"Fira Code", monospace' },
-];
 
 // ---------- Main component ----------
 
@@ -218,6 +222,22 @@ export default function RichTextEditor({
     minHeight = '150px',
     maxHeight = '400px',
     maxLength,
+    // Feature flags
+    enableHeadings = false,
+    enableTables = false,
+    enableFontFamily = true,
+    enableTextColor = true,
+    enableHighlightColor = true,
+    enableTaskList = true,
+    enableSubSuperscript = true,
+    enableBlockquote = true,
+    enableCodeBlock = true,
+    enableImage = true,
+    enableLink = true,
+    enableTextAlign = true,
+    enableUnderline = true,
+    enableStrike = true,
+    enableClearFormat = true,
     ...props
 }) {
     const { control, formState: { errors } } = useFormContext();
@@ -226,12 +246,109 @@ export default function RichTextEditor({
     const [isExpanded, setIsExpanded] = useState(false);
     const [textColor, setTextColor] = useState('#000000');
     const [highlightColor, setHighlightColor] = useState('#FFFF00');
-    const [selectedLineHeight, setSelectedLineHeight] = useState('1.5');
 
     const sizeClass = styles[`editor${size.charAt(0).toUpperCase() + size.slice(1)}`] || '';
     const labelSizeClass = styles[`label${size.charAt(0).toUpperCase() + size.slice(1)}`] || '';
     const descriptionSizeClass = styles[`description${size.charAt(0).toUpperCase() + size.slice(1)}`] || '';
     const errorSizeClass = styles[`error${size.charAt(0).toUpperCase() + size.slice(1)}`] || '';
+
+    // Build extensions based on enabled features
+    const getExtensions = () => {
+        const extensions = [];
+
+        // StarterKit with configurable options
+        const starterKitConfig = {
+            heading: enableHeadings ? { levels: [1, 2, 3, 4] } : false,
+            bulletList: { keepMarks: true, keepAttributes: false },
+            orderedList: { keepMarks: true, keepAttributes: false },
+            listItem: { nested: true },
+            blockquote: enableBlockquote ? {} : false,
+            codeBlock: enableCodeBlock ? {} : false,
+            bold: {},
+            italic: {},
+            strike: enableStrike ? {} : false,
+        };
+
+        extensions.push(StarterKit.configure(starterKitConfig));
+
+        // TextStyle - required for font family and color
+        extensions.push(TextStyle);
+
+        // Font Family
+        if (enableFontFamily) {
+            extensions.push(FontFamily.configure({ types: ['textStyle'] }));
+        }
+
+        // Link
+        if (enableLink) {
+            extensions.push(
+                Link.configure({
+                    openOnClick: false,
+                    HTMLAttributes: {
+                        class: styles.link,
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                    },
+                })
+            );
+        }
+
+        // Text Align
+        if (enableTextAlign) {
+            extensions.push(
+                TextAlign.configure({
+                    types: ['heading', 'paragraph'],
+                    alignments: ['left', 'center', 'right', 'justify'],
+                })
+            );
+        }
+
+        // Underline
+        if (enableUnderline) {
+            extensions.push(Underline);
+        }
+
+        // Highlight
+        if (enableHighlightColor) {
+            extensions.push(Highlight.configure({ multicolor: true }));
+        }
+
+        // Color
+        if (enableTextColor) {
+            extensions.push(Color);
+        }
+
+        // Image
+        if (enableImage) {
+            extensions.push(Image);
+        }
+
+        // Task List
+        if (enableTaskList) {
+            extensions.push(TaskList);
+            extensions.push(TaskItem.configure({ nested: true }));
+        }
+
+        // Subscript & Superscript
+        if (enableSubSuperscript) {
+            extensions.push(Subscript);
+            extensions.push(Superscript);
+        }
+
+        // Tables
+        if (enableTables) {
+            extensions.push(
+                Table.configure({
+                    resizable: true,
+                })
+            );
+            extensions.push(TableRow);
+            extensions.push(TableHeader);
+            extensions.push(TableCell);
+        }
+
+        return extensions;
+    };
 
     return (
         <FormField
@@ -239,52 +356,7 @@ export default function RichTextEditor({
             name={name}
             render={({ field }) => {
                 const editor = useEditor({
-                    extensions: [
-                        StarterKit.configure({
-                            heading: {
-                                levels: [1, 2, 3, 4],
-                            },
-                            bulletList: {
-                                keepMarks: true,
-                                keepAttributes: false,
-                            },
-                            orderedList: {
-                                keepMarks: true,
-                                keepAttributes: false,
-                            },
-                            listItem: {
-                                nested: true,
-                            },
-                        }),
-                        TextStyle, // needed for font family, font size, color [web:11]
-                        FontFamily.configure({ types: ['textStyle'] }), // [web:1]
-                        Link.configure({
-                            openOnClick: false,
-                            HTMLAttributes: {
-                                class: styles.link,
-                                target: '_blank',
-                                rel: 'noopener noreferrer',
-                            },
-                        }),
-                        TextAlign.configure({
-                            types: ['heading', 'paragraph'],
-                            alignments: ['left', 'center', 'right', 'justify'],
-                        }),
-                        Underline,
-                        Highlight.configure({ multicolor: true }),
-                        Color,
-                        Image,
-                        TaskList,
-                        TaskItem.configure({ nested: true }),
-                        Subscript,
-                        Superscript,
-                        Table.configure({
-                            resizable: true,
-                        }), // [web:17]
-                        TableRow,
-                        TableHeader,
-                        TableCell,
-                    ],
+                    extensions: getExtensions(),
                     content: field.value || '',
                     editable: !disabled && !readOnly,
                     onUpdate: ({ editor }) => {
@@ -298,7 +370,6 @@ export default function RichTextEditor({
                             style: {
                                 minHeight: isExpanded ? '400px' : minHeight,
                                 maxHeight: isExpanded ? 'none' : maxHeight,
-                                lineHeight: selectedLineHeight,
                             },
                         },
                     },
@@ -327,7 +398,7 @@ export default function RichTextEditor({
                 }, [editor]);
 
                 const toggleLink = useCallback(() => {
-                    if (!editor) return;
+                    if (!editor || !enableLink) return;
                     const previousUrl = editor.getAttributes('link').href;
                     const url = window.prompt('Enter URL:', previousUrl);
                     if (url === null) return;
@@ -336,12 +407,12 @@ export default function RichTextEditor({
                         return;
                     }
                     editor.chain().focus().setLink({ href: url }).run();
-                }, [editor]);
+                }, [editor, enableLink]);
 
                 const toggleExpanded = () => setIsExpanded((exp) => !exp);
 
                 const handleImageUpload = useCallback(() => {
-                    if (!editor) return;
+                    if (!editor || !enableImage) return;
                     const input = document.createElement('input');
                     input.type = 'file';
                     input.accept = 'image/*';
@@ -358,26 +429,19 @@ export default function RichTextEditor({
                         reader.readAsDataURL(file);
                     };
                     input.click();
-                }, [editor]);
+                }, [editor, enableImage]);
 
                 const setTextColorHandler = useCallback((color) => {
-                    if (!editor) return;
+                    if (!editor || !enableTextColor) return;
                     setTextColor(color);
                     editor.chain().focus().setColor(color).run();
-                }, [editor]);
+                }, [editor, enableTextColor]);
 
                 const setHighlightColorHandler = useCallback((color) => {
-                    if (!editor) return;
+                    if (!editor || !enableHighlightColor) return;
                     setHighlightColor(color);
                     editor.chain().focus().toggleHighlight({ color }).run();
-                }, [editor]);
-
-                const setLineHeight = useCallback((value) => {
-                    setSelectedLineHeight(value);
-                    if (editor) {
-                        editor.view.dom.style.lineHeight = value;
-                    }
-                }, [editor]);
+                }, [editor, enableHighlightColor]);
 
                 const toggleBulletList = useCallback((style) => {
                     if (!editor) return;
@@ -430,51 +494,48 @@ export default function RichTextEditor({
                     });
                 }, [editor]);
 
-                const indent = useCallback(() => {
-                    if (!editor) return;
-                    editor.chain().focus().sinkListItem('listItem').run();
-                }, [editor]);
-
-                const outdent = useCallback(() => {
-                    if (!editor) return;
-                    editor.chain().focus().liftListItem('listItem').run();
-                }, [editor]);
-
                 const setFontFamily = useCallback((family) => {
+                    if (!editor || !enableFontFamily) return;
                     editor?.chain().focus().setFontFamily(family || null).run();
-                }, [editor]);
+                }, [editor, enableFontFamily]);
 
                 const insertTable = useCallback(() => {
-                    editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
-                }, [editor]);
+                    if (!editor || !enableTables) return;
+                    editor?.chain().focus()
+                        .insertTable({
+                            rows: TABLE_DEFAULT_CONFIG.rows,
+                            cols: TABLE_DEFAULT_CONFIG.cols,
+                            withHeaderRow: TABLE_DEFAULT_CONFIG.withHeaderRow
+                        })
+                        .run();
+                }, [editor, enableTables]);
 
                 const deleteTable = useCallback(() => {
+                    if (!editor || !enableTables) return;
                     editor?.chain().focus().deleteTable().run();
-                }, [editor]);
+                }, [editor, enableTables]);
 
                 const actions = {
                     bold: () => editor?.chain().focus().toggleBold().run(),
                     italic: () => editor?.chain().focus().toggleItalic().run(),
                     underline: () => editor?.chain().focus().toggleUnderline().run(),
                     strike: () => editor?.chain().focus().toggleStrike().run(),
-                    heading1: () => editor?.chain().focus().toggleHeading({ level: 1 }).run(),
-                    heading2: () => editor?.chain().focus().toggleHeading({ level: 2 }).run(),
-                    heading3: () => editor?.chain().focus().toggleHeading({ level: 3 }).run(),
-                    heading4: () => editor?.chain().focus().toggleHeading({ level: 4 }).run(),
+                    heading1: () => enableHeadings && editor?.chain().focus().toggleHeading({ level: 1 }).run(),
+                    heading2: () => enableHeadings && editor?.chain().focus().toggleHeading({ level: 2 }).run(),
+                    heading3: () => enableHeadings && editor?.chain().focus().toggleHeading({ level: 3 }).run(),
+                    heading4: () => enableHeadings && editor?.chain().focus().toggleHeading({ level: 4 }).run(),
                     bulletList: () => editor?.chain().focus().toggleBulletList().run(),
                     orderedList: () => editor?.chain().focus().toggleOrderedList().run(),
-                    taskList: () => editor?.chain().focus().toggleTaskList().run(),
-                    blockquote: () => editor?.chain().focus().toggleBlockquote().run(),
-                    codeBlock: () => editor?.chain().focus().toggleCodeBlock().run(),
-                    leftAlign: () => editor?.chain().focus().setTextAlign('left').run(),
-                    centerAlign: () => editor?.chain().focus().setTextAlign('center').run(),
-                    rightAlign: () => editor?.chain().focus().setTextAlign('right').run(),
-                    justifyAlign: () => editor?.chain().focus().setTextAlign('justify').run(),
-                    clearFormat: () => editor?.chain().focus().clearNodes().unsetAllMarks().run(),
-                    indent,
-                    outdent,
-                    subscript: () => editor?.chain().focus().toggleSubscript().run(),
-                    superscript: () => editor?.chain().focus().toggleSuperscript().run(),
+                    taskList: () => enableTaskList && editor?.chain().focus().toggleTaskList().run(),
+                    blockquote: () => enableBlockquote && editor?.chain().focus().toggleBlockquote().run(),
+                    codeBlock: () => enableCodeBlock && editor?.chain().focus().toggleCodeBlock().run(),
+                    leftAlign: () => enableTextAlign && editor?.chain().focus().setTextAlign('left').run(),
+                    centerAlign: () => enableTextAlign && editor?.chain().focus().setTextAlign('center').run(),
+                    rightAlign: () => enableTextAlign && editor?.chain().focus().setTextAlign('right').run(),
+                    justifyAlign: () => enableTextAlign && editor?.chain().focus().setTextAlign('justify').run(),
+                    clearFormat: () => enableClearFormat && editor?.chain().focus().clearNodes().unsetAllMarks().run(),
+                    subscript: () => enableSubSuperscript && editor?.chain().focus().toggleSubscript().run(),
+                    superscript: () => enableSubSuperscript && editor?.chain().focus().toggleSuperscript().run(),
                 };
 
                 const isActive = (extension, attributes) => {
@@ -503,68 +564,92 @@ export default function RichTextEditor({
                                 className={`${styles.editorWrapper} ${error ? styles.hasError : ''} ${disabled ? styles.disabled : ''
                                     }`}
                             >
-                                {renderToolbar && toolbarPosition === 'top' && (
+                                {renderToolbar && (
                                     <div className={styles.toolbar}>
-                                        {/* Font family */}
-                                        <div className={styles.toolbarGroup}>
-                                            <select
-                                                className={styles.select}
-                                                value={currentFontFamily}
-                                                onChange={(e) => setFontFamily(e.target.value)}
-                                                disabled={disabled}
-                                            >
-                                                {FONT_FAMILIES.map((f) => (
-                                                    <option key={f.value || 'default'} value={f.value}>
-                                                        {f.label}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
+                                        {/* Font family - only if enabled */}
+                                        {enableFontFamily && (
+                                            <>
+                                                <div className={styles.toolbarGroup}>
+                                                    <select
+                                                        className={styles.select}
+                                                        value={currentFontFamily}
+                                                        onChange={(e) => setFontFamily(e.target.value)}
+                                                        disabled={disabled}
+                                                    >
+                                                        {FONT_FAMILIES.map((f) => (
+                                                            <option key={f.value || 'default'} value={f.value}>
+                                                                {f.label}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <span className={styles.toolbarDivider} />
+                                                </div>
+                                            </>
+                                        )}
 
-                                        {/* Text formatting */}
+                                        {/* Text formatting - always available */}
                                         <div className={styles.toolbarGroup}>
                                             <MenuButton isActive={isActive('bold')} onClick={actions.bold} icon={FiBold} label="Bold" disabled={disabled} />
                                             <MenuButton isActive={isActive('italic')} onClick={actions.italic} icon={FiItalic} label="Italic" disabled={disabled} />
-                                            <MenuButton isActive={isActive('underline')} onClick={actions.underline} icon={FiUnderline} label="Underline" disabled={disabled} />
-                                            <MenuButton isActive={isActive('strike')} onClick={actions.strike} icon={FiMinus} label="Strikethrough" disabled={disabled} />
-                                            <MenuButton isActive={isActive('subscript')} onClick={actions.subscript} icon={FiCornerDownRight} label="Subscript" disabled={disabled} />
-                                            <MenuButton isActive={isActive('superscript')} onClick={actions.superscript} icon={FiCornerUpLeft} label="Superscript" disabled={disabled} />
+                                            {enableUnderline && (
+                                                <MenuButton isActive={isActive('underline')} onClick={actions.underline} icon={FiUnderline} label="Underline" disabled={disabled} />
+                                            )}
+                                            {enableStrike && (
+                                                <MenuButton isActive={isActive('strike')} onClick={actions.strike} icon={FiMinus} label="Strikethrough" disabled={disabled} />
+                                            )}
+                                            {enableSubSuperscript && (
+                                                <>
+                                                    <MenuButton isActive={isActive('subscript')} onClick={actions.subscript} icon={FiCornerDownRight} label="Subscript" disabled={disabled} />
+                                                    <MenuButton isActive={isActive('superscript')} onClick={actions.superscript} icon={FiCornerUpLeft} label="Superscript" disabled={disabled} />
+                                                </>
+                                            )}
                                             <span className={styles.toolbarDivider} />
                                         </div>
 
-                                        {/* Text color */}
-                                        <div className={styles.toolbarGroup}>
-                                            <ColorPicker
-                                                onSelect={setTextColorHandler}
-                                                currentColor={textColor}
-                                                label="Text Color"
-                                                disabled={disabled}
-                                            />
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
+                                        {/* Text color - only if enabled */}
+                                        {enableTextColor && (
+                                            <>
+                                                <div className={styles.toolbarGroup}>
+                                                    <ColorPicker
+                                                        onSelect={setTextColorHandler}
+                                                        currentColor={textColor}
+                                                        label="Text Color"
+                                                        disabled={disabled}
+                                                    />
+                                                    <span className={styles.toolbarDivider} />
+                                                </div>
+                                            </>
+                                        )}
 
-                                        {/* Highlight color */}
-                                        <div className={styles.toolbarGroup}>
-                                            <ColorPicker
-                                                onSelect={setHighlightColorHandler}
-                                                currentColor={highlightColor}
-                                                label="Highlight Color"
-                                                disabled={disabled}
-                                            />
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
+                                        {/* Highlight color - only if enabled */}
+                                        {enableHighlightColor && (
+                                            <>
+                                                <div className={styles.toolbarGroup}>
+                                                    <ColorPicker
+                                                        onSelect={setHighlightColorHandler}
+                                                        currentColor={highlightColor}
+                                                        label="Highlight Color"
+                                                        disabled={disabled}
+                                                    />
+                                                    <span className={styles.toolbarDivider} />
+                                                </div>
+                                            </>
+                                        )}
 
-                                        {/* Headings */}
-                                        <div className={styles.toolbarGroup}>
-                                            <MenuButton isActive={isActive('heading', { level: 1 })} onClick={actions.heading1} icon={FiType} label="Heading 1" disabled={disabled} />
-                                            <MenuButton isActive={isActive('heading', { level: 2 })} onClick={actions.heading2} icon={FiType} label="Heading 2" disabled={disabled} />
-                                            <MenuButton isActive={isActive('heading', { level: 3 })} onClick={actions.heading3} icon={FiType} label="Heading 3" disabled={disabled} />
-                                            <MenuButton isActive={isActive('heading', { level: 4 })} onClick={actions.heading4} icon={FiType} label="Heading 4" disabled={disabled} />
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
+                                        {/* Headings - only if enabled */}
+                                        {enableHeadings && (
+                                            <>
+                                                <div className={styles.toolbarGroup}>
+                                                    <MenuButton isActive={isActive('heading', { level: 1 })} onClick={actions.heading1} icon={FiType} label="Heading 1" disabled={disabled} />
+                                                    <MenuButton isActive={isActive('heading', { level: 2 })} onClick={actions.heading2} icon={FiType} label="Heading 2" disabled={disabled} />
+                                                    <MenuButton isActive={isActive('heading', { level: 3 })} onClick={actions.heading3} icon={FiType} label="Heading 3" disabled={disabled} />
+                                                    <MenuButton isActive={isActive('heading', { level: 4 })} onClick={actions.heading4} icon={FiType} label="Heading 4" disabled={disabled} />
+                                                    <span className={styles.toolbarDivider} />
+                                                </div>
+                                            </>
+                                        )}
 
-                                        {/* Lists */}
+                                        {/* Lists - always available */}
                                         <div className={styles.toolbarGroup}>
                                             <DropdownMenu
                                                 trigger={
@@ -581,10 +666,14 @@ export default function RichTextEditor({
                                                         <span>{style.label}</span> {style.name}
                                                     </div>
                                                 ))}
-                                                <div className={styles.dropdownDivider} />
-                                                <div className={styles.dropdownItem} onClick={actions.taskList}>
-                                                    <FiCheckSquare size={14} /> Task List
-                                                </div>
+                                                {enableTaskList && (
+                                                    <>
+                                                        <div className={styles.dropdownDivider} />
+                                                        <div className={styles.dropdownItem} onClick={actions.taskList}>
+                                                            <FiCheckSquare size={14} /> Task List
+                                                        </div>
+                                                    </>
+                                                )}
                                             </DropdownMenu>
 
                                             <DropdownMenu
@@ -607,64 +696,61 @@ export default function RichTextEditor({
                                             <span className={styles.toolbarDivider} />
                                         </div>
 
-                                        {/* Indent controls */}
-                                        <div className={styles.toolbarGroup}>
-                                            <MenuButton isActive={false} onClick={actions.outdent} icon={FiCornerUpLeft} label="Decrease Indent" disabled={disabled} />
-                                            <MenuButton isActive={false} onClick={actions.indent} icon={FiCornerDownRight} label="Increase Indent" disabled={disabled} />
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
+                                        {/* Blockquote & Code Block - only if enabled */}
+                                        {(enableBlockquote || enableCodeBlock) && (
+                                            <div className={styles.toolbarGroup}>
+                                                {enableBlockquote && (
+                                                    <MenuButton isActive={isActive('blockquote')} onClick={actions.blockquote} icon={FiType} label="Blockquote" disabled={disabled} />
+                                                )}
+                                                {enableCodeBlock && (
+                                                    <MenuButton isActive={isActive('codeBlock')} onClick={actions.codeBlock} icon={FiCode} label="Code Block" disabled={disabled} />
+                                                )}
+                                                <span className={styles.toolbarDivider} />
+                                            </div>
+                                        )}
 
-                                        {/* Alignment */}
-                                        <div className={styles.toolbarGroup}>
-                                            <MenuButton isActive={isActive('textAlign', { textAlign: 'left' })} onClick={actions.leftAlign} icon={FiAlignLeft} label="Align Left" disabled={disabled} />
-                                            <MenuButton isActive={isActive('textAlign', { textAlign: 'center' })} onClick={actions.centerAlign} icon={FiAlignCenter} label="Align Center" disabled={disabled} />
-                                            <MenuButton isActive={isActive('textAlign', { textAlign: 'right' })} onClick={actions.rightAlign} icon={FiAlignRight} label="Align Right" disabled={disabled} />
-                                            <MenuButton isActive={isActive('textAlign', { textAlign: 'justify' })} onClick={actions.justifyAlign} icon={FiAlignJustify} label="Justify" disabled={disabled} />
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
+                                        {/* Text Align - only if enabled */}
+                                        {enableTextAlign && (
+                                            <div className={styles.toolbarGroup}>
+                                                <MenuButton isActive={isActive('textAlign', { textAlign: 'left' })} onClick={actions.leftAlign} icon={FiAlignLeft} label="Align Left" disabled={disabled} />
+                                                <MenuButton isActive={isActive('textAlign', { textAlign: 'center' })} onClick={actions.centerAlign} icon={FiAlignCenter} label="Align Center" disabled={disabled} />
+                                                <MenuButton isActive={isActive('textAlign', { textAlign: 'right' })} onClick={actions.rightAlign} icon={FiAlignRight} label="Align Right" disabled={disabled} />
+                                                <MenuButton isActive={isActive('textAlign', { textAlign: 'justify' })} onClick={actions.justifyAlign} icon={FiAlignJustify} label="Justify" disabled={disabled} />
+                                                <span className={styles.toolbarDivider} />
+                                            </div>
+                                        )}
 
-                                        {/* Line height */}
-                                        <div className={styles.toolbarGroup}>
-                                            <DropdownMenu
-                                                trigger={
-                                                    <MenuButton isActive={false} onClick={() => { }} icon={FiMenu} label="Line Height" disabled={disabled} />
-                                                }
-                                                disabled={disabled}
-                                            >
-                                                {LINE_HEIGHT_OPTIONS.map((option) => (
-                                                    <div
-                                                        key={option.value}
-                                                        className={styles.dropdownItem}
-                                                        onClick={() => setLineHeight(option.value)}
-                                                    >
-                                                        {option.label}
-                                                    </div>
-                                                ))}
-                                            </DropdownMenu>
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
+                                        {/* Tables - only if enabled */}
+                                        {enableTables && (
+                                            <div className={styles.toolbarGroup}>
+                                                <MenuButton isActive={isActive('table')} onClick={insertTable} icon={FiTable} label="Insert Table" disabled={disabled} />
+                                                <MenuButton isActive={false} onClick={deleteTable} icon={FiDelete} label="Delete Table" disabled={disabled} />
+                                                <span className={styles.toolbarDivider} />
+                                            </div>
+                                        )}
 
-                                        {/* Tables */}
-                                        <div className={styles.toolbarGroup}>
-                                            <MenuButton isActive={isActive('table')} onClick={insertTable} icon={FiTable} label="Insert Table" disabled={disabled} />
-                                            <MenuButton isActive={false} onClick={deleteTable} icon={FiDelete} label="Delete Table" disabled={disabled} />
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
+                                        {/* Advanced - Link & Image */}
+                                        {(enableLink || enableImage) && (
+                                            <div className={styles.toolbarGroup}>
+                                                {enableLink && (
+                                                    <MenuButton isActive={isActive('link')} onClick={toggleLink} icon={FiLink} label="Add Link" disabled={disabled} />
+                                                )}
+                                                {enableImage && (
+                                                    <MenuButton isActive={isActive('image')} onClick={handleImageUpload} icon={FiImage} label="Insert Image" disabled={disabled} />
+                                                )}
+                                                <span className={styles.toolbarDivider} />
+                                            </div>
+                                        )}
 
-                                        {/* Advanced */}
-                                        <div className={styles.toolbarGroup}>
-                                            <MenuButton isActive={isActive('link')} onClick={toggleLink} icon={FiLink} label="Add Link" disabled={disabled} />
-                                            <MenuButton isActive={isActive('image')} onClick={handleImageUpload} icon={FiImage} label="Insert Image" disabled={disabled} />
-                                            <MenuButton isActive={isActive('codeBlock')} onClick={actions.codeBlock} icon={FiCode} label="Code Block" disabled={disabled} />
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
+                                        {/* Clear formatting - only if enabled */}
+                                        {enableClearFormat && (
+                                            <div className={styles.toolbarGroup}>
+                                                <MenuButton isActive={false} onClick={actions.clearFormat} icon={FiX} label="Clear Formatting" disabled={disabled} />
+                                                <span className={styles.toolbarDivider} />
+                                            </div>
+                                        )}
 
-                                        {/* Clear formatting & Expand */}
-                                        <div className={styles.toolbarGroup}>
-                                            <MenuButton isActive={false} onClick={actions.clearFormat} icon={FiX} label="Clear Formatting" disabled={disabled} />
-                                            <span className={styles.toolbarDivider} />
-                                        </div>
-
+                                        {/* Expand/Collapse - always available */}
                                         <div className={styles.toolbarGroup}>
                                             <button
                                                 type="button"

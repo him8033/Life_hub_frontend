@@ -1,5 +1,5 @@
 /* ============================================
-   RICH TEXT EDITOR - FIXED FOR NEXT.JS CSS MODULES
+   RICH TEXT EDITOR - CSS MODULE
    ============================================ */
 
 /* ============================================
@@ -224,6 +224,145 @@
     color: #4a5db8;
 }
 
+/* ============================================
+   TABLE STYLES - COMPLETE FIX
+   ============================================ */
+
+/* Table container with overflow support */
+.editorContent .ProseMirror .tableWrapper {
+    overflow-x: auto;
+    margin: 0.75rem 0;
+    position: relative;
+}
+
+.editorContent .ProseMirror .tableWrapper table {
+    margin: 0;
+    width: 100%;
+}
+
+/* Main table styles - IMPORTANT: these must be applied */
+.editorContent .ProseMirror table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin: 0.75rem 0 !important;
+    table-layout: fixed !important;
+    border: 2px solid #d1d5db !important;
+    border-color: var(--border, #d1d5db) !important;
+}
+
+/* Table header cells */
+.editorContent .ProseMirror table th {
+    border: 2px solid #9ca3af !important;
+    border-color: var(--border, #9ca3af) !important;
+    padding: 0.5rem 0.75rem !important;
+    text-align: left !important;
+    vertical-align: top !important;
+    min-width: 50px !important;
+    background: #f3f4f6 !important;
+    background-color: var(--muted, #f3f4f6) !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+    color: var(--foreground, #111827) !important;
+    position: relative !important;
+}
+
+/* Table data cells */
+.editorContent .ProseMirror table td {
+    border: 2px solid #d1d5db !important;
+    border-color: var(--border, #d1d5db) !important;
+    padding: 0.5rem 0.75rem !important;
+    text-align: left !important;
+    vertical-align: top !important;
+    min-width: 50px !important;
+    background: #ffffff !important;
+    background-color: var(--background, #ffffff) !important;
+    color: #111827 !important;
+    color: var(--foreground, #111827) !important;
+    position: relative !important;
+}
+
+/* Table row hover effect */
+.editorContent .ProseMirror table tr:hover td {
+    background: #f8fafc !important;
+    background-color: var(--accent, #f8fafc) !important;
+}
+
+.editorContent .ProseMirror table tr:hover th {
+    background: #e5e7eb !important;
+    background-color: var(--muted, #e5e7eb) !important;
+}
+
+/* Selected cell styling */
+.editorContent .ProseMirror table .selectedCell {
+    background: rgba(102, 126, 234, 0.15) !important;
+    outline: 2px solid #667eea !important;
+    outline-color: var(--primary, #667eea) !important;
+    outline-offset: -1px !important;
+}
+
+/* Column resize handle */
+.editorContent .ProseMirror .column-resize-handle {
+    position: absolute !important;
+    right: -2px !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 4px !important;
+    background-color: #667eea !important;
+    background-color: var(--primary, #667eea) !important;
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+}
+
+.editorContent .ProseMirror .column-resize-handle:hover {
+    opacity: 1 !important;
+}
+
+/* Resize guide line */
+.editorContent .ProseMirror .resize-guide {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 1px !important;
+    height: 100% !important;
+    background-color: #667eea !important;
+    background-color: var(--primary, #667eea) !important;
+    pointer-events: none !important;
+}
+
+/* Last column border fix */
+.editorContent .ProseMirror table td:last-child,
+.editorContent .ProseMirror table th:last-child {
+    border-right: 2px solid #d1d5db !important;
+    border-right-color: var(--border, #d1d5db) !important;
+}
+
+/* First column border fix */
+.editorContent .ProseMirror table td:first-child,
+.editorContent .ProseMirror table th:first-child {
+    border-left: 2px solid #d1d5db !important;
+    border-left-color: var(--border, #d1d5db) !important;
+}
+
+/* Table caption */
+.editorContent .ProseMirror table caption {
+    padding: 0.5rem !important;
+    caption-side: bottom !important;
+    color: #6b7280 !important;
+    color: var(--muted-foreground, #6b7280) !important;
+    font-size: var(--text-sm, 0.875rem) !important;
+}
+
+/* Empty cell placeholder */
+.editorContent .ProseMirror table td p:first-child,
+.editorContent .ProseMirror table th p:first-child {
+    margin-top: 0 !important;
+}
+
+.editorContent .ProseMirror table td p:last-child,
+.editorContent .ProseMirror table th p:last-child {
+    margin-bottom: 0 !important;
+}
+
 /* Editor size variants */
 .editorSm .editorContent .ProseMirror {
     font-size: var(--text-sm, 0.875rem);
@@ -247,10 +386,24 @@
     font-size: 1rem;
 }
 
+.editorSm .editorContent .ProseMirror table td,
+.editorSm .editorContent .ProseMirror table th {
+    padding: 0.35rem 0.5rem !important;
+    font-size: var(--text-sm, 0.875rem) !important;
+    min-width: 40px !important;
+}
+
 .editorMd .editorContent .ProseMirror {
     font-size: var(--text-base, 1rem);
     padding: 0.75rem 1rem;
     min-height: 150px;
+}
+
+.editorMd .editorContent .ProseMirror table td,
+.editorMd .editorContent .ProseMirror table th {
+    padding: 0.5rem 0.75rem !important;
+    font-size: var(--text-base, 1rem) !important;
+    min-width: 50px !important;
 }
 
 .editorLg .editorContent .ProseMirror {
@@ -273,6 +426,13 @@
 
 .editorLg .editorContent .ProseMirror h4 {
     font-size: 1.25rem;
+}
+
+.editorLg .editorContent .ProseMirror table td,
+.editorLg .editorContent .ProseMirror table th {
+    padding: 0.75rem 1rem !important;
+    font-size: var(--text-base, 1rem) !important;
+    min-width: 60px !important;
 }
 
 /* Expanded state */
@@ -421,8 +581,8 @@
     box-shadow: var(--shadow-lg-value, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
     padding: 8px;
     z-index: 1000;
-    min-width: 180px;
-    max-width: 200px;
+    min-width: 200px;
+    max-width: 220px;
 }
 
 .colorPickerGrid {
@@ -449,6 +609,85 @@
 .colorSelected {
     border-color: var(--primary, #667eea);
     box-shadow: 0 0 0 1px var(--primary, #667eea);
+}
+
+/* ============================================
+   COLOR PICKER - CUSTOM COLOR SUPPORT
+   ============================================ */
+.colorPickerCustom {
+    border-top: 1px solid var(--border, #e5e7eb);
+    padding: 0.5rem 0.25rem 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.colorPickerCustomLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--text-xs, 0.75rem);
+    color: var(--muted-foreground, #6b7280);
+    margin-bottom: 0.35rem;
+}
+
+.colorPickerCustomLabel svg {
+    flex-shrink: 0;
+}
+
+.colorPickerCustomInput {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.colorPickerNativeInput {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: var(--radius-sm, 0.375rem);
+    cursor: pointer;
+    background: transparent;
+    flex-shrink: 0;
+}
+
+.colorPickerNativeInput::-webkit-color-swatch-wrapper {
+    padding: 2px;
+}
+
+.colorPickerNativeInput::-webkit-color-swatch {
+    border-radius: var(--radius-sm, 0.375rem);
+    border: none;
+}
+
+.colorPickerNativeInput::-moz-color-swatch {
+    border-radius: var(--radius-sm, 0.375rem);
+    border: none;
+}
+
+.colorPickerHexInput {
+    flex: 1;
+    padding: 0.25rem 0.4rem;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: var(--radius-sm, 0.375rem);
+    font-size: var(--text-xs, 0.75rem);
+    font-family: 'Fira Code', 'Courier New', monospace;
+    color: var(--foreground, #111827);
+    background: var(--background, #ffffff);
+    outline: none;
+    transition: border-color 0.15s ease;
+    height: 30px;
+    text-transform: uppercase;
+    min-width: 60px;
+}
+
+.colorPickerHexInput:focus {
+    border-color: var(--primary, #667eea);
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
+}
+
+.colorPickerHexInput::placeholder {
+    color: var(--muted-foreground, #9ca3af);
+    text-transform: none;
 }
 
 /* ============================================
@@ -592,7 +831,6 @@
 /* ============================================
    DARK MODE - Using .dark class from global.css
    ============================================ */
-/* All dark mode styles are wrapped with :global(.dark) to ensure purity */
 :global(.dark) .editorWrapper {
     background: var(--background, #1f2937);
     border-color: var(--border, #374151);
@@ -659,6 +897,74 @@
 }
 
 :global(.dark) .editorContent .ProseMirror-empty::before {
+    color: var(--muted-foreground, #6b7280);
+}
+
+/* Dark mode table styles */
+:global(.dark) .editorContent .ProseMirror table {
+    border-color: var(--border, #374151) !important;
+}
+
+:global(.dark) .editorContent .ProseMirror table th {
+    border-color: var(--border, #4b5563) !important;
+    background: var(--background, #1f2937) !important;
+    color: var(--foreground, #e5e7eb) !important;
+}
+
+:global(.dark) .editorContent .ProseMirror table td {
+    border-color: var(--border, #374151) !important;
+    background: var(--background, #111827) !important;
+    color: var(--foreground, #e5e7eb) !important;
+}
+
+:global(.dark) .editorContent .ProseMirror table tr:hover td {
+    background: var(--accent, #1f2937) !important;
+}
+
+:global(.dark) .editorContent .ProseMirror table tr:hover th {
+    background: var(--muted, #374151) !important;
+}
+
+:global(.dark) .editorContent .ProseMirror table .selectedCell {
+    background: rgba(127, 156, 245, 0.2) !important;
+    outline-color: var(--primary, #7f9cf5) !important;
+}
+
+:global(.dark) .editorContent .ProseMirror table td:last-child,
+:global(.dark) .editorContent .ProseMirror table th:last-child {
+    border-right-color: var(--border, #374151) !important;
+}
+
+:global(.dark) .editorContent .ProseMirror table td:first-child,
+:global(.dark) .editorContent .ProseMirror table th:first-child {
+    border-left-color: var(--border, #374151) !important;
+}
+
+/* Dark mode custom color picker */
+:global(.dark) .colorPickerCustom {
+    border-top-color: var(--border, #374151);
+}
+
+:global(.dark) .colorPickerCustomLabel {
+    color: var(--muted-foreground, #9ca3af);
+}
+
+:global(.dark) .colorPickerNativeInput {
+    border-color: var(--border, #374151);
+}
+
+:global(.dark) .colorPickerHexInput {
+    border-color: var(--border, #374151);
+    color: var(--foreground, #e5e7eb);
+    background: var(--background, #1f2937);
+}
+
+:global(.dark) .colorPickerHexInput:focus {
+    border-color: var(--primary, #7f9cf5);
+    box-shadow: 0 0 0 2px rgba(127, 156, 245, 0.2);
+}
+
+:global(.dark) .colorPickerHexInput::placeholder {
     color: var(--muted-foreground, #6b7280);
 }
 
@@ -817,9 +1123,10 @@
     }
 
     .colorPickerDropdown {
-        min-width: 150px;
-        max-width: 160px;
+        min-width: 170px;
+        max-width: 180px;
         left: -30px;
+        padding: 6px;
     }
 
     .colorOption {
@@ -830,6 +1137,34 @@
     .dropdownContent {
         min-width: 150px;
         left: -20px;
+    }
+
+    /* Table responsive for mobile */
+    .editorContent .ProseMirror .tableWrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .editorContent .ProseMirror table td,
+    .editorContent .ProseMirror table th {
+        padding: 0.35rem 0.5rem !important;
+        font-size: var(--text-sm, 0.875rem) !important;
+        min-width: 40px !important;
+    }
+
+    .colorPickerCustomInput {
+        gap: 0.25rem;
+    }
+
+    .colorPickerNativeInput {
+        width: 28px;
+        height: 28px;
+    }
+
+    .colorPickerHexInput {
+        height: 28px;
+        font-size: var(--text-xs, 0.75rem);
+        min-width: 50px;
     }
 }
 
@@ -885,8 +1220,8 @@
     }
 
     .colorPickerDropdown {
-        min-width: 130px;
-        max-width: 140px;
+        min-width: 150px;
+        max-width: 160px;
         left: -40px;
         padding: 6px;
     }
@@ -906,6 +1241,36 @@
         font-size: var(--text-xs, 0.75rem);
         padding: 4px 8px;
     }
+
+    /* Table responsive for small screens */
+    .editorContent .ProseMirror table td,
+    .editorContent .ProseMirror table th {
+        padding: 0.25rem 0.35rem !important;
+        font-size: var(--text-xs, 0.75rem) !important;
+        min-width: 30px !important;
+        border-width: 1px !important;
+    }
+
+    .editorContent .ProseMirror table {
+        border-width: 1px !important;
+    }
+
+    /* Custom color picker responsive */
+    .colorPickerCustomInput {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .colorPickerNativeInput {
+        width: 100%;
+        height: 32px;
+    }
+
+    .colorPickerHexInput {
+        width: 100%;
+        height: 28px;
+        min-width: unset;
+    }
 }
 
 /* ============================================
@@ -916,7 +1281,8 @@
     .editorContent,
     .menuButton,
     .colorOption,
-    .dropdownItem {
+    .dropdownItem,
+    .colorPickerHexInput {
         transition: none !important;
     }
 }
@@ -935,6 +1301,15 @@
     :global(.dark) .menuButton.active {
         background: var(--primary, #7f9cf5);
         color: #1f2937;
+    }
+
+    .editorContent .ProseMirror table td,
+    .editorContent .ProseMirror table th {
+        border-width: 2px !important;
+    }
+
+    .colorPickerHexInput {
+        border-width: 2px;
     }
 }
 
@@ -959,6 +1334,19 @@
     }
 
     .charCount {
+        display: none !important;
+    }
+
+    .editorContent .ProseMirror table {
+        break-inside: auto;
+    }
+
+    .editorContent .ProseMirror table td,
+    .editorContent .ProseMirror table th {
+        border-color: #000 !important;
+    }
+
+    .colorPickerDropdown {
         display: none !important;
     }
 }
