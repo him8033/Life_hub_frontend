@@ -516,9 +516,6 @@ const BasicInfoSection = ({
                             size="md"
                             className={styles.fieldItem}
                         />
-                        <p className={styles.summaryHint}>
-                            Write a brief professional summary...
-                        </p>
                     </div>
 
                     {/* Auto-save indicator */}

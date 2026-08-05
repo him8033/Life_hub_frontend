@@ -4,12 +4,12 @@ import { useState, useCallback, useRef } from 'react';
 
 // Paper sizes for resume (document view)
 export const PAPER_SIZES = [
-    { value: 'auto', label: 'Fit', w: 0, h: 0 },
+    // { value: 'auto', label: 'Fit', w: 0, h: 0 },
     { value: 'a4', label: 'A4', w: 210, h: 297 },
-    { value: 'a3', label: 'A3', w: 297, h: 420 },
-    { value: 'a5', label: 'A5', w: 148, h: 210 },
-    { value: 'letter', label: 'Letter', w: 216, h: 279 },
-    { value: 'legal', label: 'Legal', w: 216, h: 356 },
+    // { value: 'a3', label: 'A3', w: 297, h: 420 },
+    // { value: 'a5', label: 'A5', w: 148, h: 210 },
+    // { value: 'letter', label: 'Letter', w: 216, h: 279 },
+    // { value: 'legal', label: 'Legal', w: 216, h: 356 },
 ];
 
 // Viewport sizes for portfolio (webpage view)
@@ -22,14 +22,14 @@ export const VIEWPORT_SIZES = [
 ];
 
 export const LAYOUTS = [
-    { value: 20, label: '20/80' },
-    { value: 30, label: '30/70' },
-    { value: 40, label: '40/60' },
+    // { value: 20, label: '20/80' },
+    // { value: 30, label: '30/70' },
+    // { value: 40, label: '40/60' },
     { value: 50, label: '50/50' },
-    { value: 60, label: '60/40' },
-    { value: 70, label: '70/30' },
-    { value: 80, label: '80/20' },
-    { value: 90, label: '90/10' },
+    // { value: 60, label: '60/40' },
+    // { value: 70, label: '70/30' },
+    // { value: 80, label: '80/20' },
+    // { value: 90, label: '90/10' },
 ];
 
 export function usePreviewSettings(defaultSize = 'a4', defaultZoom = 100, viewMode = 'document') {
@@ -120,14 +120,12 @@ export function usePreviewSettings(defaultSize = 'a4', defaultZoom = 100, viewMo
             }
 
             return {
-                width: `${size.w}px`,
-                height: `${size.h}px`,
-                maxWidth: '100%',
-                maxHeight: '100%',
-                background: 'white',
-                overflow: 'auto',
-                borderRadius: '4px',
+                width: `${size.w * s}px`,
+                height: `${size.h * s}px`,
                 boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
+                borderRadius: '4px',
+                background: 'white',
+                overflow: 'hidden',
                 flexShrink: 0,
             };
         }

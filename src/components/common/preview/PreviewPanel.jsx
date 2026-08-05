@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { FiRefreshCw } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import styles from '@/styles/common/preview/PreviewPanel.module.css';
@@ -23,37 +23,72 @@ export default function PreviewPanel({
     isWebpage = false,
 }) {
     const isFirstLoad = useRef(true);
+    const containerRef = useRef(null);
+    const [fitScale, setFitScale] = useState(1);
+
+    // Calculate the scale to fit the paper within the container
+    // Calculate the scale to fit the paper within the container
+    const calculateFitScale = useCallback(() => {
+        if (!containerRef.current) return 1;
+
+        const container = containerRef.current;
+
+        // Reduced padding to minimize gapping
+        const availableWidth = container.clientWidth - 8;
+        const availableHeight = container.clientHeight - 8;
+
+        const paperWidth = parseFloat(paperStyle.width) || 794;
+        const paperHeight = parseFloat(paperStyle.height) || 1123;
+
+        const scaleX = availableWidth / paperWidth;
+        const scaleY = availableHeight / paperHeight;
+
+        return Math.max(Math.min(scaleX, scaleY, 1), 0.1);
+    }, [paperStyle]);
+
+    // Update scale on resize
+    useEffect(() => {
+        const updateScale = () => {
+            setFitScale(calculateFitScale());
+        };
+
+        updateScale();
+
+        const resizeObserver = new ResizeObserver(updateScale);
+        if (containerRef.current) {
+            resizeObserver.observe(containerRef.current);
+        }
+
+        window.addEventListener('resize', updateScale);
+
+        return () => {
+            resizeObserver.disconnect();
+            window.removeEventListener('resize', updateScale);
+        };
+    }, [calculateFitScale]);
 
     // Use location.replace to avoid adding history entries
     useEffect(() => {
         if (iframeRef.current && previewUrl) {
             const iframe = iframeRef.current;
 
-            // Try to use location.replace if available
             try {
                 if (iframe.contentWindow?.location?.replace) {
                     if (!isFirstLoad.current) {
-                        // Use replace for subsequent loads
                         iframe.contentWindow.location.replace(previewUrl);
                     } else {
-                        // First load can use src
                         iframe.src = previewUrl;
                         isFirstLoad.current = false;
                     }
                 } else {
-                    // Fallback: use src but with a cache-busting parameter
-                    // that doesn't affect history
                     const url = new URL(previewUrl, window.location.origin);
                     url.searchParams.set('_t', Date.now());
                     iframe.src = url.toString();
                 }
             } catch (error) {
-                // Cross-origin fallback - reload iframe without adding history
                 if (!isFirstLoad.current) {
-                    // Use a hidden technique to reload without history
                     const currentSrc = iframe.src;
                     if (currentSrc && !currentSrc.includes('about:blank')) {
-                        // Force reload without history using a temporary document
                         iframe.src = 'about:blank';
                         setTimeout(() => {
                             iframe.src = previewUrl;
@@ -67,7 +102,7 @@ export default function PreviewPanel({
         }
     }, [previewKey, previewUrl, iframeRef]);
 
-    // Cleanup function to prevent memory leaks
+    // Cleanup function
     useEffect(() => {
         return () => {
             if (iframeRef.current) {
@@ -79,6 +114,9 @@ export default function PreviewPanel({
             }
         };
     }, [iframeRef]);
+
+    // Calculate the final scale (user zoom * fit scale)
+    const finalScale = (zoom / 100) * fitScale;
 
     return (
         <div className={styles.previewPanel}>
@@ -99,17 +137,21 @@ export default function PreviewPanel({
 
             <div className={styles.previewFrame}>
                 {canPreview && previewUrl ? (
-                    <div className={isWebpage ? styles.webpageScroll : styles.scrollArea}>
+                    <div
+                        ref={containerRef}
+                        className={isWebpage ? styles.webpageScroll : styles.scrollArea}
+                    >
                         <div
                             className={isWebpage ? styles.webpagePaper : styles.paper}
-                            style={isWebpage ? {
+                            style={{
                                 ...paperStyle,
-                                transform: `scale(${zoom / 100})`,
+                                transform: `scale(${finalScale})`,
                                 transformOrigin: 'top center',
-                            } : {
-                                ...paperStyle,
-                                transform: `scale(${zoom / 100})`,
-                                transformOrigin: 'top center',
+                                // Ensure the paper maintains its fixed pixel size
+                                width: paperStyle.width || '794px',
+                                height: paperStyle.height || '1123px',
+                                // Prevent scaling from affecting layout
+                                flexShrink: 0,
                             }}
                         >
                             <iframe
