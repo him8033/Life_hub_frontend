@@ -71,35 +71,70 @@
 }
 
 /* ============================================
-   PREVIEW FRAME
+   PREVIEW FRAME - New A4 Architecture
    ============================================ */
 
 .previewFrame {
     flex: 1;
     width: 100%;
     overflow: hidden;
-    background: #cbd5e1;
+    background: #f5f5f5;
 }
 
-.scrollArea {
+/* Preview Viewport - Handles positioning and scrolling of A4 paper */
+.previewViewport {
     width: 100%;
     height: 100%;
-    /* overflow: auto; */
-    display: grid;
-    place-items: start center;
-    padding: 0;
-    background: #cbd5e1;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    background: #f5f5f5;
+    /* Custom scrollbar for better UX */
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f5f5f5;
 }
 
-/* Fixed paper size with scaling */
-.paper {
+.previewViewport::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.previewViewport::-webkit-scrollbar-track {
+    background: #f5f5f5;
+}
+
+.previewViewport::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 6px;
+    border: 3px solid #f5f5f5;
+}
+
+.previewViewport::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* A4 Paper Container - Fixed dimensions for A4 paper */
+.a4Paper {
     position: relative;
     background: white;
     flex-shrink: 0;
-    transition: transform 0.2s ease;
+    transition: transform 0.15s ease-out;
     box-shadow:
-        0 4px 12px rgba(0, 0, 0, 0.12),
-        0 12px 28px rgba(0, 0, 0, 0.08);
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        0 8px 24px rgba(0, 0, 0, 0.12);
+    margin: 0 auto; /* Horizontal centering */
+    overflow: hidden; /* Content that exceeds A4 will be handled internally */
+}
+
+/* Resume iframe fills the A4 paper */
+.iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    background: white;
 }
 
 /* Ensure iframe fills the paper */
@@ -152,14 +187,28 @@
 }
 
 .dark .previewFrame {
-    background: var(--gray-950);
+    background: #1a1a1a;
 }
 
-.dark .scrollArea {
-    background: var(--gray-950);
+.dark .previewViewport {
+    background: #1a1a1a;
+    scrollbar-color: #4a4a4a #1a1a1a;
 }
 
-.dark .paper {
+.dark .previewViewport::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.dark .previewViewport::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-color: #1a1a1a;
+}
+
+.dark .previewViewport::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+.dark .a4Paper {
     background: white;
 }
 
@@ -176,13 +225,13 @@
         overflow: visible !important;
     }
 
-    .scrollArea {
+    .previewViewport {
         padding: 0 !important;
         overflow: visible !important;
         background: white !important;
     }
 
-    .paper {
+    .a4Paper {
         box-shadow: none !important;
         border-radius: 0 !important;
         transform: none !important;
@@ -198,15 +247,15 @@
 
 @media (max-width: 768px) {
 
-    .scrollArea {
-        padding: 2px;
+    .previewViewport {
+        padding: 16px; /* Further reduced padding on mobile */
     }
 
     .zoomControls {
         display: none;
     }
 
-    .paper {
+    .a4Paper {
         width: 100% !important;
         height: auto !important;
     }
@@ -216,27 +265,28 @@
    WEBPAGE VIEW (Portfolio)
    ============================================ */
 
-.webpageScroll {
+.webpageViewport {
     width: 100%;
     height: 100%;
     overflow: auto;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 0;
-    background: #cbd5e1;
+    padding: 16px;
+    background: #f5f5f5;
 }
 
-.webpagePaper {
+.webpageContainer {
     background: white;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease-out;
     flex-shrink: 0;
     border-radius: 4px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
     overflow: auto;
     width: 100%;
-    height: 100%;
+    max-width: 1200px;
     min-height: 500px;
+    margin: auto;
 }
 
 .webpageIframe {
@@ -247,17 +297,17 @@
 }
 
 /* Dark mode for webpage */
-.dark .webpageScroll {
-    background: var(--gray-950);
+.dark .webpageViewport {
+    background: #1a1a1a;
 }
 
-.dark .webpagePaper {
+.dark .webpageContainer {
     background: var(--gray-900);
 }
 
 /* Responsive for webpage */
 @media (max-width: 768px) {
-    .webpageScroll {
-        padding: 2px;
+    .webpageViewport {
+        padding: 16px;
     }
 }

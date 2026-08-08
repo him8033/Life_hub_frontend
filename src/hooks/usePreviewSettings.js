@@ -22,14 +22,14 @@ export const VIEWPORT_SIZES = [
 ];
 
 export const LAYOUTS = [
-    // { value: 20, label: '20/80' },
-    // { value: 30, label: '30/70' },
-    // { value: 40, label: '40/60' },
+    { value: 20, label: '20/80' },
+    { value: 30, label: '30/70' },
+    { value: 40, label: '40/60' },
     { value: 50, label: '50/50' },
-    // { value: 60, label: '60/40' },
-    // { value: 70, label: '70/30' },
-    // { value: 80, label: '80/20' },
-    // { value: 90, label: '90/10' },
+    { value: 60, label: '60/40' },
+    { value: 70, label: '70/30' },
+    { value: 80, label: '80/20' },
+    { value: 90, label: '90/10' },
 ];
 
 export function usePreviewSettings(defaultSize = 'a4', defaultZoom = 100, viewMode = 'document') {

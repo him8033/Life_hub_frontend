@@ -7,6 +7,10 @@ import { FiRefreshCw } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import styles from '@/styles/common/preview/PreviewPanel.module.css';
 
+// A4 paper dimensions in pixels (at 96 DPI)
+const A4_WIDTH_PX = 794;  // 210mm
+const A4_HEIGHT_PX = 1123; // 297mm
+
 export default function PreviewPanel({
     paperStyle,
     zoom,
@@ -23,29 +27,32 @@ export default function PreviewPanel({
     isWebpage = false,
 }) {
     const isFirstLoad = useRef(true);
-    const containerRef = useRef(null);
+    const previewViewportRef = useRef(null);
+    const a4ContainerRef = useRef(null);
     const [fitScale, setFitScale] = useState(1);
+    const [zoomCenter, setZoomCenter] = useState({ x: 0.5, y: 0.5 });
 
-    // Calculate the scale to fit the paper within the container
-    // Calculate the scale to fit the paper within the container
+    // Calculate the scale to fit the A4 paper within the preview viewport
     const calculateFitScale = useCallback(() => {
-        if (!containerRef.current) return 1;
+        if (!previewViewportRef.current) return 1;
 
-        const container = containerRef.current;
+        const viewport = previewViewportRef.current;
 
-        // Minimal padding to reduce gapping
-        const availableWidth = container.clientWidth - 4;
-        const availableHeight = container.clientHeight - 4;
+        // Small padding around the A4 paper in the viewport
+        const padding = 20;
+        const availableWidth = viewport.clientWidth - (padding * 2);
+        const availableHeight = viewport.clientHeight - padding;
 
-        const paperWidth = parseFloat(paperStyle.width) || 794;
-        const paperHeight = parseFloat(paperStyle.height) || 1123;
+        // Use fixed A4 dimensions
+        const a4Width = A4_WIDTH_PX;
+        const a4Height = A4_HEIGHT_PX;
 
-        const scaleX = availableWidth / paperWidth;
-        const scaleY = availableHeight / paperHeight;
+        const scaleX = availableWidth / a4Width;
+        const scaleY = availableHeight / a4Height;
 
-        // Allow scaling up to fill space, but don't exceed 1.5x (150%)
-        return Math.max(Math.min(scaleX, scaleY, 1.5), 0.1);
-    }, [paperStyle]);
+        // Use the smaller scale to fit entirely, but allow up to 1.0 (100%)
+        return Math.max(Math.min(scaleX, scaleY, 1.0), 0.1);
+    }, []);
 
     // Update scale on resize
     useEffect(() => {
@@ -56,8 +63,8 @@ export default function PreviewPanel({
         updateScale();
 
         const resizeObserver = new ResizeObserver(updateScale);
-        if (containerRef.current) {
-            resizeObserver.observe(containerRef.current);
+        if (previewViewportRef.current) {
+            resizeObserver.observe(previewViewportRef.current);
         }
 
         window.addEventListener('resize', updateScale);
@@ -67,6 +74,27 @@ export default function PreviewPanel({
             window.removeEventListener('resize', updateScale);
         };
     }, [calculateFitScale]);
+
+    // Calculate the final scale (user zoom * fit scale)
+    const finalScale = (zoom / 100) * fitScale;
+
+    // Update scroll position after zoom to maintain center focus
+    useEffect(() => {
+        if (previewViewportRef.current && zoomCenter.x !== 0) {
+            const viewport = previewViewportRef.current;
+
+            // Maintain the same center point after zoom
+            const newScrollLeft = (viewport.scrollWidth * zoomCenter.x) - (viewport.clientWidth / 2);
+            const newScrollTop = (viewport.scrollHeight * zoomCenter.y) - (viewport.clientHeight / 2);
+
+            viewport.scrollTo({
+                left: Math.max(0, newScrollLeft),
+                top: Math.max(0, newScrollTop),
+                behavior: 'smooth'
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [finalScale]);
 
     // Use location.replace to avoid adding history entries
     useEffect(() => {
@@ -116,8 +144,20 @@ export default function PreviewPanel({
         };
     }, [iframeRef]);
 
-    // Calculate the final scale (user zoom * fit scale)
-    const finalScale = (zoom / 100) * fitScale;
+    // Track center point for zoom focus (only on initial load and fit scale changes)
+    useEffect(() => {
+        if (previewViewportRef.current) {
+            const viewport = previewViewportRef.current;
+            const centerX = viewport.scrollLeft + viewport.clientWidth / 2;
+            const centerY = viewport.scrollTop + viewport.clientHeight / 2;
+
+            setZoomCenter({
+                x: centerX / (viewport.scrollWidth || 1),
+                y: centerY / (viewport.scrollHeight || 1)
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fitScale]);
 
     return (
         <div className={styles.previewPanel}>
@@ -139,37 +179,43 @@ export default function PreviewPanel({
             <div className={styles.previewFrame}>
                 {canPreview && previewUrl ? (
                     <div
-                        ref={containerRef}
-                        className={isWebpage ? styles.webpageScroll : styles.scrollArea}
+                        ref={previewViewportRef}
+                        className={isWebpage ? styles.webpageViewport : styles.previewViewport}
                     >
-                        <div
-                            className={isWebpage ? styles.webpagePaper : styles.paper}
-                            style={{
-                                ...paperStyle,
-                                transform: isWebpage ? 'none' : `scale(${finalScale})`,
-                                transformOrigin: 'top center',
-                                // For webpage: take full width, for document: use fixed size
-                                width: isWebpage ? '100%' : (paperStyle.width || '794px'),
-                                height: isWebpage ? '100%' : (paperStyle.height || '1123px'),
-                                // Prevent scaling from affecting layout
-                                flexShrink: 0,
-                            }}
-                        >
-                            <iframe
-                                key={previewKey}
-                                ref={iframeRef}
-                                src={previewUrl}
-                                className={isWebpage ? styles.webpageIframe : styles.iframe}
-                                title="Preview"
-                                style={isWebpage ? {
-                                    width: '100%',
-                                    height: '100%',
-                                    border: 'none',
-                                    display: 'block',
-                                } : {}}
-                                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-                            />
-                        </div>
+                        {!isWebpage && (
+                            <div
+                                ref={a4ContainerRef}
+                                className={styles.a4Paper}
+                                style={{
+                                    transform: `scale(${finalScale})`,
+                                    transformOrigin: 'top center',
+                                    // Fixed A4 dimensions
+                                    width: `${A4_WIDTH_PX}px`,
+                                    height: `${A4_HEIGHT_PX}px`,
+                                }}
+                            >
+                                <iframe
+                                    key={previewKey}
+                                    ref={iframeRef}
+                                    src={previewUrl}
+                                    className={styles.iframe}
+                                    title="Preview"
+                                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                                />
+                            </div>
+                        )}
+                        {isWebpage && (
+                            <div className={styles.webpageContainer}>
+                                <iframe
+                                    key={previewKey}
+                                    ref={iframeRef}
+                                    src={previewUrl}
+                                    className={styles.webpageIframe}
+                                    title="Preview"
+                                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                                />
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div className={styles.placeholder}>
