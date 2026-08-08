@@ -38,12 +38,16 @@ export default function PreviewPanel({
 
         const viewport = previewViewportRef.current;
 
-        // Small padding around the A4 paper in the viewport
+        // For webpage (portfolio), use responsive sizing
+        if (isWebpage) {
+            return 1.0; // No scaling for responsive webpage view
+        }
+
+        // For document (resume), use fixed A4 dimensions
         const padding = 20;
         const availableWidth = viewport.clientWidth - (padding * 2);
         const availableHeight = viewport.clientHeight - padding;
 
-        // Use fixed A4 dimensions
         const a4Width = A4_WIDTH_PX;
         const a4Height = A4_HEIGHT_PX;
 
@@ -52,7 +56,7 @@ export default function PreviewPanel({
 
         // Use the smaller scale to fit entirely, but allow up to 1.0 (100%)
         return Math.max(Math.min(scaleX, scaleY, 1.0), 0.1);
-    }, []);
+    }, [isWebpage]);
 
     // Update scale on resize
     useEffect(() => {
@@ -76,7 +80,7 @@ export default function PreviewPanel({
     }, [calculateFitScale]);
 
     // Calculate the final scale (user zoom * fit scale)
-    const finalScale = (zoom / 100) * fitScale;
+    const finalScale = isWebpage ? (zoom / 100) : (zoom / 100) * fitScale;
 
     // Update scroll position after zoom to maintain center focus
     useEffect(() => {
@@ -189,7 +193,7 @@ export default function PreviewPanel({
                                 style={{
                                     transform: `scale(${finalScale})`,
                                     transformOrigin: 'top center',
-                                    // Fixed A4 dimensions
+                                    // Fixed A4 dimensions for resume
                                     width: `${A4_WIDTH_PX}px`,
                                     height: `${A4_HEIGHT_PX}px`,
                                 }}
@@ -205,7 +209,16 @@ export default function PreviewPanel({
                             </div>
                         )}
                         {isWebpage && (
-                            <div className={styles.webpageContainer}>
+                            <div
+                                ref={a4ContainerRef}
+                                className={styles.webpageContainer}
+                                style={{
+                                    // Responsive sizing for portfolio
+                                    width: '100%',
+                                    height: '100%',
+                                    minHeight: '500px',
+                                }}
+                            >
                                 <iframe
                                     key={previewKey}
                                     ref={iframeRef}
