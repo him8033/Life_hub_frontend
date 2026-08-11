@@ -18,8 +18,8 @@
     background: white;
     min-height: 1123px;
     box-sizing: border-box;
-    page-break-after: avoid;
-    page-break-inside: avoid;
+    page-break-after: auto;
+    page-break-inside: auto;
 }
 
 /* Header - Name centered */
@@ -788,8 +788,8 @@
         margin: 0 auto !important;
         background: white !important;
         box-sizing: border-box !important;
-        page-break-after: avoid !important;
-        page-break-inside: avoid !important;
+        page-break-after: auto !important;
+        page-break-inside: auto !important;
         box-shadow: none !important;
     }
 
@@ -811,14 +811,18 @@
 
     .section {
         margin-bottom: 18px !important;
+        page-break-inside: auto !important;
+        orphans: 2;
+        widows: 2;
     }
 
     .sectionTitle {
         border-bottom-color: #e8edf2 !important;
+        page-break-after: avoid !important;
     }
 
     .strengthGrid {
-        break-inside: avoid !important;
+        break-inside: auto !important;
     }
 
     .expItem,
@@ -826,12 +830,10 @@
     .eduItem,
     .certItem,
     .achItem {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-
-    .section {
-        page-break-inside: avoid !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+        orphans: 2;
+        widows: 2;
     }
 
     .noPrint {
