@@ -110,6 +110,39 @@
     border-top-color: var(--info);
 }
 
+/* Loading/Retrying state for button */
+.retryingButton {
+    opacity: 0.7;
+    cursor: not-allowed;
+    position: relative;
+}
+
+/* If you want to add a spinner animation to the retry button */
+.content .retryingButton :global(.button-content)::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: var(--spacing-2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Disabled button styles if not already defined in your Button component */
+.content button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
     .container {

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { FiAlertCircle, FiAlertTriangle, FiInfo, FiRefreshCw } from 'react-icons/fi';
 import Button from '@/components/common/buttons/Button';
 import styles from '@/styles/common/ErrorState.module.css';
@@ -7,15 +8,25 @@ import styles from '@/styles/common/ErrorState.module.css';
 export default function ErrorState({
     message,
     onRetry,
-    errorType = 'error', // 'error', 'warning', 'info'
+    errorType = 'error',
     retryMsg = 'Try Again',
+    loadingMsg = 'Retrying...',
     showIcon = true,
     className = '',
     title = 'Something went wrong',
 }) {
-    const handleRetry = () => {
-        if (onRetry) {
-            onRetry();
+    const [isRetrying, setIsRetrying] = useState(false);
+
+    const handleRetry = async () => {
+        if (!onRetry || isRetrying) return;
+
+        setIsRetrying(true);
+        try {
+            await onRetry();
+        } catch (error) {
+            console.error('Retry failed:', error);
+        } finally {
+            setIsRetrying(false);
         }
     };
 
@@ -62,10 +73,12 @@ export default function ErrorState({
                         variant={errorType === 'error' ? 'danger' : errorType === 'warning' ? 'warning' : 'primary'}
                         size="md"
                         onClick={handleRetry}
-                        icon={<FiRefreshCw />}
+                        disabled={isRetrying}
+                        icon={isRetrying ? undefined : <FiRefreshCw />}
                         iconPosition="left"
+                        className={isRetrying ? styles.retryingButton : ''}
                     >
-                        {retryMsg}
+                        {isRetrying ? loadingMsg : retryMsg}
                     </Button>
                 )}
             </div>

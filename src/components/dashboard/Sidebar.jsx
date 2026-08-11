@@ -63,13 +63,13 @@ const menuItems = [
                         label: 'Add User',
                         icon: <FiUserPlus />,
                         href: '/dashboard/users/add',
-                        show: 'admin',
+                        show: true,
                     },
                     {
                         label: 'Roles',
                         icon: <FiShield />,
                         href: '/dashboard/users/roles',
-                        show: 'admin',
+                        show: true,
                     }
                 ]
             },
@@ -90,7 +90,7 @@ const menuItems = [
                         label: 'Spot Categories',
                         icon: <FiGrid />,
                         href: ROUTES.DASHBOARD.TRAVELSPOT.SPOTCATEGORY.LIST,
-                        show: 'admin',
+                        show: true,
                     },
                 ]
             },
@@ -126,37 +126,37 @@ const menuItems = [
                 id: 'portfolio_settings',
                 label: 'Portfolio Hub Settings',
                 icon: <FiBriefcase />,
-                show: 'admin',
+                show: true,
                 submenu: [
                     {
                         label: 'Skill Categories',
                         icon: <FiGrid />,
                         href: '/dashboard/portfolio/admin/skill-categories',
-                        show: 'admin',
+                        show: true,
                     },
                     {
                         label: 'Master Skills',
                         icon: <FiCode />,
                         href: '/dashboard/portfolio/admin/master-skills',
-                        show: 'admin',
+                        show: true,
                     },
                     {
                         label: 'Languages',
                         icon: <FiGlobe />,
                         href: '/dashboard/portfolio/admin/master-languages',
-                        show: 'admin',
+                        show: true,
                     },
                     {
                         label: 'Resume Templates',
                         icon: <FiFileText />,
                         href: '/dashboard/portfolio/admin/resume-templates',
-                        show: 'admin',
+                        show: true,
                     },
                     {
                         label: 'Portfolio Themes',
                         icon: <FaPalette />,
                         href: '/dashboard/portfolio/admin/portfolio-themes',
-                        show: 'admin',
+                        show: true,
                     },
                 ]
             },
