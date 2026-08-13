@@ -9,6 +9,7 @@ import NotFoundState from '@/components/common/NotFoundState';
 import { getPortfolioTheme, getThemeName } from '@/components/portfolio/theme/ThemeRegistry';
 import { FiArrowLeft, FiPrinter, FiLayout } from 'react-icons/fi';
 import styles from '@/styles/portfolio/portfolio/PortfolioPreview.module.css';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 // KEY MAPPING: API section keys → Frontend section IDs (same as resume)
 const API_KEY_TO_SECTION_ID = {
@@ -34,7 +35,7 @@ export default function PortfolioPreviewPage() {
     const [selectedTheme, setSelectedTheme] = useState(null);
     const [showSwitcher, setShowSwitcher] = useState(false);
 
-    const { data, isLoading, error } = useGetPublicPortfolioQuery(slug, { skip: !slug });
+    const { data, isLoading, error, refetch } = useGetPublicPortfolioQuery(slug, { skip: !slug });
     const { data: themesData } = useGetPublicPortfolioThemesQuery();
 
     const portfolioData = data?.data;
@@ -64,10 +65,32 @@ export default function PortfolioPreviewPage() {
     const isEmbedded = typeof window !== 'undefined' &&
         new URLSearchParams(window.location.search).get('embed') === 'true';
 
-    if (isLoading) return <Loader text="Loading portfolio..." />;
-    if (error?.status === 404) return <NotFoundState title="Portfolio Not Found" message="This portfolio doesn't exist or is private." fullPage />;
-    if (error) return <ErrorState message="Failed to load portfolio" />;
-    if (!portfolioData) return <NotFoundState title="Portfolio Not Found" fullPage />;
+    if (isLoading) {
+        return <Loader text="Loading portfolio..." />;
+    }
+
+    if (error?.status === 404) {
+        return <NotFoundState
+            title="Portfolio Not Found"
+            message="This portfolio doesn't exist or is private."
+            fullPage
+        />
+    };
+
+    if (error) {
+        return <ErrorState
+            message={extractErrorMessage(error, 'Failed to load portfolio')}
+            onRetry={refetch}
+            retryMsg="Retry"
+        />;
+    }
+
+    if (!portfolioData) {
+        return <NotFoundState
+            title="Portfolio Not Found"
+            fullPage
+        />;
+    }
 
     // Get theme component
     const themeKey = selectedTheme || portfolioData.portfolio?.portfolio_theme_key ||

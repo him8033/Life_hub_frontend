@@ -53,8 +53,22 @@ export default function ThemeSectionsPage() {
         if (index <= 0) return;
         const prev = sorted[index - 1];
         try {
-            await updateSection({ themeId, sectionId, data: { position: prev.position } }).unwrap();
-            await updateSection({ themeId, sectionId: prev.portfoliothemesection_id, data: { position: currentPosition } }).unwrap();
+            await updateSection({
+                themeId,
+                sectionId,
+                data: {
+                    position: prev.position
+                }
+            }).unwrap();
+
+            await updateSection({
+                themeId,
+                sectionId: prev.portfoliothemesection_id,
+                data: {
+                    position: currentPosition
+                }
+            }).unwrap();
+
             refetch();
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 3000);
@@ -67,17 +81,49 @@ export default function ThemeSectionsPage() {
         if (index < 0 || index >= sorted.length - 1) return;
         const next = sorted[index + 1];
         try {
-            await updateSection({ themeId, sectionId, data: { position: next.position } }).unwrap();
-            await updateSection({ themeId, sectionId: next.portfoliothemesection_id, data: { position: currentPosition } }).unwrap();
+            await updateSection({
+                themeId,
+                sectionId,
+                data: {
+                    position: next.position
+                }
+            }).unwrap();
+
+            await updateSection({
+                themeId,
+                sectionId: next.portfoliothemesection_id,
+                data: {
+                    position: currentPosition
+                }
+            }).unwrap();
+
             refetch();
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 3000);
         }
     };
 
-    if (themeLoading || sectionsLoading) return <Loader text="Loading sections..." />;
-    if (themeError?.status === 404) return <NotFoundState title="Theme Not Found" backLabel="Back" backTo={ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIOTHEME.LIST} fullPage />;
-    if (themeError) return <ErrorState message="Failed to load theme" onRetry={refetch} retryMsg="Retry" />;
+    if (themeLoading || sectionsLoading) {
+        return <Loader text="Loading sections..." />;
+    }
+
+    if (themeError?.status === 404) {
+        return <NotFoundState
+            title="Theme Not Found"
+            backLabel="Back"
+            backTo={ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIOTHEME.LIST}
+            fullPage
+        />;
+    }
+
+    if (themeError) {
+        return <ErrorState
+            message="extractErrorMessage(error, 'Failed to load theme')"
+            onRetry={refetch}
+            retryMsg="Retry"
+        />;
+    }
+
 
     const sortedSections = [...sections].sort((a, b) => a.position - b.position);
 

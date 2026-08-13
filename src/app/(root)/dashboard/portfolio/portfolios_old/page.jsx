@@ -70,8 +70,17 @@ export default function PortfoliosPage() {
         }
     };
 
-    if (isLoading) return <Loader text="Loading portfolios..." />;
-    if (error) return <ErrorState message={error?.data?.message || "Failed to load portfolios"} onRetry={refetch} retryMsg="Retry" />;
+    if (isLoading) {
+        return <Loader text="Loading portfolios..." />;
+    }
+
+    if (error) {
+        return <ErrorState
+            message={extractErrorMessage(error, 'Failed to load portfolios')}
+            onRetry={refetch}
+            retryMsg="Retry" />;
+    }
+
 
     return (
         <div className={styles.pageContainer}>

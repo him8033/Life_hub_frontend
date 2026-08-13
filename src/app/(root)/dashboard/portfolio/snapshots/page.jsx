@@ -209,7 +209,7 @@ export default function PortfolioPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load snapshots. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load snapshots. Please try again.')}
                 errorType="error"
                 onRetry={() => refetch()}
                 retryMsg="Refresh"

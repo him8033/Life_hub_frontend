@@ -10,6 +10,7 @@ import NotFoundState from '@/components/common/NotFoundState';
 import SnapshotForm from '@/components/portfolio/SnapshotForm';
 import { useGetSnapshotQuery, useUpdateSnapshotMutation } from '@/services/api/portfolioApi';
 import { FiFolder } from 'react-icons/fi';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function EditSnapshotPage() {
     const router = useRouter();
@@ -72,7 +73,7 @@ export default function EditSnapshotPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load snapshot details. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load snapshot details. Please try again.')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

@@ -58,7 +58,7 @@ export default function EditMasterLanguagePage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load language"}
+                message={extractErrorMessage(error, 'Failed to load languages')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

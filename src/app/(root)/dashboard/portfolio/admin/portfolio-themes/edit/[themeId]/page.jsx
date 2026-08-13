@@ -10,6 +10,7 @@ import NotFoundState from '@/components/common/NotFoundState';
 import PortfolioThemeForm from '@/components/portfolio/admin/PortfolioThemeForm';
 import { useGetPortfolioThemeQuery, useUpdatePortfolioThemeMutation } from '@/services/api/portfolioApi';
 import { FaPalette } from 'react-icons/fa';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function EditPortfolioThemePage() {
     const router = useRouter();
@@ -58,7 +59,7 @@ export default function EditPortfolioThemePage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load theme"}
+                message={extractErrorMessage(error, 'Failed to load themes')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

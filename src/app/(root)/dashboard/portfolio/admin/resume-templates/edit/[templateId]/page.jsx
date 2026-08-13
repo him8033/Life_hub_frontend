@@ -58,7 +58,7 @@ export default function EditResumeTemplatePage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load template"}
+                message={extractErrorMessage(error, 'Failed to load template')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

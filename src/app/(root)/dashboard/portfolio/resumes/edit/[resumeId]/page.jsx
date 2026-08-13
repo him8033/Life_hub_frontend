@@ -10,6 +10,7 @@ import NotFoundState from '@/components/common/NotFoundState';
 import ResumeSettingsForm from '@/components/portfolio/ResumeSettingsForm';
 import { useGetResumeProjectQuery, useUpdateResumeProjectMutation } from '@/services/api/portfolioApi';
 import { FiFileText } from 'react-icons/fi';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function EditResumePage() {
     const router = useRouter();
@@ -71,7 +72,7 @@ export default function EditResumePage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load resume details. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load resume details. Please try again.')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

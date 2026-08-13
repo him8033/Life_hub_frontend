@@ -137,7 +137,7 @@ export default function SnapshotViewPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load snapshot"}
+                message={extractErrorMessage(error, 'Failed to load snapshot')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

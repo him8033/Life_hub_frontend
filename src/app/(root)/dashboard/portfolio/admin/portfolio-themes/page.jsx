@@ -156,7 +156,7 @@ export default function PortfolioThemesPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load themes"}
+                message={extractErrorMessage(error, 'Failed to load themes')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

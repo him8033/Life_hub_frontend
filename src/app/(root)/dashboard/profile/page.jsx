@@ -11,14 +11,15 @@ import styles from '@/styles/dashboard/profile/Profile.module.css';
 export default function ProfilePage() {
     const { data: meData, isLoading, error, refetch } = useGetMeQuery();
     const profile = meData?.data;
-    console.log(profile);
 
-    if (isLoading) return <Loader text="Loading profile..." />;
+    if (isLoading) {
+        return <Loader text="Loading profile..." />;
+    }
 
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load profile"}
+                message={extractErrorMessage(error, 'Failed to load profile')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />
@@ -28,7 +29,7 @@ export default function ProfilePage() {
     if (!profile) {
         return (
             <ErrorState
-                message="Profile not found"
+                message={extractErrorMessage(error, 'Profile not found.')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

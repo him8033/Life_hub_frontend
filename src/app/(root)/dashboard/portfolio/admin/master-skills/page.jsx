@@ -186,7 +186,7 @@ export default function MasterSkillsPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load master skills"}
+                message={extractErrorMessage(error, 'Failed to load master skills')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

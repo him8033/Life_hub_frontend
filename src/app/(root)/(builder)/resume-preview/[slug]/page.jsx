@@ -9,6 +9,7 @@ import NotFoundState from '@/components/common/NotFoundState';
 import { getTemplate, getTemplateName } from '@/components/portfolio/template/TemplateRegistry';
 import { FiArrowLeft, FiPrinter, FiLayout, FiZoomIn, FiZoomOut, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import styles from '@/styles/portfolio/resume/ResumePreview.module.css';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 // 🔑 KEY MAPPING: API section keys → Frontend section IDs
 const API_KEY_TO_SECTION_ID = {
@@ -40,7 +41,7 @@ export default function ResumePreviewPage() {
     const contentRef = useRef(null);
     const pageRefs = useRef({});
 
-    const { data, isLoading, error } = useGetPublicResumeQuery(slug, { skip: !slug });
+    const { data, isLoading, error, refetch } = useGetPublicResumeQuery(slug, { skip: !slug });
     const { data: templatesData } = useGetPublicResumeTemplatesQuery();
 
     const resumeData = data?.data;
@@ -132,10 +133,33 @@ export default function ResumePreviewPage() {
     const nextPage = () => goToPage(currentPage + 1);
     const prevPage = () => goToPage(currentPage - 1);
 
-    if (isLoading) return <Loader text="Loading resume..." />;
-    if (error?.status === 404) return <NotFoundState title="Resume Not Found" message="This resume doesn't exist or is private." fullPage />;
-    if (error) return <ErrorState message="Failed to load resume" />;
-    if (!resumeData) return <NotFoundState title="Resume Not Found" fullPage />;
+    if (isLoading) {
+        return <Loader text="Loading resume..." />;
+    }
+
+    if (error?.status === 404) {
+        return <NotFoundState
+            title="Resume Not Found"
+            message="This resume doesn't exist or is private."
+            fullPage
+        />;
+    }
+
+    if (error) {
+        return <ErrorState
+            message={extractErrorMessage(error, 'Failed to load resume')}
+            onRetry={refetch}
+            retryMsg="Retry"
+        />;
+    }
+
+    if (!resumeData) {
+        return <NotFoundState
+            title="Resume Not Found"
+            fullPage
+        />;
+    }
+
 
     // Get template component
     const templateKey = selectedTemplate || resumeData.resume?.resume_template_key ||

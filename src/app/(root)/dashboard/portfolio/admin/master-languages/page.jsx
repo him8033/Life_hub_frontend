@@ -169,7 +169,7 @@ export default function MasterLanguagesPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load languages"}
+                message={extractErrorMessage(error, 'Failed to load languages')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

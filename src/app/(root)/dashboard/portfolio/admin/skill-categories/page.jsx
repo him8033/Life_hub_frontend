@@ -163,12 +163,14 @@ export default function SkillCategoriesPage() {
         },
     ];
 
-    if (isLoading) return <Loader text="Loading skill categories..." />;
+    if (isLoading) {
+        return <Loader text="Loading skill categories..." />;
+    }
 
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load skill categories"}
+                message={extractErrorMessage(error, 'Failed to load skill categories')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

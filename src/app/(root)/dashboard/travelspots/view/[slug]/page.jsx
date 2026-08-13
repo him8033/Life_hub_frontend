@@ -11,6 +11,7 @@ import { formatDateTime } from '@/utils/date.utils';
 import NotFoundState from '@/components/common/NotFoundState';
 import ErrorState from '@/components/common/ErrorState';
 import TravelSpotMap from '@/components/travelspots/TravelSpotMap';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function ViewTravelSpotPage() {
     const router = useRouter();
@@ -42,7 +43,7 @@ export default function ViewTravelSpotPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load travel spot details. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load travel spot details. Please try again.')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

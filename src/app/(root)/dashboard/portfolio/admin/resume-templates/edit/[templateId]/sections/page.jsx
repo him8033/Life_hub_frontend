@@ -90,13 +90,19 @@ export default function TemplateSectionsPage() {
             await updateSection({
                 templateId,
                 sectionId,
-                data: { position: nextSection.position },
+                data: {
+                    position: nextSection.position
+                },
             }).unwrap();
+
             await updateSection({
                 templateId,
                 sectionId: nextSection.resumetemplatesection_id,
-                data: { position: currentPosition },
+                data: {
+                    position: currentPosition
+                },
             }).unwrap();
+
             refetch();
         } catch (error) {
             showSnackbar(extractErrorMessage(error, 'Failed to reorder'), 'error', 3000);
@@ -106,11 +112,20 @@ export default function TemplateSectionsPage() {
     if (templateLoading || sectionsLoading) return <Loader text="Loading sections..." />;
 
     if (templateError?.status === 404) {
-        return <NotFoundState title="Template Not Found" backLabel="Back" backTo={ROUTES.DASHBOARD.PORTFOLIO.RESUMETEMPLATE.LIST} fullPage />;
+        return <NotFoundState
+            title="Template Not Found"
+            backLabel="Back"
+            backTo={ROUTES.DASHBOARD.PORTFOLIO.RESUMETEMPLATE.LIST}
+            fullPage
+        />;
     }
 
     if (templateError) {
-        return <ErrorState message="Failed to load template" onRetry={refetch} retryMsg="Retry" />;
+        return <ErrorState
+            message={extractErrorMessage(error, 'Failed to load template')}
+            onRetry={refetch}
+            retryMsg="Retry"
+        />;
     }
 
     const sortedSections = [...sections].sort((a, b) => a.position - b.position);

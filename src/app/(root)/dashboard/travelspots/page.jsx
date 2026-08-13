@@ -28,6 +28,7 @@ import { MdOutlineTour } from 'react-icons/md';
 import { FiPlus } from 'react-icons/fi';
 import { formatDateTime } from '@/utils/date.utils';
 import styles from '@/styles/common/CommonListing.module.css';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function TravelSpotsPage() {
     const router = useRouter();
@@ -367,7 +368,7 @@ export default function TravelSpotsPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load travel spots. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load travel spots. Please try again.')}
                 errorType="error"
                 onRetry={() => refetch()}
                 retryMsg="Refresh"

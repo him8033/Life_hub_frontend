@@ -10,6 +10,7 @@ import NotFoundState from '@/components/common/NotFoundState';
 import SpotCategoryForm from '@/components/travelspots/spotcategory/SpotCategoryForm';
 import { useGetSpotCategoryBySlugQuery, useUpdateSpotCategoryMutation } from '@/services/api/spotcategoryApi';
 import { MdOutlineCategory } from 'react-icons/md';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function EditTravelSpotPage() {
     const router = useRouter();
@@ -75,7 +76,7 @@ export default function EditTravelSpotPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load spot category details. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load spot category details. Please try again.')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

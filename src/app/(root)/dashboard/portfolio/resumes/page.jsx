@@ -95,12 +95,14 @@ export default function ResumesPage() {
         router.push(ROUTES.DASHBOARD.PORTFOLIO.RESUME.EDIT(resumeId));
     };
 
-    if (isLoading) return <Loader text="Loading resumes..." />;
+    if (isLoading) {
+        return <Loader text="Loading resumes..." />;
+    }
 
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load resumes"}
+                message={extractErrorMessage(error, 'Failed to load resumes')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

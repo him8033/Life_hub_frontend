@@ -167,7 +167,7 @@ export default function ResumeTemplatesPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load templates"}
+                message={extractErrorMessage(error, 'Failed to load template')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

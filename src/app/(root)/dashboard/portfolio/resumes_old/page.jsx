@@ -52,8 +52,17 @@ export default function ResumesPage() {
         window.open(`/resume/${slug}`, '_blank');
     };
 
-    if (isLoading) return <Loader text="Loading resumes..." />;
-    if (error) return <ErrorState message={error?.data?.message || "Failed to load resumes"} onRetry={refetch} retryMsg="Retry" />;
+    if (isLoading) {
+        return <Loader text="Loading resumes..." />;
+    }
+
+    if (error) {
+        return <ErrorState
+            message={extractErrorMessage(error, 'Failed to load resumes')}
+            onRetry={refetch}
+            retryMsg="Retry" />;
+    }
+
 
     return (
         <div className={styles.pageContainer}>

@@ -10,6 +10,7 @@ import NotFoundState from '@/components/common/NotFoundState';
 import SkillCategoryForm from '@/components/portfolio/admin/SkillCategoryForm';
 import { useGetSkillCategoryQuery, useUpdateSkillCategoryMutation } from '@/services/api/portfolioApi';
 import { FiGrid } from 'react-icons/fi';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function EditSkillCategoryPage() {
     const router = useRouter();
@@ -58,7 +59,7 @@ export default function EditSkillCategoryPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load skill category"}
+                message={extractErrorMessage(error, 'Failed to load skill category')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

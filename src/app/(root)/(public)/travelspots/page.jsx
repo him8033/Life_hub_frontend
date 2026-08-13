@@ -20,6 +20,7 @@ import {
     useGetVillagesBySubDistrictQuery,
 } from '@/services/api/locationsApi';
 import { FiFilter, FiSearch } from 'react-icons/fi';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 // Shimmer/Skeleton Card Component
 const ShimmerCard = () => (
@@ -438,7 +439,7 @@ export default function PublicTravelSpotsPage() {
     if (error && travelSpots.length === 0 && !isLoading && hasFetchedOnce) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load travel spots. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load travel spots. Please try again.')}
                 errorType="error"
                 onRetry={() => {
                     setHasFetchedOnce(false);

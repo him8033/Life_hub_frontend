@@ -18,6 +18,7 @@ import { useConfirm } from '@/context/ConfirmContext';
 import { MdOutlineCategory } from 'react-icons/md';
 import styles from '@/styles/common/CommonListing.module.css';
 import { FiPlus } from 'react-icons/fi';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function SpotCategoriesPage() {
     const router = useRouter();
@@ -210,7 +211,7 @@ export default function SpotCategoriesPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load Spot Categories. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load Spot Categories. Please try again.')}
                 errorType="error"
                 onRetry={() => refetch()}
                 retryMsg="Refresh"

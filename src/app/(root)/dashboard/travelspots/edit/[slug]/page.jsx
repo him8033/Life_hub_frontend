@@ -26,6 +26,7 @@ import Step5ReviewSubmit from '@/components/travelspots/steps/Step5ReviewSubmit'
 
 // Progress Stepper
 import ProgressStepper from '@/components/travelspots/steps/ProgressStepper';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function EditTravelSpotPage() {
     const router = useRouter();
@@ -52,7 +53,7 @@ export default function EditTravelSpotPage() {
     useEffect(() => {
         if (travelSpot?.completion_status) {
             const newCompletedSteps = new Set();
-            
+
             switch (travelSpot.completion_status) {
                 case 'basic_info':
                     newCompletedSteps.add(1);
@@ -82,9 +83,9 @@ export default function EditTravelSpotPage() {
                 default:
                     break;
             }
-            
+
             setCompletedSteps(newCompletedSteps);
-            
+
             const getInitialStep = () => {
                 if (!travelSpot.completion_status) return 1;
                 switch (travelSpot.completion_status) {
@@ -96,7 +97,7 @@ export default function EditTravelSpotPage() {
                     default: return 1;
                 }
             };
-            
+
             setCurrentStep(getInitialStep());
         }
     }, [travelSpot]);
@@ -310,7 +311,7 @@ export default function EditTravelSpotPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load travel spot details. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load travel spot details. Please try again.')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

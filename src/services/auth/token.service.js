@@ -1,5 +1,6 @@
 "use client";
 import Cookies from "js-cookie";
+import { ROUTES } from '@/routes/routes.constants';
 
 class TokenService {
     store({ access, refresh, user }) {
@@ -40,6 +41,11 @@ class TokenService {
         Cookies.remove("access_token", { path: "/" });
         Cookies.remove("refresh_token", { path: "/" });
         Cookies.remove("user", { path: "/" });
+
+        // Trigger redirect to login
+        if (typeof window !== 'undefined') {
+            window.location.href = ROUTES.AUTH.LOGIN;
+        }
     }
 }
 

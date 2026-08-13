@@ -25,10 +25,36 @@ export default function EditPortfolioPage() {
         catch (error) { showSnackbar(extractErrorMessage(error, 'Failed'), 'error', 5000); }
     };
 
-    if (isLoading) return <Loader text="Loading..." />;
-    if (error?.status === 404) return <NotFoundState title="Not Found" backLabel="Back" backTo={ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIO.LIST} fullPage />;
-    if (error) return <ErrorState message={error?.data?.message} onRetry={refetch} retryMsg="Retry" />;
-    if (!portfolio) return <NotFoundState title="Not Found" backLabel="Back" backTo={ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIO.LIST} fullPage />;
+    if (isLoading) {
+        return <Loader text="Loading..." />;
+    }
+
+    if (error?.status === 404) {
+        return <NotFoundState
+            title="Not Found"
+            backLabel="Back"
+            backTo={ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIO.LIST}
+            fullPage
+        />;
+    }
+
+    if (error) {
+        return <ErrorState
+            message={extractErrorMessage(error, 'Failed to load portfolio')}
+            onRetry={refetch}
+            retryMsg="Retry"
+        />;
+    }
+
+    if (!portfolio) {
+        return <NotFoundState
+            title="Not Found"
+            backLabel="Back"
+            backTo={ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIO.LIST}
+            fullPage
+        />;
+    }
+
 
     return (
         <div className={styles.pageContainer}>

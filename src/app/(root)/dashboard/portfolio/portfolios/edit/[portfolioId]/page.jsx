@@ -10,6 +10,7 @@ import NotFoundState from '@/components/common/NotFoundState';
 import PortfolioSettingsForm from '@/components/portfolio/PortfolioSettingsForm';
 import { useGetPortfolioProjectQuery, useUpdatePortfolioProjectMutation } from '@/services/api/portfolioApi';
 import { FiGlobe } from 'react-icons/fi';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function EditPortfolioPage() {
     const router = useRouter();
@@ -71,7 +72,7 @@ export default function EditPortfolioPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load portfolio details. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load portfolio details. Please try again.')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

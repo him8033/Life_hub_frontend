@@ -31,6 +31,7 @@ import {
     FaMap as FaMapIcon,
     FaLocationArrow
 } from 'react-icons/fa';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function PublicTravelSpotViewPage() {
     const params = useParams();
@@ -149,7 +150,7 @@ export default function PublicTravelSpotViewPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load travel spot details. Please try again."}
+                message={extractErrorMessage(error, 'Failed to load travel spot details. Please try again.')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

@@ -10,6 +10,7 @@ import NotFoundState from '@/components/common/NotFoundState';
 import MasterSkillForm from '@/components/portfolio/admin/MasterSkillForm';
 import { useGetMasterSkillQuery, useUpdateMasterSkillMutation } from '@/services/api/portfolioApi';
 import { FiCode } from 'react-icons/fi';
+import { extractErrorMessage } from '@/utils/errorHandler';
 
 export default function EditMasterSkillPage() {
     const router = useRouter();
@@ -59,7 +60,7 @@ export default function EditMasterSkillPage() {
     if (error) {
         return (
             <ErrorState
-                message={error?.data?.message || "Failed to load master skill"}
+                message={extractErrorMessage(error, 'Failed to load master skills')}
                 onRetry={refetch}
                 retryMsg="Retry"
             />

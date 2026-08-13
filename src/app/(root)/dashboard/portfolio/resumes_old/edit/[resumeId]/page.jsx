@@ -32,10 +32,38 @@ export default function EditResumePage() {
         }
     };
 
-    if (isLoading) return <Loader text="Loading resume..." />;
-    if (error?.status === 404) return <NotFoundState title="Resume Not Found" message="The resume doesn't exist." backLabel="Back to Resumes" backTo={ROUTES.DASHBOARD.PORTFOLIO.RESUME.LIST} fullPage />;
-    if (error) return <ErrorState message={error?.data?.message || "Failed to load resume"} onRetry={refetch} retryMsg="Retry" />;
-    if (!resume) return <NotFoundState title="Resume Not Found" message="The resume doesn't exist." backLabel="Back to Resumes" backTo={ROUTES.DASHBOARD.PORTFOLIO.RESUME.LIST} fullPage />;
+    if (isLoading) {
+        return <Loader text="Loading resume..." />;
+    }
+
+    if (error?.status === 404) {
+        return <NotFoundState
+            title="Resume Not Found"
+            message="The resume doesn't exist."
+            backLabel="Back to Resumes"
+            backTo={ROUTES.DASHBOARD.PORTFOLIO.RESUME.LIST}
+            fullPage
+        />;
+    }
+
+    if (error) {
+        return <ErrorState
+            message={extractErrorMessage(error, 'Failed to load resume')}
+            onRetry={refetch}
+            retryMsg="Retry"
+        />;
+    }
+
+    if (!resume) {
+        return <NotFoundState
+            title="Resume Not Found"
+            message="The resume doesn't exist."
+            backLabel="Back to Resumes"
+            backTo={ROUTES.DASHBOARD.PORTFOLIO.RESUME.LIST}
+            fullPage
+        />;
+    }
+
 
     return (
         <div className={styles.pageContainer}>
