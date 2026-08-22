@@ -21,17 +21,17 @@ const TEMPLATES = {
         component: ModernATS,
     },
 
-    minimal: {
+    'executive-suite': {
         name: 'Minimal',
         component: Minimal,
     },
 
-    creative: {
+    'academic-scholar': {
         name: 'Creative',
         component: Creative,
     },
 
-    corporate: {
+    'clean-canvas': {
         name: 'Corporate',
         component: Corporate,
     },

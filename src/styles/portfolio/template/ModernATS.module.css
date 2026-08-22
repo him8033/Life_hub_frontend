@@ -746,26 +746,74 @@
     /* Inherits from richText */
 }
 
-/* Strengths - Grid 2 per row */
-.strengthGrid {
+/* Strengths, Hobbies, Languages - 2-column Grid with Bullets */
+.gridContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3px 30px;
+    gap: 4px 20px;
 }
 
-.strengthItem {
+.gridItem {
     display: flex;
     align-items: flex-start;
-    gap: 5px;
+    gap: 6px;
     font-size: 12.5px;
     color: #334155;
     line-height: 1.6;
-    padding: 1px 0;
+    padding: 2px 0;
 }
 
-.strengthBullet {
-    color: #64748b;
+.bullet {
+    color: var(--primary);
     flex-shrink: 0;
+    font-weight: 600;
+}
+
+/* Language specific styles */
+.languageName {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.languageProficiency {
+    color: #64748b;
+    font-weight: 400;
+}
+
+/* Custom Sections */
+.customSectionItem {
+    margin-bottom: 14px;
+}
+
+.customSectionItem:last-child {
+    margin-bottom: 0;
+}
+
+.customSectionTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 4px 0;
+}
+
+.customSectionContent {
+    font-size: 12.5px;
+    color: #334155;
+    line-height: 1.6;
+}
+
+.jsonContent {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-family: 'Fira Code', 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: #475569;
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 /* Print Styles - A4 Exact */
@@ -802,6 +850,13 @@
         print-color-adjust: exact !important;
     }
 
+    .jsonContent {
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
     .richText code {
         background: #1a1a1a !important;
         color: #ffffff !important;
@@ -821,7 +876,7 @@
         page-break-after: avoid !important;
     }
 
-    .strengthGrid {
+    .gridContainer {
         break-inside: auto !important;
     }
 
@@ -829,7 +884,8 @@
     .projectItem,
     .eduItem,
     .certItem,
-    .achItem {
+    .achItem,
+    .customSectionItem {
         break-inside: auto !important;
         page-break-inside: auto !important;
         orphans: 2;
@@ -841,151 +897,23 @@
     }
 }
 
-/* Screen Responsive */
-@media screen and (max-width: 820px) {
-    .container {
-        max-width: 100%;
-        padding: 40px 30px 40px 30px;
-        min-height: auto;
-    }
-}
+/* ============================================
+   REMOVED: Screen Responsive CSS
+   ============================================
+   The A4 page is now fixed-dimension and scaled via CSS transform.
+   No responsive breakpoints should affect the resume template itself.
+   The preview viewport handles responsiveness through auto-scaling.
 
-@media screen and (max-width: 768px) {
-    .container {
-        padding: 28px 20px 30px 20px;
-    }
+   Previous responsive CSS that changed layout based on screen width has been removed:
+   - Container width/padding changes
+   - Font size changes
+   - Grid layout changes (2-column to 1-column)
+   - Flex direction changes
+   - All other responsive layout modifications
 
-    .name {
-        font-size: 28px;
-    }
-
-    .contactLine,
-    .socialLine {
-        gap: 3px 12px;
-        font-size: 12px;
-    }
-
-    .expCompanyLine {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-    }
-
-    .expDate {
-        white-space: normal;
-    }
-
-    .eduHeader {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-    }
-
-    .eduMeta {
-        gap: 6px;
-    }
-
-    .certHeader {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-    }
-
-    .strengthGrid {
-        grid-template-columns: 1fr;
-        gap: 2px;
-    }
-
-    .skillCategory {
-        font-size: 12px;
-    }
-
-    .richText {
-        font-size: 12px;
-    }
-
-    .richText h1 {
-        font-size: 1.3rem;
-    }
-
-    .richText h2 {
-        font-size: 1.15rem;
-    }
-
-    .richText h3 {
-        font-size: 1rem;
-    }
-
-    /* Adjust code blocks for mobile */
-    .richText pre {
-        font-size: 0.8em;
-        padding: 0.75rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .container {
-        padding: 16px 14px 20px 14px;
-    }
-
-    .name {
-        font-size: 24px;
-    }
-
-    .contactLine,
-    .socialLine {
-        gap: 2px 8px;
-        font-size: 11px;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .contactLine span:not(:last-child)::after,
-    .socialLine span:not(:last-child)::after {
-        content: '';
-    }
-
-    .expDate,
-    .eduDateText {
-        white-space: normal;
-    }
-
-    .eduMeta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 3px;
-    }
-
-    .certMeta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 3px;
-    }
-
-    .strengthGrid {
-        grid-template-columns: 1fr;
-        gap: 2px;
-    }
-
-    .bulletItem {
-        font-size: 11px;
-    }
-
-    .richText {
-        font-size: 11px;
-    }
-
-    .richText ul,
-    .richText ol {
-        padding-left: 1rem;
-    }
-
-    /* Adjust code blocks for smaller screens */
-    .richText pre {
-        font-size: 0.7em;
-        padding: 0.5rem;
-    }
-}
+   The resume now maintains exact A4 proportions at all screen sizes.
+   Scaling is handled by the preview wrapper, not the template itself.
+=========================================== */
 
 /* For A4 exact sizing when printing */
 @page {

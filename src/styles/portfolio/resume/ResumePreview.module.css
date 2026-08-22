@@ -236,6 +236,9 @@
     justify-content: center;
     align-items: flex-start;
     background: #f1f5f9;
+    overflow-x: auto;
+    /* Allow horizontal scrolling when zoomed */
+    overflow-y: auto;
 }
 
 .previewContent.embedded {
@@ -250,8 +253,12 @@
     align-items: center;
     gap: 16px;
     width: 100%;
-    max-width: 900px;
+    /* No max-width restriction - let scaling handle it */
     transition: transform 0.2s ease;
+    flex-shrink: 0;
+    /* Prevent container from shrinking */
+    margin: 0 auto;
+    /* Center the container */
 }
 
 /* Page Navigation */
@@ -299,25 +306,30 @@
     text-align: center;
 }
 
-/* A4 Page */
+/* A4 Page - Fixed dimensions, never responsive */
 .a4Page {
     width: 794px;
-    /* 210mm at 96dpi */
+    /* 210mm at 96dpi - FIXED, never changes */
     min-height: 1123px;
-    /* 297mm at 96dpi */
+    /* 297mm at 96dpi - FIXED, never changes */
     background: white;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     border-radius: 4px;
     overflow: hidden;
     position: relative;
+    flex-shrink: 0;
+    /* Prevent shrinking */
 }
 
 /* A4 Content */
 .a4Content {
     width: 100%;
     min-height: 1123px;
+    /* FIXED height, never changes */
     padding: 0;
     background: white;
+    flex-shrink: 0;
+    /* Prevent shrinking */
 }
 
 /* Page Number Indicator at Bottom */
@@ -364,15 +376,18 @@
     }
 
     .a4Page {
-        width: 100% !important;
-        min-height: auto !important;
+        width: 794px !important;
+        /* Keep fixed A4 width for print */
+        min-height: 1123px !important;
+        /* Keep fixed A4 height for print */
         box-shadow: none !important;
         border-radius: 0 !important;
         page-break-after: always;
     }
 
     .a4Content {
-        min-height: auto !important;
+        min-height: 1123px !important;
+        /* Keep fixed A4 height for print */
     }
 
     .pageNavigation {
@@ -388,17 +403,8 @@
     }
 }
 
-/* Responsive */
+/* Responsive - Only UI elements, NOT A4 page dimensions */
 @media (max-width: 900px) {
-    .a4Page {
-        width: 100%;
-        min-height: auto;
-    }
-
-    .a4Content {
-        min-height: auto;
-    }
-
     .previewContent {
         padding: 20px 12px;
     }
@@ -452,6 +458,7 @@
 
     .previewContent {
         padding: 12px 8px;
+        /* Reduced padding for mobile */
     }
 
     .pageNavigation {
@@ -465,4 +472,6 @@
         width: 100%;
         justify-content: center;
     }
+
+    /* NO changes to .a4Page or .a4Content - they remain fixed */
 }

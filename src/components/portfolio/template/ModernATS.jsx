@@ -4,7 +4,7 @@ import RichTextRenderer from '@/components/common/RichTextRenderer';
 import { FiMail, FiPhone, FiMapPin, FiGlobe, FiGithub, FiLinkedin } from 'react-icons/fi';
 
 export default function ModernATS({ data }) {
-    const { resume, basic_info, social_links, skills, experiences, educations, projects, strengths, certificates, achievements } = data;
+    const { resume, basic_info, social_links, skills, experiences, educations, projects, strengths, certificates, achievements, hobbies, languages, custom_sections } = data;
 
     const getSocial = (platform) => social_links?.find(l => l.platform_name?.toLowerCase() === platform);
     const website = getSocial('website');
@@ -230,14 +230,70 @@ export default function ModernATS({ data }) {
                 {strengths?.length > 0 && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>STRENGTHS</h2>
-                        <div className={styles.strengthGrid}>
+                        <div className={styles.gridContainer}>
                             {strengths.map((strength) => (
-                                <div key={strength.profilestrength_id} className={styles.strengthItem}>
-                                    <span className={styles.strengthBullet}>-</span>
+                                <div key={strength.profilestrength_id} className={styles.gridItem}>
+                                    <span className={styles.bullet}>•</span>
                                     <span>{strength.title}</span>
                                 </div>
                             ))}
                         </div>
+                    </section>
+                )}
+
+                {/* Hobbies */}
+                {hobbies?.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>HOBBIES</h2>
+                        <div className={styles.gridContainer}>
+                            {hobbies.map((hobby) => (
+                                <div key={hobby.profilehobby_id} className={styles.gridItem}>
+                                    <span className={styles.bullet}>•</span>
+                                    <span>{hobby.hobby_name}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Languages */}
+                {languages?.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>LANGUAGES</h2>
+                        <div className={styles.gridContainer}>
+                            {languages.map((lang) => (
+                                <div key={lang.profilelanguage_id} className={styles.gridItem}>
+                                    <span className={styles.bullet}>•</span>
+                                    <span>
+                                        <span className={styles.languageName}>{lang.language}</span>
+                                        <span className={styles.languageProficiency}> — {lang.proficiency}</span>
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Custom Sections */}
+                {custom_sections?.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>ADDITIONAL INFORMATION</h2>
+                        {custom_sections.map((section) => (
+                            <div key={section.profilecustomsection_id} className={styles.customSectionItem}>
+                                <h3 className={styles.customSectionTitle}>{section.title}</h3>
+                                {section.content && (
+                                    <div className={styles.customSectionContent}>
+                                        {typeof section.content === 'object' ? (
+                                            <pre className={styles.jsonContent}>
+                                                {JSON.stringify(section.content, null, 2)}
+                                            </pre>
+                                        ) : (
+                                            <span>{String(section.content)}</span>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
                     </section>
                 )}
             </div>

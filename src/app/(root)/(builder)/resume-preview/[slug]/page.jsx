@@ -35,11 +35,13 @@ export default function ResumePreviewPage() {
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [showSwitcher, setShowSwitcher] = useState(false);
     const [zoomLevel, setZoomLevel] = useState(100);
+    const [autoScale, setAutoScale] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [pageHeights, setPageHeights] = useState([]);
     const contentRef = useRef(null);
     const pageRefs = useRef({});
+    const containerRef = useRef(null);
 
     const { data, isLoading, error, refetch } = useGetPublicResumeQuery(slug, { skip: !slug });
     const { data: templatesData } = useGetPublicResumeTemplatesQuery();
@@ -120,10 +122,40 @@ export default function ResumePreviewPage() {
         return () => clearTimeout(timer);
     }, [calculatePages]);
 
-    // Handle zoom
+    // Calculate auto-scale based on viewport width
+    useEffect(() => {
+        const calculateAutoScale = () => {
+            if (!containerRef.current) return;
+
+            const containerWidth = containerRef.current.clientWidth;
+            const a4Width = 794; // A4 width in pixels at 96dpi
+            const padding = 40; // Total horizontal padding
+
+            const availableWidth = containerWidth - padding;
+            const requiredScale = availableWidth / a4Width;
+
+            // Only auto-scale if needed (scale < 1)
+            const newAutoScale = requiredScale < 1 ? requiredScale : 1;
+            setAutoScale(newAutoScale);
+        };
+
+        calculateAutoScale();
+
+        const handleResize = () => {
+            calculateAutoScale();
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Handle zoom - combines auto-scale with manual zoom
     const zoomIn = () => setZoomLevel(prev => Math.min(prev + 10, 200));
     const zoomOut = () => setZoomLevel(prev => Math.max(prev - 10, 50));
     const zoomReset = () => setZoomLevel(100);
+
+    // Combined scale = auto-scale * manual zoom
+    const combinedScale = autoScale * (zoomLevel / 100);
 
     // Navigation
     const goToPage = (page) => {
@@ -279,11 +311,14 @@ export default function ResumePreviewPage() {
             )}
 
             {/* A4 Page Container with Pagination */}
-            <div className={`${styles.previewContent} ${isEmbedded ? styles.embedded : ''}`}>
+            <div
+                ref={containerRef}
+                className={`${styles.previewContent} ${isEmbedded ? styles.embedded : ''}`}
+            >
                 <div
                     className={styles.a4PageContainer}
                     style={{
-                        transform: `scale(${zoomLevel / 100})`,
+                        transform: `scale(${combinedScale})`,
                         transformOrigin: 'top center',
                     }}
                 >

@@ -6,13 +6,21 @@
     color: #334155;
     font-family: 'Inter', system-ui, sans-serif;
     line-height: 1.6;
-    min-height: 100vh;
+    width: 794px;
+    /* Fixed A4 width */
+    min-height: 1123px;
+    /* Fixed A4 height */
+    flex-shrink: 0;
+    /* Prevent shrinking */
 }
 
 .layout {
     display: grid;
     grid-template-columns: 300px 1fr;
-    min-height: 100vh;
+    min-height: 1123px;
+    /* Fixed A4 height */
+    flex-shrink: 0;
+    /* Prevent shrinking */
 }
 
 /* Sidebar */
@@ -210,21 +218,22 @@
     gap: 4px;
 }
 
-@media (max-width: 768px) {
-    .layout {
-        grid-template-columns: 1fr;
-    }
-
-    .projectGrid {
-        grid-template-columns: 1fr;
-    }
-
-    .main {
-        padding: 24px 16px;
-    }
-}
+/* ============================================
+   REMOVED: Screen Responsive CSS
+   ============================================
+   The A4 page is now fixed-dimension and scaled via CSS transform.
+   No responsive breakpoints should affect the resume template itself.
+   The preview viewport handles responsiveness through auto-scaling.
+=========================================== */
 
 @media print {
+    .page {
+        width: 210mm !important;
+        /* Fixed A4 width for print */
+        min-height: 297mm !important;
+        /* Fixed A4 height for print */
+    }
+
     .layout {
         grid-template-columns: 250px 1fr;
     }
