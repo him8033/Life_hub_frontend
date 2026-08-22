@@ -2,6 +2,7 @@ import ModernATS from './ModernATS';
 import Minimal from './Minimal';
 import Creative from './Creative';
 import Corporate from './Corporate';
+import CLASSICPROFESSIONAL from './ClassicProfessional';
 
 /**
  * Resume Template Registry
@@ -31,9 +32,14 @@ const TEMPLATES = {
         component: Creative,
     },
 
-    'clean-canvas': {
+    'design-innovator': {
         name: 'Corporate',
         component: Corporate,
+    },
+
+    'clean-canvas': {
+        name: 'Classic',
+        component: CLASSICPROFESSIONAL,
     },
 };
 

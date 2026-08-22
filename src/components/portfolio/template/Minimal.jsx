@@ -1,4 +1,5 @@
 import styles from '@/styles/portfolio/template/Minimal.module.css';
+import RichTextRenderer from '@/components/common/RichTextRenderer';
 import { FiMail, FiPhone, FiMapPin, FiCalendar, FiExternalLink, FiGithub } from 'react-icons/fi';
 
 export default function Minimal({ data }) {
@@ -10,6 +11,13 @@ export default function Minimal({ data }) {
     const formatDate = (date) => {
         if (!date) return '';
         return new Date(date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+    };
+
+    // Helper to check if content has meaningful text
+    const hasContent = (html) => {
+        if (!html) return false;
+        const cleaned = html.replace(/<p>\s*<\/p>/g, '').trim();
+        return cleaned.length > 0;
     };
 
     return (
@@ -28,9 +36,13 @@ export default function Minimal({ data }) {
                 </header>
 
                 {/* Summary */}
-                {basic_info?.summary && (
+                {basic_info?.summary && hasContent(basic_info.summary) && (
                     <section className={styles.section}>
-                        <p className={styles.summary}>{basic_info.summary}</p>
+                        <RichTextRenderer
+                            html={basic_info.summary}
+                            mode="light"
+                            className={styles.summary}
+                        />
                     </section>
                 )}
 
@@ -47,7 +59,13 @@ export default function Minimal({ data }) {
                                         <span className={styles.date}>
                                             <FiCalendar size={11} /> {formatDate(exp.start_date)} — {exp.is_current ? 'Present' : formatDate(exp.end_date)}
                                         </span>
-                                        {exp.description && <p>{exp.description}</p>}
+                                        {exp.description && hasContent(exp.description) && (
+                                            <RichTextRenderer
+                                                html={exp.description}
+                                                mode="light"
+                                                className={styles.description}
+                                            />
+                                        )}
                                     </div>
                                 </div>
                             ))}
@@ -84,17 +102,26 @@ export default function Minimal({ data }) {
                 {projects?.length > 0 && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>Projects</h2>
-                        {projects.map((project) => (
-                            <div key={project.profileproject_id} className={styles.projectItem}>
-                                <h3>{project.project_name}</h3>
-                                <p>{project.short_description}</p>
-                                {project.live_url && (
-                                    <a href={project.live_url} target="_blank" rel="noopener">
-                                        <FiExternalLink size={12} /> View Project
-                                    </a>
-                                )}
-                            </div>
-                        ))}
+                        {projects.map((project) => {
+                            const descHtml = project.short_description || project.full_description;
+                            return (
+                                <div key={project.profileproject_id} className={styles.projectItem}>
+                                    <h3>{project.project_name}</h3>
+                                    {descHtml && hasContent(descHtml) && (
+                                        <RichTextRenderer
+                                            html={descHtml}
+                                            mode="light"
+                                            className={styles.description}
+                                        />
+                                    )}
+                                    {project.live_url && (
+                                        <a href={project.live_url} target="_blank" rel="noopener">
+                                            <FiExternalLink size={12} /> View Project
+                                        </a>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </section>
                 )}
             </div>

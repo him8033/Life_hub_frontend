@@ -1,0 +1,224 @@
+/* ClassicProfessional.module.css - Classic Resume Template */
+
+.page {
+    background: white;
+    color: #000000;
+    font-family: 'Times New Roman', Times, serif;
+    line-height: 1.4;
+    width: 794px;
+    /* Fixed A4 width */
+    min-height: 1123px;
+    /* Fixed A4 height */
+    flex-shrink: 0;
+    /* Prevent shrinking */
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 50px 40px 50px;
+    background: white;
+    box-sizing: border-box;
+    page-break-after: auto;
+    page-break-inside: auto;
+}
+
+/* Header - Curriculum Vitae */
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    color: #000000;
+    text-transform: uppercase;
+}
+
+/* Contact Section */
+.contactSection {
+    margin-bottom: 15px;
+}
+
+.contactBlock {
+    margin-bottom: 10px;
+}
+
+.contactName {
+    font-size: 16px;
+    margin: 0 0 8px 0;
+    color: #000000;
+}
+
+.contactDetail {
+    font-size: 12px;
+    margin: 4px 0;
+    color: #000000;
+}
+
+.contactDetail strong {
+    font-weight: bold;
+}
+
+/* Divider */
+.divider {
+    border: none;
+    border-top: 1px solid #000000;
+    margin: 15px 0;
+}
+
+/* Sections */
+.section {
+    margin-bottom: 18px;
+}
+
+.section:last-child {
+    margin-bottom: 0;
+}
+
+.sectionTitle {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 0 0 10px 0;
+    color: #000000;
+    text-transform: uppercase;
+}
+
+.sectionContent {
+    font-size: 12px;
+    color: #000000;
+    line-height: 1.5;
+}
+
+.sectionContent p {
+    margin: 6px 0;
+}
+
+.sectionContent strong {
+    font-weight: bold;
+}
+
+/* Education Items */
+.eduItem {
+    margin-bottom: 8px;
+}
+
+.eduText {
+    font-size: 12px;
+    margin: 4px 0;
+    color: #000000;
+}
+
+/* Experience Items */
+.expItem {
+    margin-bottom: 8px;
+}
+
+.expText {
+    font-size: 12px;
+    margin: 4px 0;
+    color: #000000;
+}
+
+/* Technical Qualification */
+.techText {
+    font-size: 12px;
+    margin: 6px 0;
+    color: #000000;
+}
+
+/* Personal Information */
+.personalDetail {
+    font-size: 12px;
+    margin: 5px 0;
+    color: #000000;
+    line-height: 1.6;
+}
+
+.personalDetail strong {
+    font-weight: bold;
+}
+
+/* Signature Block */
+.signatureBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 40px;
+    padding-top: 20px;
+}
+
+.signatureLeft {
+    flex: 1;
+}
+
+.signatureRight {
+    text-align: right;
+}
+
+.signatureLine {
+    font-size: 12px;
+    margin: 4px 0;
+    color: #000000;
+}
+
+.signatureName {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    color: #000000;
+}
+
+/* Print Styles */
+@media print {
+    .page {
+        background: white !important;
+        width: 210mm !important;
+        /* Fixed A4 width for print */
+        min-height: 297mm !important;
+        /* Fixed A4 height for print */
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container {
+        width: 210mm !important;
+        padding: 20mm 25mm 20mm 25mm !important;
+        margin: 0 auto !important;
+        background: white !important;
+        box-sizing: border-box !important;
+        page-break-after: auto !important;
+        page-break-inside: auto !important;
+        box-shadow: none !important;
+    }
+
+    .section {
+        margin-bottom: 14px !important;
+        page-break-inside: auto !important;
+        orphans: 2;
+        widows: 2;
+    }
+
+    .sectionTitle {
+        page-break-after: avoid !important;
+    }
+
+    .signatureBlock {
+        page-break-inside: avoid !important;
+    }
+}
+
+@page {
+    size: A4;
+    margin: 0;
+}
+
+@media print and (orientation: portrait) {
+    .page {
+        width: 210mm !important;
+        min-height: 297mm !important;
+    }
+}

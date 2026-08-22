@@ -1,4 +1,5 @@
 import styles from '@/styles/portfolio/template/Creative.module.css';
+import RichTextRenderer from '@/components/common/RichTextRenderer';
 import { FiMail, FiPhone, FiMapPin, FiGlobe, FiGithub, FiLinkedin, FiExternalLink, FiStar } from 'react-icons/fi';
 
 export default function Creative({ data }) {
@@ -12,6 +13,13 @@ export default function Creative({ data }) {
     const formatDate = (date) => {
         if (!date) return '';
         return new Date(date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+    };
+
+    // Helper to check if content has meaningful text
+    const hasContent = (html) => {
+        if (!html) return false;
+        const cleaned = html.replace(/<p>\s*<\/p>/g, '').trim();
+        return cleaned.length > 0;
     };
 
     return (
@@ -54,10 +62,14 @@ export default function Creative({ data }) {
 
                 {/* Main Content */}
                 <main className={styles.main}>
-                    {basic_info?.summary && (
+                    {basic_info?.summary && hasContent(basic_info.summary) && (
                         <section className={styles.section}>
                             <h2>About Me</h2>
-                            <p>{basic_info.summary}</p>
+                            <RichTextRenderer
+                                html={basic_info.summary}
+                                mode="light"
+                                className={styles.description}
+                            />
                         </section>
                     )}
 
@@ -71,7 +83,13 @@ export default function Creative({ data }) {
                                         <span>{formatDate(exp.start_date)} — {exp.is_current ? 'Present' : formatDate(exp.end_date)}</span>
                                     </div>
                                     <p className={styles.cardSub}>{exp.company_name}</p>
-                                    {exp.description && <p>{exp.description}</p>}
+                                    {exp.description && hasContent(exp.description) && (
+                                        <RichTextRenderer
+                                            html={exp.description}
+                                            mode="light"
+                                            className={styles.description}
+                                        />
+                                    )}
                                 </div>
                             ))}
                         </section>
@@ -81,16 +99,25 @@ export default function Creative({ data }) {
                         <section className={styles.section}>
                             <h2>Projects</h2>
                             <div className={styles.projectGrid}>
-                                {projects.map((project) => (
-                                    <div key={project.profileproject_id} className={styles.projectCard}>
-                                        <h3>{project.project_name}</h3>
-                                        <p>{project.short_description}</p>
-                                        <div className={styles.projectLinks}>
-                                            {project.live_url && <a href={project.live_url} target="_blank" rel="noopener"><FiExternalLink /> Live</a>}
-                                            {project.code_url && <a href={project.code_url} target="_blank" rel="noopener"><FiGithub /> Code</a>}
+                                {projects.map((project) => {
+                                    const descHtml = project.short_description || project.full_description;
+                                    return (
+                                        <div key={project.profileproject_id} className={styles.projectCard}>
+                                            <h3>{project.project_name}</h3>
+                                            {descHtml && hasContent(descHtml) && (
+                                                <RichTextRenderer
+                                                    html={descHtml}
+                                                    mode="light"
+                                                    className={styles.description}
+                                                />
+                                            )}
+                                            <div className={styles.projectLinks}>
+                                                {project.live_url && <a href={project.live_url} target="_blank" rel="noopener"><FiExternalLink /> Live</a>}
+                                                {project.code_url && <a href={project.code_url} target="_blank" rel="noopener"><FiGithub /> Code</a>}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </section>
                     )}

@@ -1,21 +1,18 @@
 // ModernATS.jsx - Updated with RichTextRenderer
 import styles from '@/styles/portfolio/template/ModernATS.module.css';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
-import { FiMail, FiPhone, FiMapPin, FiGlobe, FiGithub, FiLinkedin } from 'react-icons/fi';
 
 export default function ModernATS({ data }) {
     const { resume, basic_info, social_links, skills, experiences, educations, projects, strengths, certificates, achievements, hobbies, languages, custom_sections } = data;
-
-    const getSocial = (platform) => social_links?.find(l => l.platform_name?.toLowerCase() === platform);
-    const website = getSocial('website');
-    const github = getSocial('github');
-    const linkedin = getSocial('linkedin');
 
     // Clean URL - remove http:// or https://
     const cleanUrl = (url) => {
         if (!url) return '';
         return url.replace(/^https?:\/\//, '');
     };
+
+    // Sort social links by position
+    const sortedSocialLinks = [...(social_links || [])].sort((a, b) => (a.position || 0) - (b.position || 0));
 
     // Format date as MM/YYYY
     const formatDate = (date) => {
@@ -64,9 +61,13 @@ export default function ModernATS({ data }) {
                     </div>
 
                     <div className={styles.socialLine}>
-                        {linkedin && <span>{cleanUrl(linkedin.url)}</span>}
-                        {github && <span>{cleanUrl(github.url)}</span>}
-                        {website && <span>{cleanUrl(website.url)}</span>}
+                        {sortedSocialLinks.map((social) => (
+                            social.url && (
+                                <span key={social.profilesociallink_id}>
+                                    {cleanUrl(social.url)}
+                                </span>
+                            )
+                        ))}
                     </div>
                 </header>
 
