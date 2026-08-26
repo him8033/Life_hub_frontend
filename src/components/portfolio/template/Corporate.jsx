@@ -1,5 +1,7 @@
 import styles from '@/styles/portfolio/template/Corporate.module.css';
 import { FiMail, FiPhone, FiMapPin, FiGlobe, FiGithub, FiLinkedin, FiCalendar } from 'react-icons/fi';
+import RichTextRenderer from '@/components/common/RichTextRenderer';
+import { hasContent } from '@/utils/richTextHelper';
 
 export default function Corporate({ data }) {
     const { resume, basic_info, social_links, skills, experiences, educations, projects, certificates, languages, achievements } = data;
@@ -66,7 +68,15 @@ export default function Corporate({ data }) {
                         {basic_info?.summary && (
                             <section className={styles.section}>
                                 <h2>Professional Summary</h2>
-                                <p>{basic_info.summary}</p>
+                                {hasContent(basic_info.summary) ? (
+                                    <RichTextRenderer
+                                        html={basic_info.summary}
+                                        mode="light"
+                                        className={styles.description}
+                                    />
+                                ) : (
+                                    <p>{basic_info.summary}</p>
+                                )}
                             </section>
                         )}
 
@@ -79,7 +89,13 @@ export default function Corporate({ data }) {
                                         <span className={styles.meta}>
                                             <FiCalendar size={11} /> {formatDate(exp.start_date)} — {exp.is_current ? 'Present' : formatDate(exp.end_date)} · {exp.employment_type}
                                         </span>
-                                        {exp.description && <p>{exp.description}</p>}
+                                        {exp.description && hasContent(exp.description) ? (
+                                            <RichTextRenderer
+                                                html={exp.description}
+                                                mode="light"
+                                                className={styles.description}
+                                            />
+                                        ) : exp.description && <p>{exp.description}</p>}
                                     </div>
                                 ))}
                             </section>

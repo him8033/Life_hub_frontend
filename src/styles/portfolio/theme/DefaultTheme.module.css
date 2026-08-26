@@ -1,62 +1,188 @@
-/* DefaultTheme.module.css */
+/* DefaultTheme.module.css - Reference Portfolio Theme */
 
 .page {
     min-height: 100vh;
-    padding: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--background);
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 0;
+    background: #0f172a;
+    /* Dark blue background */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .container {
-    max-width: 600px;
+    max-width: 1200px;
     width: 100%;
+    margin: 0 auto;
     padding: 2rem;
-    background: var(--card);
-    border-radius: var(--radius-xl);
-    border: 1px solid var(--border);
-    text-align: center;
+    background: #0f172a;
+    /* Dark blue background */
 }
 
 .title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--foreground);
-    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: #86efac;
+    /* Light green accent */
+    margin-bottom: 3rem;
+    text-align: center;
+    font-weight: 400;
 }
 
 .info {
     text-align: left;
-    margin: 1rem 0;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: rgba(30, 41, 59, 0.5);
+    /* Slightly lighter dark blue */
+    border-radius: 12px;
+    border: 1px solid rgba(134, 239, 172, 0.2);
+    /* Light green border */
+}
+
+.info p {
+    color: #e2e8f0;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0.5rem 0;
+}
+
+.info strong {
+    color: #86efac;
+    /* Light green accent */
+    font-weight: 600;
 }
 
 .contact {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--muted-foreground);
+    gap: 1rem 2rem;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #94a3b8;
 }
 
 .contact span {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.5rem;
+    color: #e2e8f0;
 }
 
 .fallback {
-    color: var(--muted-foreground);
+    color: #94a3b8;
     font-size: 0.875rem;
-    margin-top: 1rem;
+    margin-top: 2rem;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(30, 41, 59, 0.3);
+    border-radius: 8px;
 }
 
-/* Dark Mode */
+/* Section styling */
+.section {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 12px;
+    border: 1px solid rgba(134, 239, 172, 0.2);
+}
+
+.sectionTitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #86efac;
+    /* Light green accent */
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sectionContent {
+    color: #e2e8f0;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+/* Button styling */
+.button {
+    background: #86efac;
+    /* Light green accent */
+    color: #0f172a;
+    /* Dark blue text */
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.button:hover {
+    background: #4ade80;
+    /* Slightly darker green */
+    transform: translateY(-2px);
+}
+
+/* Card styling */
+.card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(134, 239, 172, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    border-color: #86efac;
+    /* Light green border on hover */
+    transform: translateY(-2px);
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.cardSubtitle {
+    font-size: 0.9rem;
+    color: #86efac;
+    /* Light green accent */
+    margin-bottom: 1rem;
+}
+
+.cardDescription {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Skill tags */
+.skillTag {
+    display: inline-block;
+    background: rgba(134, 239, 172, 0.2);
+    /* Light green with transparency */
+    color: #86efac;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 0.25rem;
+    border: 1px solid rgba(134, 239, 172, 0.3);
+}
+
+/* Dark Mode adjustments */
 .dark .container {
-    background: var(--gray-900);
-    border-color: var(--gray-800);
+    background: #0f172a;
+    border-color: rgba(134, 239, 172, 0.2);
 }
 
 /* Print Styles */
@@ -70,5 +196,18 @@
         box-shadow: none !important;
         border: none !important;
         background: white !important;
+    }
+
+    .section {
+        background: white !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .sectionTitle {
+        color: #0f172a !important;
+    }
+
+    .sectionContent {
+        color: #334155 !important;
     }
 }
