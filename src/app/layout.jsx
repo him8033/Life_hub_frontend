@@ -7,6 +7,7 @@ import { store } from "@/redux/store";
 import { SnackbarProvider } from "@/context/SnackbarContext";
 import GlobalSnackbarRenderer from "@/components/Application/GlobalSnackbarRenderer";
 import { ConfirmProvider } from "@/context/ConfirmContext";
+import { ModalProvider } from '@/context/ModalContext';
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { usePathname } from "next/navigation";
@@ -18,7 +19,7 @@ function ThemeToggleWrapper() {
 
   // Hide theme toggle on preview and public portfolio/resume pages
   const isPreviewPage = pathname?.includes('/portfolio-preview') ||
-                       pathname?.includes('/resume-preview');
+    pathname?.includes('/resume-preview');
 
   if (isPreviewPage) {
     return null;
@@ -40,7 +41,9 @@ export default function RootLayout({ children }) {
             <SnackbarProvider>
               <GlobalSnackbarRenderer />
               <ConfirmProvider>
-                {children}
+                <ModalProvider>
+                  {children}
+                </ModalProvider>
                 <ThemeToggleWrapper />
               </ConfirmProvider>
             </SnackbarProvider>

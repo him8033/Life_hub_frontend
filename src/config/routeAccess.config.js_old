@@ -1,0 +1,8 @@
+// // src/config/routeAccess.config.js
+// // Re-exported directly from single source of truth in routes.constants.js
+// export {
+//     canAccessRoute,
+//     getRouteAccess,
+//     defineRoute,
+//     ROUTE_ACCESS,
+// } from '@/routes/routes.constants';

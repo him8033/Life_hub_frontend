@@ -20,12 +20,12 @@ export default function Header() {
     }, []);
 
     const checkAuthStatus = () => {
-        const token = tokenService.get();
-        const user = token.user;
+        const tokenData = tokenService.get();
+        const user = tokenData.user;
 
-        if (token && user) {
+        if (tokenData && user) {
             setIsAuthenticated(true);
-            setUserName(user.name || 'User');
+            setUserName(user.full_name || user.email || 'User');
         } else {
             setIsAuthenticated(false);
             setUserName('');
@@ -127,9 +127,27 @@ export default function Header() {
                 <div className={styles.authSection}>
                     {isAuthenticated ? (
                         <div className={styles.userMenu}>
-                            <span className={styles.welcomeText}>
-                                Welcome, <span className={styles.userName}>{userName}</span>
-                            </span>
+                            <div className={styles.userProfileSection}>
+                                {(() => {
+                                    const tokenData = tokenService.get();
+                                    const user = tokenData.user;
+                                    const profileImage = user?.profile_image;
+                                    return profileImage ? (
+                                        <img
+                                            src={profileImage}
+                                            alt="Profile"
+                                            className={styles.profileImage}
+                                        />
+                                    ) : (
+                                        <div className={styles.profilePlaceholder}>
+                                            {userName.charAt(0).toUpperCase()}
+                                        </div>
+                                    );
+                                })()}
+                                <span className={styles.welcomeText}>
+                                    Welcome, <span className={styles.userName}>{userName}</span>
+                                </span>
+                            </div>
                             <div className={styles.authButtons}>
                                 <button
                                     onClick={handleDashboard}

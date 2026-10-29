@@ -63,9 +63,10 @@ const RegisterPage = () => {
         }
 
         if (res.data) {
-            showSnackbar("Registration successful! Please login.", "success", 5000);
+            showSnackbar("Registration successful! Please verify your email with the OTP sent.", "success", 5000);
             methods.reset();
-            router.push(ROUTES.AUTH.LOGIN);
+            // Redirect to OTP verification page with email
+            router.push(`${ROUTES.AUTH.VERIFY_OTP}?email=${encodeURIComponent(data.email)}&purpose=email_verification`);
         }
     };
 

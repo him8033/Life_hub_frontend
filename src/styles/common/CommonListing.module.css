@@ -462,3 +462,140 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Table Styles */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.table thead {
+    background: var(--muted);
+}
+
+.table th {
+    padding: var(--spacing-3) var(--spacing-4);
+    text-align: left;
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--foreground);
+    border-bottom: 1px solid var(--border);
+}
+
+.table td {
+    padding: var(--spacing-3) var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background: var(--accent);
+}
+
+.nameCell {
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.slugCell {
+    font-family: monospace;
+    color: var(--primary);
+}
+
+.descriptionCell {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.statusBadge {
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    border: none;
+    cursor: default;
+    transition: all 0.2s;
+}
+
+.statusBadge.clickable {
+    cursor: pointer;
+}
+
+.statusBadge.clickable:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+.statusBadge.active {
+    background: var(--primary);
+    color: white;
+}
+
+.statusBadge.inactive {
+    background: var(--muted);
+    color: var(--muted-foreground);
+}
+
+.dateCell {
+    color: var(--muted-foreground);
+    font-size: var(--text-xs);
+}
+
+.actionsCell {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.actionButton {
+    padding: var(--spacing-1);
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--muted-foreground);
+    transition: all 0.2s;
+}
+
+.actionButton:hover {
+    background: var(--accent);
+    color: var(--foreground);
+}
+
+.actionButton.deleteButton:hover {
+    background: var(--destructive);
+    color: var(--destructive-foreground);
+}
+
+.loadingText {
+    text-align: center;
+    padding: var(--spacing-8);
+    color: var(--muted-foreground);
+}
+
+.emptyState {
+    text-align: center;
+    padding: var(--spacing-12);
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+}
+
+.emptyIcon {
+    font-size: 48px;
+    margin-bottom: var(--spacing-4);
+}
+
+.emptyText {
+    color: var(--muted-foreground);
+    font-size: var(--text-base);
+}

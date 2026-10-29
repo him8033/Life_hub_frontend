@@ -1,0 +1,181 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit-6);
+    padding: var(--spacing-unit-6);
+    background-color: var(--card);
+    border-radius: var(--radius-lg);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filters {
+    display: flex;
+    gap: var(--spacing-unit-4);
+    flex-wrap: wrap;
+}
+
+.searchInput {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-unit-2);
+    padding: var(--spacing-unit-3) var(--spacing-unit-4);
+    background-color: var(--input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    flex: 1;
+    min-width: 200px;
+}
+
+.filterSelect {
+    padding: var(--spacing-unit-3) var(--spacing-unit-4);
+    background-color: var(--input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    min-width: 150px;
+}
+
+.tableContainer {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableHeader {
+    background-color: var(--muted);
+}
+
+.tableCell {
+    padding: var(--spacing-unit-4);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.tableRow {
+    transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+    background-color: var(--accent);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-500);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: var(--text-base);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-unit-4);
+}
+
+/* Modal Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: var(--card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-unit-6);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-unit-6);
+}
+
+.modalForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit-4);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit-2);
+}
+
+.formInput {
+    padding: var(--spacing-unit-3) var(--spacing-unit-4);
+    background-color: var(--input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.formInput:focus {
+    border-color: var(--primary-500);
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-unit-3);
+    margin-top: var(--spacing-unit-6);
+}
+
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+    }
+
+    .searchInput {
+        min-width: 100%;
+    }
+
+    .filterSelect {
+        min-width: 100%;
+    }
+
+    .table {
+        font-size: var(--text-sm);
+    }
+
+    .tableCell {
+        padding: var(--spacing-unit-3);
+    }
+
+    .modal {
+        padding: var(--spacing-unit-4);
+        margin: var(--spacing-unit-4);
+    }
+}

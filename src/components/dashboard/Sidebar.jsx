@@ -18,16 +18,20 @@ import {
     FiLayers,
     FiCode,
     FiGlobe,
+    FiLock,
+    FiKey,
+    FiLink,
+    FiClock,
+    FiMonitor,
     FiFileText,
     FiSettings,
     FiChevronDown,
-    FiChevronRight,
-    FiMonitor
+    FiChevronRight
 } from 'react-icons/fi';
 import styles from '@/styles/dashboard/Sidebar.module.css';
-import { ROUTES } from '@/routes/routes.constants';
+import { ROUTES, canAccessRoute } from '@/routes/routes.constants';
 import { FaPalette } from 'react-icons/fa';
-import { tokenService } from '@/services/auth/token.service';
+import { useUserRole } from '@/services/auth/role.service';
 
 // Menu items with simple visibility config
 const menuItems = [
@@ -48,32 +52,67 @@ const menuItems = [
         title: 'MANAGEMENT',
         items: [
             {
-                id: 'users',
-                label: 'Users',
-                icon: <FiUsers />,
-                show: true,
+                id: 'account',
+                label: 'Accounts',
+                icon: <FiUser />,
                 submenu: [
                     {
-                        label: 'All Users',
+                        label: 'Users',
                         icon: <FiUsers />,
-                        href: '/dashboard/users',
-                        show: true,
+                        href: ROUTES.DASHBOARD.ACCOUNT.USERS,
                     },
                     {
-                        label: 'Add User',
-                        icon: <FiUserPlus />,
-                        href: '/dashboard/users/add',
-                        show: true,
+                        label: 'Statuses',
+                        icon: <FiLayers />,
+                        href: ROUTES.DASHBOARD.ACCOUNT.STATUS,
                     },
                     {
                         label: 'Roles',
                         icon: <FiShield />,
-                        href: '/dashboard/users/roles',
-                        show: true,
-                    }
+                        href: ROUTES.DASHBOARD.ACCOUNT.ROLES,
+                    },
+                    {
+                        label: 'Role Permissions',
+                        icon: <FiKey />,
+                        href: ROUTES.DASHBOARD.ACCOUNT.ROLEPERMISSIONS,
+                    },
+                    {
+                        label: 'OTP Purposes',
+                        icon: <FiLock />,
+                        href: ROUTES.DASHBOARD.ACCOUNT.OTPPURPOSES,
+                    },
+                    {
+                        label: 'Permissions',
+                        icon: <FiKey />,
+                        href: ROUTES.DASHBOARD.ACCOUNT.PERMISSIONS,
+                    },
+                    {
+                        label: 'Social Providers',
+                        icon: <FiLink />,
+                        href: ROUTES.DASHBOARD.ACCOUNT.SOCIALPROVIDERS,
+                    },
+                    {
+                        label: 'Social Accounts',
+                        icon: <FiUserPlus />,
+                        href: ROUTES.DASHBOARD.ACCOUNT.SOCIALACCOUNTS,
+                    },
+                    {
+                        label: 'Login History',
+                        icon: <FiClock />,
+                        href: ROUTES.DASHBOARD.ACCOUNT.LOGINHISTORY,
+                    },
+                    {
+                        label: 'OTP Records',
+                        icon: <FiLock />,
+                        href: ROUTES.DASHBOARD.ACCOUNT.OTPS,
+                    },
+                    {
+                        label: 'User Sessions',
+                        icon: <FiMonitor />,
+                        href: ROUTES.DASHBOARD.ACCOUNT.USERSESSIONS,
+                    },
                 ]
             },
-
             {
                 id: 'travelhub',
                 label: 'Travel Hub',
@@ -126,37 +165,31 @@ const menuItems = [
                 id: 'portfolio_settings',
                 label: 'Portfolio Hub Settings',
                 icon: <FiBriefcase />,
-                show: true,
                 submenu: [
                     {
                         label: 'Skill Categories',
                         icon: <FiGrid />,
-                        href: '/dashboard/portfolio/admin/skill-categories',
-                        show: true,
+                        href: ROUTES.DASHBOARD.PORTFOLIO.SKILLCATEGORY.LIST,
                     },
                     {
                         label: 'Master Skills',
                         icon: <FiCode />,
-                        href: '/dashboard/portfolio/admin/master-skills',
-                        show: true,
+                        href: ROUTES.DASHBOARD.PORTFOLIO.MASTERSKILL.LIST,
                     },
                     {
                         label: 'Languages',
                         icon: <FiGlobe />,
-                        href: '/dashboard/portfolio/admin/master-languages',
-                        show: true,
+                        href: ROUTES.DASHBOARD.PORTFOLIO.MASTERLANGUAGE.LIST,
                     },
                     {
                         label: 'Resume Templates',
                         icon: <FiFileText />,
-                        href: '/dashboard/portfolio/admin/resume-templates',
-                        show: true,
+                        href: ROUTES.DASHBOARD.PORTFOLIO.RESUMETEMPLATE.LIST,
                     },
                     {
                         label: 'Portfolio Themes',
                         icon: <FaPalette />,
-                        href: '/dashboard/portfolio/admin/portfolio-themes',
-                        show: true,
+                        href: ROUTES.DASHBOARD.PORTFOLIO.PORTFOLIOTHEME.LIST,
                     },
                 ]
             },
@@ -190,30 +223,35 @@ const menuItems = [
     }
 ];
 
-// Check if item should be shown
-const shouldShow = (item, isAdmin) => {
-    if (item.show === 'admin') return isAdmin;
-    if (item.show === 'user') return !isAdmin;
-    return item.show !== false;
+// Check if item should be shown using centralized routeAccess configuration
+const shouldShow = (item, role) => {
+    // 1. Explicit override if set on the item
+    if (item.show === 'admin') return role === 'admin';
+    if (item.show === 'user') return role !== 'admin';
+    if (item.show === false) return false;
+
+    // 2. Check route access rule if item has an href
+    if (item.href) {
+        return canAccessRoute(item.href, role);
+    }
+
+    // 3. For parent container with submenu, show if AT LEAST ONE subitem is accessible
+    if (item.submenu && item.submenu.length > 0) {
+        return item.submenu.some(sub => shouldShow(sub, role));
+    }
+
+    return true;
 };
 
 const Sidebar = ({ closeSidebar, isOpen }) => {
     const pathname = usePathname();
-    const [mounted, setMounted] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const { role, mounted } = useUserRole();
 
     const [openSubmenus, setOpenSubmenus] = useState({});
     const [hoveredItem, setHoveredItem] = useState(null);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0 });
     const hoverTimeoutRef = useRef(null);
     const dropdownRef = useRef(null);
-
-    // Get user role after mounting (client-side only)
-    useEffect(() => {
-        setMounted(true);
-        const { user } = tokenService.get();
-        setIsAdmin(user?.role === 'admin');
-    }, []);
 
     // Initialize open submenus
     useEffect(() => {
@@ -222,10 +260,10 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
         const initialOpenState = {};
         menuItems.forEach(section => {
             section.items.forEach(item => {
-                if (!shouldShow(item, isAdmin)) return;
+                if (!shouldShow(item, role)) return;
                 if (item.submenu) {
                     const isActive = item.submenu.some(subItem =>
-                        shouldShow(subItem, isAdmin) && pathname.startsWith(subItem.href)
+                        shouldShow(subItem, role) && pathname.startsWith(subItem.href)
                     );
                     if (isActive) {
                         initialOpenState[item.id] = true;
@@ -233,8 +271,9 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
                 }
             });
         });
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setOpenSubmenus(initialOpenState);
-    }, [pathname, isAdmin, mounted]);
+    }, [pathname, role, mounted]);
 
     const isActive = (href) => {
         if (!href) return false;
@@ -250,16 +289,16 @@ const Sidebar = ({ closeSidebar, isOpen }) => {
         }));
     };
 
-    // Filter menu items based on role
+    // Filter menu items based on role using centralized route access
     const filteredMenuItems = menuItems
         .map(section => {
             const filteredItems = section.items
-                .filter(item => shouldShow(item, isAdmin))
+                .filter(item => shouldShow(item, role))
                 .map(item => {
                     if (item.submenu) {
                         return {
                             ...item,
-                            submenu: item.submenu.filter(sub => shouldShow(sub, isAdmin))
+                            submenu: item.submenu.filter(sub => shouldShow(sub, role))
                         };
                     }
                     return item;

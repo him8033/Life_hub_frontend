@@ -17,16 +17,36 @@ export const authApi = createApi({
             query: (payload) => ({ url: "auth/login/", method: "POST", body: payload }),
         }),
 
+        verifyOTP: builder.mutation({
+            query: (payload) => ({ url: "auth/verify-otp/", method: "POST", body: payload }),
+        }),
+
+        resendOTP: builder.mutation({
+            query: (payload) => ({ url: "auth/resend-otp/", method: "POST", body: payload }),
+        }),
+
         changeUserPassword: builder.mutation({
             query: (payload) => ({ url: "auth/change-password/", method: "POST", body: payload }),
         }),
 
-        sendPasswordResetEmail: builder.mutation({
-            query: (payload) => ({ url: "auth/send-reset-password-email/", method: "POST", body: payload }),
+        forgotPassword: builder.mutation({
+            query: (payload) => ({ url: "auth/forgot-password/", method: "POST", body: payload }),
         }),
 
         resetPassword: builder.mutation({
-            query: ({ data, id, token }) => ({ url: `auth/reset-password/${id}/${token}/`, method: "POST", body: data }),
+            query: (payload) => ({ url: "auth/reset-password/", method: "POST", body: payload }),
+        }),
+
+        logout: builder.mutation({
+            query: () => ({ url: "auth/logout/", method: "POST" }),
+        }),
+
+        logoutAll: builder.mutation({
+            query: () => ({ url: "auth/logout-all/", method: "POST" }),
+        }),
+
+        refreshToken: builder.mutation({
+            query: (payload) => ({ url: "auth/token/refresh/", method: "POST", body: payload }),
         }),
 
         // ========================= CURRENT USER (MAIN SOURCE) =========================
@@ -37,6 +57,15 @@ export const authApi = createApi({
                 method: "GET",
             }),
             providesTags: ["User", "Profile", "SocialLinks"],
+            refetchOnMountOrArgChange: true,
+        }),
+
+        getAuthMe: builder.query({
+            query: () => ({
+                url: "auth/me/",
+                method: "GET",
+            }),
+            providesTags: ["User"],
             refetchOnMountOrArgChange: true,
         }),
 
@@ -129,12 +158,18 @@ export const {
     // Auth
     useRegisterUserMutation,
     useLoginUserMutation,
+    useVerifyOTPMutation,
+    useResendOTPMutation,
     useChangeUserPasswordMutation,
-    useSendPasswordResetEmailMutation,
+    useForgotPasswordMutation,
     useResetPasswordMutation,
+    useLogoutMutation,
+    useLogoutAllMutation,
+    useRefreshTokenMutation,
 
     // Me
     useGetMeQuery,
+    useGetAuthMeQuery,
 
     // Profile
     useUpdateProfileMutation,

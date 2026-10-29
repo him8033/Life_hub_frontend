@@ -34,6 +34,7 @@ const ChangePassword = () => {
     const form = useForm({
         resolver: zodResolver(changePasswordSchema),
         defaultValues: {
+            old_password: "",
             password: "",
             password2: "",
         },
@@ -108,6 +109,28 @@ const ChangePassword = () => {
                                 onSubmit={form.handleSubmit(handleChangePasswordSubmit)}
                                 className={styles.changePasswordForm}
                             >
+                                {/* Old Password */}
+                                <FormField
+                                    control={form.control}
+                                    name="old_password"
+                                    render={({ field }) => (
+                                        <FormItem className={styles.formItem}>
+                                            <FormLabel className={styles.formLabel}>
+                                                Current Password
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="password"
+                                                    placeholder="Enter current password"
+                                                    {...field}
+                                                    className={styles.formInput}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className={styles.errorMessage} />
+                                        </FormItem>
+                                    )}
+                                />
+
                                 {/* Password */}
                                 <FormField
                                     control={form.control}

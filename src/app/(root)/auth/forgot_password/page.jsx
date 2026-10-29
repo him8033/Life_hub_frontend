@@ -13,14 +13,16 @@ import AuthDivider from "@/components/auth/AuthDivider";
 import AuthLinks from "@/components/auth/AuthLinks";
 import { ROUTES } from "@/routes/routes.constants";
 import { resetPasswordRequestSchema } from "@/lib/validations/auth/zodSchema";
-import { useSendPasswordResetEmailMutation } from "@/services/api/authApi";
+import { useForgotPasswordMutation } from "@/services/api/authApi";
 import { useSnackbar } from "@/context/SnackbarContext";
+import { usePasswordReset } from "@/context/PasswordResetContext";
 import styles from "@/styles/auth/Shared.module.css";
 
 const ForgotPasswordPage = () => {
     const router = useRouter();
     const { showSnackbar } = useSnackbar();
-    const [sendPasswordResetEmail, { isLoading }] = useSendPasswordResetEmailMutation();
+    const { startPasswordReset } = usePasswordReset();
+    const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
 
     const methods = useForm({
         resolver: zodResolver(resetPasswordRequestSchema),
@@ -30,7 +32,7 @@ const ForgotPasswordPage = () => {
     });
 
     const handleForgotSubmit = async (data) => {
-        const res = await sendPasswordResetEmail(data);
+        const res = await forgotPassword(data);
 
         if (res.error) {
             const backendErrors = res.error.data?.errors;
@@ -54,9 +56,17 @@ const ForgotPasswordPage = () => {
         }
 
         if (res.data) {
-            showSnackbar(res.data.message, "success", 5000);
+            showSnackbar("Password reset OTP sent to your email", "success", 5000);
             methods.reset();
-            router.push(ROUTES.AUTH.LOGIN);
+
+            // Get the reset_token from response
+            const resetToken = res.data.data?.reset_token;
+
+            // Store in context (not URL, not localStorage/sessionStorage)
+            startPasswordReset(data.email, resetToken);
+
+            // Redirect to OTP verification page without email in URL
+            router.push(ROUTES.AUTH.VERIFY_OTP);
         }
     };
 
@@ -83,7 +93,7 @@ const ForgotPasswordPage = () => {
             <AuthForm methods={methods} onSubmit={handleForgotSubmit}>
                 <div className={styles.infoBox}>
                     <p className={styles.infoText}>
-                        We'll send you a link to reset your password. The link will expire in 24 hours.
+                        We&apos;ll send you a 6-digit OTP to reset your password. The OTP will expire in 15 minutes.
                     </p>
                 </div>
 
@@ -100,11 +110,11 @@ const ForgotPasswordPage = () => {
                 <AuthButton
                     type="submit"
                     isLoading={isLoading}
-                    loadingText="Sending..."
+                    loadingText="Sending OTP..."
                     icon={<FiArrowRight />}
                     fullWidth
                 >
-                    Send Reset Instructions
+                    Send Reset OTP
                 </AuthButton>
 
                 <AuthDivider />

@@ -14,7 +14,7 @@ import AuthDivider from "@/components/auth/AuthDivider";
 import AuthLinks from "@/components/auth/AuthLinks";
 import { ROUTES } from "@/routes/routes.constants";
 import { loginSchema } from "@/lib/validations/auth/zodSchema";
-import { useLoginUserMutation } from "@/services/api/authApi";
+import { useLoginUserMutation, useResendOTPMutation } from "@/services/api/authApi";
 import { tokenService } from "@/services/auth/token.service";
 import { useSnackbar } from "@/context/SnackbarContext";
 import styles from "@/styles/auth/Shared.module.css";
@@ -24,6 +24,8 @@ const LoginPage = () => {
     const router = useRouter();
     const { showSnackbar } = useSnackbar();
     const [loginUser, { isLoading }] = useLoginUserMutation();
+    const [resendOTP, { isLoading: isSendingOTP }] = useResendOTPMutation();
+    const [needsVerificationEmail, setNeedsVerificationEmail] = useState(null);
 
     const methods = useForm({
         resolver: zodResolver(loginSchema),
@@ -35,6 +37,7 @@ const LoginPage = () => {
     });
 
     const handleLoginSubmit = async (data) => {
+        setNeedsVerificationEmail(null);
         const res = await loginUser(data);
 
         if (res.error) {
@@ -52,7 +55,11 @@ const LoginPage = () => {
             }
 
             if (backendErrors?.non_field_errors?.length) {
-                showSnackbar(backendErrors.non_field_errors[0], "error", 5000);
+                const errorMsg = backendErrors.non_field_errors[0];
+                showSnackbar(errorMsg, "error", 5000);
+                if (errorMsg.toLowerCase().includes("verify your email")) {
+                    setNeedsVerificationEmail(data.email);
+                }
             }
 
             return;
@@ -60,7 +67,20 @@ const LoginPage = () => {
 
         if (res.data) {
             showSnackbar(res.data.message, "success", 5000);
-            tokenService.store(res.data.data);
+            // Store tokens and user profile from the new response format
+            const tokens = res.data.data.tokens;
+            const session = res.data.data.session;
+            const user = res.data.data.user;
+            tokenService.store({
+                access: tokens.access,
+                refresh: tokens.refresh,
+                user: user,
+                session_id: session.session_id,
+                device: session.device,
+            });
+
+            // tokenService.store() already saves session_id to cookies
+            // No need to call saveSessionId() separately
 
             // if (isRememberMe) {
             //     localStorage.setItem('rememberMe', 'true');
@@ -79,6 +99,32 @@ const LoginPage = () => {
         setTimeout(() => {
             window.location.href = `/api/auth/${provider}`;
         }, 1000);
+    };
+
+    const handleVerifyEmailClick = async (e) => {
+        if (e) e.preventDefault();
+        if (!needsVerificationEmail) return;
+
+        try {
+            const res = await resendOTP({
+                email: needsVerificationEmail,
+                purpose: "email_verification",
+            });
+
+            if (res.error) {
+                const backendErrors = res.error.data?.errors;
+                const errorMsg = backendErrors?.non_field_errors?.[0] || res.error.data?.message || "Failed to send verification OTP";
+                showSnackbar(errorMsg, "error", 5000);
+                router.push(`${ROUTES.AUTH.VERIFY_OTP}?email=${encodeURIComponent(needsVerificationEmail)}&purpose=email_verification`);
+                return;
+            }
+
+            showSnackbar("Verification code sent to your email!", "success", 5000);
+            router.push(`${ROUTES.AUTH.VERIFY_OTP}?email=${encodeURIComponent(needsVerificationEmail)}&purpose=email_verification`);
+        } catch (err) {
+            showSnackbar("Failed to send verification code. Please try again.", "error", 5000);
+            router.push(`${ROUTES.AUTH.VERIFY_OTP}?email=${encodeURIComponent(needsVerificationEmail)}&purpose=email_verification`);
+        }
     };
 
     const authLinks = [
@@ -139,6 +185,30 @@ const LoginPage = () => {
                 >
                     Sign In
                 </AuthButton>
+
+                {needsVerificationEmail && (
+                    <div className={styles.infoBox} style={{ marginTop: "1rem", textAlign: "center" }}>
+                        <p className={styles.infoText} style={{ marginBottom: "0.5rem" }}>
+                            Your email is not verified yet.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={handleVerifyEmailClick}
+                            disabled={isSendingOTP}
+                            style={{
+                                background: "none",
+                                border: "none",
+                                color: "var(--primary)",
+                                fontWeight: 600,
+                                textDecoration: "underline",
+                                cursor: isSendingOTP ? "not-allowed" : "pointer",
+                                fontSize: "var(--text-sm)",
+                            }}
+                        >
+                            {isSendingOTP ? "Sending OTP..." : "Verify Email Now"}
+                        </button>
+                    </div>
+                )}
 
 
                 {/* Social Login Buttons */}

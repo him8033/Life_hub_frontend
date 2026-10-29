@@ -35,6 +35,7 @@ export const registerSchema = z
 // Change Password Schema
 export const changePasswordSchema = z
     .object({
+        old_password: z.string().min(1, "Current password is required"),
         password: z.string()
             .min(8, "Password must be at least 8 characters")
             .regex(/[a-z]/, "Password must contain at least one lowercase letter")
@@ -54,11 +55,20 @@ export const resetPasswordRequestSchema = z.object({
         .email("Invalid email address"),
 });
 
-// Reset Password Schema (set new password)
+// Reset Password Schema (set new password with confirm_token)
 export const resetPasswordSchema = z
     .object({
-        password: z.string().min(6, "Password must be at least 6 characters"),
-        password2: z.string().min(6, "Confirm Password must be at least 6 characters"),
+        email: z
+            .string()
+            .min(1, "Email is required")
+            .email("Invalid email address")
+            .optional(),
+        confirm_token: z
+            .string()
+            .min(1, "Confirm token is required")
+            .optional(),
+        password: z.string().min(8, "Password must be at least 8 characters"),
+        password2: z.string().min(8, "Confirm Password must be at least 8 characters"),
     })
     .refine((data) => data.password === data.password2, {
         message: "Passwords do not match",

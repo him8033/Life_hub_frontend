@@ -107,6 +107,34 @@
     gap: var(--spacing-5);
 }
 
+.userProfileSection {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.profileImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+}
+
+.profilePlaceholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--brand-gradient);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    border: 2px solid var(--primary);
+}
+
 .welcomeText {
     font-size: var(--text-sm);
     color: var(--muted-foreground);

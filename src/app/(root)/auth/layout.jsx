@@ -1,9 +1,11 @@
 import React from 'react'
+import { PasswordResetProvider } from '@/context/PasswordResetContext'
 
 const layout = ({ children }) => {
     return (
-        // <div className='h-screen w-screen flex justify-center items-center'>{children}</div>
-        <div>{children}</div>
+        <PasswordResetProvider>
+            <div>{children}</div>
+        </PasswordResetProvider>
     )
 }
 
